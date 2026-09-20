@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía Maestra del Chord Looper — Yamaha PSR-SX920 | Rubén Sbarsky</title>
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --card:#0f172a;
+    --border:#1e3a5f;
+    --accent:#00d4ff;
+    --green:#22c55e;
+    --amber:#f59e0b;
+    --red:#ef4444;
+    --purple:#a855f7;
+    --text:#e2e8f0;
+    --muted:#94a3b8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    line-height:1.65;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ============ PROGRESS BAR ============ */
+  #progressBar{
+    position:fixed;top:0;left:0;height:3px;width:0%;
+    background:linear-gradient(90deg,var(--accent),var(--purple),var(--green));
+    z-index:1000;
+    transition:width .15s linear;
+    box-shadow:0 0 12px rgba(0,212,255,.6);
+  }
+
+  /* ============ NAVBAR ============ */
+  #navbar{
+    position:fixed;top:3px;left:0;right:0;
+    background:rgba(10,14,26,.94);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+    z-index:999;
+    padding:10px 12px;
+  }
+  .nav-inner{
+    display:flex;align-items:center;gap:10px;
+    max-width:1400px;margin:0 auto;
+  }
+  .nav-brand{
+    display:flex;align-items:center;gap:8px;
+    font-weight:700;color:var(--accent);
+    font-size:.85rem;letter-spacing:.4px;
+    white-space:nowrap;flex-shrink:0;
+    padding-right:10px;border-right:1px solid var(--border);
+  }
+  .nav-brand .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 10px var(--green);
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.8);}}
+  .nav-scroll{
+    display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;
+    padding:4px 2px;flex:1;
+    scrollbar-width:thin;scrollbar-color:var(--accent) transparent;
+    -webkit-overflow-scrolling:touch;
+  }
+  .nav-scroll::-webkit-scrollbar{height:4px;}
+  .nav-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+  .nav-btn{
+    background:transparent;border:1px solid var(--border);
+    color:var(--muted);
+    padding:7px 13px;border-radius:8px;
+    font-size:.78rem;font-weight:600;
+    cursor:pointer;white-space:nowrap;
+    transition:all .25s ease;
+    font-family:inherit;flex-shrink:0;
+  }
+  .nav-btn:hover{color:var(--text);border-color:var(--accent);transform:translateY(-1px);}
+  .nav-btn.active{
+    background:linear-gradient(135deg,rgba(0,212,255,.18),rgba(168,85,247,.18));
+    color:var(--accent);border-color:var(--accent);
+    box-shadow:0 0 14px rgba(0,212,255,.25);
+  }
+  .nav-btn.credits{color:var(--purple);border-color:rgba(168,85,247,.5);}
+  .nav-btn.credits.active{
+    background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(0,212,255,.15));
+    color:var(--purple);box-shadow:0 0 14px rgba(168,85,247,.35);
+  }
+
+  /* ============ LAYOUT ============ */
+  main{
+    max-width:1200px;margin:0 auto;
+    padding:96px 16px 80px;
+  }
+  .section{display:none;animation:fadeUp .45s ease;}
+  .section.active{display:block;}
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(18px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+
+  /* ============ SVG HERO ============ */
+  .hero-svg-wrap{
+    width:100%;
+    border-radius:14px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    box-shadow:0 0 40px rgba(0,212,255,.12), 0 20px 50px rgba(0,0,0,.6);
+    margin-bottom:28px;
+    background:#070b14;
+    position:relative;
+  }
+  .hero-svg-wrap svg{display:block;width:100%;height:auto;aspect-ratio:16/9;}
+
+  /* ============ HERO CONTENT ============ */
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:linear-gradient(135deg,rgba(0,212,255,.14),rgba(168,85,247,.14));
+    border:1px solid rgba(0,212,255,.4);
+    color:var(--accent);
+    padding:6px 14px;border-radius:99px;
+    font-size:.72rem;font-weight:700;
+    letter-spacing:1.2px;text-transform:uppercase;
+    margin-bottom:18px;
+  }
+  .badge::before{
+    content:'';width:7px;height:7px;border-radius:50%;
+    background:var(--green);box-shadow:0 0 8px var(--green);
+    animation:pulse 1.8s ease-in-out infinite;
+  }
+  h1.title{
+    font-size:clamp(1.6rem,4.6vw,2.8rem);
+    font-weight:800;
+    line-height:1.15;
+    background:linear-gradient(135deg,#ffffff 0%,#00d4ff 45%,#a855f7 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    margin-bottom:14px;
+    letter-spacing:-.5px;
+  }
+  .subtitle{
+    font-size:clamp(.95rem,2.1vw,1.15rem);
+    color:var(--muted);
+    margin-bottom:22px;
+    font-weight:500;
+  }
+  .description{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-left:3px solid var(--accent);
+    border-radius:10px;
+    padding:18px 20px;
+    margin-bottom:22px;
+    font-size:.95rem;
+    color:#cbd5e1;
+  }
+  .quote{
+    background:linear-gradient(135deg,rgba(168,85,247,.09),rgba(0,212,255,.05));
+    border:1px solid rgba(168,85,247,.35);
+    border-radius:12px;
+    padding:20px 22px;
+    margin-bottom:24px;
+    position:relative;
+    font-style:italic;
+    color:#c4b5fd;
+    font-size:1rem;
+  }
+  .quote::before{
+    content:'"';
+    position:absolute;top:-14px;left:16px;
+    font-size:3.6rem;color:var(--purple);opacity:.4;
+    font-family:Georgia,serif;line-height:1;
+  }
+  .quote cite{
+    display:block;margin-top:10px;
+    font-style:normal;font-size:.82rem;
+    color:var(--muted);text-align:right;font-weight:600;
+  }
+
+  /* ============ METRICS ============ */
+  .metrics{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+    gap:12px;margin-bottom:26px;
+  }
+  .metric{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px 14px;
+    text-align:center;
+    transition:all .3s ease;
+    position:relative;overflow:hidden;
+  }
+  .metric::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,var(--accent),var(--purple));
+    opacity:.6;
+  }
+  .metric:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 8px 24px rgba(0,212,255,.15);}
+  .metric .val{
+    font-size:1.5rem;font-weight:800;
+    color:var(--accent);
+    display:block;
+    text-shadow:0 0 18px rgba(0,212,255,.4);
+  }
+  .metric .lbl{
+    font-size:.7rem;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.9px;
+    margin-top:4px;font-weight:600;
+  }
+  .meta-line{
+    display:flex;flex-wrap:wrap;gap:14px;
+    padding:14px 16px;
+    background:rgba(15,23,42,.6);
+    border:1px solid var(--border);
+    border-radius:10px;
+    font-size:.8rem;color:var(--muted);
+    margin-bottom:8px;
+  }
+  .meta-line span strong{color:var(--accent);font-weight:700;}
+  .meta-line .sep{color:var(--border);}
+
+  /* ============ CARDS ============ */
+  .section-header{
+    display:flex;align-items:center;gap:14px;
+    margin-bottom:22px;padding-bottom:18px;
+    border-bottom:1px solid var(--border);
+  }
+  .section-icon{
+    width:48px;height:48px;flex-shrink:0;
+    background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(168,85,247,.15));
+    border:1px solid rgba(0,212,255,.4);
+    border-radius:11px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.5rem;
+    box-shadow:0 0 20px rgba(0,212,255,.15);
+  }
+  .section-header h2{
+    font-size:clamp(1.25rem,3vw,1.7rem);
+    font-weight:800;
+    color:#fff;
+    letter-spacing:-.3px;
+    line-height:1.2;
+  }
+  .section-header p{color:var(--muted);font-size:.85rem;margin-top:3px;}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px 22px;
+    margin-bottom:16px;
+    transition:all .3s ease;
+  }
+  .card:hover{border-color:rgba(0,212,255,.5);box-shadow:0 6px 24px rgba(0,0,0,.3);}
+  .card h3{
+    color:var(--accent);font-size:1.08rem;
+    margin-bottom:12px;font-weight:700;
+    display:flex;align-items:center;gap:10px;
+  }
+  .card h3 .num{
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    color:#fff;width:26px;height:26px;border-radius:7px;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:.78rem;font-weight:800;flex-shrink:0;
+  }
+  .card p{margin-bottom:10px;color:#cbd5e1;font-size:.94rem;}
+  .card p:last-child{margin-bottom:0;}
+
+  /* ============ STEPS ============ */
+  .steps{counter-reset:step;margin:14px 0;}
+  .step{
+    counter-increment:step;
+    display:flex;gap:14px;
+    padding:12px 0;
+    border-bottom:1px dashed rgba(30,58,95,.6);
+  }
+  .step:last-child{border-bottom:none;}
+  .step::before{
+    content:counter(step);
+    flex-shrink:0;
+    width:30px;height:30px;
+    background:linear-gradient(135deg,rgba(0,212,255,.2),rgba(168,85,247,.2));
+    border:1px solid var(--accent);
+    color:var(--accent);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:.82rem;
+  }
+  .step .step-body{flex:1;font-size:.92rem;color:#cbd5e1;padding-top:3px;}
+  .step .step-body strong{color:#fff;}
+
+  /* ============ CALLOUTS ============ */
+  .callout{
+    border-radius:10px;
+    padding:14px 16px 14px 48px;
+    margin:14px 0;
+    font-size:.9rem;
+    position:relative;
+    line-height:1.55;
+  }
+  .callout::before{
+    content:'';position:absolute;left:15px;top:15px;
+    width:20px;height:20px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .callout.info{
+    background:rgba(0,212,255,.08);
+    border:1px solid rgba(0,212,255,.35);
+    color:#a5e8ff;
+  }
+  .callout.info::before{content:'ℹ';background:var(--accent);color:#03121a;font-weight:800;font-size:.85rem;display:flex;align-items:center;justify-content:center;line-height:1;}
+  .callout.example{
+    background:rgba(34,197,94,.08);
+    border:1px solid rgba(34,197,94,.35);
+    color:#a7f3c9;
+  }
+  .callout.example::before{content:'✦';background:var(--green);color:#03120a;font-weight:800;font-size:.85rem;display:flex;align-items:center;justify-content:center;line-height:1;}
+  .callout.warning{
+    background:rgba(245,158,11,.09);
+    border:1px solid rgba(245,158,11,.4);
+    color:#fcd8a0;
+  }
+  .callout.warning::before{content:'!';background:var(--amber);color:#1a0e00;font-weight:800;font-size:.9rem;display:flex;align-items:center;justify-content:center;line-height:1;}
+  .callout.danger{
+    background:rgba(239,68,68,.09);
+    border:1px solid rgba(239,68,68,.4);
+    color:#fca5a5;
+  }
+  .callout.danger::before{content:'✕';background:var(--red);color:#1a0000;font-weight:800;font-size:.85rem;display:flex;align-items:center;justify-content:center;line-height:1;}
+  .callout strong{color:#fff;}
+
+  /* ============ TABLES ============ */
+  .table-wrap{overflow-x:auto;margin:14px 0;border-radius:10px;border:1px solid var(--border);}
+  table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:420px;}
+  thead{background:linear-gradient(135deg,rgba(0,212,255,.12),rgba(168,85,247,.12));}
+  th{
+    padding:12px 14px;text-align:left;
+    color:var(--accent);font-weight:700;
+    font-size:.78rem;text-transform:uppercase;letter-spacing:.7px;
+    border-bottom:1px solid var(--border);
+  }
+  td{padding:11px 14px;border-bottom:1px solid rgba(30,58,95,.5);color:#cbd5e1;}
+  tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:rgba(0,212,255,.05);}
+  td strong{color:#fff;}
+
+  /* ============ BADGES / CHIPS ============ */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+  .chip{
+    background:rgba(0,212,255,.1);
+    border:1px solid rgba(0,212,255,.4);
+    color:var(--accent);
+    padding:5px 11px;border-radius:7px;
+    font-size:.76rem;font-weight:600;
+    font-family:'Consolas','Monaco',monospace;
+  }
+  .chip.green{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.4);color:var(--green);}
+  .chip.amber{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.4);color:var(--amber);}
+  .chip.purple{background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.4);color:var(--purple);}
+  .chip.red{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.4);color:var(--red);}
+
+  /* ============ KEY / NOTE ============ */
+  .notation{
+    display:inline-block;
+    background:rgba(0,212,255,.1);
+    border:1px solid rgba(0,212,255,.4);
+    border-radius:8px;
+    padding:6px 12px;
+    font-family:'Consolas','Monaco',monospace;
+    color:var(--accent);font-weight:700;
+    font-size:.95rem;
+    margin:3px 4px 3px 0;
+  }
+  .scale-box{
+    background:linear-gradient(135deg,rgba(0,212,255,.06),rgba(168,85,247,.06));
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px;
+    margin:14px 0;
+    display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+    justify-content:center;
+  }
+  .scale-box .note{
+    width:44px;height:44px;
+    background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(168,85,247,.15));
+    border:1px solid var(--accent);
+    border-radius:9px;
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:800;font-size:.95rem;
+    box-shadow:0 0 14px rgba(0,212,255,.2);
+    transition:transform .25s ease;
+  }
+  .scale-box .note:hover{transform:translateY(-3px) scale(1.08);}
+  .scale-box .arrow{color:var(--muted);font-size:1.1rem;}
+
+  /* ============ GRID COMPARISON ============ */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+  @media(max-width:720px){.grid-2{grid-template-columns:1fr;}}
+
+  /* ============ ACCORDION ============ */
+  .accordion{
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;margin-bottom:10px;
+  }
+  .acc-head{
+    background:rgba(15,23,42,.7);
+    padding:13px 16px;
+    cursor:pointer;
+    display:flex;justify-content:space-between;align-items:center;
+    font-weight:600;color:var(--text);font-size:.92rem;
+    transition:background .25s ease;
+    user-select:none;
+  }
+  .acc-head:hover{background:rgba(0,212,255,.08);}
+  .acc-head .arrow-acc{
+    color:var(--accent);transition:transform .3s ease;font-size:.9rem;
+  }
+  .accordion.open .acc-head .arrow-acc{transform:rotate(90deg);}
+  .acc-body{
+    max-height:0;overflow:hidden;
+    transition:max-height .4s ease,padding .3s ease;
+    padding:0 16px;color:#cbd5e1;font-size:.9rem;
+  }
+  .accordion.open .acc-body{max-height:1200px;padding:14px 16px;}
+
+  /* ============ FUENTES / CRÉDITOS ============ */
+  .credits-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:24px;
+    text-align:center;
+    margin-top:20px;
+  }
+  .credits-name{
+    font-size:1.5rem;font-weight:800;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    margin:14px 0 6px;
+  }
+  .credits-info{
+    display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
+    margin:18px 0;
+  }
+  .credits-info .info-box{
+    background:rgba(0,212,255,.06);
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:11px 18px;
+    font-size:.85rem;
+  }
+  .credits-info .info-box strong{color:var(--accent);}
+  .latin{
+    font-style:italic;color:var(--purple);
+    font-size:1rem;margin-top:18px;
+    padding-top:18px;border-top:1px solid var(--border);
+    letter-spacing:.6px;
+  }
+
+  .source-item{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-left:3px solid var(--accent);
+    border-radius:10px;
+    padding:16px 18px;
+    margin-bottom:12px;
+  }
+  .source-item h4{color:var(--accent);font-size:.95rem;margin-bottom:6px;}
+  .source-item .src-link{
+    font-family:'Consolas','Monaco',monospace;
+    font-size:.8rem;color:var(--purple);
+    word-break:break-all;
+  }
+  .source-item p{color:var(--muted);font-size:.85rem;margin-top:6px;}
+
+  /* ============ BACK TO TOP ============ */
+  #backTop{
+    position:fixed;
+    right:16px;bottom:16px;
+    width:48px;height:48px;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    color:#fff;border:none;border-radius:50%;
+    font-size:1.3rem;cursor:pointer;
+    box-shadow:0 6px 20px rgba(0,212,255,.4);
+    opacity:0;pointer-events:none;
+    transition:all .3s ease;
+    z-index:998;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;
+  }
+  #backTop.show{opacity:1;pointer-events:auto;}
+  #backTop:hover{transform:translateY(-4px) scale(1.05);}
+
+  /* ============ FOOTER ============ */
+  footer{
+    border-top:1px solid var(--border);
+    padding:28px 16px 26px;
+    text-align:center;
+    color:var(--muted);
+    font-size:.82rem;
+    background:rgba(15,23,42,.5);
+    margin-top:30px;
+  }
+  footer .foot-line{margin:5px 0;}
+  footer .latin-foot{
+    color:var(--purple);font-style:italic;
+    margin-top:12px;font-size:.85rem;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media(max-width:640px){
+    main{padding:88px 12px 70px;}
+    .nav-brand{font-size:.75rem;padding-right:8px;}
+    .nav-brand span.txt{display:none;}
+    .nav-btn{padding:6px 10px;font-size:.72rem;}
+    .card{padding:16px 15px;}
+    .section-icon{width:42px;height:42px;font-size:1.25rem;}
+    .metrics{grid-template-columns:repeat(2,1fr);}
+    .scale-box .note{width:38px;height:38px;font-size:.85rem;}
+    #backTop{width:44px;height:44px;font-size:1.15rem;}
+  }
+  @media(max-width:380px){
+    .nav-btn{padding:6px 8px;font-size:.68rem;}
+    .metric .val{font-size:1.25rem;}
+  }
+
+  /* ============ REDUCED MOTION ============ */
+  @media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+      animation-duration:.001ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;
+      scroll-behavior:auto !important;
+    }
+  }
+
+  /* ============ SVG helpers ============ */
+  .svg-text{font-family:'Segoe UI',system-ui,sans-serif;font-weight:700;}
+</style>
+</head>
+<body>
+
+<div id="progressBar"></div>
+
+<nav id="navbar">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <span class="dot"></span>
+      <span class="txt">CHORD LOOPER</span>
+    </div>
+    <div class="nav-scroll" id="navScroll">
+      <button class="nav-btn active" data-sec="home">🏠 Inicio</button>
+      <button class="nav-btn" data-sec="funcionamiento">⚙️ Funcionamiento</button>
+      <button class="nav-btn" data-sec="grabacion">🎙️ Grabación</button>
+      <button class="nav-btn" data-sec="almacenamiento">💾 Almacenamiento</button>
+      <button class="nav-btn" data-sec="envivo">🎭 En Vivo</button>
+      <button class="nav-btn" data-sec="ejercicio">🎼 Ejercicio</button>
+      <button class="nav-btn" data-sec="fuentes">📚 Fuentes</button>
+      <button class="nav-btn credits" data-sec="creditos">👨‍💻 Créditos</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ==================== HOME ==================== -->
+<section class="section active" id="home">
+
+  <!-- SVG HERO: música / chord looper / progresión armónica -->
+  <div class="hero-svg-wrap">
+    <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" id="heroSVG">
+      <defs>
+        <radialGradient id="clBg" cx="50%" cy="45%" r="80%">
+          <stop offset="0%" stop-color="#0f172a">
+            <animate attributeName="stop-color" values="#0f172a;#122a45;#1a1a45;#0f172a" dur="9s" repeatCount="indefinite"/>
+          </stop>
+          <stop offset="100%" stop-color="#070b14">
+            <animate attributeName="stop-color" values="#070b14;#0a0e1a;#070b14" dur="6s" repeatCount="indefinite"/>
+          </stop>
+        </radialGradient>
+
+        <linearGradient id="clCyan" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#00d4ff"/>
+          <stop offset="100%" stop-color="#a855f7"/>
+        </linearGradient>
+        <linearGradient id="clGreen" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#22c55e"/>
+          <stop offset="100%" stop-color="#00d4ff"/>
+        </linearGradient>
+        <linearGradient id="clAmber" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#f59e0b"/>
+          <stop offset="100%" stop-color="#ef4444"/>
+        </linearGradient>
+        <linearGradient id="clPurple" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#a855f7"/>
+          <stop offset="100%" stop-color="#00d4ff"/>
+        </linearGradient>
+
+        <pattern id="clGrid" width="34" height="34" patternUnits="userSpaceOnUse">
+          <path d="M 34 0 L 0 0 0 34" fill="none" stroke="#1e3a5f" stroke-width="0.6"/>
+        </pattern>
+
+        <filter id="clGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3.2" result="b"/>
+          <feMerge>
+            <feMergeNode in="b"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <filter id="clGlowSoft" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="6" result="b"/>
+          <feMerge>
+            <feMergeNode in="b"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+
+        <!-- Ruta del flujo armónico (loop) -->
+        <path id="flowCurve" d="M 130 250 C 230 130, 320 130, 400 220 S 570 310, 670 210" fill="none"/>
+        <path id="flowCurve2" d="M 670 210 C 570 110, 470 110, 400 220 S 230 340, 130 250" fill="none"/>
+
+        <!-- Forma de nota musical para partículas -->
+        <g id="pNote">
+          <circle cx="0" cy="0" r="2.4" fill="#00d4ff" filter="url(#clGlow)"/>
+        </g>
+        <g id="pNotePurple">
+          <circle cx="0" cy="0" r="2" fill="#a855f7" filter="url(#clGlow)"/>
+        </g>
+        <g id="pNoteGreen">
+          <circle cx="0" cy="0" r="2.2" fill="#22c55e" filter="url(#clGlow)"/>
+        </g>
+      </defs>
+
+      <!-- Fondo -->
+      <rect width="800" height="450" fill="url(#clBg)"/>
+      <rect width="800" height="450" fill="url(#clGrid)" opacity="0.35">
+        <animate attributeName="opacity" values="0.2;0.5;0.2" dur="4.5s" repeatCount="indefinite"/>
+      </rect>
+
+      <!-- Anillos orbitales concéntricos -->
+      <g transform="translate(400 220)">
+        <circle r="185" fill="none" stroke="#00d4ff" stroke-width="0.9" stroke-dasharray="5 9" opacity="0.35">
+          <animateTransform attributeName="transform" type="rotate" from="0 400 220" to="360 400 220" dur="22s" repeatCount="indefinite"/>
+          <animate attributeName="stroke-dasharray" values="5 9;10 6;14 10;5 9" dur="8s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="152" fill="none" stroke="#a855f7" stroke-width="1" stroke-dasharray="2 7" opacity="0.3">
+          <animateTransform attributeName="transform" type="rotate" from="360 400 220" to="0 400 220" dur="16s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="122" fill="none" stroke="#22c55e" stroke-width="1" stroke-dasharray="7 11" opacity="0.28">
+          <animateTransform attributeName="transform" type="rotate" from="0 400 220" to="360 400 220" dur="13s" repeatCount="indefinite"/>
+          <animate attributeName="stroke-dasharray" values="7 11;12 8;7 11" dur="6s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+
+      <!-- Título -->
+      <text x="400" y="52" text-anchor="middle" class="svg-text" font-size="26" letter-spacing="2" filter="url(#clGlow)">
+        <tspan fill="#00d4ff">
+          CHORD LOOPER
+          <animate attributeName="fill" values="#00d4ff;#a855f7;#22c55e;#f59e0b;#00d4ff" dur="9s" repeatCount="indefinite"/>
+        </tspan>
+      </text>
+      <text x="400" y="78" text-anchor="middle" class="svg-text" font-size="12" letter-spacing="4" fill="#94a3b8" opacity="0.85">
+        YAMAHA PSR-SX920 · BUCLE ARMÓNICO
+        <animate attributeName="opacity" values="0.4;0.9;0.4" dur="3.5s" repeatCount="indefinite"/>
+      </text>
+
+      <!-- Indicador LIVE -->
+      <g transform="translate(710 30)">
+        <rect x="0" y="0" width="66" height="22" rx="11" fill="rgba(239,68,68,.15)" stroke="#ef4444" stroke-width="1"/>
+        <circle cx="12" cy="11" r="4" fill="#ef4444" filter="url(#clGlow)">
+          <animate attributeName="opacity" values="1;0.2;1" dur="1.4s" repeatCount="indefinite"/>
+        </circle>
+        <text x="24" y="15" class="svg-text" font-size="10" fill="#ef4444" letter-spacing="1.5">LIVE</text>
+      </g>
+
+      <!-- Ruta del flujo armónico (fondo punteado) -->
+      <use href="#flowCurve" stroke="#00d4ff" stroke-width="1.4" stroke-dasharray="4 6" opacity="0.45">
+        <animate attributeName="stroke-dashoffset" from="0" to="-100" dur="5s" repeatCount="indefinite"/>
+      </use>
+      <use href="#flowCurve2" stroke="#a855f7" stroke-width="1.2" stroke-dasharray="3 7" opacity="0.35">
+        <animate attributeName="stroke-dashoffset" from="0" to="-100" dur="6s" repeatCount="indefinite"/>
+      </use>
+
+      <!-- Acordes (bloques) C · Am · F · G -->
+      <g>
+        <!-- C -->
+        <g transform="translate(130 250)">
+          <circle r="36" fill="none" stroke="#00d4ff" stroke-width="1.5" opacity="0.6" filter="url(#clGlow)">
+            <animate attributeName="r" values="36;42;36" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.6;0.25;0.6" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="30" fill="#0f172a" stroke="#00d4ff" stroke-width="1.5"/>
+          <text y="-2" text-anchor="middle" class="svg-text" font-size="18" fill="#00d4ff">C</text>
+          <text y="12" text-anchor="middle" font-size="9" fill="#94a3b8" font-weight="600">I</text>
+          <animateTransform attributeName="transform" type="translate" values="130 250;130 246;130 250" dur="3.2s" repeatCount="indefinite"/>
+        </g>
+        <!-- Am -->
+        <g transform="translate(400 220)">
+          <circle r="38" fill="none" stroke="#a855f7" stroke-width="1.6" opacity="0.65" filter="url(#clGlow)">
+            <animate attributeName="r" values="38;44;38" dur="3.6s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="32" fill="#0f172a" stroke="#a855f7" stroke-width="1.6"/>
+          <text y="-2" text-anchor="middle" class="svg-text" font-size="18" fill="#a855f7">Am</text>
+          <text y="12" text-anchor="middle" font-size="9" fill="#94a3b8" font-weight="600">VI</text>
+          <animateTransform attributeName="transform" type="translate" values="400 220;400 215;400 220" dur="2.7s" repeatCount="indefinite"/>
+        </g>
+        <!-- F -->
+        <g transform="translate(670 210)">
+          <circle r="36" fill="none" stroke="#22c55e" stroke-width="1.5" opacity="0.6" filter="url(#clGlow)">
+            <animate attributeName="r" values="36;42;36" dur="3.4s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="30" fill="#0f172a" stroke="#22c55e" stroke-width="1.5"/>
+          <text y="-2" text-anchor="middle" class="svg-text" font-size="18" fill="#22c55e">F</text>
+          <text y="12" text-anchor="middle" font-size="9" fill="#94a3b8" font-weight="600">IV</text>
+          <animateTransform attributeName="transform" type="translate" values="670 210;670 205;670 210" dur="2.9s" repeatCount="indefinite"/>
+        </g>
+      </g>
+
+      <!-- Partículas viajando por las rutas -->
+      <g>
+        <use href="#pNote">
+          <animateMotion dur="5s" repeatCount="indefinite" rotate="auto">
+            <mpath href="#flowCurve"/>
+          </animateMotion>
+        </use>
+        <use href="#pNotePurple">
+          <animateMotion dur="5s" begin="1.2s" repeatCount="indefinite" rotate="auto">
+            <mpath href="#flowCurve"/>
+          </animateMotion>
+        </use>
+        <use href="#pNoteGreen">
+          <animateMotion dur="5s" begin="2.4s" repeatCount="indefinite" rotate="auto">
+            <mpath href="#flowCurve"/>
+          </animateMotion>
+        </use>
+        <use href="#pNotePurple">
+          <animateMotion dur="6s" repeatCount="indefinite" rotate="auto">
+            <mpath href="#flowCurve2"/>
+          </animateMotion>
+        </use>
+        <use href="#pNote">
+          <animateMotion dur="6s" begin="1.8s" repeatCount="indefinite" rotate="auto">
+            <mpath href="#flowCurve2"/>
+          </animateMotion>
+        </use>
+        <use href="#pNoteGreen">
+          <animateMotion dur="6s" begin="3.6s" repeatCount="indefinite" rotate="auto">
+            <mpath href="#flowCurve2"/>
+          </animateMotion>
+        </use>
+      </g>
+
+      <!-- Ghost chord (pieza fantasma que recorre el path) -->
+      <g opacity="0.55">
+        <circle r="10" fill="none" stroke="#00d4ff" stroke-width="1.4" filter="url(#clGlow)"/>
+        <animateMotion dur="5s" repeatCount="indefinite">
+          <mpath href="#flowCurve"/>
+        </animateMotion>
+        <animate attributeName="opacity" values="0.6;0.15;0.6" dur="5s" repeatCount="indefinite"/>
+      </g>
+      <g opacity="0.5">
+        <circle r="9" fill="none" stroke="#a855f7" stroke-width="1.3" filter="url(#clGlow)"/>
+        <animateMotion dur="6s" begin="2s" repeatCount="indefinite">
+          <mpath href="#flowCurve2"/>
+        </animateMotion>
+        <animate attributeName="opacity" values="0.5;0.1;0.5" dur="6s" repeatCount="indefinite"/>
+      </g>
+
+      <!-- Teclado de piano estilizado (parte inferior) -->
+      <g transform="translate(0 385)">
+        <rect x="40" y="0" width="720" height="50" rx="6" fill="#0b1220" stroke="#1e3a5f" stroke-width="1"/>
+        <g>
+          <!-- teclas blancas -->
+          <rect x="48" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#00d4ff;#e2e8f0" dur="4s" begin="0s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="84" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="120" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#a855f7;#e2e8f0" dur="4.5s" begin="1s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="156" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="192" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#22c55e;#e2e8f0" dur="4.2s" begin="2s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="228" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="264" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#00d4ff;#e2e8f0" dur="3.8s" begin="0.5s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="300" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="336" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#f59e0b;#e2e8f0" dur="4.6s" begin="1.5s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="372" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="408" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#a855f7;#e2e8f0" dur="4s" begin="2.5s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="444" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="480" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#00d4ff;#e2e8f0" dur="4.4s" begin="3s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="516" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="552" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#22c55e;#e2e8f0" dur="4.1s" begin="0.8s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="588" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="624" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#00d4ff;#e2e8f0" dur="3.9s" begin="1.7s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="660" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="696" y="5" width="28" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+        </g>
+        <!-- teclas negras -->
+        <g fill="#0a0e1a" stroke="#1e3a5f">
+          <rect x="76" y="5" width="18" height="26" rx="2"/>
+          <rect x="112" y="5" width="18" height="26" rx="2"/>
+          <rect x="184" y="5" width="18" height="26" rx="2"/>
+          <rect x="220" y="5" width="18" height="26" rx="2"/>
+          <rect x="256" y="5" width="18" height="26" rx="2"/>
+          <rect x="328" y="5" width="18" height="26" rx="2"/>
+          <rect x="364" y="5" width="18" height="26" rx="2"/>
+          <rect x="400" y="5" width="18" height="26" rx="2"/>
+          <rect x="472" y="5" width="18" height="26" rx="2"/>
+          <rect x="508" y="5" width="18" height="26" rx="2"/>
+          <rect x="544" y="5" width="18" height="26" rx="2"/>
+          <rect x="616" y="5" width="18" height="26" rx="2"/>
+          <rect x="652" y="5" width="18" height="26" rx="2"/>
+        </g>
+      </g>
+
+      <!-- Indicador de bucle (arriba izquierda) -->
+      <g transform="translate(20 28)">
+        <text class="svg-text" font-size="11" fill="#22c55e" letter-spacing="1.6" opacity="0.9">
+          LOOP ∞
+          <animate attributeName="opacity" values="0.35;1;0.35" dur="2.4s" repeatCount="indefinite"/>
+        </text>
+      </g>
+
+      <!-- Flash grande animado -->
+      <text x="400" y="360" text-anchor="middle" class="svg-text" font-size="20" letter-spacing="6" fill="#00d4ff" opacity="0">
+        <animate attributeName="opacity" values="0;1;0;0;0;0;0;0" dur="9s" repeatCount="indefinite"/>
+        <animate attributeName="fill" values="#00d4ff;#a855f7;#22c55e;#f59e0b;#00d4ff" dur="9s" repeatCount="indefinite"/>
+        ▶ BUCLE ARMÓNICO ◀
+      </text>
+
+      <!-- Firma del autor -->
+      <text x="780" y="440" text-anchor="end" font-size="9" fill="#a855f7" font-weight="600" letter-spacing="1.2" opacity="0.7">
+        Rubén Sbarsky
+        <animate attributeName="opacity" values="0.3;0.9;0.3" dur="5s" repeatCount="indefinite"/>
+      </text>
+    </svg>
+  </div>
+
+  <!-- Contenido HOME -->
+  <div class="badge">Tutorial Profesional · Yamaha PSR-SX920</div>
+  <h1 class="title">Guía Maestra del Chord Looper en el Yamaha PSR-SX920</h1>
+  <p class="subtitle">Una mano izquierda virtual que graba, repite y libera tu interpretación.</p>
+
+  <div class="description">
+    El <strong>Chord Looper</strong> (Bucle de acordes) es una de las funciones de interpretación más avanzadas del PSR-SX920. Funciona literalmente como una <strong>mano izquierda virtual</strong> que graba una secuencia armónica y la reproduce en bucle. Al liberar tu mano izquierda del acompañamiento, puedes utilizar la extensión completa del teclado para tocar la melodía a dos manos, ejecutar solos, accionar el Joystick de expresión o cambiar registros en el panel en tiempo real.
+  </div>
+
+  <div class="quote">
+    Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien.
+    <cite>— Albert Einstein (atribuida)</cite>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><span class="val">2</span><span class="lbl">Métodos grabación</span></div>
+    <div class="metric"><span class="val">8</span><span class="lbl">Casilleros memoria</span></div>
+    <div class="metric"><span class="val">.clb</span><span class="lbl">Formato banco</span></div>
+    <div class="metric"><span class="val">4</span><span class="lbl">Compases ejemplo</span></div>
+    <div class="metric"><span class="val">85</span><span class="lbl">BPM ejercicio</span></div>
+    <div class="metric"><span class="val">2</span><span class="lbl">Manos libres</span></div>
+  </div>
+
+  <div class="meta-line">
+    <span><strong>Autor:</strong> Rubén Sbarsky</span>
+    <span class="sep">·</span>
+    <span><strong>Fecha:</strong> 20/09/2026</span>
+    <span class="sep">·</span>
+    <span><strong>Hora:</strong> 03:59:16</span>
+    <span class="sep">·</span>
+    <span><strong>Nivel:</strong> Intermedio</span>
+  </div>
+
+  <div class="callout info">
+    <strong>Navega por el tutorial:</strong> usa la barra superior para acceder a las secciones <em>Funcionamiento</em>, <em>Grabación</em>, <em>Almacenamiento</em>, <em>En Vivo</em>, <em>Ejercicio</em>, <em>Fuentes</em> y <em>Créditos</em>.
+  </div>
+
+</section>
+
+<!-- ==================== FUNCIONAMIENTO ==================== -->
+<section class="section" id="funcionamiento">
+  <div class="section-header">
+    <div class="section-icon">⚙️</div>
+    <div>
+      <h2>1. ¿Cómo funciona la liberación del teclado?</h2>
+      <p>El núcleo conceptual del Chord Looper</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Comportamiento del sistema durante el bucle</h3>
+    <p>Cuando el bucle de acordes entra en reproducción activa, el botón de acompañamiento <span class="chip">[ACMP]</span> comienza a parpadear y el área de reconocimiento de acordes del teclado se inhabilita.</p>
+    <p>Esto significa que <strong>todas las teclas del piano (de grave a agudo) quedan disponibles</strong> para tocar libremente cualquier nota sin alterar la progresión de acordes que el teclado sigue ejecutando automáticamente.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>🔒 Antes del bucle</h3>
+      <p>La mano izquierda está <strong>comprometida</strong> con el reconocimiento de acordes. Cualquier nota que toques en el sector izquierdo modifica la armonía que reproduce el estilo.</p>
+    </div>
+    <div class="card">
+      <h3>🔓 Con el bucle activo</h3>
+      <p>La mano izquierda queda <strong>liberada</strong>. El Chord Looper alimenta la armonía al estilo automáticamente. Puedes tocar libremente en todo el teclado.</p>
+    </div>
+  </div>
+
+  <div class="callout warning">
+    <strong>Importante:</strong> el parpadeo de <span class="chip amber">[ACMP]</span> es la señal visual que confirma que la liberación del teclado está activa.
+  </div>
+</section>
+
+<!-- ==================== GRABACIÓN ==================== -->
+<section class="section" id="grabacion">
+  <div class="section-header">
+    <div class="section-icon">🎙️</div>
+    <div>
+      <h2>2. Métodos de Grabación Paso a Paso</h2>
+      <p>Dos alternativas según prefieras grabar en vivo o con la base detenida</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="num">A</span> Grabación en Directo (Con el Estilo sonando)</h3>
+    <div class="steps">
+      <div class="step"><div class="step-body">Inicia la reproducción de tu <strong>Estilo (Style)</strong> preferido.</div></div>
+      <div class="step"><div class="step-body">Presiona el botón <span class="chip">CHORD LOOPER [REC/STOP]</span> en el panel. El botón parpadeará indicando modo de espera y la función <span class="chip amber">[ACMP]</span> se activará automáticamente si estaba apagada.</div></div>
+      <div class="step"><div class="step-body">En el primer tiempo del siguiente compás, el botón <span class="chip">[REC/STOP]</span> se quedará encendido de forma fija y la grabación comenzará.</div></div>
+      <div class="step"><div class="step-body">Ejecuta la secuencia de acordes con tu mano izquierda siguiendo el ritmo.</div></div>
+      <div class="step"><div class="step-body">
+        <strong>Para finalizar la grabación:</strong>
+        <ul style="margin-top:8px;padding-left:20px;color:#cbd5e1;">
+          <li><strong>Paso directo al bucle:</strong> presiona <span class="chip green">CHORD LOOPER [ON/OFF]</span>. El botón parpadeará en verde y, en el primer tiempo del siguiente compás, se iluminará en color naranja indicando que la secuencia está sonando en bucle continuo.</li>
+          <li style="margin-top:6px;"><strong>Solo guardar sin reproducir de inmediato:</strong> presiona <span class="chip">[REC/STOP]</span> o <span class="chip">STYLE CONTROL [START/STOP]</span>.</li>
+        </ul>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="num">B</span> Grabación con Estilo Detenido (Usando Sync Start)</h3>
+    <div class="steps">
+      <div class="step"><div class="step-body">Con el estilo detenido, presiona el botón <span class="chip">CHORD LOOPER [REC/STOP]</span>.</div></div>
+      <div class="step"><div class="step-body">El botón <span class="chip">[REC/STOP]</span> parpadeará y la función <span class="chip">STYLE CONTROL [SYNC START]</span> se encenderá automáticamente.</div></div>
+      <div class="step"><div class="step-body">En el instante en que ejecutes el primer acorde con tu mano izquierda, el estilo y la grabación del bucle comenzarán exactamente en el primer tiempo del compás.</div></div>
+      <div class="step"><div class="step-body">Al terminar de tocar la progresión, presiona <span class="chip">STYLE CONTROL [START/STOP]</span>. La grabación se detendrá y el botón <span class="chip">CHORD LOOPER [ON/OFF]</span> se iluminará en azul, confirmando que la secuencia está guardada en la memoria temporal.</div></div>
+    </div>
+  </div>
+
+  <div class="callout example">
+    <strong>Consejo didáctico:</strong> el Método B (Sync Start) es el más cómodo para grabar progresiones completas, porque garantiza que el primer acorde coincide exactamente con el tiempo 1 del compás 1.
+  </div>
+</section>
+
+<!-- ==================== ALMACENAMIENTO ==================== -->
+<section class="section" id="almacenamiento">
+  <div class="section-header">
+    <div class="section-icon">💾</div>
+    <div>
+      <h2>3. Memorización y Almacenamiento en Bancos (.CLB)</h2>
+      <p>Organiza tus canciones y no pierdas la información</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Procedimiento completo</h3>
+    <div class="steps">
+      <div class="step"><div class="step-body"><strong>Abrir la pantalla de control:</strong> presiona <span class="chip">[MENU]</span> → <span class="chip">[Chord Looper]</span> en la pantalla táctil.</div></div>
+      <div class="step"><div class="step-body"><strong>Memorizar en un casillero (1 al 8):</strong> toca la opción <span class="chip">[Memory]</span> en pantalla y luego presiona una de las casillas numeradas (del <strong>1</strong> al <strong>8</strong>) para asignar la secuencia que acabas de grabar.</div></div>
+      <div class="step"><div class="step-body">
+        <strong>Guardar el Banco completo (*.clb):</strong> toca el icono de disco <span class="chip green">[Save]</span> en la parte superior de la pantalla. Esto guardará las 8 memorias en un único archivo de <strong>Banco de Chord Looper (*.clb)</strong> en la memoria interna o en tu pendrive USB.
+      </div></div>
+    </div>
+  </div>
+
+  <div class="callout danger">
+    <strong>Nota importante:</strong> si apagas el teclado o cambias de banco sin haber guardado el archivo <span class="chip red">.clb</span>, la memoria temporal se borrará.
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Elemento</th><th>Función</th><th>Persistencia</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Memoria temporal</strong></td><td>Guarda la secuencia grabada mientras el equipo está encendido</td><td>Se pierde al apagar</td></tr>
+        <tr><td><strong>Casilleros 1–8</strong></td><td>Asignación de secuencias dentro del banco actual</td><td>Se pierde si no se guarda</td></tr>
+        <tr><td><strong>Archivo .clb</strong></td><td>Banco completo con las 8 memorias</td><td>Persistente en USB / memoria interna</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== EN VIVO ==================== -->
+<section class="section" id="envivo">
+  <div class="section-header">
+    <div class="section-icon">🎭</div>
+    <div>
+      <h2>4. Control e Interpretación en Vivo</h2>
+      <p>Comportamiento del Chord Looper durante la ejecución</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Entrada precisa del bucle</h3>
+    <p>Al presionar <span class="chip">[ON/OFF]</span> durante la ejecución, el botón parpadea en verde y espera el cambio de compás para activarse en naranja y comenzar a repetir la secuencia de forma perfecta.</p>
+  </div>
+
+  <div class="card">
+    <h3>Transiciones entre partes (Estrofa / Coro)</h3>
+    <p>Si tienes una progresión en la casilla <strong>1</strong> (Estrofa) y otra en la casilla <strong>2</strong> (Coro), simplemente toca el número <strong>2</strong> en la pantalla táctil. El PSR-SX920 realizará el cambio de acordes en el <strong>primer tiempo del siguiente compás</strong> sin perder la sincronía rítmica.</p>
+  </div>
+
+  <div class="card">
+    <h3>Reactivar control manual</h3>
+    <p>Presiona <span class="chip">[ON/OFF]</span> para desactivar el bucle; el estilo volverá a obedecer los acordes de tu mano izquierda al instante.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Color del botón [ON/OFF]</th><th>Estado</th><th>Significado</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Verde parpadeante</strong></td><td>Armado</td><td>Esperando el cambio de compás para activar el bucle</td></tr>
+        <tr><td><strong>Naranja fijo</strong></td><td>Bucle activo</td><td>Secuencia sonando en repetición continua</td></tr>
+        <tr><td><strong>Azul fijo</strong></td><td>Guardado</td><td>Secuencia almacenada en memoria temporal</td></tr>
+        <tr><td><strong>Apagado</strong></td><td>Inactivo</td><td>Control manual del estilo restaurado</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== EJERCICIO ==================== -->
+<section class="section" id="ejercicio">
+  <div class="section-header">
+    <div class="section-icon">🎼</div>
+    <div>
+      <h2>5. Ejercicio Práctico Paso a Paso en el PSR-SX920</h2>
+      <p>Progresión clásica en tonalidad de C(I) mayor</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Fase 1 — Preparación del Teclado</h3>
+    <div class="steps">
+      <div class="step"><div class="step-body">Selecciona un estilo Pop o Ballad de tu preferencia (ejemplo: <em>Pop Rock</em> o <em>8Beat</em>).</div></div>
+      <div class="step"><div class="step-body">Ajusta el tempo a <strong>85 BPM</strong> utilizando los botones <span class="chip">TEMPO [−]/[+]</span>.</div></div>
+      <div class="step"><div class="step-body">Asegúrate de que la voz principal de tu mano derecha sea un piano acústico o eléctrico.</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Fase 2 — Grabación de la Progresión (4 Compases)</h3>
+    <p>Secuencia de 4 compases a trabajar:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Compás</th><th>Acorde</th><th>Grado</th><th>Notas del acorde</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>1</strong></td><td>C mayor</td><td><span class="chip">I</span></td><td>C(I) · E(III) · G(V)</td></tr>
+          <tr><td><strong>2</strong></td><td>A menor</td><td><span class="chip">VI</span></td><td>A(VI) · C(I) · E(III)</td></tr>
+          <tr><td><strong>3</strong></td><td>F mayor</td><td><span class="chip">IV</span></td><td>F(IV) · A(VI) · C(I)</td></tr>
+          <tr><td><strong>4</strong></td><td>G mayor</td><td><span class="chip">V</span></td><td>G(V) · B(VII) · D(II)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="margin-top:14px;"><strong>Pasos para grabar:</strong></p>
+    <div class="steps">
+      <div class="step"><div class="step-body">Con el estilo detenido, presiona <span class="chip">CHORD LOOPER [REC/STOP]</span>. (Parpadea el botón y se enciende Sync Start).</div></div>
+      <div class="step"><div class="step-body">Toca el acorde de <strong>C(I)</strong> en el sector izquierdo para arrancar el compás 1.</div></div>
+      <div class="step"><div class="step-body">
+        Mantén cada acorde durante <strong>4 tiempos completos</strong>:
+        <ul style="margin-top:8px;padding-left:20px;color:#cbd5e1;">
+          <li>Compás 1: toca <strong>C(I)</strong> (cuentas 1, 2, 3, 4).</li>
+          <li>Compás 2: cambia a <strong>A(VI)</strong> menor (cuentas 1, 2, 3, 4).</li>
+          <li>Compás 3: cambia a <strong>F(IV)</strong> mayor (cuentas 1, 2, 3, 4).</li>
+          <li>Compás 4: cambia a <strong>G(V)</strong> mayor (cuentas 1, 2, 3, 4).</li>
+        </ul>
+      </div></div>
+      <div class="step"><div class="step-body">Justo en el primer tiempo del compás 5, presiona <span class="chip">STYLE CONTROL [START/STOP]</span>. (La grabación se detiene y <span class="chip">[ON/OFF]</span> queda encendido en azul).</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Fase 3 — Asignación a la Memoria 1</h3>
+    <div class="steps">
+      <div class="step"><div class="step-body">Toca <span class="chip">[MENU]</span> → <span class="chip">[Chord Looper]</span>.</div></div>
+      <div class="step"><div class="step-body">Presiona la casilla <span class="chip">[Memory]</span> en pantalla y presiona el casillero <strong>1</strong>. Verás aparecer los acordes grabados en esa posición.</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Fase 4 — Ejecución a Dos Manos e Improvisación</h3>
+    <div class="steps">
+      <div class="step"><div class="step-body">Con el estilo sonando, presiona <span class="chip green">CHORD LOOPER [ON/OFF]</span> para iniciar la reproducción automática de tu secuencia. (Observa cómo parpadea la luz de <span class="chip amber">[ACMP]</span>).</div></div>
+      <div class="step"><div class="step-body">Como el teclado ahora controla los acordes automáticamente, usa la escala de <strong>C(I) mayor</strong> en tu mano derecha e izquierda a lo largo de todo el teclado para tocar melodías.</div></div>
+      <div class="step"><div class="step-body">Prueba hacer adornos en la zona grave con la mano izquierda (donde normalmente tocarías acordes) y nota cómo no afecta en absoluto al acompañamiento.</div></div>
+    </div>
+
+    <p style="margin-top:16px;"><strong>Escala de C(I) mayor — sistema americano:</strong></p>
+    <div class="scale-box">
+      <div class="note">C<sub style="font-size:.65rem;color:#94a3b8;">I</sub></div>
+      <span class="arrow">→</span>
+      <div class="note">D<sub style="font-size:.65rem;color:#94a3b8;">II</sub></div>
+      <span class="arrow">→</span>
+      <div class="note">E<sub style="font-size:.65rem;color:#94a3b8;">III</sub></div>
+      <span class="arrow">→</span>
+      <div class="note">F<sub style="font-size:.65rem;color:#94a3b8;">IV</sub></div>
+      <span class="arrow">→</span>
+      <div class="note">G<sub style="font-size:.65rem;color:#94a3b8;">V</sub></div>
+      <span class="arrow">→</span>
+      <div class="note">A<sub style="font-size:.65rem;color:#94a3b8;">VI</sub></div>
+      <span class="arrow">→</span>
+      <div class="note">B<sub style="font-size:.65rem;color:#94a3b8;">VII</sub></div>
+    </div>
+  </div>
+
+  <div class="callout example">
+    <strong>Progresión completa resumida:</strong>
+    <span class="notation">C(I)</span> <span class="notation">A(VI)</span> <span class="notation">F(IV)</span> <span class="notation">G(V)</span>
+  </div>
+
+  <div class="callout info">
+    <strong>FIN DEL EJERCICIO:</strong> al terminar, guarda tu banco <span class="chip green">.clb</span> para no perder el trabajo realizado.
+  </div>
+</section>
+
+<!-- ==================== FUENTES ==================== -->
+<section class="section" id="fuentes">
+  <div class="section-header">
+    <div class="section-icon">📚</div>
+    <div>
+      <h2>Fuentes y Referencias</h2>
+      <p>Material documental de apoyo sobre el Chord Looper y el PSR-SX920</p>
+    </div>
+  </div>
+
+  <div class="source-item">
+    <h4>Manual de referencia del Yamaha PSR-SX920</h4>
+    <div class="src-link">Yamaha Corporation — Reference Manual PSR-SX920</div>
+    <p>Documentación oficial del fabricante sobre Chord Looper, estilos, bancos de registros y funciones de interpretación en vivo.</p>
+  </div>
+
+  <div class="source-item">
+    <h4>Contenido base del tutorial</h4>
+    <div class="src-link">Guía Maestra del Chord Looper en el Yamaha PSR-SX920 — by Rubén Sbarsky</div>
+    <p>Documento de origen que sirvió como contenido íntegro de este tutorial. Toda la información técnica, procedimientos, ejemplos, colores de botones y ejercicio práctico provienen de este material.</p>
+  </div>
+
+  <div class="callout info">
+    <strong>Nota:</strong> este tutorial no incorpora fuentes externas consultadas en Internet. Todo el contenido técnico deriva exclusivamente del material documental proporcionado por el autor.
+  </div>
+</section>
+
+<!-- ==================== CRÉDITOS ==================== -->
+<section class="section" id="creditos">
+  <div class="section-header">
+    <div class="section-icon">👨‍💻</div>
+    <div>
+      <h2>Créditos</h2>
+      <p>Información de autoría y datos del tutorial</p>
+    </div>
+  </div>
+
+  <!-- Mismo SVG animado que HOME -->
+  <div class="hero-svg-wrap">
+    <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" id="creditsSVG">
+      <use href="#heroSVGContent" />
+    </svg>
+  </div>
+
+  <div class="credits-card">
+    <div class="badge" style="margin-bottom:14px;">Tutorial Educativo</div>
+    <h3 style="color:var(--accent);font-size:1.1rem;margin-bottom:6px;">Guía Maestra del Chord Looper</h3>
+    <p style="color:var(--muted);font-size:.85rem;">Yamaha PSR-SX920</p>
+
+    <div class="credits-name">Rubén Sbarsky</div>
+    <p style="color:var(--muted);font-size:.85rem;">Autor y desarrollador del contenido</p>
+
+    <div class="credits-info">
+      <div class="info-box"><strong>Fecha:</strong> 20/09/2026</div>
+      <div class="info-box"><strong>Hora:</strong> 03:59:16</div>
+      <div class="info-box"><strong>Tema:</strong> Chord Looper · PSR-SX920</div>
+    </div>
+
+    <p style="color:#cbd5e1;font-size:.9rem;max-width:620px;margin:0 auto;">
+      Este tutorial ha sido elaborado exclusivamente con fines educativos y de divulgación, con el objetivo de facilitar el aprendizaje progresivo del Chord Looper en el Yamaha PSR-SX920.
+    </p>
+
+    <div class="latin">Fiat iustitia, ruat caelum.</div>
+  </div>
+</section>
+
+</main>
+
+<button id="backTop" aria-label="Volver arriba">↑</button>
+
+<footer>
+  <div class="foot-line">📚 Tutorial solo con fines Educativos y Divulgación</div>
+  <div class="foot-line">👨‍💻 Créditos: Rubén Sbarsky</div>
+  <div class="foot-line">📅 FECHA: 20/09/2026 &nbsp;·&nbsp; Hora: 03:59:16</div>
+  <div class="foot-line latin-foot">Fiat iustitia, ruat caelum.</div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ================== SPA NAV ================== */
+  var navButtons = document.querySelectorAll('.nav-btn');
+  var sections = document.querySelectorAll('.section');
+  var navScroll = document.getElementById('navScroll');
+
+  function showSection(id){
+    sections.forEach(function(s){
+      s.classList.toggle('active', s.id === id);
+    });
+    navButtons.forEach(function(b){
+      var on = b.dataset.sec === id;
+      b.classList.toggle('active', on);
+      if(on && navScroll){
+        var r = b.getBoundingClientRect();
+        var p = navScroll.getBoundingClientRect();
+        if(r.left < p.left || r.right > p.right){
+          navScroll.scrollLeft += (r.left - p.left) - 20;
+        }
+      }
+    });
+    window.scrollTo({top:0, behavior:'smooth'});
+
+    /* Reiniciar animación del SVG de créditos */
+    if(id === 'creditos'){
+      var cs = document.getElementById('creditsSVG');
+      if(cs){
+        try{
+          cs.setCurrentTime(0);
+        }catch(e){ /* noop */ }
+      }
+    }
+  }
+
+  navButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      showSection(btn.dataset.sec);
+    });
+  });
+
+  /* ================== PROGRESS BAR ================== */
+  var bar = document.getElementById('progressBar');
+  function updateProgress(){
+    var h = document.documentElement;
+    var st = h.scrollTop || document.body.scrollTop;
+    var sh = (h.scrollHeight || document.body.scrollHeight) - h.clientHeight;
+    var pct = sh > 0 ? (st / sh) * 100 : 0;
+    bar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+
+  /* ================== BACK TO TOP ================== */
+  var backTop = document.getElementById('backTop');
+  window.addEventListener('scroll', function(){
+    if(window.scrollY > 300){
+      backTop.classList.add('show');
+    }else{
+      backTop.classList.remove('show');
+    }
+  }, {passive:true});
+  backTop.addEventListener('click', function(){
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  /* ================== ACCORDION (por si se añade) ================== */
+  document.querySelectorAll('.acc-head').forEach(function(h){
+    h.addEventListener('click', function(){
+      var acc = h.parentElement;
+      acc.classList.toggle('open');
+    });
+  });
+
+})();
+</script>
+
+<!-- ============ SVG defs reutilizables para CRÉDITOS ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="clBg2" cx="50%" cy="45%" r="80%">
+      <stop offset="0%" stop-color="#0f172a">
+        <animate attributeName="stop-color" values="#0f172a;#122a45;#1a1a45;#0f172a" dur="9s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#070b14">
+        <animate attributeName="stop-color" values="#070b14;#0a0e1a;#070b14" dur="6s" repeatCount="indefinite"/>
+      </stop>
+    </radialGradient>
+    <pattern id="clGrid2" width="34" height="34" patternUnits="userSpaceOnUse">
+      <path d="M 34 0 L 0 0 0 34" fill="none" stroke="#1e3a5f" stroke-width="0.6"/>
+    </pattern>
+    <filter id="clGlow2" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3.2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <path id="flowCurveB" d="M 130 250 C 230 130, 320 130, 400 220 S 570 310, 670 210" fill="none"/>
+    <path id="flowCurve2B" d="M 670 210 C 570 110, 470 110, 400 220 S 230 340, 130 250" fill="none"/>
+    <g id="pNoteB"><circle r="2.4" fill="#00d4ff" filter="url(#clGlow2)"/></g>
+    <g id="pNotePurpleB"><circle r="2" fill="#a855f7" filter="url(#clGlow2)"/></g>
+    <g id="pNoteGreenB"><circle r="2.2" fill="#22c55e" filter="url(#clGlow2)"/></g>
+
+    <g id="heroSVGContent">
+      <rect width="800" height="450" fill="url(#clBg2)"/>
+      <rect width="800" height="450" fill="url(#clGrid2)" opacity="0.35">
+        <animate attributeName="opacity" values="0.2;0.5;0.2" dur="4.5s" repeatCount="indefinite"/>
+      </rect>
+
+      <g transform="translate(400 220)">
+        <circle r="185" fill="none" stroke="#00d4ff" stroke-width="0.9" stroke-dasharray="5 9" opacity="0.35">
+          <animateTransform attributeName="transform" type="rotate" from="0 400 220" to="360 400 220" dur="22s" repeatCount="indefinite"/>
+          <animate attributeName="stroke-dasharray" values="5 9;10 6;14 10;5 9" dur="8s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="152" fill="none" stroke="#a855f7" stroke-width="1" stroke-dasharray="2 7" opacity="0.3">
+          <animateTransform attributeName="transform" type="rotate" from="360 400 220" to="0 400 220" dur="16s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="122" fill="none" stroke="#22c55e" stroke-width="1" stroke-dasharray="7 11" opacity="0.28">
+          <animateTransform attributeName="transform" type="rotate" from="0 400 220" to="360 400 220" dur="13s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+
+      <text x="400" y="52" text-anchor="middle" class="svg-text" font-size="26" letter-spacing="2" filter="url(#clGlow2)">
+        <tspan fill="#00d4ff">
+          CHORD LOOPER
+          <animate attributeName="fill" values="#00d4ff;#a855f7;#22c55e;#f59e0b;#00d4ff" dur="9s" repeatCount="indefinite"/>
+        </tspan>
+      </text>
+      <text x="400" y="78" text-anchor="middle" class="svg-text" font-size="12" letter-spacing="4" fill="#94a3b8" opacity="0.85">
+        YAMAHA PSR-SX920 · BUCLE ARMÓNICO
+        <animate attributeName="opacity" values="0.4;0.9;0.4" dur="3.5s" repeatCount="indefinite"/>
+      </text>
+
+      <g transform="translate(710 30)">
+        <rect x="0" y="0" width="66" height="22" rx="11" fill="rgba(239,68,68,.15)" stroke="#ef4444" stroke-width="1"/>
+        <circle cx="12" cy="11" r="4" fill="#ef4444" filter="url(#clGlow2)">
+          <animate attributeName="opacity" values="1;0.2;1" dur="1.4s" repeatCount="indefinite"/>
+        </circle>
+        <text x="24" y="15" class="svg-text" font-size="10" fill="#ef4444" letter-spacing="1.5">LIVE</text>
+      </g>
+
+      <use href="#flowCurveB" stroke="#00d4ff" stroke-width="1.4" stroke-dasharray="4 6" opacity="0.45">
+        <animate attributeName="stroke-dashoffset" from="0" to="-100" dur="5s" repeatCount="indefinite"/>
+      </use>
+      <use href="#flowCurve2B" stroke="#a855f7" stroke-width="1.2" stroke-dasharray="3 7" opacity="0.35">
+        <animate attributeName="stroke-dashoffset" from="0" to="-100" dur="6s" repeatCount="indefinite"/>
+      </use>
+
+      <g>
+        <g transform="translate(130 250)">
+          <circle r="36" fill="none" stroke="#00d4ff" stroke-width="1.5" opacity="0.6" filter="url(#clGlow2)">
+            <animate attributeName="r" values="36;42;36" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="30" fill="#0f172a" stroke="#00d4ff" stroke-width="1.5"/>
+          <text y="-2" text-anchor="middle" class="svg-text" font-size="18" fill="#00d4ff">C</text>
+          <text y="12" text-anchor="middle" font-size="9" fill="#94a3b8" font-weight="600">I</text>
+          <animateTransform attributeName="transform" type="translate" values="130 250;130 246;130 250" dur="3.2s" repeatCount="indefinite"/>
+        </g>
+        <g transform="translate(400 220)">
+          <circle r="38" fill="none" stroke="#a855f7" stroke-width="1.6" opacity="0.65" filter="url(#clGlow2)">
+            <animate attributeName="r" values="38;44;38" dur="3.6s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="32" fill="#0f172a" stroke="#a855f7" stroke-width="1.6"/>
+          <text y="-2" text-anchor="middle" class="svg-text" font-size="18" fill="#a855f7">Am</text>
+          <text y="12" text-anchor="middle" font-size="9" fill="#94a3b8" font-weight="600">VI</text>
+          <animateTransform attributeName="transform" type="translate" values="400 220;400 215;400 220" dur="2.7s" repeatCount="indefinite"/>
+        </g>
+        <g transform="translate(670 210)">
+          <circle r="36" fill="none" stroke="#22c55e" stroke-width="1.5" opacity="0.6" filter="url(#clGlow2)">
+            <animate attributeName="r" values="36;42;36" dur="3.4s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="30" fill="#0f172a" stroke="#22c55e" stroke-width="1.5"/>
+          <text y="-2" text-anchor="middle" class="svg-text" font-size="18" fill="#22c55e">F</text>
+          <text y="12" text-anchor="middle" font-size="9" fill="#94a3b8" font-weight="600">IV</text>
+          <animateTransform attributeName="transform" type="translate" values="670 210;670 205;670 210" dur="2.9s" repeatCount="indefinite"/>
+        </g>
+      </g>
+
+      <g>
+        <use href="#pNoteB"><animateMotion dur="5s" repeatCount="indefinite" rotate="auto"><mpath href="#flowCurveB"/></animateMotion></use>
+        <use href="#pNotePurpleB"><animateMotion dur="5s" begin="1.2s" repeatCount="indefinite" rotate="auto"><mpath href="#flowCurveB"/></animateMotion></use>
+        <use href="#pNoteGreenB"><animateMotion dur="5s" begin="2.4s" repeatCount="indefinite" rotate="auto"><mpath href="#flowCurveB"/></animateMotion></use>
+        <use href="#pNotePurpleB"><animateMotion dur="6s" repeatCount="indefinite" rotate="auto"><mpath href="#flowCurve2B"/></animateMotion></use>
+        <use href="#pNoteB"><animateMotion dur="6s" begin="1.8s" repeatCount="indefinite" rotate="auto"><mpath href="#flowCurve2B"/></animateMotion></use>
+        <use href="#pNoteGreenB"><animateMotion dur="6s" begin="3.6s" repeatCount="indefinite" rotate="auto"><mpath href="#flowCurve2B"/></animateMotion></use>
+      </g>
+
+      <g opacity="0.55">
+        <circle r="10" fill="none" stroke="#00d4ff" stroke-width="1.4" filter="url(#clGlow2)"/>
+        <animateMotion dur="5s" repeatCount="indefinite"><mpath href="#flowCurveB"/></animateMotion>
+        <animate attributeName="opacity" values="0.6;0.15;0.6" dur="5s" repeatCount="indefinite"/>
+      </g>
+      <g opacity="0.5">
+        <circle r="9" fill="none" stroke="#a855f7" stroke-width="1.3" filter="url(#clGlow2)"/>
+        <animateMotion dur="6s" begin="2s" repeatCount="indefinite"><mpath href="#flowCurve2B"/></animateMotion>
+        <animate attributeName="opacity" values="0.5;0.1;0.5" dur="6s" repeatCount="indefinite"/>
+      </g>
+
+      <g transform="translate(0 385)">
+        <rect x="40" y="0" width="720" height="50" rx="6" fill="#0b1220" stroke="#1e3a5f" stroke-width="1"/>
+        <g>
+          <rect x="48" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#00d4ff;#e2e8f0" dur="4s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="84" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="120" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#a855f7;#e2e8f0" dur="4.5s" begin="1s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="156" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="192" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#22c55e;#e2e8f0" dur="4.2s" begin="2s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="228" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="264" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#00d4ff;#e2e8f0" dur="3.8s" begin="0.5s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="300" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="336" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#f59e0b;#e2e8f0" dur="4.6s" begin="1.5s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="372" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="408" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#a855f7;#e2e8f0" dur="4s" begin="2.5s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="444" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="480" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#00d4ff;#e2e8f0" dur="4.4s" begin="3s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="516" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="552" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#22c55e;#e2e8f0" dur="4.1s" begin="0.8s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="588" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="624" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f">
+            <animate attributeName="fill" values="#e2e8f0;#00d4ff;#e2e8f0" dur="3.9s" begin="1.7s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="660" y="5" width="34" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+          <rect x="696" y="5" width="28" height="40" rx="3" fill="#e2e8f0" stroke="#1e3a5f"/>
+        </g>
+        <g fill="#0a0e1a" stroke="#1e3a5f">
+          <rect x="76" y="5" width="18" height="26" rx="2"/>
+          <rect x="112" y="5" width="18" height="26" rx="2"/>
+          <rect x="184" y="5" width="18" height="26" rx="2"/>
+          <rect x="220" y="5" width="18" height="26" rx="2"/>
+          <rect x="256" y="5" width="18" height="26" rx="2"/>
+          <rect x="328" y="5" width="18" height="26" rx="2"/>
+          <rect x="364" y="5" width="18" height="26" rx="2"/>
+          <rect x="400" y="5" width="18" height="26" rx="2"/>
+          <rect x="472" y="5" width="18" height="26" rx="2"/>
+          <rect x="508" y="5" width="18" height="26" rx="2"/>
+          <rect x="544" y="5" width="18" height="26" rx="2"/>
+          <rect x="616" y="5" width="18" height="26" rx="2"/>
+          <rect x="652" y="5" width="18" height="26" rx="2"/>
+        </g>
+      </g>
+
+      <g transform="translate(20 28)">
+        <text class="svg-text" font-size="11" fill="#22c55e" letter-spacing="1.6" opacity="0.9">
+          LOOP ∞
+          <animate attributeName="opacity" values="0.35;1;0.35" dur="2.4s" repeatCount="indefinite"/>
+        </text>
+      </g>
+
+      <text x="400" y="360" text-anchor="middle" class="svg-text" font-size="20" letter-spacing="6" fill="#00d4ff" opacity="0">
+        <animate attributeName="opacity" values="0;1;0;0;0;0;0;0" dur="9s" repeatCount="indefinite"/>
+        <animate attributeName="fill" values="#00d4ff;#a855f7;#22c55e;#f59e0b;#00d4ff" dur="9s" repeatCount="indefinite"/>
+        ▶ BUCLE ARMÓNICO ◀
+      </text>
+
+      <text x="780" y="440" text-anchor="end" font-size="9" fill="#a855f7" font-weight="600" letter-spacing="1.2" opacity="0.7">
+        Rubén Sbarsky
+        <animate attributeName="opacity" values="0.3;0.9;0.3" dur="5s" repeatCount="indefinite"/>
+      </text>
+    </g>
+  </defs>
+</svg>
+
+</body>
+</html>
