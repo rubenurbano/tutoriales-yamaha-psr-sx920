@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subir al máximo el EQ — Yamaha PSR-SX920 | Tutorial</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0a0e1a;
+    --card:#0f172a;
+    --border:#1e3a5f;
+    --accent:#00d4ff;
+    --green:#22c55e;
+    --amber:#f59e0b;
+    --red:#ef4444;
+    --purple:#a855f7;
+    --text:#e2e8f0;
+    --muted:#94a3b8;
+  }
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    line-height:1.65;
+    padding-top:94px;
+    overflow-x:hidden;
+    -webkit-text-size-adjust:100%;
+  }
+  /* ---------- PROGRESS BAR ---------- */
+  .progress-wrap{
+    position:fixed;top:0;left:0;right:0;height:4px;
+    background:rgba(30,58,95,.4);z-index:1200;
+  }
+  .progress-bar{
+    height:100%;width:0%;
+    background:linear-gradient(90deg,var(--accent),var(--purple),var(--green));
+    transition:width .12s linear;
+    box-shadow:0 0 12px rgba(0,212,255,.7);
+  }
+  /* ---------- NAVBAR ---------- */
+  .navbar{
+    position:fixed;top:4px;left:0;right:0;z-index:1100;
+    background:rgba(10,14,26,.94);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner{
+    max-width:1240px;margin:0 auto;
+    display:flex;align-items:center;gap:14px;
+    padding:10px 14px;
+  }
+  .nav-brand{
+    font-weight:800;font-size:.95rem;letter-spacing:.14em;
+    color:var(--accent);white-space:nowrap;
+    text-shadow:0 0 14px rgba(0,212,255,.5);
+    flex:0 0 auto;
+  }
+  .nav-links{
+    display:flex;gap:6px;overflow-x:auto;
+    scrollbar-width:thin;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:3px;
+    flex:1 1 auto;
+  }
+  .nav-links::-webkit-scrollbar{height:5px}
+  .nav-links::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+  .nav-btn{
+    flex:0 0 auto;
+    background:transparent;color:var(--muted);
+    border:1px solid transparent;border-radius:9px;
+    padding:8px 14px;font-size:.78rem;font-weight:700;
+    letter-spacing:.09em;cursor:pointer;
+    font-family:inherit;white-space:nowrap;
+    transition:all .22s ease;
+  }
+  .nav-btn:hover{color:var(--text);border-color:var(--border);background:rgba(0,212,255,.07)}
+  .nav-btn.active{
+    color:#04121c;background:linear-gradient(135deg,var(--accent),#4ad9ff);
+    border-color:var(--accent);
+    box-shadow:0 0 18px rgba(0,212,255,.5);
+  }
+  /* ---------- LAYOUT ---------- */
+  main{max-width:1240px;margin:0 auto;padding:20px 14px 40px}
+  .section{display:none;animation:fadeIn .45s ease}
+  .section.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  /* ---------- SVG SLOT ---------- */
+  .svg-slot{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:hidden;
+    background:#070b14;
+    box-shadow:0 0 0 1px rgba(0,212,255,.09), 0 14px 48px rgba(0,0,0,.65);
+    margin-bottom:26px;
+  }
+  .svg-slot svg{display:block;width:100%;height:auto;aspect-ratio:16/9}
+  /* ---------- HERO ---------- */
+  .badge{
+    display:inline-block;
+    background:rgba(0,212,255,.1);
+    border:1px solid rgba(0,212,255,.45);
+    color:var(--accent);
+    border-radius:999px;
+    padding:6px 16px;
+    font-size:.72rem;font-weight:800;letter-spacing:.16em;
+    margin-bottom:16px;
+  }
+  h1{
+    font-size:clamp(1.7rem,4.6vw,2.9rem);
+    line-height:1.15;
+    font-weight:800;
+    letter-spacing:-.02em;
+    margin-bottom:12px;
+    background:linear-gradient(120deg,#ffffff,#00d4ff 45%,#a855f7);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .subtitle{
+    font-size:clamp(.95rem,2.3vw,1.15rem);
+    color:var(--accent);font-weight:600;margin-bottom:16px;
+  }
+  .lead{color:var(--muted);max-width:900px;margin-bottom:22px;font-size:1rem}
+  .quote{
+    border-left:4px solid var(--purple);
+    background:linear-gradient(90deg,rgba(168,85,247,.12),transparent);
+    padding:16px 20px;border-radius:0 12px 12px 0;
+    font-style:italic;color:#cbd5e1;
+    margin:22px 0;font-size:1.02rem;
+  }
+  .metrics{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:12px;margin:24px 0;
+  }
+  .metric{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px 16px;
+    text-align:center;
+  }
+  .metric .val{
+    display:block;font-size:1.35rem;font-weight:800;
+    color:var(--accent);letter-spacing:.02em;
+  }
+  .metric .lbl{
+    display:block;font-size:.68rem;color:var(--muted);
+    letter-spacing:.13em;text-transform:uppercase;margin-top:4px;
+  }
+  /* ---------- CARDS ---------- */
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px 20px 22px;
+    margin-bottom:18px;
+    box-shadow:0 4px 22px rgba(0,0,0,.35);
+  }
+  .card h3{
+    font-size:1.1rem;color:var(--accent);
+    margin-bottom:12px;letter-spacing:.01em;
+    display:flex;align-items:center;gap:9px;
+  }
+  .card h3 .ico{font-size:1.2rem}
+  .section-title{
+    font-size:clamp(1.4rem,3.4vw,2.05rem);
+    font-weight:800;margin:4px 0 8px;
+    color:#fff;letter-spacing:-.01em;
+  }
+  .section-sub{
+    color:var(--muted);margin-bottom:22px;
+    border-bottom:1px solid var(--border);
+    padding-bottom:16px;font-size:.95rem;
+  }
+  p{margin-bottom:12px}
+  ul,ol{margin:10px 0 14px 22px}
+  li{margin-bottom:7px}
+  strong{color:#fff}
+  code{
+    background:#0b1220;border:1px solid var(--border);
+    border-radius:6px;padding:2px 7px;
+    font-family:'Consolas','Courier New',monospace;
+    color:var(--accent);font-size:.88em;
+  }
+  /* ---------- STEPS ---------- */
+  .steps{counter-reset:st;list-style:none;margin-left:0}
+  .steps li{
+    counter-increment:st;
+    position:relative;
+    background:linear-gradient(135deg,rgba(15,23,42,.95),rgba(15,23,42,.6));
+    border:1px solid var(--border);
+    border-left:3px solid var(--accent);
+    border-radius:10px;
+    padding:14px 16px 14px 58px;
+    margin-bottom:11px;
+    transition:border-color .25s,transform .25s;
+  }
+  .steps li:hover{border-left-color:var(--green);transform:translateX(4px)}
+  .steps li::before{
+    content:counter(st,decimal-leading-zero);
+    position:absolute;left:14px;top:14px;
+    width:32px;height:32px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(0,212,255,.12);
+    border:1px solid rgba(0,212,255,.45);
+    border-radius:9px;
+    color:var(--accent);font-weight:800;font-size:.78rem;
+  }
+  /* ---------- CALLOUTS ---------- */
+  .callout{
+    border-radius:11px;
+    padding:14px 16px 14px 48px;
+    margin:16px 0;
+    position:relative;
+    font-size:.94rem;
+    border:1px solid;
+  }
+  .callout::before{
+    position:absolute;left:15px;top:13px;
+    font-size:1.05rem;
+  }
+  .callout.info{background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.4);color:#bae6fd}
+  .callout.info::before{content:"ℹ️"}
+  .callout.ejemplo{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.4);color:#bbf7d0}
+  .callout.ejemplo::before{content:"✅"}
+  .callout.advertencia{background:rgba(245,158,11,.09);border-color:rgba(245,158,11,.45);color:#fde68a}
+  .callout.advertencia::before{content:"⚠️"}
+  .callout.error{background:rgba(239,68,68,.09);border-color:rgba(239,68,68,.45);color:#fecaca}
+  .callout.error::before{content:"⛔"}
+  /* ---------- TABLE ---------- */
+  .table-wrap{overflow-x:auto;margin:16px 0;border-radius:11px;border:1px solid var(--border)}
+  table{width:100%;border-collapse:collapse;min-width:440px;font-size:.9rem}
+  th{
+    background:rgba(0,212,255,.1);color:var(--accent);
+    text-align:left;padding:11px 14px;
+    font-size:.72rem;letter-spacing:.11em;text-transform:uppercase;
+    border-bottom:1px solid var(--border);
+  }
+  td{padding:11px 14px;border-bottom:1px solid rgba(30,58,95,.55);color:#cbd5e1}
+  tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:rgba(0,212,255,.045)}
+  /* ---------- CHIPS ---------- */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+  .chip{
+    background:rgba(0,212,255,.09);
+    border:1px solid rgba(0,212,255,.35);
+    color:var(--accent);
+    border-radius:999px;padding:5px 13px;
+    font-size:.74rem;font-weight:700;letter-spacing:.05em;
+  }
+  .chip.g{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.4);color:var(--green)}
+  .chip.a{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.4);color:var(--amber)}
+  .chip.p{background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.4);color:var(--purple)}
+  .chip.r{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.4);color:var(--red)}
+  /* ---------- EQ VISUAL ---------- */
+  .eq-visual{
+    display:grid;
+    grid-template-columns:repeat(8,1fr);
+    gap:8px;
+    align-items:end;
+    height:150px;
+    background:#0b1220;
+    border:1px solid var(--border);
+    border-radius:11px;
+    padding:14px 12px 10px;
+    margin:16px 0;
+  }
+  .eq-col{display:flex;flex-direction:column;justify-content:flex-end;height:100%;text-align:center}
+  .eq-col .bar{
+    width:100%;border-radius:5px 5px 2px 2px;
+    background:linear-gradient(180deg,var(--accent),rgba(0,212,255,.28));
+    box-shadow:0 0 12px rgba(0,212,255,.45);
+    height:var(--h);
+    transition:height .35s;
+  }
+  .eq-col .hz{font-size:.6rem;color:var(--muted);margin-top:7px;letter-spacing:.03em}
+  /* ---------- KEYBOARD ---------- */
+  .kb{
+    display:flex;gap:3px;background:#0b1220;
+    border:1px solid var(--border);border-radius:10px;
+    padding:10px;margin:16px 0;overflow-x:auto;
+  }
+  .key{
+    flex:0 0 auto;width:38px;height:96px;
+    background:linear-gradient(180deg,#f8fafc,#cbd5e1);
+    border-radius:0 0 6px 6px;
+    display:flex;align-items:flex-end;justify-content:center;
+    padding-bottom:6px;font-size:.62rem;font-weight:800;color:#0f172a;
+    box-shadow:inset 0 -6px 10px rgba(0,0,0,.15);
+  }
+  .key.hl{background:linear-gradient(180deg,#00d4ff,#0891b2);color:#04121c;box-shadow:0 0 16px rgba(0,212,255,.6)}
+  /* ---------- ACCORDION ---------- */
+  .acc{border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;background:rgba(15,23,42,.7)}
+  .acc-head{
+    width:100%;text-align:left;background:transparent;border:none;
+    color:var(--text);font-family:inherit;font-size:.92rem;font-weight:700;
+    padding:13px 16px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;
+  }
+  .acc-head:hover{background:rgba(0,212,255,.06)}
+  .acc-body{max-height:0;overflow:hidden;transition:max-height .35s ease;padding:0 16px}
+  .acc.open .acc-body{max-height:600px;padding:0 16px 15px}
+  .acc-head .arrow{transition:transform .3s;color:var(--accent)}
+  .acc.open .acc-head .arrow{transform:rotate(90deg)}
+  /* ---------- CREDITS ---------- */
+  .credit-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+    gap:14px;margin:20px 0;
+  }
+  .credit-item{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:12px;padding:16px;
+  }
+  .credit-item .k{
+    font-size:.66rem;color:var(--muted);
+    letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;display:block;
+  }
+  .credit-item .v{font-size:1.02rem;font-weight:700;color:#fff}
+  .latin{
+    text-align:center;font-style:italic;color:var(--purple);
+    font-size:1.05rem;margin:24px 0 8px;letter-spacing:.03em;
+  }
+  /* ---------- FUENTES ---------- */
+  .src-item{
+    background:var(--card);border:1px solid var(--border);
+    border-left:3px solid var(--purple);
+    border-radius:10px;padding:15px 17px;margin-bottom:12px;
+  }
+  .src-item .t{font-weight:700;color:#fff;margin-bottom:5px}
+  .src-item .d{font-size:.87rem;color:var(--muted)}
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--border);
+    background:#070b14;
+    padding:26px 16px 32px;
+    text-align:center;
+    font-size:.84rem;color:var(--muted);
+  }
+  footer p{margin-bottom:7px}
+  footer .latin-foot{color:var(--purple);font-style:italic;margin-top:12px}
+  /* ---------- TO TOP ---------- */
+  #toTop{
+    position:fixed;right:16px;bottom:16px;
+    width:48px;height:48px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),#0891b2);
+    color:#04121c;border:none;font-size:1.3rem;font-weight:800;
+    cursor:pointer;z-index:1000;
+    box-shadow:0 6px 22px rgba(0,212,255,.45);
+    opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;
+  }
+  #toTop.show{opacity:1;pointer-events:auto}
+  #toTop:hover{transform:translateY(-3px) scale(1.06)}
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:640px){
+    body{padding-top:88px}
+    main{padding:14px 10px 30px}
+    .card{padding:16px 14px 18px}
+    .steps li{padding:12px 12px 12px 52px}
+    .steps li::before{left:11px;width:28px;height:28px;font-size:.72rem}
+    .nav-inner{padding:8px 10px;gap:9px}
+    .nav-btn{padding:7px 11px;font-size:.72rem}
+    .nav-brand{font-size:.82rem}
+    .eq-visual{height:120px;gap:5px;padding:10px 8px 8px}
+    .eq-col .hz{font-size:.52rem}
+    .key{width:32px;height:82px}
+    #toTop{width:44px;height:44px;right:12px;bottom:12px}
+    .metrics{grid-template-columns:repeat(2,1fr)}
+    .section-title{font-size:1.35rem}
+  }
+  @media (max-width:360px){
+    .metrics{grid-template-columns:1fr}
+    .key{width:28px;height:74px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{
+      animation-duration:.001ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.01ms !important;
+      scroll-behavior:auto !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= PROGRESS ================= -->
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <span class="nav-brand">EQ·SX920</span>
+    <div class="nav-links" id="navLinks">
+      <button class="nav-btn active" data-target="home">INICIO</button>
+      <button class="nav-btn" data-target="master">MASTER EQ</button>
+      <button class="nav-btn" data-target="part">PART EQ</button>
+      <button class="nav-btn" data-target="prueba">PRUEBA DE SONIDO</button>
+      <button class="nav-btn" data-target="fuentes">FUENTES</button>
+      <button class="nav-btn" data-target="creditos">CRÉDITOS</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============================================================
+     HOME
+     ============================================================ -->
+<section id="home" class="section active">
+
+  <div class="svg-slot" id="homeSvgSlot">
+    <!-- ================= SVG ANIMADO (único, se reutiliza en CRÉDITOS) ================= -->
+    <svg id="coverSvg" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Portada animada: ecualizador de 8 bandas del Yamaha PSR-SX920 subiendo al máximo">
+      <defs>
+        <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#070b14">
+            <animate attributeName="stop-color" values="#070b14;#0d1b3a;#0a0e1a;#070b14" dur="11s" repeatCount="indefinite"/>
+          </stop>
+          <stop offset="50%" stop-color="#0a0e1a">
+            <animate attributeName="stop-color" values="#0a0e1a;#132a4d;#0f172a;#0a0e1a" dur="14s" repeatCount="indefinite"/>
+          </stop>
+          <stop offset="100%" stop-color="#0f172a">
+            <animate attributeName="stop-color" values="#0f172a;#1b1035;#0a0e1a;#0f172a" dur="17s" repeatCount="indefinite"/>
+          </stop>
+        </linearGradient>
+
+        <linearGradient id="barGrad" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.25"/>
+          <stop offset="55%" stop-color="#00d4ff" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#a855f7" stop-opacity="1"/>
+        </linearGradient>
+
+        <linearGradient id="titleGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#00d4ff">
+            <animate attributeName="stop-color" values="#00d4ff;#22c55e;#f59e0b;#a855f7;#00d4ff" dur="9s" repeatCount="indefinite"/>
+          </stop>
+          <stop offset="100%" stop-color="#a855f7">
+            <animate attributeName="stop-color" values="#a855f7;#00d4ff;#ef4444;#22c55e;#a855f7" dur="9s" repeatCount="indefinite"/>
+          </stop>
+        </linearGradient>
+
+        <radialGradient id="haloCyan">
+          <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.85"/>
+          <stop offset="55%" stop-color="#00d4ff" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="haloPurple">
+          <stop offset="0%" stop-color="#a855f7" stop-opacity="0.8"/>
+          <stop offset="60%" stop-color="#a855f7" stop-opacity="0.14"/>
+          <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="haloAmber">
+          <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.8"/>
+          <stop offset="60%" stop-color="#f59e0b" stop-opacity="0.12"/>
+          <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+        </radialGradient>
+
+        <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="3.2" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glowStrong" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="7" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+
+        <pattern id="gridPat" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0 L0 0 L0 40" fill="none" stroke="#00d4ff" stroke-width="0.6" stroke-opacity="0.11"/>
+        </pattern>
+
+        <path id="pFlowA" d="M 20 250 C 150 110 250 390 400 250 S 650 110 780 250" fill="none"/>
+        <path id="pFlowB" d="M 20 390 Q 400 40 780 390" fill="none"/>
+        <path id="pFlowC" d="M 20 120 C 220 200 480 60 780 150" fill="none"/>
+      </defs>
+
+      <!-- FONDO -->
+      <rect x="0" y="0" width="800" height="450" fill="url(#bgGrad)"/>
+      <rect x="0" y="0" width="800" height="450" fill="url(#gridPat)">
+        <animate attributeName="opacity" values="0.35;0.85;0.45;0.9;0.35" dur="6.5s" repeatCount="indefinite"/>
+      </rect>
+
+      <!-- ANILLOS ORBITALES -->
+      <g fill="none">
+        <circle cx="400" cy="228" r="196" stroke="#00d4ff" stroke-width="1" stroke-dasharray="6 14" opacity="0.34">
+          <animateTransform attributeName="transform" type="rotate" from="0 400 228" to="360 400 228" dur="26s" repeatCount="indefinite"/>
+          <animate attributeName="stroke-dasharray" values="6 14;22 8;6 14" dur="9s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="400" cy="228" r="158" stroke="#a855f7" stroke-width="1.1" stroke-dasharray="14 10" opacity="0.3">
+          <animateTransform attributeName="transform" type="rotate" from="360 400 228" to="0 400 228" dur="19s" repeatCount="indefinite"/>
+          <animate attributeName="stroke-dasharray" values="14 10;4 20;14 10" dur="7s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="400" cy="228" r="118" stroke="#22c55e" stroke-width="0.9" stroke-dasharray="3 9" opacity="0.28">
+          <animateTransform attributeName="transform" type="rotate" from="0 400 228" to="360 400 228" dur="13s" repeatCount="indefinite"/>
+          <animate attributeName="stroke-dasharray" values="3 9;18 6;3 9" dur="5.5s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+
+      <!-- HALOS PULSANTES -->
+      <circle cx="240" cy="150" r="60" fill="url(#haloCyan)">
+        <animate attributeName="r" values="50;78;50" dur="4.2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.45;0.85;0.45" dur="4.2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="580" cy="130" r="52" fill="url(#haloPurple)">
+        <animate attributeName="r" values="44;72;44" dur="5.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.4;0.8;0.4" dur="5.4s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="400" cy="330" r="46" fill="url(#haloAmber)">
+        <animate attributeName="r" values="38;64;38" dur="6.2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.3;0.7;0.3" dur="6.2s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- LÍNEA BASE EQ -->
+      <line x1="130" y1="400" x2="670" y2="400" stroke="#1e3a5f" stroke-width="1.6"/>
+      <line x1="130" y1="400" x2="670" y2="400" stroke="#00d4ff" stroke-width="1.2" opacity="0.5" filter="url(#glow)">
+        <animate attributeName="opacity" values="0.15;0.7;0.15" dur="3.5s" repeatCount="indefinite"/>
+      </line>
+
+      <!-- 8 BANDAS EQ -->
+      <g filter="url(#glow)">
+        <rect x="145" y="380" width="44" height="20" rx="6" fill="url(#barGrad)">
+          <animate attributeName="height" values="20;218;60;232;20" dur="4.4s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="380;182;340;168;380" dur="4.4s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="213" y="380" width="44" height="20" rx="6" fill="url(#barGrad)">
+          <animate attributeName="height" values="30;200;90;226;30" dur="5.1s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="370;200;310;174;370" dur="5.1s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="281" y="380" width="44" height="20" rx="6" fill="url(#barGrad)">
+          <animate attributeName="height" values="24;236;50;210;24" dur="3.7s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="376;164;350;190;376" dur="3.7s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="349" y="380" width="44" height="20" rx="6" fill="url(#barGrad)">
+          <animate attributeName="height" values="18;248;70;238;18" dur="4.8s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="382;152;330;162;382" dur="4.8s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="417" y="380" width="44" height="20" rx="6" fill="url(#barGrad)">
+          <animate attributeName="height" values="26;244;44;230;26" dur="5.6s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="374;156;356;170;374" dur="5.6s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="485" y="380" width="44" height="20" rx="6" fill="url(#barGrad)">
+          <animate attributeName="height" values="22;228;86;214;22" dur="4.1s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="378;172;314;186;378" dur="4.1s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="553" y="380" width="44" height="20" rx="6" fill="url(#barGrad)">
+          <animate attributeName="height" values="28;240;54;222;28" dur="6.3s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="372;160;346;178;372" dur="6.3s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="621" y="380" width="44" height="20" rx="6" fill="url(#barGrad)">
+          <animate attributeName="height" values="16;252;76;244;16" dur="5.9s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="384;148;324;156;384" dur="5.9s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+
+      <!-- ETIQUETAS DE FRECUENCIA -->
+      <g fill="#94a3b8" font-family="'Segoe UI',system-ui,sans-serif" font-size="11" font-weight="700" text-anchor="middle">
+        <text x="167" y="422">80</text>
+        <text x="235" y="422">250</text>
+        <text x="303" y="422">500</text>
+        <text x="371" y="422">630</text>
+        <text x="439" y="422">800</text>
+        <text x="507" y="422">1k</text>
+        <text x="575" y="422">4k</text>
+        <text x="643" y="422">8k</text>
+      </g>
+
+      <!-- FLUJO NARRATIVO: PATHS CON DASH-OFFSET -->
+      <g fill="none" stroke-linecap="round" filter="url(#glow)">
+        <path d="M 20 250 C 150 110 250 390 400 250 S 650 110 780 250"
+              stroke="#00d4ff" stroke-width="1.8" stroke-dasharray="12 16" opacity="0.55">
+          <animate attributeName="stroke-dashoffset" from="0" to="-280" dur="6s" repeatCount="indefinite"/>
+        </path>
+        <path d="M 20 390 Q 400 40 780 390"
+              stroke="#a855f7" stroke-width="1.5" stroke-dasharray="8 22" opacity="0.42">
+          <animate attributeName="stroke-dashoffset" from="0" to="-300" dur="8.5s" repeatCount="indefinite"/>
+        </path>
+        <path d="M 20 120 C 220 200 480 60 780 150"
+              stroke="#22c55e" stroke-width="1.4" stroke-dasharray="6 26" opacity="0.36">
+          <animate attributeName="stroke-dashoffset" from="0" to="-320" dur="10.5s" repeatCount="indefinite"/>
+        </path>
+      </g>
+
+      <!-- PARTÍCULAS VIAJERAS -->
+      <circle r="4" fill="#00d4ff" filter="url(#glow)">
+        <animateMotion dur="6s" repeatCount="indefinite"><mpath xlink:href="#pFlowA"/></animateMotion>
+        <animate attributeName="r" values="2.5;5.5;2.5" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="3" fill="#22c55e" filter="url(#glow)">
+        <animateMotion dur="6s" begin="2s" repeatCount="indefinite"><mpath xlink:href="#pFlowA"/></animateMotion>
+      </circle>
+      <circle r="3.5" fill="#a855f7" filter="url(#glow)">
+        <animateMotion dur="8.5s" repeatCount="indefinite"><mpath xlink:href="#pFlowB"/></animateMotion>
+        <animate attributeName="r" values="2;5;2" dur="2.6s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="3" fill="#f59e0b" filter="url(#glow)">
+        <animateMotion dur="8.5s" begin="3.2s" repeatCount="indefinite"><mpath xlink:href="#pFlowB"/></animateMotion>
+      </circle>
+      <circle r="2.6" fill="#ef4444" filter="url(#glow)">
+        <animateMotion dur="10.5s" repeatCount="indefinite"><mpath xlink:href="#pFlowC"/></animateMotion>
+      </circle>
+      <circle r="3.2" fill="#00d4ff" filter="url(#glow)">
+        <animateMotion dur="10.5s" begin="4.4s" repeatCount="indefinite"><mpath xlink:href="#pFlowC"/></animateMotion>
+      </circle>
+
+      <!-- GHOST ELEMENTS (piezas fantasma que recorren el path) -->
+      <rect x="-13" y="-13" width="26" height="26" rx="5" fill="#a855f7" opacity="0">
+        <animateMotion dur="8.5s" repeatCount="indefinite"><mpath xlink:href="#pFlowB"/></animateMotion>
+        <animate attributeName="opacity" values="0;0.75;0.75;0" keyTimes="0;0.1;0.8;1" dur="8.5s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="-11" y="-11" width="22" height="22" rx="4" fill="#00d4ff" opacity="0">
+        <animateMotion dur="6s" begin="1.5s" repeatCount="indefinite"><mpath xlink:href="#pFlowA"/></animateMotion>
+        <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.12;0.78;1" dur="6s" repeatCount="indefinite"/>
+      </rect>
+      <circle r="9" fill="none" stroke="#f59e0b" stroke-width="2" opacity="0">
+        <animateMotion dur="10.5s" begin="2s" repeatCount="indefinite"><mpath xlink:href="#pFlowC"/></animateMotion>
+        <animate attributeName="opacity" values="0;0.8;0.8;0" keyTimes="0;0.1;0.8;1" dur="10.5s" repeatCount="indefinite"/>
+        <animate attributeName="r" values="6;12;6" dur="3s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- NODOS CLAVE CON PARPADEO -->
+      <circle cx="167" cy="168" r="5" fill="none" stroke="#ef4444" stroke-width="2" filter="url(#glow)">
+        <animate attributeName="stroke-width" values="1.2;3.4;1.2" dur="2.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="439" cy="156" r="5" fill="none" stroke="#f59e0b" stroke-width="2" filter="url(#glow)">
+        <animate attributeName="stroke-width" values="1.2;3.4;1.2" dur="3.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.3;1;0.3" dur="3.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="643" cy="148" r="5" fill="none" stroke="#22c55e" stroke-width="2" filter="url(#glow)">
+        <animate attributeName="stroke-width" values="1.2;3.4;1.2" dur="4.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.3;1;0.3" dur="4.5s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- EXPLOSIONES RADIALES -->
+      <g stroke="#00d4ff" stroke-width="1.6" opacity="0">
+        <line x1="167" y1="168" x2="167" y2="140"/>
+        <line x1="167" y1="168" x2="195" y2="168"/>
+        <line x1="167" y1="168" x2="167" y2="196"/>
+        <line x1="167" y1="168" x2="139" y2="168"/>
+        <animate attributeName="opacity" values="0;0.9;0" keyTimes="0;0.5;1" dur="3.5s" repeatCount="indefinite"/>
+      </g>
+      <g stroke="#a855f7" stroke-width="1.6" opacity="0">
+        <line x1="643" y1="148" x2="643" y2="118"/>
+        <line x1="643" y1="148" x2="673" y2="148"/>
+        <line x1="643" y1="148" x2="643" y2="178"/>
+        <line x1="643" y1="148" x2="613" y2="148"/>
+        <animate attributeName="opacity" values="0;0.85;0" keyTimes="0;0.5;1" dur="5.5s" repeatCount="indefinite"/>
+      </g>
+
+      <!-- TEXTO PRINCIPAL -->
+      <text x="400" y="66" text-anchor="middle"
+            font-family="'Segoe UI',system-ui,sans-serif"
+            font-size="40" font-weight="800" letter-spacing="3"
+            fill="url(#titleGrad)" filter="url(#glowStrong)">
+        MASTER EQ
+        <animate attributeName="opacity" values="0.85;1;0.85" dur="4s" repeatCount="indefinite"/>
+      </text>
+
+      <text x="400" y="94" text-anchor="middle"
+            font-family="'Segoe UI',system-ui,sans-serif"
+            font-size="14" font-weight="700" letter-spacing="6" fill="#94a3b8">
+        YAMAHA PSR-SX920 · 8 BANDAS
+        <animate attributeName="opacity" values="0.4;0.95;0.4" dur="5.5s" repeatCount="indefinite"/>
+      </text>
+
+      <!-- FLASH CULMINANTE -->
+      <text x="400" y="368" text-anchor="middle"
+            font-family="'Segoe UI',system-ui,sans-serif"
+            font-size="30" font-weight="900" letter-spacing="4"
+            fill="#f59e0b" filter="url(#glowStrong)" opacity="0">
+        MAX +dB
+        <animate attributeName="opacity" values="0;0;0.95;0.95;0;0" keyTimes="0;0.68;0.72;0.84;0.88;1" dur="9s" repeatCount="indefinite"/>
+      </text>
+
+      <!-- INDICADOR LIVE -->
+      <g>
+        <circle cx="726" cy="34" r="6" fill="#ef4444" filter="url(#glow)">
+          <animate attributeName="r" values="4;8;4" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <text x="706" y="39" text-anchor="end"
+              font-family="'Segoe UI',system-ui,sans-serif"
+              font-size="12" font-weight="800" letter-spacing="3" fill="#ef4444">
+          LIVE
+          <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
+        </text>
+      </g>
+
+      <!-- ETIQUETA DE ESTADO ALTERNANTE -->
+      <text x="34" y="34"
+            font-family="'Segoe UI',system-ui,sans-serif"
+            font-size="11" font-weight="700" letter-spacing="2.5" fill="#22c55e">
+        <animate attributeName="opacity" values="1;0;1;0;1" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite"/>
+        SEÑAL · ACTIVA
+      </text>
+      <text x="34" y="34"
+            font-family="'Segoe UI',system-ui,sans-serif"
+            font-size="11" font-weight="700" letter-spacing="2.5" fill="#00d4ff">
+        <animate attributeName="opacity" values="0;1;0;1;0" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite"/>
+        BOOST · MÁXIMO
+      </text>
+
+      <!-- FIRMA -->
+      <text x="766" y="432" text-anchor="end"
+            font-family="'Segoe UI',system-ui,sans-serif"
+            font-size="11" font-weight="600" letter-spacing="1.5" fill="#a855f7">
+        Rubén Sbarsky
+        <animate attributeName="opacity" values="0.35;0.95;0.35" dur="3.2s" repeatCount="indefinite"/>
+      </text>
+
+      <!-- ESQUINAS TÉCNICAS -->
+      <g stroke="#00d4ff" stroke-width="1.8" fill="none" opacity="0.55">
+        <path d="M14 32 L14 14 L32 14"/>
+        <path d="M768 14 L786 14 L786 32"/>
+        <path d="M786 418 L786 436 L768 436"/>
+        <path d="M32 436 L14 436 L14 418"/>
+        <animate attributeName="opacity" values="0.25;0.75;0.25" dur="4.5s" repeatCount="indefinite"/>
+      </g>
+
+      <!-- SCANLINE -->
+      <rect x="0" y="0" width="800" height="3" fill="#00d4ff" opacity="0.14" filter="url(#glow)">
+        <animate attributeName="y" values="0;447;0" dur="7.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.05;0.3;0.05" dur="7.5s" repeatCount="indefinite"/>
+      </rect>
+    </svg>
+  </div>
+
+  <span class="badge">TUTORIAL TÉCNICO · YAMAHA PSR-SX920</span>
+  <h1>Subir al máximo el Ecualizador EQ del Yamaha PSR-SX920</h1>
+  <p class="subtitle">Guía paso a paso para Master EQ de 8 bandas y Part EQ (High / Low)</p>
+  <p class="lead">
+    Subir al máximo la ecualización (EQ) ayuda a resaltar la potencia y el brillo de tus sonidos.
+    En el <strong>Yamaha PSR-SX920</strong> existen dos formas principales de ajustar el ecualizador:
+    el <strong>Master EQ</strong> (que ecualiza la mezcla general de todo el teclado a través de 8 bandas)
+    y el <strong>Part EQ</strong> (que ajusta los agudos y graves de partes individuales como la mano derecha
+    o los estilos). A continuación se detalla el paso a paso completo para ambas opciones.
+  </p>
+
+  <div class="quote">
+    "Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien."
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><span class="val">8</span><span class="lbl">Bandas Master EQ</span></div>
+    <div class="metric"><span class="val">2</span><span class="lbl">Métodos</span></div>
+    <div class="metric"><span class="val">30</span><span class="lbl">Slots User</span></div>
+    <div class="metric"><span class="val">+dB</span><span class="lbl">Ganancia máx.</span></div>
+    <div class="metric"><span class="val">20/09/2026</span><span class="lbl">Fecha</span></div>
+    <div class="metric"><span class="val">03:59:16</span><span class="lbl">Hora</span></div>
+  </div>
+
+  <div class="card">
+    <h3><span class="ico">🎛️</span> ¿Qué vas a encontrar en este tutorial?</h3>
+    <div class="chips">
+      <span class="chip">Master EQ</span>
+      <span class="chip p">Part EQ</span>
+      <span class="chip g">High / Low</span>
+      <span class="chip a">Guardar en User</span>
+      <span class="chip r">Master Compressor</span>
+    </div>
+    <ul>
+      <li><strong>Método 1:</strong> subir al máximo el Ecualizador Principal (Master EQ de 8 bandas).</li>
+      <li><strong>Método 2:</strong> subir al máximo el EQ por Partes (Part EQ — High y Low).</li>
+      <li><strong>Consejo tutorial:</strong> cómo probar tu nuevo sonido con notas concretas al piano.</li>
+    </ul>
+    <div class="callout info">
+      <strong>INFO</strong> — Navega con la barra superior. Cada sección es independiente y no recarga la página.
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     MASTER EQ
+     ============================================================ -->
+<section id="master" class="section">
+  <h2 class="section-title">Método 1 · Master EQ de 8 Bandas</h2>
+  <p class="section-sub">
+    Este procedimiento ajusta el tono global de todo tu teclado, aplicando la ecualización sobre la mezcla general.
+  </p>
+
+  <div class="card">
+    <h3><span class="ico">🎚️</span> Bandas del Master EQ</h3>
+    <div class="eq-visual">
+      <div class="eq-col"><div class="bar" style="--h:96%"></div><span class="hz">80Hz</span></div>
+      <div class="eq-col"><div class="bar" style="--h:92%"></div><span class="hz">250Hz</span></div>
+      <div class="eq-col"><div class="bar" style="--h:98%"></div><span class="hz">500Hz</span></div>
+      <div class="eq-col"><div class="bar" style="--h:95%"></div><span class="hz">630Hz</span></div>
+      <div class="eq-col"><div class="bar" style="--h:94%"></div><span class="hz">800Hz</span></div>
+      <div class="eq-col"><div class="bar" style="--h:97%"></div><span class="hz">1.0kHz</span></div>
+      <div class="eq-col"><div class="bar" style="--h:99%"></div><span class="hz">4.0kHz</span></div>
+      <div class="eq-col"><div class="bar" style="--h:100%"></div><span class="hz">8.0kHz</span></div>
+    </div>
+    <p>El Master EQ trabaja sobre estas ocho frecuencias: <code>80Hz</code>, <code>250Hz</code>, <code>500Hz</code>,
+      <code>630Hz</code>, <code>800Hz</code>, <code>1.0kHz</code>, <code>4.0kHz</code> y <code>8.0kHz</code>.</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="ico">📋</span> Procedimiento completo</h3>
+    <ol class="steps">
+      <li>
+        <strong>Abre el Mezclador:</strong> en el panel físico del teclado, presiona el botón
+        <code>[MIXER/EQ]</code>.
+      </li>
+      <li>
+        <strong>Selecciona la pestaña Master:</strong> en la pantalla táctil, toca la pestaña
+        <strong>"Master"</strong> ubicada en la esquina superior derecha.
+      </li>
+      <li>
+        <strong>Entra al área de EQ:</strong> en el menú vertical del lado izquierdo, toca la opción
+        <strong>"EQ"</strong>.
+      </li>
+      <li>
+        <strong>Elige una base (Opcional):</strong> toca el nombre del preset actual (por ejemplo,
+        <em>Flat</em> o <em>Powerful</em>) para seleccionar un punto de partida.
+      </li>
+      <li>
+        <strong>Ajusta las 8 bandas al máximo:</strong> verás las 8 frecuencias del ecualizador
+        (80Hz, 250Hz, 500Hz, 630Hz, 800Hz, 1.0kHz, 4.0kHz y 8.0kHz). En la sección <strong>Gain</strong>
+        (Ganancia) de cada una de las 8 columnas, gira la perilla en pantalla o desliza hacia arriba hasta
+        llevar el valor al máximo número de decibelios (<code>+dB</code>).
+      </li>
+      <li>
+        <strong>Guarda tu configuración personalizada:</strong> toca el icono de <strong>Guardar</strong>
+        (el disco con la flecha hacia abajo) en la pantalla.
+      </li>
+      <li>
+        <strong>Selecciona una casilla User:</strong> elige una ubicación libre entre <strong>User1</strong>
+        y <strong>User30</strong> y confirma tocando <code>[Save]</code> para renombrar y almacenar tu
+        ecualización.
+      </li>
+    </ol>
+
+    <div class="callout advertencia">
+      <strong>NOTA</strong> — Ten en cuenta que el Master EQ afecta a las voces e instrumentos del teclado,
+      pero <strong>no se aplica a la reproducción de canciones de audio</strong> ni a la entrada
+      <code>AUX IN</code>.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="ico">🗂️</span> Resumen rápido del Método 1</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Paso</th><th>Acción</th><th>Ubicación</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Presionar <code>[MIXER/EQ]</code></td><td>Panel físico</td></tr>
+          <tr><td>2</td><td>Tocar pestaña "Master"</td><td>Esquina superior derecha (pantalla táctil)</td></tr>
+          <tr><td>3</td><td>Tocar "EQ"</td><td>Menú vertical izquierdo</td></tr>
+          <tr><td>4</td><td>Elegir preset base (opcional)</td><td>Nombre del preset actual (Flat / Powerful)</td></tr>
+          <tr><td>5</td><td>Subir Gain de las 8 bandas al máximo</td><td>Sección Gain de cada columna</td></tr>
+          <tr><td>6</td><td>Tocar icono Guardar</td><td>Disco con flecha hacia abajo</td></tr>
+          <tr><td>7</td><td>Elegir User1–User30 y confirmar <code>[Save]</code></td><td>Casillas User</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PART EQ
+     ============================================================ -->
+<section id="part" class="section">
+  <h2 class="section-title">Método 2 · Part EQ (High y Low)</h2>
+  <p class="section-sub">
+    Si lo que deseas es subir al máximo los agudos y graves únicamente de tu voz principal
+    (como el piano de la mano derecha) o del acompañamiento, utiliza el EQ por Partes.
+  </p>
+
+  <div class="card">
+    <h3><span class="ico">🎹</span> Procedimiento completo</h3>
+    <ol class="steps">
+      <li>Presiona el botón <code>[MIXER/EQ]</code> en el panel.</li>
+      <li>
+        En la parte superior de la pantalla, selecciona la pestaña correspondiente a lo que deseas ecualizar:
+        <ul>
+          <li><strong>Panel:</strong> para las voces que tocas con la mano derecha e izquierda
+            (Right 1, Right 2, Right 3, Left).</li>
+          <li><strong>Style:</strong> para los canales del estilo de acompañamiento.</li>
+          <li><strong>Song:</strong> para los canales de canciones MIDI.</li>
+        </ul>
+      </li>
+      <li>En el menú de la izquierda, toca la pestaña <strong>"EQ"</strong>.</li>
+      <li>
+        Verás las filas de parámetros <strong>High</strong> (Agudos) y <strong>Low</strong> (Graves) para cada canal:
+        <ul>
+          <li>Gira la perilla virtual de <strong>High</strong> al máximo hacia la derecha (<code>+dB</code>)
+            para aumentar el brillo.</li>
+          <li>Gira la perilla virtual de <strong>Low</strong> al máximo hacia la derecha (<code>+dB</code>)
+            para potenciar los graves.</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3><span class="ico">🔀</span> ¿Qué pestaña elegir?</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Pestaña</th><th>Alcance</th><th>Canales incluidos</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Panel</strong></td><td>Voces tocadas con mano derecha e izquierda</td><td>Right 1, Right 2, Right 3, Left</td></tr>
+          <tr><td><strong>Style</strong></td><td>Estilo de acompañamiento</td><td>Canales del estilo</td></tr>
+          <tr><td><strong>Song</strong></td><td>Canciones MIDI</td><td>Canales de la canción</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Parámetro</th><th>Función</th><th>Acción para máximo</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>High</strong></td><td>Agudos — aporta brillo</td><td>Girar al máximo a la derecha (<code>+dB</code>)</td></tr>
+          <tr><td><strong>Low</strong></td><td>Graves — aporta cuerpo</td><td>Girar al máximo a la derecha (<code>+dB</code>)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout ejemplo">
+      <strong>EJEMPLO</strong> — Si tocas un piano con la mano derecha y quieres que suene mucho más brillante,
+      selecciona la pestaña <strong>Panel</strong>, entra en <strong>EQ</strong> y sube al máximo el
+      <strong>High</strong> del canal <strong>Right 1</strong>.
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PRUEBA DE SONIDO
+     ============================================================ -->
+<section id="prueba" class="section">
+  <h2 class="section-title">🎹 Consejo tutorial para probar tu nuevo sonido</h2>
+  <p class="section-sub">
+    Cuando subes todas las bandas de ganancia al máximo, el sonido se vuelve sumamente potente y brillante.
+    Para comprobar el impacto de la ecualización en los graves y agudos, realiza esta prueba en tu teclado.
+  </p>
+
+  <div class="card">
+    <h3><span class="ico">🧪</span> Prueba de graves y agudos</h3>
+    <ol class="steps">
+      <li>
+        Toca en la mano izquierda una nota grave como <strong>C(I)</strong> para sentir la resonancia
+        y pegada de los bajos.
+      </li>
+      <li>
+        Toca en la mano derecha un acorde brillante de Do mayor con las notas
+        <strong>C(I)</strong> – <strong>E(III)</strong> – <strong>G(V)</strong> en la región aguda
+        para percibir la claridad de las frecuencias altas.
+      </li>
+    </ol>
+
+    <p><strong>Visualización del acorde de Do mayor — C(I) · E(III) · G(V):</strong></p>
+    <div class="kb">
+      <div class="key hl">C(I)</div>
+      <div class="key">D(II)</div>
+      <div class="key hl">E(III)</div>
+      <div class="key">F(IV)</div>
+      <div class="key hl">G(V)</div>
+      <div class="key">A(VI)</div>
+      <div class="key">B(VII)</div>
+    </div>
+
+    <div class="callout ejemplo">
+      <strong>EJEMPLO</strong> — Mano izquierda: <strong>C(I)</strong> grave para los bajos.
+      Mano derecha: <strong>C(I) – E(III) – G(V)</strong> agudo para los brillos.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="ico">🛡️</span> Si notas saturación</h3>
+    <p>
+      Si notas alguna saturación al subir todo al máximo, puedes equilibrar el volumen master o activar el
+      <strong>Master Compressor</strong> desde la pestaña Master del mezclador para mantener el sonido
+      limpio y profesional.
+    </p>
+    <div class="chips">
+      <span class="chip">Volumen Master</span>
+      <span class="chip a">Master Compressor</span>
+      <span class="chip p">Pestaña Master</span>
+      <span class="chip g">Sonido limpio</span>
+    </div>
+    <div class="callout advertencia">
+      <strong>ADVERTENCIA</strong> — Subir todas las bandas al máximo incrementa mucho la energía de la señal.
+      Ajusta el volumen master y/o el Master Compressor para evitar saturación.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="ico">❓</span> Preguntas rápidas</h3>
+    <div class="acc">
+      <button class="acc-head" type="button">¿Cuántas bandas tiene el Master EQ? <span class="arrow">›</span></button>
+      <div class="acc-body"><p>El Master EQ del Yamaha PSR-SX920 trabaja con <strong>8 bandas</strong>:
+        80Hz, 250Hz, 500Hz, 630Hz, 800Hz, 1.0kHz, 4.0kHz y 8.0kHz.</p></div>
+    </div>
+    <div class="acc">
+      <button class="acc-head" type="button">¿Dónde guardo mi ecualización personalizada? <span class="arrow">›</span></button>
+      <div class="acc-body"><p>En una casilla libre entre <strong>User1</strong> y <strong>User30</strong>,
+        tocando el icono de Guardar (disco con flecha hacia abajo) y confirmando con <code>[Save]</code>.</p></div>
+    </div>
+    <div class="acc">
+      <button class="acc-head" type="button">¿El Master EQ afecta a las canciones de audio? <span class="arrow">›</span></button>
+      <div class="acc-body"><p>No. El Master EQ afecta a las voces e instrumentos del teclado, pero no se aplica
+        a la reproducción de canciones de audio ni a la entrada <code>AUX IN</code>.</p></div>
+    </div>
+    <div class="acc">
+      <button class="acc-head" type="button">¿Qué ajusta el Part EQ? <span class="arrow">›</span></button>
+      <div class="acc-body"><p>Ajusta <strong>High</strong> (agudos) y <strong>Low</strong> (graves) de partes
+        individuales: Panel (Right 1, Right 2, Right 3, Left), Style o Song.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FUENTES
+     ============================================================ -->
+<section id="fuentes" class="section">
+  <h2 class="section-title">📚 Fuentes</h2>
+  <p class="section-sub">Origen documental del contenido de este tutorial.</p>
+
+  <div class="src-item">
+    <div class="t">Subir al máximo el Ecualizador EQ del Yamaha PSR-SX920</div>
+    <div class="d">Autor: <strong>Rubén Sbarsky</strong> · Documento fuente del tutorial (TXT).</div>
+  </div>
+
+  <div class="src-item">
+    <div class="t">Equipo de referencia</div>
+    <div class="d">Yamaha PSR-SX920 — Sistema de ecualización Master EQ (8 bandas) y Part EQ (High / Low).</div>
+  </div>
+
+  <div class="src-item">
+    <div class="t">Nota sobre enlaces</div>
+    <div class="d">El documento original no incluye enlaces ni vídeos externos verificables. No se han añadido
+      enlaces inventados.</div>
+  </div>
+
+  <div class="callout info">
+    <strong>INFO</strong> — Todo el contenido de este tutorial proviene exclusivamente del documento fuente
+    indicado. No se ha consultado ni incorporado información externa.
+  </div>
+</section>
+
+<!-- ============================================================
+     CRÉDITOS
+     ============================================================ -->
+<section id="creditos" class="section">
+  <div class="svg-slot" id="credSvgSlot"></div>
+
+  <h2 class="section-title">Créditos</h2>
+  <p class="section-sub">Información de autoría y datos de generación del tutorial.</p>
+
+  <div class="credit-grid">
+    <div class="credit-item"><span class="k">Tutorial</span><span class="v">Subir al máximo el Ecualizador EQ del Yamaha PSR-SX920</span></div>
+    <div class="credit-item"><span class="k">Créditos</span><span class="v">Rubén Sbarsky</span></div>
+    <div class="credit-item"><span class="k">Fecha</span><span class="v">20/09/2026</span></div>
+    <div class="credit-item"><span class="k">Hora</span><span class="v">03:59:16</span></div>
+  </div>
+
+  <div class="card">
+    <h3><span class="ico">🎓</span> Indicación educativa</h3>
+    <p>
+      Este tutorial ha sido elaborado con finalidad exclusivamente educativa y de divulgación.
+      Su objetivo es facilitar el aprendizaje del manejo del ecualizador en el Yamaha PSR-SX920,
+      conservando íntegramente la información del documento original.
+    </p>
+  </div>
+
+  <p class="latin">Fiat iustitia, ruat caelum.</p>
+</section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <p>📚 Tutorial solo con fines Educativos y Divulgación</p>
+  <p>👨‍💻 Créditos: Rubén Sbarsky</p>
+  <p>📅 FECHA: 20/09/2026 &nbsp;·&nbsp; Hora: 03:59:16</p>
+  <p class="latin-foot">Fiat iustitia, ruat caelum.</p>
+</footer>
+
+<button id="toTop" type="button" aria-label="Volver arriba">↑</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- SPA NAVIGATION ---------- */
+  var sections   = document.querySelectorAll('.section');
+  var navButtons = document.querySelectorAll('.nav-btn');
+  var homeSlot   = document.getElementById('homeSvgSlot');
+  var credSlot   = document.getElementById('credSvgSlot');
+  var coverSvg   = document.getElementById('coverSvg');
+
+  function restartSvg() {
+    if (!coverSvg) return;
+    try {
+      if (typeof coverSvg.setCurrentTime === 'function') {
+        coverSvg.setCurrentTime(0);
+      }
+    } catch (e) { /* silencioso */ }
+  }
+
+  function showSection(id) {
+    for (var i = 0; i < sections.length; i++) {
+      sections[i].classList.toggle('active', sections[i].id === id);
+    }
+    for (var j = 0; j < navButtons.length; j++) {
+      navButtons[j].classList.toggle('active', navButtons[j].getAttribute('data-target') === id);
+    }
+
+    /* Mover el MISMO SVG entre HOME y CRÉDITOS */
+    if (id === 'home' && homeSlot && coverSvg && coverSvg.parentNode !== homeSlot) {
+      homeSlot.appendChild(coverSvg);
+      restartSvg();
+    } else if (id === 'creditos' && credSlot && coverSvg && coverSvg.parentNode !== credSlot) {
+      credSlot.appendChild(coverSvg);
+      restartSvg();
+    } else if (id === 'home' || id === 'creditos') {
+      restartSvg();
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateProgress();
+  }
+
+  for (var k = 0; k < navButtons.length; k++) {
+    navButtons[k].addEventListener('click', function () {
+      showSection(this.getAttribute('data-target'));
+    });
+  }
+
+  /* ---------- PROGRESS BAR ---------- */
+  var progressBar = document.getElementById('progressBar');
+  var toTop = document.getElementById('toTop');
+
+  function updateProgress() {
+    var doc = document.documentElement;
+    var scrollTop = window.pageYOffset || doc.scrollTop || 0;
+    var height = (doc.scrollHeight - doc.clientHeight) || 1;
+    var pct = Math.min(100, Math.max(0, (scrollTop / height) * 100));
+    progressBar.style.width = pct + '%';
+    toTop.classList.toggle('show', scrollTop > 260);
+  }
+
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress);
+
+  /* ---------- BACK TO TOP ---------- */
+  toTop.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ---------- ACCORDIONS ---------- */
+  var accHeads = document.querySelectorAll('.acc-head');
+  for (var a = 0; a < accHeads.length; a++) {
+    accHeads[a].addEventListener('click', function () {
+      var parent = this.parentNode;
+      var isOpen = parent.classList.contains('open');
+      var all = document.querySelectorAll('.acc');
+      for (var b = 0; b < all.length; b++) { all[b].classList.remove('open'); }
+      if (!isOpen) { parent.classList.add('open'); }
+    });
+  }
+
+  /* ---------- INIT ---------- */
+  updateProgress();
+  restartSvg();
+})();
+</script>
+
+</body>
+</html>
