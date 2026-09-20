@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transpose, Memoria de Registros, Playlist y Control Manos Libres · Yamaha PSR-SX920 · Tutorial</title>
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --card:#0f172a;
+    --border:#1e3a5f;
+    --accent:#00d4ff;
+    --green:#22c55e;
+    --amber:#f59e0b;
+    --red:#ef4444;
+    --purple:#a855f7;
+    --text:#e2e8f0;
+    --muted:#94a3b8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.6;
+    overflow-x:hidden;
+    -webkit-text-size-adjust:100%;
+  }
+  /* ========= PROGRESS BAR ========= */
+  #progressWrap{
+    position:fixed;top:0;left:0;width:100%;height:3px;
+    background:rgba(30,58,95,0.3);z-index:1200;
+  }
+  #progressBar{
+    height:100%;width:0%;background:linear-gradient(90deg,#00d4ff,#a855f7,#22c55e);
+    transition:width 0.15s ease-out;
+  }
+  /* ========= NAVBAR ========= */
+  #navbar{
+    position:fixed;top:3px;left:0;width:100%;
+    background:rgba(10,14,26,0.92);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+    z-index:1100;
+    padding:8px 10px;
+  }
+  #navbar .nav-scroll{
+    display:flex;gap:6px;overflow-x:auto;
+    scrollbar-width:thin;scrollbar-color:var(--border) transparent;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:4px;
+  }
+  #navbar .nav-scroll::-webkit-scrollbar{height:5px;}
+  #navbar .nav-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+  .nav-btn{
+    flex:0 0 auto;
+    padding:8px 14px;
+    font-size:12.5px;font-weight:600;
+    background:transparent;color:var(--muted);
+    border:1px solid var(--border);
+    border-radius:8px;
+    cursor:pointer;
+    transition:all .25s ease;
+    white-space:nowrap;
+    font-family:inherit;
+  }
+  .nav-btn:hover{color:var(--accent);border-color:var(--accent);}
+  .nav-btn.active{
+    color:#0a0e1a;
+    background:linear-gradient(135deg,#00d4ff,#22c55e);
+    border-color:transparent;
+    box-shadow:0 0 14px rgba(0,212,255,0.4);
+  }
+  .nav-btn.credits-btn{
+    background:linear-gradient(135deg,#a855f7,#ef4444);
+    color:#fff;border-color:transparent;
+  }
+  /* ========= LAYOUT ========= */
+  main{
+    max-width:1100px;margin:0 auto;
+    padding:80px 16px 90px;
+  }
+  section.view{display:none;animation:fade .35s ease;}
+  section.view.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  
+  h1,h2,h3,h4{line-height:1.25;font-weight:700;}
+  h1{font-size:clamp(1.5rem,4vw,2.4rem);}
+  h2{font-size:clamp(1.3rem,3.4vw,1.85rem);color:var(--accent);margin-bottom:14px;letter-spacing:.2px;}
+  h3{font-size:clamp(1.05rem,2.6vw,1.3rem);color:#fff;margin-bottom:10px;}
+  p{margin-bottom:12px;color:#cbd5e1;}
+  ul,ol{margin:8px 0 14px 22px;color:#cbd5e1;}
+  li{margin-bottom:6px;}
+  strong{color:#fff;}
+  
+  /* ========= CARDS ========= */
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:18px;
+    box-shadow:0 4px 24px rgba(0,0,0,0.35);
+  }
+  .card.accent-cyan{border-left:4px solid var(--accent);}
+  .card.accent-green{border-left:4px solid var(--green);}
+  .card.accent-amber{border-left:4px solid var(--amber);}
+  .card.accent-red{border-left:4px solid var(--red);}
+  .card.accent-purple{border-left:4px solid var(--purple);}
+  
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  @media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+  
+  /* ========= BADGE / CHIPS ========= */
+  .badge{
+    display:inline-block;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:11px;font-weight:700;
+    letter-spacing:1.2px;text-transform:uppercase;
+    background:rgba(0,212,255,0.12);
+    color:var(--accent);
+    border:1px solid rgba(0,212,255,0.35);
+    margin-bottom:14px;
+  }
+  .badge.green{background:rgba(34,197,94,0.12);color:var(--green);border-color:rgba(34,197,94,0.35);}
+  .badge.amber{background:rgba(245,158,11,0.12);color:var(--amber);border-color:rgba(245,158,11,0.35);}
+  .badge.purple{background:rgba(168,85,247,0.12);color:var(--purple);border-color:rgba(168,85,247,0.35);}
+  .badge.red{background:rgba(239,68,68,0.12);color:var(--red);border-color:rgba(239,68,68,0.35);}
+  
+  .chip{
+    display:inline-block;
+    padding:4px 10px;border-radius:6px;
+    font-size:12px;font-weight:600;
+    background:rgba(30,58,95,0.6);
+    border:1px solid var(--border);
+    color:#cbd5e1;
+    margin:2px 4px 2px 0;
+  }
+  .chip.key{background:rgba(0,212,255,0.15);color:var(--accent);border-color:rgba(0,212,255,0.4);font-family:ui-monospace,monospace;}
+  .chip.green{background:rgba(34,197,94,0.15);color:var(--green);border-color:rgba(34,197,94,0.4);}
+  .chip.amber{background:rgba(245,158,11,0.15);color:var(--amber);border-color:rgba(245,158,11,0.4);}
+  .chip.purple{background:rgba(168,85,247,0.15);color:var(--purple);border-color:rgba(168,85,247,0.4);}
+  
+  /* ========= CALLOUTS ========= */
+  .callout{
+    border-radius:10px;
+    padding:14px 16px;
+    margin:14px 0;
+    border-left:5px solid;
+    font-size:0.95rem;
+  }
+  .callout .ttl{
+    display:block;font-weight:800;
+    font-size:11px;letter-spacing:1.4px;
+    text-transform:uppercase;margin-bottom:6px;
+  }
+  .callout.info{background:rgba(0,212,255,0.08);border-color:var(--accent);}
+  .callout.info .ttl{color:var(--accent);}
+  .callout.example{background:rgba(34,197,94,0.08);border-color:var(--green);}
+  .callout.example .ttl{color:var(--green);}
+  .callout.warn{background:rgba(245,158,11,0.08);border-color:var(--amber);}
+  .callout.warn .ttl{color:var(--amber);}
+  .callout.error{background:rgba(239,68,68,0.08);border-color:var(--red);}
+  .callout.error .ttl{color:var(--red);}
+  .callout.tip{background:rgba(168,85,247,0.08);border-color:var(--purple);}
+  .callout.tip .ttl{color:var(--purple);}
+  
+  /* ========= STEP LIST ========= */
+  .steps{list-style:none;margin-left:0;counter-reset:st;}
+  .steps li{
+    counter-increment:st;
+    position:relative;
+    padding:14px 14px 14px 58px;
+    background:rgba(30,58,95,0.22);
+    border:1px solid var(--border);
+    border-radius:10px;
+    margin-bottom:10px;
+  }
+  .steps li::before{
+    content:counter(st);
+    position:absolute;
+    left:14px;top:14px;
+    width:30px;height:30px;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#00d4ff,#a855f7);
+    color:#0a0e1a;font-weight:800;font-size:14px;
+    border-radius:8px;
+    box-shadow:0 0 12px rgba(0,212,255,0.4);
+  }
+  .steps li strong{display:block;color:#fff;margin-bottom:3px;}
+  
+  /* ========= TABLES ========= */
+  .tbl-wrap{overflow-x:auto;margin:12px 0;border-radius:10px;border:1px solid var(--border);}
+  table{width:100%;border-collapse:collapse;font-size:14px;min-width:480px;}
+  th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--border);}
+  th{background:rgba(0,212,255,0.08);color:var(--accent);font-weight:700;font-size:12px;letter-spacing:.8px;text-transform:uppercase;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(0,212,255,0.03);}
+  
+  /* ========= ASCII / DIAGRAM ========= */
+  .diagram{
+    background:#070b14;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px;
+    font-family:ui-monospace,'Courier New',monospace;
+    font-size:12px;
+    line-height:1.5;
+    overflow-x:auto;
+    color:#8fb8d8;
+    white-space:pre;
+    margin:12px 0;
+  }
+  .diagram .hl-c{color:var(--accent);}
+  .diagram .hl-g{color:var(--green);}
+  .diagram .hl-a{color:var(--amber);}
+  .diagram .hl-p{color:var(--purple);}
+  
+  /* ========= KBD ========= */
+  kbd{
+    display:inline-block;
+    padding:2px 8px;
+    background:#0a0e1a;
+    border:1px solid var(--border);
+    border-bottom-width:2px;
+    border-radius:5px;
+    font-family:ui-monospace,monospace;
+    font-size:12px;font-weight:700;
+    color:var(--accent);
+    margin:0 2px;
+  }
+  
+  /* ========= FIXED BUTTONS ========= */
+  #backTop{
+    position:fixed;
+    right:16px;bottom:16px;
+    width:46px;height:46px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#00d4ff,#a855f7);
+    color:#0a0e1a;
+    border:none;
+    font-size:20px;font-weight:900;
+    cursor:pointer;
+    box-shadow:0 4px 20px rgba(0,212,255,0.5);
+    display:none;
+    z-index:1000;
+    transition:transform .2s;
+  }
+  #backTop.show{display:block;}
+  #backTop:active{transform:scale(0.92);}
+  
+  /* ========= HOME SPECIFIC ========= */
+  .home-hero{
+    text-align:center;
+    margin-bottom:22px;
+  }
+  .home-hero h1{
+    background:linear-gradient(135deg,#00d4ff 0%,#a855f7 50%,#22c55e 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    margin-bottom:8px;
+  }
+  .home-hero .sub{
+    color:var(--muted);
+    font-size:clamp(0.9rem,2.2vw,1.1rem);
+    max-width:720px;margin:0 auto 14px;
+  }
+  .home-quote{
+    max-width:720px;
+    margin:18px auto;
+    padding:16px 20px;
+    border-left:3px solid var(--accent);
+    background:rgba(0,212,255,0.05);
+    border-radius:0 10px 10px 0;
+    font-style:italic;
+    color:#cbd5e1;
+    text-align:left;
+    font-size:0.95rem;
+  }
+  .metrics{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+    gap:10px;
+    margin:18px 0;
+  }
+  .metric{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 10px;
+    text-align:center;
+  }
+  .metric .v{
+    font-size:1.6rem;font-weight:800;
+    background:linear-gradient(135deg,#00d4ff,#a855f7);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    line-height:1.1;
+  }
+  .metric .l{
+    font-size:10.5px;color:var(--muted);
+    text-transform:uppercase;letter-spacing:1px;
+    margin-top:5px;font-weight:600;
+  }
+  .stamp{
+    display:inline-flex;flex-wrap:wrap;
+    gap:10px;justify-content:center;
+    margin-top:6px;
+    font-size:12px;color:var(--muted);
+  }
+  .stamp span{
+    background:rgba(30,58,95,0.5);
+    border:1px solid var(--border);
+    padding:4px 10px;border-radius:6px;
+  }
+  
+  /* SVG slot */
+  .svg-slot{
+    width:100%;
+    margin:0 auto 22px;
+    max-width:980px;
+  }
+  .svg-slot svg{
+    width:100%;height:auto;display:block;
+    border-radius:14px;
+    box-shadow:0 0 60px rgba(0,212,255,0.12),
+               0 0 120px rgba(168,85,247,0.08),
+               0 10px 40px rgba(0,0,0,0.5);
+  }
+  
+  /* ========= CREDITS ========= */
+  .credits-card{
+    text-align:center;
+    padding:26px 20px;
+  }
+  .credits-card h2{margin-bottom:10px;}
+  .credits-name{
+    font-size:1.4rem;font-weight:800;
+    background:linear-gradient(135deg,#00d4ff,#a855f7);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    margin:8px 0;
+  }
+  .fiat{
+    margin-top:16px;
+    font-style:italic;
+    color:var(--purple);
+    font-size:1.05rem;
+    letter-spacing:.5px;
+  }
+  
+  /* ========= FUENTES ========= */
+  .fuente-item{
+    display:flex;gap:14px;align-items:flex-start;
+    padding:14px;border:1px solid var(--border);
+    border-radius:10px;margin-bottom:10px;
+    background:rgba(30,58,95,0.15);
+  }
+  .fuente-item .ic{
+    flex:0 0 40px;width:40px;height:40px;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#00d4ff,#a855f7);
+    border-radius:10px;color:#0a0e1a;font-weight:800;
+    font-size:16px;
+  }
+  .fuente-item .body{flex:1;min-width:0;}
+  .fuente-item .body .nm{font-weight:700;color:#fff;margin-bottom:3px;}
+  .fuente-item .body .ds{font-size:13px;color:var(--muted);word-break:break-word;}
+  
+  /* ========= FOOTER ========= */
+  footer{
+    max-width:1100px;margin:0 auto;
+    padding:22px 16px 40px;
+    border-top:1px solid var(--border);
+    text-align:center;
+    font-size:12.5px;
+    color:var(--muted);
+    line-height:1.8;
+  }
+  footer .line{margin-bottom:4px;}
+  footer .fiat-ft{color:var(--purple);font-style:italic;margin-top:8px;}
+  
+  /* ========= MOBILE ========= */
+  @media(max-width:520px){
+    main{padding:78px 12px 80px;}
+    .card{padding:16px 14px;}
+    .nav-btn{padding:7px 11px;font-size:11.5px;}
+    .steps li{padding:12px 12px 12px 52px;}
+    .steps li::before{left:11px;top:12px;width:28px;height:28px;font-size:12px;}
+    .metric .v{font-size:1.35rem;}
+    h2{font-size:1.25rem;}
+    table{font-size:13px;}
+    th,td{padding:9px 10px;}
+  }
+  
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= PROGRESS BAR ================= -->
+<div id="progressWrap"><div id="progressBar"></div></div>
+
+<!-- ================= NAVBAR ================= -->
+<nav id="navbar">
+  <div class="nav-scroll" id="navScroll">
+    <button class="nav-btn active" data-target="home">🏠 Inicio</button>
+    <button class="nav-btn" data-target="m1">🎹 M1 · Transpose</button>
+    <button class="nav-btn" data-target="m2">💾 M2 · Memoria</button>
+    <button class="nav-btn" data-target="m3">🧊 M3 · Freeze</button>
+    <button class="nav-btn" data-target="m4">📋 M4 · Playlist</button>
+    <button class="nav-btn" data-target="m5">🦶 M5 · Manos Libres</button>
+    <button class="nav-btn" data-target="fuentes">📚 Fuentes</button>
+    <button class="nav-btn credits-btn" data-target="creditos">✨ Créditos</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ================================================================= -->
+<!-- =========================== HOME ================================ -->
+<!-- ================================================================= -->
+<section id="home" class="view active">
+
+  <!-- ===== SVG PRIMERO, BIEN ARRIBA ===== -->
+  <div class="svg-slot" id="homeSvgSlot">
+    <div id="coverSvgWrap">
+      <svg id="coverSvg" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Portada animada: teclado Yamaha, transposición de semitonos y flujo de notas">
+        <defs>
+          <linearGradient id="bgG" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#070b14">
+              <animate attributeName="stop-color" values="#070b14;#0a1730;#070b14" dur="8s" repeatCount="indefinite"/>
+            </stop>
+            <stop offset="55%" stop-color="#0a0e1a">
+              <animate attributeName="stop-color" values="#0a0e1a;#101c38;#0a0e1a" dur="6.5s" repeatCount="indefinite"/>
+            </stop>
+            <stop offset="100%" stop-color="#070b14">
+              <animate attributeName="stop-color" values="#070b14;#0d1330;#070b14" dur="9s" repeatCount="indefinite"/>
+            </stop>
+          </linearGradient>
+
+          <pattern id="gridP" width="32" height="32" patternUnits="userSpaceOnUse">
+            <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#1e3a5f" stroke-width="0.5"/>
+          </pattern>
+
+          <radialGradient id="haloC">
+            <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.85"/>
+            <stop offset="55%" stop-color="#00d4ff" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+          </radialGradient>
+
+          <radialGradient id="haloP">
+            <stop offset="0%" stop-color="#a855f7" stop-opacity="0.75"/>
+            <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+          </radialGradient>
+
+          <radialGradient id="haloG">
+            <stop offset="0%" stop-color="#22c55e" stop-opacity="0.75"/>
+            <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+          </radialGradient>
+
+          <radialGradient id="haloA">
+            <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.75"/>
+            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+          </radialGradient>
+
+          <filter id="glowF" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2.2" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+
+          <filter id="glowBig" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="5.5" result="b"/>
+            <feMerge>
+              <feMergeNode in="b"/>
+              <feMergeNode in="b"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+
+          <linearGradient id="kbGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1e293b"/>
+            <stop offset="100%" stop-color="#0f172a"/>
+          </linearGradient>
+
+          <linearGradient id="beamGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#00d4ff" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#00d4ff" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+          </linearGradient>
+
+          <path id="flow1" d="M 130 340 Q 320 180 500 200" fill="none"/>
+          <path id="flow2" d="M 130 340 Q 350 240 610 215" fill="none"/>
+          <path id="flow3" d="M 130 340 Q 420 280 710 235" fill="none"/>
+        </defs>
+
+        <!-- Fondo -->
+        <rect width="800" height="450" fill="url(#bgG)"/>
+        <rect width="800" height="450" fill="url(#gridP)" opacity="0.25">
+          <animate attributeName="opacity" values="0.15;0.4;0.15" dur="5s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- Anillos orbitales concéntricos -->
+        <g transform="translate(400 225)">
+          <circle r="185" fill="none" stroke="#00d4ff" stroke-width="0.9" stroke-dasharray="4 14" opacity="0.35">
+            <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="28s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="222" fill="none" stroke="#a855f7" stroke-width="0.7" stroke-dasharray="2 22" opacity="0.28">
+            <animateTransform attributeName="transform" type="rotate" from="360 0 0" to="0 0 0" dur="42s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="150" fill="none" stroke="#22c55e" stroke-width="0.6" stroke-dasharray="1 9" opacity="0.25">
+            <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="18s" repeatCount="indefinite"/>
+          </circle>
+        </g>
+
+        <!-- Encabezado: badge TRANSPOSE -->
+        <g transform="translate(400 44)" text-anchor="middle" font-family="'Segoe UI',system-ui,sans-serif">
+          <text font-size="40" font-weight="900" letter-spacing="6" fill="#00d4ff" filter="url(#glowBig)">
+            TRANSPOSE
+            <animate attributeName="fill" values="#00d4ff;#a855f7;#22c55e;#f59e0b;#00d4ff" dur="9s" repeatCount="indefinite"/>
+          </text>
+          <text y="22" font-size="11.5" font-weight="700" letter-spacing="4.5" fill="#94a3b8" opacity="0.9">
+            PSR-SX920 · MEMORIA · PLAYLIST · MANOS LIBRES
+            <animate attributeName="opacity" values="0.55;1;0.55" dur="3.4s" repeatCount="indefinite"/>
+          </text>
+        </g>
+
+        <!-- Indicador LIVE -->
+        <g transform="translate(724 34)">
+          <circle r="6" fill="#ef4444">
+            <animate attributeName="r" values="4.5;7;4.5" dur="1.6s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="1;0.55;1" dur="1.6s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="12" fill="none" stroke="#ef4444" stroke-width="0.8" opacity="0.6">
+            <animate attributeName="r" values="7;16;7" dur="1.6s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.7;0;0.7" dur="1.6s" repeatCount="indefinite"/>
+          </circle>
+          <text x="-15" y="4" text-anchor="end" font-size="10" font-weight="800" letter-spacing="2" fill="#ef4444" font-family="'Segoe UI',sans-serif">LIVE</text>
+        </g>
+
+        <!-- ================== TECLADO ================== -->
+        <g transform="translate(80 330)">
+          <rect x="-10" y="-12" width="640" height="76" rx="10" fill="url(#kbGrad)" stroke="#1e3a5f" stroke-width="1.2" opacity="0.95"/>
+          <!-- Teclas blancas -->
+          <g>
+            <rect x="0"   y="0" width="70" height="52" rx="4" fill="#e2e8f0" stroke="#0a0e1a" stroke-width="1"/>
+            <rect x="72"  y="0" width="70" height="52" rx="4" fill="#e2e8f0" stroke="#0a0e1a" stroke-width="1"/>
+            <rect x="144" y="0" width="70" height="52" rx="4" fill="#e2e8f0" stroke="#0a0e1a" stroke-width="1"/>
+            <rect x="216" y="0" width="70" height="52" rx="4" fill="#e2e8f0" stroke="#0a0e1a" stroke-width="1"/>
+            <rect x="288" y="0" width="70" height="52" rx="4" fill="#e2e8f0" stroke="#0a0e1a" stroke-width="1"/>
+            <rect x="360" y="0" width="70" height="52" rx="4" fill="#e2e8f0" stroke="#0a0e1a" stroke-width="1"/>
+            <rect x="432" y="0" width="70" height="52" rx="4" fill="#e2e8f0" stroke="#0a0e1a" stroke-width="1"/>
+            <rect x="504" y="0" width="70" height="52" rx="4" fill="#e2e8f0" stroke="#0a0e1a" stroke-width="1"/>
+          </g>
+          <!-- Teclas negras -->
+          <g fill="#0a0e1a">
+            <rect x="46"  y="0" width="30" height="32" rx="3"/>
+            <rect x="118" y="0" width="30" height="32" rx="3"/>
+            <rect x="262" y="0" width="30" height="32" rx="3"/>
+            <rect x="334" y="0" width="30" height="32" rx="3"/>
+            <rect x="406" y="0" width="30" height="32" rx="3"/>
+            <rect x="478" y="0" width="30" height="32" rx="3"/>
+          </g>
+
+          <!-- Halo pulsante sobre la tecla C (primera blanca) -->
+          <ellipse cx="35" cy="26" rx="60" ry="48" fill="url(#haloC)" opacity="0.9">
+            <animate attributeName="opacity" values="0.5;0.95;0.5" dur="2.6s" repeatCount="indefinite"/>
+          </ellipse>
+
+          <!-- Tecla C resaltada -->
+          <rect x="0" y="0" width="70" height="52" rx="4" fill="none" stroke="#00d4ff" stroke-width="2.4" filter="url(#glowF)">
+            <animate attributeName="stroke-width" values="1.6;3.2;1.6" dur="2.6s" repeatCount="indefinite"/>
+          </rect>
+          <text x="35" y="34" text-anchor="middle" font-size="17" font-weight="900" fill="#0a0e1a" font-family="'Segoe UI',sans-serif">C(I)</text>
+
+          <!-- Etiquetas escala -->
+          <text x="107" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" font-family="'Segoe UI',sans-serif">D(II)</text>
+          <text x="179" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" font-family="'Segoe UI',sans-serif">E(III)</text>
+          <text x="251" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" font-family="'Segoe UI',sans-serif">F(IV)</text>
+          <text x="323" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" font-family="'Segoe UI',sans-serif">G(V)</text>
+          <text x="395" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" font-family="'Segoe UI',sans-serif">A(VI)</text>
+          <text x="467" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" font-family="'Segoe UI',sans-serif">B(VII)</text>
+        </g>
+
+        <!-- ============ FLUJOS: TRANSFORMACIÓN ============ -->
+        <!-- Trazo de flujo continuo (stroke-dashoffset) -->
+        <g fill="none" stroke-width="1.8" filter="url(#glowF)">
+          <path d="M 130 340 Q 320 180 500 200" stroke="#00d4ff" opacity="0.7" stroke-dasharray="8 10">
+            <animate attributeName="stroke-dashoffset" from="0" to="-36" dur="2.2s" repeatCount="indefinite"/>
+          </path>
+          <path d="M 130 340 Q 350 240 610 215" stroke="#a855f7" opacity="0.65" stroke-dasharray="8 10">
+            <animate attributeName="stroke-dashoffset" from="0" to="-36" dur="2.9s" repeatCount="indefinite"/>
+          </path>
+          <path d="M 130 340 Q 420 280 710 235" stroke="#22c55e" opacity="0.6" stroke-dasharray="8 10">
+            <animate attributeName="stroke-dashoffset" from="0" to="-36" dur="3.6s" repeatCount="indefinite"/>
+          </path>
+        </g>
+
+        <!-- Partículas viajeras con animateMotion -->
+        <g>
+          <circle r="3.2" fill="#00d4ff" filter="url(#glowF)">
+            <animateMotion dur="3.2s" repeatCount="indefinite" rotate="auto">
+              <mpath href="#flow1"/>
+            </animateMotion>
+            <animate attributeName="opacity" values="0;1;1;0" dur="3.2s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="3" fill="#a855f7" filter="url(#glowF)">
+            <animateMotion dur="4.1s" begin="0.5s" repeatCount="indefinite" rotate="auto">
+              <mpath href="#flow2"/>
+            </animateMotion>
+            <animate attributeName="opacity" values="0;1;1;0" dur="4.1s" begin="0.5s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="3.4" fill="#22c55e" filter="url(#glowF)">
+            <animateMotion dur="4.8s" begin="1s" repeatCount="indefinite" rotate="auto">
+              <mpath href="#flow3"/>
+            </animateMotion>
+            <animate attributeName="opacity" values="0;1;1;0" dur="4.8s" begin="1s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="2.6" fill="#f59e0b" filter="url(#glowF)">
+            <animateMotion dur="3.8s" begin="0.8s" repeatCount="indefinite" rotate="auto">
+              <mpath href="#flow1"/>
+            </animateMotion>
+            <animate attributeName="opacity" values="0;1;1;0" dur="3.8s" begin="0.8s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="2.8" fill="#00d4ff" filter="url(#glowF)">
+            <animateMotion dur="5.2s" begin="1.4s" repeatCount="indefinite" rotate="auto">
+              <mpath href="#flow2"/>
+            </animateMotion>
+            <animate attributeName="opacity" values="0;1;1;0" dur="5.2s" begin="1.4s" repeatCount="indefinite"/>
+          </circle>
+        </g>
+
+        <!-- Ghost notes viajeras (transparencia alta) -->
+        <g opacity="0.55">
+          <g>
+            <ellipse rx="8" ry="5.5" fill="#00d4ff"/>
+            <rect x="6" y="-22" width="1.6" height="22" fill="#00d4ff"/>
+            <animateMotion dur="4.6s" repeatCount="indefinite" rotate="auto">
+              <mpath href="#flow1"/>
+            </animateMotion>
+            <animate attributeName="opacity" values="0;0.75;0.75;0" dur="4.6s" repeatCount="indefinite"/>
+          </g>
+          <g>
+            <ellipse rx="8" ry="5.5" fill="#a855f7"/>
+            <rect x="6" y="-22" width="1.6" height="22" fill="#a855f7"/>
+            <animateMotion dur="5.4s" begin="1.2s" repeatCount="indefinite" rotate="auto">
+              <mpath href="#flow2"/>
+            </animateMotion>
+            <animate attributeName="opacity" values="0;0.7;0.7;0" dur="5.4s" begin="1.2s" repeatCount="indefinite"/>
+          </g>
+          <g>
+            <ellipse rx="8" ry="5.5" fill="#22c55e"/>
+            <rect x="6" y="-22" width="1.6" height="22" fill="#22c55e"/>
+            <animateMotion dur="6s" begin="2s" repeatCount="indefinite" rotate="auto">
+              <mpath href="#flow3"/>
+            </animateMotion>
+            <animate attributeName="opacity" values="0;0.7;0.7;0" dur="6s" begin="2s" repeatCount="indefinite"/>
+          </g>
+        </g>
+
+        <!-- ============ NODOS DE DESTINO ============ -->
+        <!-- D (II) -->
+        <g transform="translate(500 200)">
+          <circle r="30" fill="url(#haloC)" opacity="0.85">
+            <animate attributeName="r" values="26;34;26" dur="2.8s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="20" fill="#0a0e1a" stroke="#00d4ff" stroke-width="1.8" filter="url(#glowF)">
+            <animate attributeName="stroke-width" values="1.2;2.6;1.2" dur="2.8s" repeatCount="indefinite"/>
+          </circle>
+          <text y="6" text-anchor="middle" font-size="16" font-weight="900" fill="#00d4ff" font-family="'Segoe UI',sans-serif">D(II)</text>
+          <text y="48" text-anchor="middle" font-size="10.5" font-weight="700" fill="#94a3b8" font-family="'Segoe UI',sans-serif">+2 ST</text>
+        </g>
+
+        <!-- E (III) -->
+        <g transform="translate(610 215)">
+          <circle r="30" fill="url(#haloP)" opacity="0.85">
+            <animate attributeName="r" values="26;34;26" dur="3.4s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="20" fill="#0a0e1a" stroke="#a855f7" stroke-width="1.8" filter="url(#glowF)">
+            <animate attributeName="stroke-width" values="1.2;2.6;1.2" dur="3.4s" repeatCount="indefinite"/>
+          </circle>
+          <text y="6" text-anchor="middle" font-size="16" font-weight="900" fill="#a855f7" font-family="'Segoe UI',sans-serif">E(III)</text>
+          <text y="48" text-anchor="middle" font-size="10.5" font-weight="700" fill="#94a3b8" font-family="'Segoe UI',sans-serif">+4 ST</text>
+        </g>
+
+        <!-- G (V) -->
+        <g transform="translate(710 235)">
+          <circle r="30" fill="url(#haloG)" opacity="0.85">
+            <animate attributeName="r" values="26;34;26" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="20" fill="#0a0e1a" stroke="#22c55e" stroke-width="1.8" filter="url(#glowF)">
+            <animate attributeName="stroke-width" values="1.2;2.6;1.2" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <text y="6" text-anchor="middle" font-size="16" font-weight="900" fill="#22c55e" font-family="'Segoe UI',sans-serif">G(V)</text>
+          <text y="48" text-anchor="middle" font-size="10.5" font-weight="700" fill="#94a3b8" font-family="'Segoe UI',sans-serif">+7 ST</text>
+        </g>
+
+        <!-- Nodo origen C -->
+        <g transform="translate(130 340)">
+          <circle r="34" fill="url(#haloA)" opacity="0.75">
+            <animate attributeName="r" values="28;40;28" dur="2.2s" repeatCount="indefinite"/>
+          </circle>
+        </g>
+
+        <!-- Explosiones de partículas en destino D -->
+        <g transform="translate(500 200)" stroke="#00d4ff" stroke-width="1.6" fill="none" filter="url(#glowF)">
+          <line x1="0" y1="0" x2="0" y2="-46">
+            <animate attributeName="y2" values="0;-46" dur="2.4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;0" dur="2.4s" repeatCount="indefinite"/>
+          </line>
+          <line x1="0" y1="0" x2="40" y2="-22">
+            <animate attributeName="x2" values="0;40" dur="2.4s" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="0;-22" dur="2.4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;0" dur="2.4s" repeatCount="indefinite"/>
+          </line>
+          <line x1="0" y1="0" x2="46" y2="14">
+            <animate attributeName="x2" values="0;46" dur="2.4s" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="0;14" dur="2.4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;0" dur="2.4s" repeatCount="indefinite"/>
+          </line>
+          <line x1="0" y1="0" x2="-40" y2="-22">
+            <animate attributeName="x2" values="0;-40" dur="2.4s" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="0;-22" dur="2.4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;0" dur="2.4s" repeatCount="indefinite"/>
+          </line>
+        </g>
+
+        <!-- Botones de Registro (fila inferior) -->
+        <g transform="translate(180 415)">
+          <g>
+            <rect x="0" y="0" width="46" height="20" rx="5" fill="#0a0e1a" stroke="#00d4ff" stroke-width="1.5"/>
+            <text x="23" y="14" text-anchor="middle" font-size="11" font-weight="800" fill="#00d4ff" font-family="'Segoe UI',sans-serif">1</text>
+            <animate attributeName="opacity" values="0.55;1;0.55" dur="2.4s" repeatCount="indefinite"/>
+          </g>
+          <g transform="translate(58 0)">
+            <rect x="0" y="0" width="46" height="20" rx="5" fill="#0a0e1a" stroke="#00d4ff" stroke-width="1.5"/>
+            <text x="23" y="14" text-anchor="middle" font-size="11" font-weight="800" fill="#00d4ff" font-family="'Segoe UI',sans-serif">2</text>
+            <animate attributeName="opacity" values="0.55;1;0.55" dur="2.4s" begin="0.3s" repeatCount="indefinite"/>
+          </g>
+          <g transform="translate(116 0)">
+            <rect x="0" y="0" width="46" height="20" rx="5" fill="#0a0e1a" stroke="#a855f7" stroke-width="1.5"/>
+            <text x="23" y="14" text-anchor="middle" font-size="11" font-weight="800" fill="#a855f7" font-family="'Segoe UI',sans-serif">3</text>
+            <animate attributeName="opacity" values="0.55;1;0.55" dur="2.4s" begin="0.6s" repeatCount="indefinite"/>
+          </g>
+          <g transform="translate(174 0)">
+            <rect x="0" y="0" width="46" height="20" rx="5" fill="#0a0e1a" stroke="#22c55e" stroke-width="1.5"/>
+            <text x="23" y="14" text-anchor="middle" font-size="11" font-weight="800" fill="#22c55e" font-family="'Segoe UI',sans-serif">4</text>
+            <animate attributeName="opacity" values="0.55;1;0.55" dur="2.4s" begin="0.9s" repeatCount="indefinite"/>
+          </g>
+          <g transform="translate(232 0)">
+            <rect x="0" y="0" width="46" height="20" rx="5" fill="#0a0e1a" stroke="#f59e0b" stroke-width="1.5"/>
+            <text x="23" y="14" text-anchor="middle" font-size="11" font-weight="800" fill="#f59e0b" font-family="'Segoe UI',sans-serif">5</text>
+            <animate attributeName="opacity" values="0.55;1;0.55" dur="2.4s" begin="1.2s" repeatCount="indefinite"/>
+          </g>
+        </g>
+
+        <!-- Etiqueta "REGIST" -->
+        <text x="140" y="429" text-anchor="middle" font-size="9.5" font-weight="800" letter-spacing="2.5" fill="#64748b" font-family="'Segoe UI',sans-serif">REGIST</text>
+
+        <!-- Firma -->
+        <text x="780" y="443" text-anchor="end" font-size="9.5" font-weight="700" letter-spacing="1.5" fill="#94a3b8" font-family="'Segoe UI',sans-serif">
+          Rubén Sbarsky
+          <animate attributeName="opacity" values="0.35;0.95;0.35" dur="5s" repeatCount="indefinite"/>
+        </text>
+
+        <!-- Etiqueta de estado alternante -->
+        <g transform="translate(14 443)">
+          <text font-size="9.5" font-weight="800" letter-spacing="2" fill="#00d4ff" font-family="'Segoe UI',sans-serif">
+            <animate attributeName="fill" values="#00d4ff;#22c55e;#f59e0b;#00d4ff" dur="6s" repeatCount="indefinite"/>
+            <animate attributeName="textContent" dur="0s" fill="freeze"/>
+            ● TRANSPOSE ENGINE
+          </text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="home-hero">
+    <span class="badge">🎹 Tutorial técnico interactivo · Yamaha PSR-SX920 / SX720</span>
+    <h1>Transpose, Memoria de Registros, Playlist y Control Manos Libres</h1>
+    <p class="sub">Guía completa paso a paso para interpretar en directo con transposición almacenada, cambios de canción por pedal y control sin soltar el teclado.</p>
+
+    <div class="home-quote">
+      "Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien."
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="v">5</div><div class="l">Módulos</div></div>
+      <div class="metric"><div class="v">±12</div><div class="l">Semitonos</div></div>
+      <div class="metric"><div class="v">8</div><div class="l">Botones Registro</div></div>
+      <div class="metric"><div class="v">3</div><div class="l">Temas Demo</div></div>
+      <div class="metric"><div class="v">∞</div><div class="l">Manos Libres</div></div>
+    </div>
+
+    <div class="stamp">
+      <span>📅 20/09/2026</span>
+      <span>🕒 03:59:16</span>
+      <span>👨‍💻 Rubén Sbarsky</span>
+    </div>
+  </div>
+
+  <div class="card accent-cyan">
+    <h3>¿Qué vas a aprender?</h3>
+    <p>Este tutorial te guía desde el concepto de <strong>TRANSPOSE</strong> hasta la construcción de una <strong>Playlist completa de concierto</strong> con cambio de canciones mediante pedal. Todo el contenido está orientado al uso profesional en vivo:</p>
+    <ul>
+      <li><strong>Módulo 1:</strong> Fundamentos del TRANSPOSE y ajuste por panel físico o pantalla táctil.</li>
+      <li><strong>Módulo 2:</strong> Guardado de la transposición en la Memoria de Registros (.rgt).</li>
+      <li><strong>Módulo 3:</strong> Congelamiento de la transposición con <em>Registration Freeze</em>.</li>
+      <li><strong>Módulo 4:</strong> Creación paso a paso de una Playlist para concierto.</li>
+      <li><strong>Módulo 5:</strong> Control manos libres con pedal FC4A/FC5 y botones ASSIGNABLE.</li>
+    </ul>
+    <div class="callout info">
+      <span class="ttl">INFO · Notación musical</span>
+      Este tutorial utiliza exclusivamente el <strong>sistema americano de notas</strong> (<em>A, B, C, D, E, F, G</em>) con indicación del grado de la escala (<em>I, II, III, IV, V, VI, VII</em>). Ejemplo: <span class="chip key">C(I)</span> <span class="chip key">D(II)</span> <span class="chip key">E(III)</span> <span class="chip key">F(IV)</span> <span class="chip key">G(V)</span>.
+    </div>
+  </div>
+
+</section>
+
+<!-- ================================================================= -->
+<!-- ===================== MÓDULO 1 · TRANSPOSE ======================= -->
+<!-- ================================================================= -->
+<section id="m1" class="view">
+  <span class="badge">Módulo 1</span>
+  <h2>Fundamentos y Ajuste del TRANSPOSE</h2>
+
+  <div class="card accent-cyan">
+    <h3>¿Qué es el TRANSPOSE y cuál es su utilidad práctica?</h3>
+    <p>La función <strong>TRANSPOSE (Transposición)</strong> permite cambiar la afinación del teclado en intervalos de semitonos, desde <strong>−12 hasta +12 semitonos</strong>, lo que equivale a una octava completa arriba o abajo.</p>
+
+    <div class="callout example">
+      <span class="ttl">EJEMPLO · Caso pedagógico</span>
+      Imagina que te aprendiste una canción utilizando la postura física de los dedos en la escala de <span class="chip key">C(I)</span> mayor (usando acordes sencillos como <span class="chip key">C(I)</span>, <span class="chip key">F(IV)</span> y <span class="chip key">G(V)</span>). Si en un ensayo el cantante te pide la canción en la tonalidad de <span class="chip key">D(II)</span> mayor o <span class="chip key">E(III)</span> mayor, <strong>no necesitas re-aprender la digitación</strong>.
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>TRANSPOSE</th><th>Tus dedos tocan…</th><th>El teclado emite…</th><th>Resultado práctico</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>+2 semitonos</strong></td><td>Teclas de <span class="chip key">C(I)</span></td><td>Sonido en <span class="chip key">D(II)</span></td><td>Digitación intacta</td></tr>
+          <tr><td><strong>+4 semitonos</strong></td><td>Teclas de <span class="chip key">C(I)</span></td><td>Sonido en <span class="chip key">E(III)</span></td><td>Digitación intacta</td></tr>
+          <tr><td><strong>+7 semitonos</strong></td><td>Teclas de <span class="chip key">C(I)</span></td><td>Sonido en <span class="chip key">G(V)</span></td><td>Digitación intacta</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card accent-green">
+    <h3>Procedimiento de Ajuste en el PSR-SX920 / SX720</h3>
+
+    <h4 style="color:var(--green);margin:14px 0 8px;">Método A: Mediante los botones físicos del panel</h4>
+    <ol class="steps">
+      <li><strong>Ubica los botones</strong> A la izquierda de la pantalla táctil principal encontrarás los botones dedicados <kbd>TRANSPOSE [−]</kbd> y <kbd>[+]</kbd>.</li>
+      <li><strong>Modifica la afinación</strong>
+        <ul style="margin-top:6px;">
+          <li>Presiona <kbd>[+]</kbd> para subir la afinación medio tono por cada pulsación.</li>
+          <li>Presiona <kbd>[−]</kbd> para bajar la afinación medio tono por cada pulsación.</li>
+        </ul>
+      </li>
+      <li><strong>Reinicio rápido a cero</strong> Para volver instantáneamente al tono original (0 semitonos), presiona los botones <kbd>[−]</kbd> y <kbd>[+]</kbd> simultáneamente.</li>
+    </ol>
+
+    <h4 style="color:var(--accent);margin:18px 0 8px;">Método B: Mediante el menú en la pantalla táctil</h4>
+    <ol class="steps">
+      <li>Presiona el botón <kbd>MENU</kbd> en el panel y selecciona el icono <kbd>Transpose</kbd>.</li>
+      <li>En la pantalla de ajuste verás <strong>tres opciones independientes</strong>:
+        <ul style="margin-top:6px;">
+          <li><strong>Master:</strong> Cambia la afinación de todo el instrumento en general (voces del teclado y estilo de acompañamiento).</li>
+          <li><strong>Keyboard:</strong> Cambia únicamente la afinación de las voces asignadas al teclado y la nota raíz para disparar los acordes del estilo.</li>
+          <li><strong>Song:</strong> Cambia exclusivamente la afinación de las canciones MIDI que tengas en reproducción.</li>
+        </ul>
+      </li>
+    </ol>
+
+    <div class="callout warn">
+      <span class="ttl">ADVERTENCIA</span>
+      Los tres parámetros (<em>Master</em>, <em>Keyboard</em>, <em>Song</em>) son <strong>independientes entre sí</strong>. Un cambio en <em>Master</em> no afecta al valor de <em>Song</em> y viceversa. Verifica siempre en qué nivel estás ajustando.
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================= -->
+<!-- ============== MÓDULO 2 · MEMORIA DE REGISTROS =================== -->
+<!-- ================================================================= -->
+<section id="m2" class="view">
+  <span class="badge green">Módulo 2</span>
+  <h2>Programación y Guardado en la Memoria de Registros</h2>
+
+  <div class="card accent-green">
+    <p>Para no tener que ajustar el <strong>TRANSPOSE</strong> manualmente en pleno escenario, puedes almacenar la configuración en uno de los <strong>8 botones de la Memoria de Registros</strong>.</p>
+
+    <div class="diagram">
+┌────────────────────────────────────────────────────────────────────────┐
+│                   SECCIÓN REGISTRATION MEMORY                          │
+│                                                                        │
+│   <span class="hl-c">[MEMORY]</span>   <span class="hl-a">[FREEZE]</span>                                                  │
+└────────────────────────────────────────────────────────────────────────┘</div>
+  </div>
+
+  <div class="card accent-cyan">
+    <h3>Paso a Paso para Guardar la Transposición</h3>
+    <ol class="steps">
+      <li><strong>Configura el parámetro</strong> Ajusta el <strong>TRANSPOSE</strong> al valor deseado (por ejemplo, <kbd>+7</kbd> semitonos para ejecutar la forma de <span class="chip key">C(I)</span> y sonar en la tonalidad de <span class="chip key">G(V)</span>). Selecciona también la voz (Voice) y el estilo (Style) que acompañarán la canción.</li>
+      <li><strong>Abre la ventana de memorización</strong> Presiona el botón <kbd>MEMORY</kbd> en la sección <strong>REGISTRATION MEMORY</strong> del panel.</li>
+      <li><strong>Paso Crítico — Verificación de Casilla</strong> En la ventana emergente que aparece en la pantalla táctil, <strong>asegúrate de que la casilla Transpose tenga una marca de verificación (✓)</strong>.
+        <div class="callout warn" style="margin-top:8px;">
+          <span class="ttl">ADVERTENCIA</span>
+          Si esta casilla está <strong>desmarcada</strong>, el valor de transposición <strong>no se guardará</strong> en la memoria.
+        </div>
+      </li>
+      <li><strong>Asigna el botón de registro</strong> Mientras mantienes la ventana abierta en pantalla, presiona uno de los botones numerados del <strong>1 al 8</strong> en el panel frontal.</li>
+      <li><strong>Guardado definitivo del Banco de Registros (.rgt) en memoria de usuario</strong>
+        <ul style="margin-top:6px;">
+          <li>Presiona los botones <kbd>REGIST BANK [−]</kbd> y <kbd>[+]</kbd> <strong>simultáneamente</strong> para abrir la pantalla de selección de bancos.</li>
+          <li>Toca el icono de <strong>Guardar (Save)</strong> en la pantalla.</li>
+          <li>Selecciona la pestaña <strong>User</strong> o tu memoria USB conectada.</li>
+          <li>Asigna un nombre claro al archivo de banco (por ejemplo: <em>"Cancion_G_Mayor"</em>) y toca <kbd>Save Here</kbd>.</li>
+        </ul>
+      </li>
+    </ol>
+
+    <div class="callout error">
+      <span class="ttl">ADVERTENCIA CRÍTICA</span>
+      Si apagas el instrumento o cambias de banco de registros <strong>sin realizar el guardado en la memoria User o USB</strong>, la configuración realizada <strong>se perderá</strong>.
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================= -->
+<!-- ==================== MÓDULO 3 · FREEZE =========================== -->
+<!-- ================================================================= -->
+<section id="m3" class="view">
+  <span class="badge purple">Módulo 3</span>
+  <h2>Congelamiento de la Transposición (REGISTRATION FREEZE)</h2>
+
+  <div class="card accent-purple">
+    <p>Cuando estás tocando una canción en directo e intercambias registros (por ejemplo, pasando del botón <kbd>1</kbd> al botón <kbd>4</kbd> para activar un solo de guitarra con la mano derecha), <strong>no quieres que la canción cambie de tono repentinamente</strong> si los botones tienen valores de transposición distintos.</p>
+
+    <p>Para "congelar" la transposición y mantenerla fija durante todo el tema:</p>
+
+    <ol class="steps">
+      <li>Ve a <kbd>MENU</kbd> ➔ <kbd>Regist Freeze</kbd> en la pantalla táctil.</li>
+      <li>Toca la pantalla para marcar con una casilla de verificación <strong>(✓)</strong> el elemento <strong>Transpose</strong>.</li>
+      <li>Presiona el botón físico <kbd>FREEZE</kbd> en el panel del teclado para activarlo.</li>
+      <li>A partir de este momento, aunque presiones distintos botones de registro del <strong>1 al 8</strong>, el valor del <strong>TRANSPOSE</strong> se mantendrá inalterado.</li>
+    </ol>
+
+    <div class="callout tip">
+      <span class="ttl">CONSEJO</span>
+      La función <em>Regist Freeze</em> puede congelar otros parámetros además de <em>Transpose</em> (como Style, Voice, Tempo, etc.). Marca únicamente lo que necesites para evitar comportamientos inesperados en vivo.
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================= -->
+<!-- ====================== MÓDULO 4 · PLAYLIST ======================= -->
+<!-- ================================================================= -->
+<section id="m4" class="view">
+  <span class="badge amber">Módulo 4</span>
+  <h2>Ejercicio Práctico Integrado — Creación de una Playlist para un Concierto</h2>
+
+  <div class="card accent-amber">
+    <p>La función <strong>Playlist</strong> te permite crear una lista ordenada de canciones para tus actuaciones en directo, conectando cada registro guardado directamente a un botón de memoria específico <strong>sin alterar tus archivos de banco originales</strong>.</p>
+
+    <div class="diagram">
+┌────────────────────────────────────────────────────────────────────────┐
+│                        ESTRUCTURA DE LA PLAYLIST                       │
+│                                                                        │
+│ Archivo Playlist (<span class="hl-a">"Show_Viernes"</span>)                                       │
+│ ├── Registro 1: <span class="hl-c">"Himno_Victoria"</span> ──> Carga Banco 01 (C(I) - Trans: 0)   │
+│ ├── Registro 2: <span class="hl-g">"Balada_Atardecer"</span> ─> Carga Banco 02 (E(III) - Trans: +4)│
+│ └── Registro 3: <span class="hl-p">"Fiesta_Latina"</span> ───> Carga Banco 03 (G(V) - Trans: +7) │
+└────────────────────────────────────────────────────────────────────────┘</div>
+  </div>
+
+  <div class="card accent-cyan">
+    <h3>Configuración del Repertorio de Ejemplo</h3>
+    <p>Vamos a programar 3 canciones interpretadas con la postura de <span class="chip key">C(I)</span> mayor, pero ajustadas a la voz de nuestro cantante:</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Tema</th><th>Tonalidad requerida</th><th>Transpose</th><th>Banco</th><th>Botón</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>"Himno de Victoria"</strong></td>
+            <td><span class="chip key">C(I)</span> mayor (original)</td>
+            <td><span class="chip green">0</span></td>
+            <td>"Cancion_1"</td>
+            <td><kbd>1</kbd></td>
+          </tr>
+          <tr>
+            <td><strong>"Balada del Atardecer"</strong></td>
+            <td><span class="chip key">E(III)</span> mayor</td>
+            <td><span class="chip amber">+4</span></td>
+            <td>"Cancion_2"</td>
+            <td><kbd>1</kbd></td>
+          </tr>
+          <tr>
+            <td><strong>"Fiesta Latina"</strong></td>
+            <td><span class="chip key">G(V)</span> mayor</td>
+            <td><span class="chip purple">+7</span></td>
+            <td>"Cancion_3"</td>
+            <td><kbd>1</kbd></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card accent-green">
+    <h3>Paso a Paso para Construir la Playlist</h3>
+    <ol class="steps">
+      <li><strong>Abre la pantalla de Playlist</strong> Presiona el botón <kbd>PLAYLIST</kbd> en el panel frontal del teclado.</li>
+      <li><strong>Crea una nueva lista</strong> Toca el icono <kbd>New</kbd> en la pantalla táctil para generar un archivo de lista de reproducción limpio.</li>
+      <li><strong>Agrega la primera canción</strong>
+        <ul style="margin-top:6px;">
+          <li>Toca la opción <kbd>Add Record</kbd> en la pantalla.</li>
+          <li>Selecciona <kbd>Select from Registration Bank</kbd>.</li>
+          <li>Navega en tu memoria <strong>User</strong> o USB, selecciona el archivo de banco <em>"Cancion_1"</em> y toca <kbd>Add to Playlist</kbd>.</li>
+        </ul>
+      </li>
+      <li><strong>Configura la acción de carga automática</strong>
+        <ul style="margin-top:6px;">
+          <li>Selecciona el registro recién añadido en la lista y toca <kbd>Edit</kbd>.</li>
+          <li>En la sección <strong>Load Regist Memory</strong>, presiona el botón <kbd>1</kbd>. Al tocar el nombre de la canción en pantalla, el teclado cargará automáticamente el Banco 1 con la transposición en 0 semitonos para <span class="chip key">C(I)</span> mayor.</li>
+        </ul>
+      </li>
+      <li><strong>Agrega las siguientes canciones</strong> Repite el proceso de <kbd>Add Record</kbd> para el banco <em>"Cancion_2"</em> (Transposición en <strong>+4</strong> para sonar en <span class="chip key">E(III)</span> mayor) y para el banco <em>"Cancion_3"</em> (Transposición en <strong>+7</strong> para sonar en <span class="chip key">G(V)</span> mayor).</li>
+      <li><strong>Guarda la Playlist</strong>
+        <ul style="margin-top:6px;">
+          <li>Toca el icono de <strong>Guardar (Save)</strong> en la esquina superior de la pantalla táctil.</li>
+          <li>Asigna el nombre a tu concierto (por ejemplo: <em>"Show_Viernes"</em>) y toca <kbd>Save Here</kbd>.</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ================================================================= -->
+<!-- ================ MÓDULO 5 · CONTROL MANOS LIBRES ================= -->
+<!-- ================================================================= -->
+<section id="m5" class="view">
+  <span class="badge red">Módulo 5</span>
+  <h2>Control Manos Libres en Vivo — Cambiar Registros y Canciones con Pedal o Botones ASSIGNABLE</h2>
+
+  <div class="card accent-red">
+    <p>Para tocar <strong>sin pausar tu interpretación en ambas manos</strong>, puedes configurar un <strong>pedal de footswitch</strong> (como el Yamaha FC4A o FC5) conectado a la toma <strong>FOOT PEDAL 1 o 2</strong>, o bien usar los botones <strong>ASSIGNABLE– / [A]–[F]</strong> para avanzar en tu secuencia de memoria y en la Playlist.</p>
+
+    <div class="diagram">
+┌────────────────────────────────────────────────────────────────────────┐
+│               CONEXIÓN Y CONTROL CON PEDAL EN VIVO                     │
+│                                                                        │
+│  <span class="hl-c">[FOOT PEDAL 1]</span> ─── (Pedal FC4A/FC5)                                   │
+│         │                                                              │
+│         └──> Asignación: <span class="hl-g">"Regist +"</span> (Avanza Secuencia / Siguiente Banco)│
+└────────────────────────────────────────────────────────────────────────┘</div>
+  </div>
+
+  <div class="card accent-cyan">
+    <h3>Paso a Paso 1: Configurar la Secuencia de Registros (Regist Sequence)</h3>
+    <p>La función <strong>Registration Sequence</strong> te permite presionar el pedal para avanzar secuencialmente a través de las memorias guardadas en orden.</p>
+
+    <ol class="steps">
+      <li><strong>Conecta el pedal</strong> Asegúrate de conectar tu pedal de interruptor a la toma <kbd>FOOT PEDAL 1 o 2</kbd> en el panel trasero.</li>
+      <li><strong>Accede al menú de secuencia</strong> Toca <kbd>MENU</kbd> ➔ <kbd>Regist Sequence</kbd> en la pantalla táctil.</li>
+      <li><strong>Asigna el control del pedal</strong>
+        <ul style="margin-top:6px;">
+          <li>En la opción <strong>Pedal Control</strong>, selecciona <kbd>Regist +</kbd> y asígnalo a <strong>Pedal 1</strong> (o <strong>Pedal 2</strong>, según la toma donde lo conectaste).</li>
+          <li><em>(Opcional)</em> Si cuentas con un segundo pedal, puedes asignar la función <kbd>Regist −</kbd> para retroceder en la secuencia.</li>
+        </ul>
+      </li>
+      <li><strong>Programa el orden de ejecución</strong> En el área <strong>Sequence Data</strong>, presiona en el panel los botones de registro en el orden que desees usar durante la canción (por ejemplo: <kbd>1</kbd> ➔ <kbd>2</kbd> ➔ <kbd>3</kbd> ➔ <kbd>4</kbd>) y toca <kbd>Insert</kbd> en pantalla para añadirlos.</li>
+      <li><strong>Configura la transición automática de canciones (Paso Maestro)</strong> En el campo <strong>End</strong>, selecciona la acción que ocurrirá al llegar al final del último registro de la canción:
+        <ul style="margin-top:6px;">
+          <li><strong>Stop:</strong> La secuencia se detiene en el último botón.</li>
+          <li><strong>Top:</strong> La secuencia regresa al primer registro del mismo banco.</li>
+          <li><strong>Next:</strong> <span style="color:var(--green);font-weight:700;">¡La opción recomendada para espectáculos!</span> Al presionar el pedal en el último registro, el teclado pasará automáticamente al <strong>siguiente Banco de Registros</strong> guardado en la misma carpeta o Playlist.</li>
+        </ul>
+      </li>
+      <li><strong>Activa la secuencia</strong> Toca la opción <kbd>Sequence [On]</kbd> en la pantalla. Verás que el indicador de secuencia aparece activo en la pantalla principal.</li>
+    </ol>
+  </div>
+
+  <div class="card accent-purple">
+    <h3>Paso a Paso 2: Asignar funciones avanzadas a los Botones ASSIGNABLE</h3>
+    <p>Si prefieres usar los botones asignables del panel (<strong>ASSIGNABLE–</strong> o <strong>[A]–[F]</strong>) para gestionar tus cambios de canciones o transposición directamente:</p>
+
+    <ol class="steps">
+      <li>Presiona el botón <kbd>MENU</kbd> ➔ <kbd>Assignable</kbd>.</li>
+      <li>Toca sobre la pantalla en el botón asignable que deseas configurar (por ejemplo, el botón <strong>ASSIGNABLE [A]</strong> o <strong>ASSIGNABLE</strong>).</li>
+      <li>Selecciona la categoría deseada de la lista:
+        <ul style="margin-top:6px;">
+          <li><strong>Registration Sequence + / −:</strong> Permite avanzar o retroceder en tu secuencia programada.</li>
+          <li><strong>Registration Bank + / −:</strong> Cambia directamente al siguiente o anterior banco de canciones.</li>
+          <li><strong>Playlist Next / Previous:</strong> Salta al siguiente o anterior tema en tu lista de reproducción.</li>
+          <li><strong>Transpose + / −:</strong> Sube o baja la transposición en semitonos directamente con el botón.</li>
+        </ul>
+      </li>
+      <li>Cierra la pantalla. A partir de este momento, tus botones personalizados del panel realizarán la acción seleccionada instantáneamente.</li>
+    </ol>
+  </div>
+
+  <div class="card accent-green">
+    <h3>Demostración del Escenario Real en Vivo</h3>
+    <ul>
+      <li>Llegas a tu presentación, abres la <strong>Playlist</strong> y seleccionas tu concierto <em>"Show_Viernes"</em>.</li>
+      <li>Con el pedal configurado en <strong>Regist Sequence (+)</strong> y la opción de final en <strong>Next</strong>, inicias el <strong>Tema 1</strong>.</li>
+      <li>Cada vez que pisas el pedal con el pie, el teclado cambia tus sonidos y arreglos del botón <kbd>1</kbd> al <kbd>2</kbd>, <kbd>3</kbd>, etc.</li>
+      <li>Al terminar el Tema 1, pisas el pedal una vez más: el instrumento pasa automáticamente al <strong>Tema 2</strong>, cargando la nueva voz, el estilo y el <strong>TRANSPOSE en +4 semitonos</strong> para sonar en <span class="chip key">E(III)</span> mayor.</li>
+    </ul>
+
+    <div class="callout info">
+      <span class="ttl">INFO · Flujo completo</span>
+      <strong>Playlist → Regist Sequence → Pedal → End: Next → Siguiente Banco</strong> = cambio total de voz, estilo y transposición sin soltar el teclado.
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================= -->
+<!-- ========================== FUENTES =============================== -->
+<!-- ================================================================= -->
+<section id="fuentes" class="view">
+  <span class="badge purple">Referencias</span>
+  <h2>Fuentes y Referencias</h2>
+
+  <div class="card accent-purple">
+    <p>Este tutorial ha sido elaborado <strong>exclusivamente</strong> a partir del documento fuente indicado a continuación. No se ha consultado ni incorporado información externa.</p>
+
+    <div class="fuente-item">
+      <div class="ic">📄</div>
+      <div class="body">
+        <div class="nm">Documento fuente principal</div>
+        <div class="ds">TRANSPOSE, MEMORIA DE REGISTROS, PLAYLIST Y CONTROL MANOS LIBRES EN YAMAHA PSR-SX920 — <strong>Rubén Sbarsky</strong></div>
+      </div>
+    </div>
+
+    <div class="fuente-item">
+      <div class="ic">🎹</div>
+      <div class="body">
+        <div class="nm">Hardware de referencia</div>
+        <div class="ds">Yamaha PSR-SX920 / PSR-SX720 — Teclado arreglista profesional de la serie PSR-SX de Yamaha Corporation.</div>
+      </div>
+    </div>
+
+    <div class="fuente-item">
+      <div class="ic">🎛️</div>
+      <div class="body">
+        <div class="nm">Accesorios mencionados</div>
+        <div class="ds">Pedales de footswitch Yamaha FC4A y FC5, utilizados para control manos libres.</div>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <span class="ttl">INFO</span>
+      El documento original no incluye enlaces externos ni vídeos. Por coherencia con la regla de integridad, no se han añadido URLs ni referencias no presentes en la fuente.
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================= -->
+<!-- ========================= CRÉDITOS =============================== -->
+<!-- ================================================================= -->
+<section id="creditos" class="view">
+  <span class="badge purple">Créditos</span>
+  <h2>Créditos del Tutorial</h2>
+
+  <!-- Mismo SVG animado se moverá aquí por JS -->
+  <div class="svg-slot" id="creditosSvgSlot"></div>
+
+  <div class="card credits-card accent-purple">
+    <h3>Transpose, Memoria de Registros, Playlist y Control Manos Libres en Yamaha PSR-SX920</h3>
+    <p style="color:var(--muted);">Tutorial técnico interactivo · Edición educativa</p>
+
+    <div class="credits-name">👨‍💻 Rubén Sbarsky</div>
+    <p><strong>Autor y desarrollador del contenido</strong></p>
+
+    <div class="stamp" style="margin-top:14px;">
+      <span>📅 20/09/2026</span>
+      <span>🕒 03:59:16</span>
+    </div>
+
+    <div class="callout info" style="text-align:left;margin-top:18px;">
+      <span class="ttl">INFO · Uso educativo</span>
+      Este tutorial ha sido creado con fines exclusivamente <strong>educativos y de divulgación</strong> para músicos, organistas y teclistas que utilicen los modelos Yamaha PSR-SX920 o PSR-SX720.
+    </div>
+
+    <p class="fiat">Fiat iustitia, ruat caelum.</p>
+  </div>
+</section>
+
+</main>
+
+<!-- ================= BACK TO TOP ================= -->
+<button id="backTop" aria-label="Volver arriba">↑</button>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="line">📚 Tutorial solo con fines Educativos y Divulgación</div>
+  <div class="line">👨‍💻 Créditos: Rubén Sbarsky</div>
+  <div class="line">📅 FECHA: 20/09/2026 · Hora: 03:59:16</div>
+  <div class="fiat-ft">Fiat iustitia, ruat caelum.</div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ================= SPA NAV ================= */
+  var buttons = document.querySelectorAll('.nav-btn');
+  var views = document.querySelectorAll('.view');
+  var navScroll = document.getElementById('navScroll');
+  var progressBar = document.getElementById('progressBar');
+  var backTop = document.getElementById('backTop');
+  var coverSvgWrap = document.getElementById('coverSvgWrap');
+  var homeSvgSlot = document.getElementById('homeSvgSlot');
+  var creditosSvgSlot = document.getElementById('creditosSvgSlot');
+
+  function showView(id){
+    views.forEach(function(v){
+      v.classList.toggle('active', v.id === id);
+    });
+    buttons.forEach(function(b){
+      b.classList.toggle('active', b.dataset.target === id);
+    });
+
+    /* Mover SVG al slot correcto */
+    if (id === 'home' && coverSvgWrap && homeSvgSlot) {
+      if (coverSvgWrap.parentNode !== homeSvgSlot) {
+        homeSvgSlot.appendChild(coverSvgWrap);
+      }
+    } else if (id === 'creditos' && coverSvgWrap && creditosSvgSlot) {
+      if (coverSvgWrap.parentNode !== creditosSvgSlot) {
+        creditosSvgSlot.appendChild(coverSvgWrap);
+      }
+      /* Reiniciar animación del SVG */
+      var svgEl = document.getElementById('coverSvg');
+      if (svgEl && typeof svgEl.setCurrentTime === 'function') {
+        try { svgEl.setCurrentTime(0); } catch(e){}
+      }
+    }
+
+    /* Centrar botón activo en navbar */
+    var activeBtn = document.querySelector('.nav-btn.active');
+    if (activeBtn && navScroll) {
+      var btnLeft = activeBtn.offsetLeft;
+      var btnW = activeBtn.offsetWidth;
+      var scW = navScroll.clientWidth;
+      navScroll.scrollTo({
+        left: btnLeft - scW/2 + btnW/2,
+        behavior: 'smooth'
+      });
+    }
+
+    window.scrollTo({top:0, behavior:'smooth'});
+    updateProgress();
+  }
+
+  buttons.forEach(function(b){
+    b.addEventListener('click', function(){
+      showView(b.dataset.target);
+    });
+  });
+
+  /* ================= PROGRESS BAR ================= */
+  function updateProgress(){
+    var h = document.documentElement;
+    var scrolled = h.scrollTop || document.body.scrollTop;
+    var total = (h.scrollHeight || document.body.scrollHeight) - h.clientHeight;
+    var pct = total > 0 ? (scrolled / total) * 100 : 0;
+    progressBar.style.width = pct + '%';
+    if (scrolled > 320) {
+      backTop.classList.add('show');
+    } else {
+      backTop.classList.remove('show');
+    }
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  window.addEventListener('resize', updateProgress, {passive:true});
+
+  /* ================= BACK TO TOP ================= */
+  backTop.addEventListener('click', function(){
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  /* ================= INIT ================= */
+  updateProgress();
+})();
+</script>
+</body>
+</html>
