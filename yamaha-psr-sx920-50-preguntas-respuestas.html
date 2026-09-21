@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yamaha PSR-SX920 · 50 Preguntas &amp; Respuestas</title>
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --card:#0f172a;
+    --border:#1e3a5f;
+    --accent:#00d4ff;
+    --green:#22c55e;
+    --amber:#f59e0b;
+    --red:#ef4444;
+    --purple:#a855f7;
+    --text:#e2e8f0;
+    --muted:#94a3b8;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height:1.65;
+    padding-top:98px;
+    -webkit-text-size-adjust:100%;
+  }
+  /* ===== PROGRESO ===== */
+  #progress{
+    position:fixed;top:0;left:0;height:3px;width:0%;
+    background:linear-gradient(90deg,var(--accent),var(--purple),var(--green));
+    z-index:200;transition:width .12s linear;
+    box-shadow:0 0 10px rgba(0,212,255,.6);
+  }
+  /* ===== NAVBAR ===== */
+  #topbar{
+    position:fixed;top:3px;left:0;right:0;z-index:150;
+    background:rgba(10,14,26,.96);
+    border-bottom:1px solid var(--border);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+  }
+  .navwrap{
+    display:flex;align-items:center;gap:12px;
+    overflow-x:auto;overflow-y:hidden;
+    padding:10px 14px;
+    scrollbar-width:thin;
+    scrollbar-color:var(--border) transparent;
+  }
+  .navwrap::-webkit-scrollbar{height:5px}
+  .navwrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+  .brand{
+    flex:0 0 auto;font-weight:800;font-size:13px;letter-spacing:1.6px;
+    color:var(--accent);text-shadow:0 0 12px rgba(0,212,255,.5);
+    padding-right:8px;border-right:1px solid var(--border);
+    white-space:nowrap;
+  }
+  #nav{display:flex;gap:8px;flex:0 0 auto}
+  .nav-btn{
+    flex:0 0 auto;
+    padding:8px 14px;
+    border-radius:999px;
+    background:#0f172a;
+    border:1px solid var(--border);
+    color:var(--muted);
+    font-size:13px;
+    font-weight:600;
+    white-space:nowrap;
+    cursor:pointer;
+    transition:.2s;
+    font-family:inherit;
+  }
+  .nav-btn:hover{color:var(--text);border-color:#2c5282}
+  .nav-btn.active{
+    background:rgba(0,212,255,.12);
+    border-color:var(--accent);
+    color:var(--accent);
+    box-shadow:0 0 14px rgba(0,212,255,.28);
+  }
+  /* ===== SECCIONES SPA ===== */
+  .section{display:none}
+  .section.active{display:block;animation:fadeIn .35s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .container{max-width:1100px;margin:0 auto;padding:26px 16px 70px}
+
+  /* ===== HOME ===== */
+  .badge{
+    display:inline-block;
+    padding:5px 14px;border-radius:999px;
+    background:rgba(0,212,255,.1);
+    border:1px solid rgba(0,212,255,.4);
+    color:var(--accent);
+    font-size:11px;font-weight:700;letter-spacing:2.4px;
+    margin-bottom:14px;
+  }
+  h1.hero-title{
+    font-size:clamp(1.6rem,5vw,2.8rem);
+    line-height:1.15;margin:0 0 10px;
+    font-weight:800;
+    background:linear-gradient(100deg,#00d4ff,#a855f7 45%,#22c55e);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .hero-sub{color:var(--muted);font-size:clamp(.9rem,2.6vw,1.05rem);margin:0 0 18px;max-width:820px}
+  .svg-frame{
+    width:100%;
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    background:#070b14;
+    box-shadow:0 0 45px rgba(0,212,255,.10), inset 0 0 60px rgba(0,0,0,.6);
+    margin:0 0 22px;
+  }
+  .svg-frame svg{display:block;width:100%;height:auto;aspect-ratio:16/9}
+  .home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:22px 0}
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px;
+  }
+  .metric{text-align:center}
+  .metric .val{font-size:1.9rem;font-weight:800;color:var(--accent);line-height:1.1}
+  .metric .lab{font-size:.76rem;letter-spacing:1.6px;color:var(--muted);text-transform:uppercase;margin-top:6px}
+  .quote{
+    border-left:3px solid var(--accent);
+    background:linear-gradient(90deg,rgba(0,212,255,.08),transparent);
+    padding:16px 18px;border-radius:0 12px 12px 0;
+    font-style:italic;color:#cbd5e1;margin:22px 0;
+  }
+  .quote span{display:block;margin-top:8px;font-style:normal;font-size:.82rem;color:var(--muted)}
+
+  /* ===== CABECERAS DE SECCIÓN ===== */
+  .sec-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+  .sec-icon{
+    flex:0 0 auto;width:52px;height:52px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:24px;background:#0f172a;border:1px solid var(--border);
+    box-shadow:0 0 22px rgba(0,212,255,.10);
+  }
+  .sec-head h2{margin:0 0 4px;font-size:clamp(1.15rem,3.4vw,1.6rem);line-height:1.25}
+  .sec-sub{margin:0;font-size:.8rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted)}
+
+  /* ===== CALLOUTS ===== */
+  .callout{
+    border-radius:12px;padding:14px 16px;margin:0 0 20px;
+    border:1px solid var(--border);background:#0f172a;
+    font-size:.95rem;color:#cbd5e1;
+  }
+  .callout.info{border-left:4px solid var(--accent);background:rgba(0,212,255,.06)}
+  .callout.example{border-left:4px solid var(--green);background:rgba(34,197,94,.06)}
+  .callout.warn{border-left:4px solid var(--amber);background:rgba(245,158,11,.07)}
+  .callout.error{border-left:4px solid var(--red);background:rgba(239,68,68,.07)}
+
+  /* ===== Q&A ===== */
+  .sec-tools{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 16px}
+  .btn{
+    padding:8px 14px;border-radius:8px;cursor:pointer;font-family:inherit;
+    font-size:.82rem;font-weight:600;
+    background:#0f172a;border:1px solid var(--border);color:var(--muted);
+    transition:.2s;
+  }
+  .btn:hover{color:var(--accent);border-color:var(--accent)}
+  .qa-list{display:flex;flex-direction:column;gap:12px}
+  .qa{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:12px;overflow:hidden;transition:border-color .2s;
+  }
+  .qa:hover{border-color:#2c5282}
+  .qa-q{
+    display:flex;gap:12px;align-items:flex-start;
+    padding:15px 16px;cursor:pointer;user-select:none;
+  }
+  .qa-num{
+    flex:0 0 auto;min-width:34px;height:26px;border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:.72rem;font-weight:800;letter-spacing:.5px;
+    background:rgba(0,212,255,.1);color:var(--accent);
+    border:1px solid rgba(0,212,255,.35);
+  }
+  .qa-q h3{margin:0;font-size:.98rem;font-weight:700;flex:1;line-height:1.45}
+  .chev{flex:0 0 auto;color:var(--muted);font-size:.8rem;transition:transform .25s;line-height:1.6}
+  .qa.open .chev{transform:rotate(180deg)}
+  .qa-a{
+    display:none;padding:0 16px 16px 62px;
+    color:#cbd5e1;font-size:.93rem;border-top:1px solid rgba(30,58,95,.5);
+    padding-top:14px;
+  }
+  .qa.open .qa-a{display:block;animation:fadeIn .25s ease}
+
+  /* ===== TABLA ===== */
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;margin:16px 0}
+  table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:460px}
+  th,td{padding:11px 14px;text-align:left;border-bottom:1px solid rgba(30,58,95,.55)}
+  th{background:#0d1526;color:var(--accent);font-size:.76rem;letter-spacing:1.2px;text-transform:uppercase}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:rgba(0,212,255,.035)}
+
+  /* ===== PIANO INTERACTIVO ===== */
+  .piano{display:flex;gap:5px;overflow-x:auto;padding:6px 2px 10px}
+  .pkey{
+    flex:1 0 48px;min-width:48px;height:104px;
+    border-radius:0 0 9px 9px;
+    background:linear-gradient(#f8fafc,#c3ced9);
+    border:1px solid #334155;border-top:none;
+    color:#0f172a;cursor:pointer;
+    display:flex;flex-direction:column;justify-content:flex-end;align-items:center;
+    padding-bottom:9px;font-weight:800;font-size:.9rem;user-select:none;
+    transition:.18s;
+  }
+  .pkey small{font-size:.66rem;color:#475569;font-weight:700;letter-spacing:1px;margin-top:3px}
+  .pkey.active{background:linear-gradient(#7dd3fc,#00d4ff);box-shadow:0 0 20px rgba(0,212,255,.65);color:#04121d}
+  .pkey:active{transform:translateY(2px)}
+
+  /* ===== CRÉDITOS ===== */
+  .cred-list{list-style:none;padding:0;margin:18px 0;display:grid;gap:10px}
+  .cred-list li{
+    background:var(--card);border:1px solid var(--border);border-radius:10px;
+    padding:13px 16px;display:flex;flex-wrap:wrap;gap:6px;align-items:baseline;
+  }
+  .cred-list .k{color:var(--muted);font-size:.76rem;letter-spacing:1.6px;text-transform:uppercase;min-width:110px}
+  .cred-list .v{font-weight:700;color:var(--text)}
+  .fiat{
+    text-align:center;font-style:italic;color:var(--amber);
+    letter-spacing:1px;margin:26px 0 0;font-size:1.02rem;
+  }
+
+  /* ===== FOOTER ===== */
+  footer{
+    border-top:1px solid var(--border);
+    background:#080c16;
+    padding:26px 16px 34px;
+    text-align:center;
+    color:var(--muted);
+    font-size:.85rem;
+    line-height:2;
+  }
+  footer .f1{color:var(--text);font-weight:600}
+  footer .f2{color:var(--accent);font-weight:700}
+
+  /* ===== BOTÓN ARRIBA ===== */
+  #toTop{
+    position:fixed;right:16px;bottom:18px;z-index:160;
+    width:46px;height:46px;border-radius:50%;
+    background:rgba(0,212,255,.14);
+    border:1px solid var(--accent);
+    color:var(--accent);font-size:20px;font-weight:800;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;transition:.28s;
+    box-shadow:0 0 20px rgba(0,212,255,.25);
+    font-family:inherit;
+  }
+  #toTop.show{opacity:1;pointer-events:auto}
+  #toTop:hover{background:rgba(0,212,255,.28)}
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width:640px){
+    body{padding-top:92px}
+    .container{padding:18px 12px 60px}
+    .qa-a{padding-left:16px}
+    .sec-icon{width:44px;height:44px;font-size:20px}
+    .metric .val{font-size:1.55rem}
+    .brand{font-size:11px;letter-spacing:1px}
+    .nav-btn{font-size:12px;padding:7px 12px}
+    .pkey{height:92px;min-width:44px;flex:1 0 44px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header id="topbar">
+  <div class="navwrap">
+    <span class="brand">◈ PSR-SX920</span>
+    <nav id="nav"></nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ================= HOME ================= -->
+  <section id="home" class="section active">
+    <div class="container">
+      <div class="badge">ARRANGER WORKSTATION · GUÍA TÉCNICA EDUCATIVA</div>
+      <h1 class="hero-title">Yamaha PSR-SX920<br>50 Preguntas &amp; Respuestas</h1>
+      <p class="hero-sub">Un recorrido guiado por la arquitectura, las voces, los estilos, la mezcla y la creación de contenido del arranger workstation de alto rendimiento de Yamaha. Por Rubén Sbarsky.</p>
+
+      <div class="svg-frame" id="homeSvg"></div>
+
+      <div class="home-grid">
+        <div class="card metric"><div class="val">50</div><div class="lab">Preguntas</div></div>
+        <div class="card metric"><div class="val">7</div><div class="lab">Bloques temáticos</div></div>
+        <div class="card metric"><div class="val">4</div><div class="lab">Partes de voz</div></div>
+        <div class="card metric"><div class="val">8</div><div class="lab">Bandas Master EQ</div></div>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-top:0;font-size:1.1rem">La arquitectura de un Arranger Workstation</h2>
+        <p style="margin-bottom:0;color:#cbd5e1">La arquitectura de un Arranger Workstation como el Yamaha PSR-SX920 está diseñada para que la tecnología desaparezca en favor de la música. Como consultor, siempre recalco que dominar la interfaz táctil no es aprender a usar una computadora, sino aprender a dirigir una orquesta. El diseño "Workstation" beneficia al músico que no desea complicaciones técnicas, ya que centraliza procesos complejos en una navegación lógica y visual. Al entender cómo movernos por sus menús, eliminamos la fricción entre la idea musical y el sonido final, permitiendo que incluso un principiante pueda gestionar una banda completa desde su primer día.</p>
+      </div>
+
+      <div class="quote">
+        "Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien."
+        <span>Principio pedagógico que guía este tutorial</span>
+      </div>
+
+      <div class="callout info">
+        <strong>▸ Cómo usar este tutorial:</strong> navega con la barra superior entre los siete bloques temáticos. Cada bloque contiene sus preguntas y respuestas completas. Pulsa cualquier pregunta para contraerla o expandirla. Al final encontrarás las fuentes documentales citadas y los créditos.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECCIONES DINÁMICAS ============ -->
+  <div id="dynamicSections"></div>
+
+  <!-- ================= FUENTES ================= -->
+  <section id="fuentes" class="section">
+    <div class="container">
+      <div class="sec-head">
+        <div class="sec-icon">📚</div>
+        <div>
+          <h2>Fuentes y Recursos Referenciados</h2>
+          <p class="sec-sub">Documentación · Software · Formatos</p>
+        </div>
+      </div>
+
+      <div class="callout info">
+        El documento fuente de este tutorial menciona los siguientes recursos técnicos. <strong>No se ha inventado ningún enlace</strong>: el material original no incluye direcciones URL, por lo que se indican únicamente los nombres y su función tal como aparecen en el contenido.
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Recurso</th><th>Descripción según el documento</th><th>Enlace</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Owner's Manual</strong></td>
+              <td>Manual para el día a día del usuario del PSR-SX920.</td>
+              <td>No especificado en el documento fuente</td>
+            </tr>
+            <tr>
+              <td><strong>Reference Manual</strong></td>
+              <td>Documento con los detalles técnicos profundos y las explicaciones de parámetros avanzados que todo usuario experto debe consultar.</td>
+              <td>No especificado en el documento fuente</td>
+            </tr>
+            <tr>
+              <td><strong>Yamaha Expansion Manager (YEM)</strong></td>
+              <td>Software para computadora que sirve para organizar e instalar paquetes de expansión (nuevos ritmos y sonidos regionales) en la memoria interna del PSR-SX920.</td>
+              <td>No especificado en el documento fuente</td>
+            </tr>
+            <tr>
+              <td><strong>Yamaha PSR-SX920</strong></td>
+              <td>Arranger Workstation de alto rendimiento, instrumento central del tutorial.</td>
+              <td>No especificado en el documento fuente</td>
+            </tr>
+            <tr>
+              <td><strong>Paquetes de expansión</strong></td>
+              <td>Contenidos adicionales de ritmos y sonidos que se descargan, se cargan en YEM, se convierten en archivo de instalación y se llevan al teclado por USB usando el menú Expansion.</td>
+              <td>No especificado en el documento fuente</td>
+            </tr>
+            <tr>
+              <td><strong>Archivos .clb y .cld</strong></td>
+              <td>Formatos de guardado del Chord Looper: <em>.clb</em> es un banco completo de 8 espacios; <em>.cld</em> es una única secuencia de acordes individual.</td>
+              <td>No especificado en el documento fuente</td>
+            </tr>
+            <tr>
+              <td><strong>Canciones MIDI y registros</strong></td>
+              <td>Material de compatibilidad que justifica la inclusión de las Legacy Voices en el instrumento.</td>
+              <td>No especificado en el documento fuente</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout warn">
+        <strong>Nota de integridad documental:</strong> todas las referencias anteriores proceden exclusivamente del documento aportado. No se han añadido ni completado direcciones web ni datos externos.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CRÉDITOS ================= -->
+  <section id="creditos" class="section">
+    <div class="container">
+      <div class="sec-head">
+        <div class="sec-icon">🏅</div>
+        <div>
+          <h2>Créditos</h2>
+          <p class="sec-sub">Autoría · Fecha · Finalidad</p>
+        </div>
+      </div>
+
+      <div class="svg-frame" id="credSvg"></div>
+
+      <ul class="cred-list">
+        <li><span class="k">Tutorial</span><span class="v">Yamaha PSR-SX920 · 50 Preguntas &amp; Respuestas</span></li>
+        <li><span class="k">Créditos</span><span class="v">Rubén Sbarsky</span></li>
+        <li><span class="k">Fecha</span><span class="v">21/09/2026</span></li>
+        <li><span class="k">Hora</span><span class="v">09:59:16</span></li>
+        <li><span class="k">Finalidad</span><span class="v">Tutorial con fines exclusivamente educativos y de divulgación</span></li>
+      </ul>
+
+      <div class="callout info">
+        Este material ha sido elaborado como recurso didáctico para el estudio y la comprensión del Yamaha PSR-SX920. Su objetivo es facilitar el aprendizaje autónomo y la divulgación técnica entre músicos y usuarios del instrumento.
+      </div>
+
+      <p class="fiat">Fiat iustitia, ruat caelum.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="f1">📚 Tutorial solo con fines Educativos y Divulgación</div>
+  <div class="f2">👨‍💻 Créditos: Rubén Sbarsky</div>
+  <div>📅 FECHA: 21/09/2026</div>
+  <div>Hora: 09:59:16</div>
+  <div class="fiat">Fiat iustitia, ruat caelum.</div>
+</footer>
+
+<button id="toTop" aria-label="Volver arriba">↑</button>
+
+<script>
+/* =========================================================
+   1. DATOS DEL TUTORIAL
+   ========================================================= */
+const GROUPS = [
+  {
+    id:'g1', nav:'1 · Fundamentos', icon:'🎛️', color:'#00d4ff',
+    title:'Fundamentos y Primeros Pasos con el PSR-SX920',
+    range:'Preguntas 1 a 7',
+    lead:`Un recorrido por la identidad del instrumento, el significado real del concepto "Workstation", el papel del botón [HOME], la pantalla táctil, el joystick y la lógica de navegación que permite aprender el panel con rapidez.`,
+    qa:[
+      {q:`¿Qué es exactamente el Yamaha PSR-SX920?`, a:`Es una "Arranger Workstation" de alto rendimiento. Imaginalo como un teclado que no solo tiene sonidos, sino que "entiende" lo que tocas y te acompaña con una banda profesional completa en tiempo real.`},
+      {q:`¿Qué significa el concepto "Workstation" para alguien sin conocimientos técnicos?`, a:`Significa que tienes un centro de producción total. Es la analogía de tener un estudio de grabación, un rack de instrumentos y una banda de músicos, todo integrado y listo para sonar sin conectar cables externos.`},
+      {q:`¿Cuál es la función del botón [HOME]?`, a:`Es tu "base segura". No importa en qué menú te pierdas, al presionar [HOME] regresas al portal principal que te muestra de un vistazo qué instrumentos y ritmos tienes seleccionados.`},
+      {q:`¿Por qué la pantalla táctil es vital para mi creatividad?`, a:`Porque elimina los botones físicos innecesarios. Puedes arrastrar valores, tocar iconos de instrumentos y personalizar atajos, haciendo que la configuración del teclado sea tan natural como usar una tableta.`},
+      {q:`¿Qué funciones cumple el controlador de Joystick?`, a:`Es tu herramienta de articulación. Se mueve en cuatro direcciones para controlar el Pitch Bend (variación de afinación) y la Modulación (efecto de vibrato), permitiendo que un saxofón o una guitarra suenen con el realismo de un músico de verdad.`},
+      {q:`¿Es difícil navegar por los menús del PSR-SX920?`, a:`Para nada. La estructura es visual y jerárquica. Además, Yamaha ha diseñado la navegación para que los parámetros más importantes estén siempre a máximo dos toques de distancia desde la pantalla principal.`},
+      {q:`¿Cómo facilita el diseño del panel el aprendizaje rápido?`, a:`El panel está dividido en secciones lógicas: a la izquierda el control de la banda (Styles) y a la derecha la selección de instrumentos (Voices). Esta separación física ayuda a tu cerebro a automatizar los movimientos mientras tocas.`}
+    ]
+  },
+  {
+    id:'g2', nav:'2 · Voces Legacy', icon:'🎹', color:'#a855f7',
+    title:'El Universo de Voces y Sonidos "Legacy"',
+    range:'Preguntas 8 a 15',
+    lead:`La paleta sonora del PSR-SX920 es vasta, pero su verdadera potencia reside en la continuidad. La inclusión de las Legacy Voices (voces de modelos clásicos de Yamaha) no es solo un tributo al pasado; es una herramienta estratégica. Estas voces permiten que tus archivos de canciones y configuraciones de teclados anteriores sigan sonando perfectamente, asegurando que tu biblioteca musical acumulada durante años mantenga su esencia mientras aprovechas la claridad del nuevo hardware.`,
+    qa:[
+      {q:`¿Qué son las "Legacy Voices"?`, a:`Son sonidos emblemáticos de modelos anteriores de Yamaha. Son fundamentales para mantener la compatibilidad con canciones MIDI y registros creados en instrumentos más antiguos.`},
+      {q:`¿Cómo inicio el proceso para encontrar estas voces ocultas?`, a:`Primero, presiona cualquier botón de categoría de voz en el panel derecho (por ejemplo, [PIANO] o [GUITAR AND BASS]).`},
+      {q:`¿Cuál es la secuencia de botones para entrar al menú Legacy?`, a:`Dentro de la pantalla de selección, presiona el botón físico [8 ^], luego el [2 ^] y finalmente el botón [E] en la pantalla táctil para acceder a la carpeta "Legacy".`},
+      {q:`¿Cómo elijo un sonido específico dentro de esa categoría?`, a:`Utiliza los botones laterales etiquetados de la [A] a la [J] para navegar por las subcategorías y seleccionar la voz exacta que deseas cargar.`},
+      {q:`¿Qué significan las partes Right 1, 2, 3 y Left?`, a:`Son las capas de tu sonido. Puedes tener hasta tres instrumentos sonando simultáneamente en tu mano derecha (Right 1-3) y uno en la izquierda (Left), como si tuvieras cuatro músicos tocando contigo.`},
+      {q:`¿Cómo asigno un sonido a una de estas partes?`, a:`Presiona el botón [PART SELECT] de la sección que quieras cambiar (por ejemplo, Right 1) y luego elige la categoría de instrumento que prefieras en el panel.`},
+      {q:`¿Qué es el "Voice Part Setup"?`, a:`Es el centro de mando de tu banda. Aquí configuras el volumen, el paneo y los efectos de cada una de tus cuatro partes de forma individual, como si estuvieras ajustando la mezcla de un grupo en vivo.`},
+      {q:`¿Puedo guardar mis sonidos preferidos para no repetir este proceso?`, a:`¡Claro! Puedes registrarlos en la pestaña "Favorite" dentro de la pantalla de selección para tenerlos siempre a mano con un solo toque.`}
+    ]
+  },
+  {
+    id:'g3', nav:'3 · Estilos & OTS', icon:'🥁', color:'#22c55e',
+    title:'Estilos de Acompañamiento y One Touch Setting (OTS)',
+    range:'Preguntas 16 a 23',
+    lead:`Los "Styles" no son simples metrónomos; son arreglos inteligentes que reaccionan a tu armonía. Para que tu interpretación sea fluida, el sistema One Touch Setting (OTS) es tu mejor aliado. Imaginalo como un asistente que, cada vez que eliges un ritmo, prepara cuatro combinaciones de instrumentos perfectas para ese género, permitiéndote cambiar de un piano suave a un sintetizador potente sin dejar de tocar.`,
+    qa:[
+      {q:`¿Qué es un "Style" en el PSR-SX920?`, a:`Es un acompañamiento automático que incluye batería, bajo y otros instrumentos que siguen los acordes que marcas con tu mano izquierda.`},
+      {q:`¿Qué diferencia a los estilos "Session" de los "Free Play"?`, a:`Los estilos "Session" añaden variaciones armónicas ricas basadas en tus acordes, mientras que los "Free Play" eliminan la rigidez del ritmo marcado, ideales para baladas o introducciones libres.`},
+      {q:`¿Existe alguna limitación con los "+Audio Styles"?`, a:`Sí. Estos estilos usan grabaciones reales de bateristas. Un dato técnico clave: si subes el tempo a más del 160% de su valor original, la parte de audio se silenciará para evitar distorsiones en la calidad del sonido.`},
+      {q:`¿Qué hace la función OTS Link?`, a:`Enlaza tus sonidos con las variaciones del ritmo. Si pasas de la variación Main A a la Main B, el teclado puede cambiar automáticamente tu instrumento de la mano derecha.`},
+      {q:`¿Puedo ajustar cuándo ocurre ese cambio de sonido en el OTS Link?`, a:`Sí, en el menú [Style Setting] puedes elegir entre Immediate (el sonido cambia en cuanto presionas el botón) o At Main Section Change (el cambio ocurre al inicio del siguiente compás).`},
+      {q:`¿Cómo programo mi propio One Touch Setting (OTS)?`, a:`Configura tus voces favoritas, mantén presionado el botón [MEMORY] y, sin soltarlo, pulsa uno de los botones de ONE TOUCH SETTING (1-4).`},
+      {q:`¿Cómo me aseguro de que mi nuevo OTS no se borre?`, a:`El OTS se guarda dentro del archivo de estilo. Debes ir a la pantalla de selección de estilos, tocar [Save] y guardarlo en la pestaña "User" o en un USB.`},
+      {q:`¿Qué pasa si cambio de estilo sin guardar?`, a:`Perderás tus ajustes de OTS. Siempre debes realizar el proceso de guardado del archivo de estilo si has modificado sus configuraciones de "un solo toque".`}
+    ]
+  },
+  {
+    id:'g4', nav:'4 · Mixer & EQ', icon:'🎚️', color:'#f59e0b',
+    title:'Ecualización y Optimización del Sonido (Mixer/EQ)',
+    range:'Preguntas 24 a 30',
+    lead:`Una mezcla profesional es lo que distingue a un tecladista experto. El Master EQ de 8 bandas es tu herramienta estratégica para adaptar el teclado al salón donde toques. Sin embargo, no todo pasa por el ecualizador principal; el Part EQ te permite dar brillo a un piano específico sin que la batería suene demasiado aguda, logrando una separación de instrumentos digna de un estudio.`,
+    qa:[
+      {q:`¿Para qué sirve el Master EQ de 8 bandas?`, a:`Para moldear el sonido global del teclado. Permite ajustar desde los bajos profundos hasta los agudos cristalinos para adaptarse a la acústica de tu habitación.`},
+      {q:`¿Qué impacto tiene subir la banda de 80Hz?`, a:`Aporta "cuerpo" y potencia. Es ideal si sientes que al bajo o al bombo de la batería les falta fuerza.`},
+      {q:`¿Y si ajusto la banda de 8.0kHz?`, a:`Ganarás claridad y brillo. Es el ajuste perfecto para que los platillos y los pianos resalten en la mezcla.`},
+      {q:`¿Existe alguna limitación importante en el Master EQ?`, a:`Sí, una muy importante para profesionales: el Master EQ no se aplica a la reproducción de canciones de audio (Audio Link) ni a lo que conectes por la entrada AUX IN.`},
+      {q:`¿Cómo puedo guardar mi ecualización personalizada?`, a:`En el menú [MIXER/EQ], ajusta las bandas y toca el icono del disco para guardar. Tienes hasta 30 casillas (User1 a User30) para almacenar tus configuraciones.`},
+      {q:`¿Cuál es el "pro-tip" de Rubén Sbarsky para probar la ecualización?`, a:`Realiza la prueba del acorde brillante: toca una nota grave C(I) para sentir el bajo y luego un acorde de Do mayor agudo con las notas C(I) - E(III) - G(V). Si escuchas cada nota con nitidez, tu EQ es correcta.`},
+      {q:`¿Cómo resalto un instrumento individual sin cambiar todo el teclado?`, a:`Usa el Part EQ. En el mezclador, selecciona la pestaña "Panel" y gira las perillas de High o Low solo para la parte que desees (ej: Right 1).`}
+    ],
+    extra:`<div class="callout example" style="margin-top:22px">
+      <strong>🎹 Laboratorio interactivo — La prueba del acorde brillante</strong>
+      <p style="margin:10px 0 4px">Toca las teclas para identificar cada nota con su grado de la escala. Después pulsa el botón del acorde de Do mayor para visualizar simultáneamente C(I) – E(III) – G(V), tal como describe el pro-tip del documento.</p>
+      <div class="piano" id="pianoLab">
+        <div class="pkey" data-deg="I">C<small>I</small></div>
+        <div class="pkey" data-deg="II">D<small>II</small></div>
+        <div class="pkey" data-deg="III">E<small>III</small></div>
+        <div class="pkey" data-deg="IV">F<small>IV</small></div>
+        <div class="pkey" data-deg="V">G<small>V</small></div>
+        <div class="pkey" data-deg="VI">A<small>VI</small></div>
+        <div class="pkey" data-deg="VII">B<small>VII</small></div>
+        <div class="pkey" data-deg="VIII">C<small>VIII</small></div>
+      </div>
+      <div class="sec-tools" style="margin-bottom:0">
+        <button class="btn" id="chordC">▶ Acorde Do mayor: C(I) – E(III) – G(V)</button>
+        <button class="btn" id="clearPiano">✕ Limpiar</button>
+      </div>
+    </div>`
+  },
+  {
+    id:'g5', nav:'5 · Looper & Pads', icon:'🔁', color:'#00d4ff',
+    title:'Herramientas de Interpretación: Chord Looper y Multi Pads',
+    range:'Preguntas 31 a 37',
+    lead:`Estas herramientas son tus "manos adicionales". El Chord Looper es un asistente revolucionario que graba tus acordes para que puedas usar ambas manos en la melodía o ajustar efectos. Junto con los Multi Pads, estas funciones transforman tu práctica diaria en una sesión de producción profesional donde tú tienes el control total del flujo.`,
+    qa:[
+      {q:`¿Qué es el Chord Looper?`, a:`Es una función que graba una secuencia de acordes y la repite en bucle, permitiéndote improvisar o tocar melodías complejas con ambas manos.`},
+      {q:`¿Cómo grabo una secuencia si el estilo está detenido?`, a:`Presiona [REC/STOP]. El botón parpadeará y se activará el [SYNC START]. En cuanto toques el primer acorde, la grabación y el estilo comenzarán simultáneamente.`},
+      {q:`¿Cómo guardo mis secuencias de acordes de forma estratégica?`, a:`Puedes memorizarlas en los 8 bancos internos. Para un uso profesional en vivo, guárdalas como un archivo de banco completo (extensión .clb), que contiene las 8 memorias juntas.`},
+      {q:`¿Qué diferencia hay entre un archivo .clb y un .cld?`, a:`El archivo .clb es un banco completo de 8 espacios, ideal para un setlist completo. El .cld es un archivo de una sola secuencia de acordes individual.`},
+      {q:`¿Qué son los Multi Pads?`, a:`Son botones que disparan frases musicales o efectos. Pueden ser rítmicos (como una percusión extra) o melódicos (como un arpegio de guitarra).`},
+      {q:`¿Qué hace la función "Multi Pad Synchro Stop"?`, a:`Determina si el Multi Pad debe dejar de sonar automáticamente cuando detienes el estilo o cuando este llega a su final (Ending).`},
+      {q:`¿Qué hago si quiero tocar un acorde pero no sé la posición de las teclas?`, a:`Usa el Chord Tutor. En el menú, esta función te muestra visualmente en un teclado en pantalla las notas exactas que debes presionar para cualquier nombre de acorde.`}
+    ]
+  },
+  {
+    id:'g6', nav:'6 · Style Creator', icon:'🎼', color:'#ef4444',
+    title:'Creación y Personalización (Style Creator)',
+    range:'Preguntas 38 a 44',
+    lead:`El Style Creator es el corazón creativo del teclado. Aquí es donde dejas de usar los ritmos de fábrica para crear tu propia identidad sonora. Es un estudio de grabación interno donde puedes construir tu banda canal por canal, decidiendo desde el patrón del bombo hasta la frase de los metales.`,
+    qa:[
+      {q:`¿Cómo se divide un estilo para su edición?`, a:`Se divide en secciones (Intro, Main A-D, Ending) y cada sección tiene 8 canales independientes que puedes grabar o importar.`},
+      {q:`¿Qué instrumentos puedo grabar en los canales de ritmo?`, a:`En el canal Rhythm 1 puedes usar casi cualquier voz, excepto Organ Flutes. El canal Rhythm 2 es más estricto: solo permite kits de batería o efectos (Drum/SFX kits).`},
+      {q:`¿Qué diferencia hay entre "Realtime" y "Step Recording"?`, a:`En Realtime tocas sobre un metrónomo en vivo. En Step Recording introduces las notas una a una, lo que te da una precisión perfecta para ritmos complejos.`},
+      {q:`¿Puedo añadir notas a un ritmo que ya grabé sin borrarlo?`, a:`Sí, mediante el Overdub Recording. Puedes grabar primero el bombo, luego la caja y así sucesivamente en el mismo canal.`},
+      {q:`¿El Overdub funciona igual para todos los instrumentos?`, a:`Cuidado aquí: El Overdub solo se aplica automáticamente a los canales de ritmo. Para el bajo o los acordes, debes borrar los datos originales antes de grabar algo nuevo sobre ese canal.`},
+      {q:`¿Puedo editar las partes de audio de un estilo?`, a:`No. Si usas un Audio Style, esa parte de audio es una grabación fija. Puedes usarla, pero no puedes editar sus notas ni borrarla desde el Style Creator.`},
+      {q:`¿Cómo evito perder mis creaciones si cambio de idea?`, a:`Es fundamental usar la función [SAVE] dentro del Style Creator antes de salir o cambiar a otro estilo, de lo contrario, todo el trabajo de grabación se perderá.`}
+    ]
+  },
+  {
+    id:'g7', nav:'7 · Mantenimiento', icon:'🛠️', color:'#22c55e',
+    title:'Mantenimiento, Conectividad y Recursos Finales',
+    range:'Preguntas 45 a 50',
+    lead:`Esta es tu guía de supervivencia. Mantener el teclado actualizado no es solo una cuestión técnica, es una mejora de rendimiento. Conocer herramientas como el Yamaha Expansion Manager te permite expandir los límites del instrumento mucho más allá de lo que traía en su caja original.`,
+    qa:[
+      {q:`¿Cómo restauro el teclado si algo deja de funcionar correctamente?`, a:`Ve al menú [UTILITY] y selecciona Factory Reset/Backup. Esto te permite devolver el sistema a su estado original de fábrica.`},
+      {q:`¿Por qué es vital hacer un "Backup" regularmente?`, a:`Porque protege meses de trabajo. Un Backup guarda todas tus ecualizaciones, voces favoritas y configuraciones en un USB, permitiéndote recuperarlas si el teclado sufre un percance.`},
+      {q:`¿En qué se diferencian el Owner's Manual y el Reference Manual?`, a:`El Owner's Manual es para el día a día. El Reference Manual es donde están los detalles técnicos profundos y explicaciones de parámetros avanzados que todo usuario experto debe consultar.`},
+      {q:`¿Qué es el Yamaha Expansion Manager (YEM)?`, a:`Es un software para tu computadora que sirve para organizar e instalar paquetes de expansión (nuevos ritmos y sonidos regionales) en la memoria interna de tu PSR-SX920.`},
+      {q:`¿Cómo instalo nuevos paquetes de sonidos?`, a:`Descargas el paquete, lo cargas en el software YEM en tu PC, generas un archivo de instalación y lo llevas al teclado a través de un USB usando el menú Expansion.`},
+      {q:`¿Para qué sirve el botón [DIRECT ACCESS]?`, a:`Es un atajo inteligente. Si presionas [DIRECT ACCESS] y luego cualquier otro botón físico (como [MIXER/EQ] o un pedal), el teclado "saltará" directamente a la pantalla de configuración de esa función, ahorrándote segundos valiosos.`}
+    ]
+  }
+];
+
+const CLOSING_QUOTE = `"El Yamaha PSR-SX920 es un lienzo infinito. No temas presionar cada botón y explorar cada menú; cada rincón tecnológico de este instrumento está diseñado para que encuentres tu propia voz musical". — Rubén Sbarsky`;
+
+/* =========================================================
+   2. NAVEGACIÓN Y RENDER
+   ========================================================= */
+const NAV_ITEMS = [{id:'home', label:'HOME'}]
+  .concat(GROUPS.map(g => ({id:g.id, label:g.nav})))
+  .concat([{id:'fuentes', label:'FUENTES'}, {id:'creditos', label:'CRÉDITOS'}]);
+
+function buildNav(){
+  const nav = document.getElementById('nav');
+  nav.innerHTML = NAV_ITEMS.map((it,i) =>
+    `<button class="nav-btn${i===0?' active':''}" data-target="${it.id}">${it.label}</button>`
+  ).join('');
+}
+
+function renderGroups(){
+  const host = document.getElementById('dynamicSections');
+  let counter = 0;
+  let html = '';
+
+  GROUPS.forEach(g => {
+    const start = counter + 1;
+    const end = counter + g.qa.length;
+    counter = end;
+
+    let cards = '';
+    g.qa.forEach(item => {
+      const n = String(counter - g.qa.length + (g.qa.indexOf(item)) + 1).padStart(2,'0');
+      cards += `<article class="qa open">
+        <div class="qa-q">
+          <span class="qa-num" style="color:${g.color};border-color:${g.color}66;background:${g.color}1a">${n}</span>
+          <h3>${item.q}</h3>
+          <span class="chev">▾</span>
+        </div>
+        <div class="qa-a">${item.a}</div>
+      </article>`;
+    });
+
+    html += `<section id="${g.id}" class="section">
+      <div class="container">
+        <div class="sec-head">
+          <div class="sec-icon" style="border-color:${g.color}55;box-shadow:0 0 22px ${g.color}22">${g.icon}</div>
+          <div>
+            <h2>${g.title}</h2>
+            <p class="sec-sub" style="color:${g.color}">${g.range}</p>
+          </div>
+        </div>
+        <div class="callout info" style="border-left-color:${g.color};background:${g.color}0f">${g.lead}</div>
+        <div class="sec-tools">
+          <button class="btn" data-act="expand">＋ Expandir todo</button>
+          <button class="btn" data-act="collapse">− Contraer todo</button>
+        </div>
+        <div class="qa-list">${cards}</div>
+        ${g.extra ? g.extra : ''}
+      </div>
+    </section>`;
+  });
+
+  html += `<section class="section" id="cierre">
+    <div class="container">
+      <div class="quote" style="border-left-color:#a855f7;background:linear-gradient(90deg,rgba(168,85,247,.1),transparent)">
+        ${CLOSING_QUOTE}
+      </div>
+    </div>
+  </section>`;
+
+  host.innerHTML = html;
+}
+
+/* =========================================================
+   3. SPA
+   ========================================================= */
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s => {
+    s.classList.toggle('active', s.id === id);
+  });
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.target === id);
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(id === 'creditos') restartSvg();
+  setTimeout(updateProgress, 60);
+}
+
+function updateProgress(){
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  const p = h > 0 ? Math.min(100, Math.max(0, (window.scrollY / h) * 100)) : 0;
+  document.getElementById('progress').style.width = p + '%';
+  document.getElementById('toTop').classList.toggle('show', window.scrollY > 380);
+}
+
+/* =========================================================
+   4. SVG ANIMADO (misma pieza en HOME y CRÉDITOS)
+   ========================================================= */
+function svgMarkup(s){
+  const W = [204,253,302,351,400,449,498,547];
+  const B = [239,288,386,435,484];
+
+  let keys = '<rect x="198" y="338" width="404" height="56" rx="10" fill="#0b1220" stroke="#1e3a5f" stroke-width="1.5"/>';
+  W.forEach(function(x,i){
+    const d = (2.4 + i*0.37).toFixed(2);
+    const b = (i*0.41).toFixed(2);
+    keys += '<rect x="'+x+'" y="344" width="46" height="44" rx="4" fill="#dbe4f0">' +
+      '<animate attributeName="fill" values="#dbe4f0;#38bdf8;#dbe4f0" dur="'+d+'s" begin="'+b+'s" repeatCount="indefinite"/></rect>';
+  });
+  B.forEach(function(x){
+    keys += '<rect x="'+x+'" y="344" width="28" height="27" rx="3" fill="#070b14" stroke="#1e3a5f"/>';
+  });
+
+  const P = [
+    {id:'pA'+s, d:'M 250 336 C 238 250 300 196 384 184', c:'#00d4ff', du:2.4},
+    {id:'pB'+s, d:'M 550 336 C 562 250 500 196 416 184', c:'#22c55e', du:2.7},
+    {id:'pC'+s, d:'M 374 182 C 310 152 210 158 120 184', c:'#a855f7', du:3.0},
+    {id:'pD'+s, d:'M 426 182 C 490 152 590 158 680 184', c:'#f59e0b', du:3.3}
+  ];
+
+  let flow = '';
+  P.forEach(function(p){
+    flow += '<path id="'+p.id+'" d="'+p.d+'" fill="none" stroke="'+p.c+'" stroke-width="2" stroke-linecap="round" stroke-dasharray="8 10" opacity="0.5">' +
+      '<animate attributeName="stroke-dashoffset" values="0;-36" dur="'+p.du+'s" repeatCount="indefinite"/></path>';
+  });
+
+  let parts = '';
+  P.forEach(function(p,i){
+    [3.2,4.7,6.3].forEach(function(du,j){
+      const bg = (i*0.8 + j*1.15).toFixed(2);
+      const r = (2.2 + j*0.7).toFixed(1);
+      parts += '<circle r="'+r+'" fill="'+p.c+'" filter="url(#glow'+s+')" opacity="0">' +
+        '<animateMotion dur="'+du+'s" begin="'+bg+'s" repeatCount="indefinite"><mpath xlink:href="#'+p.id+'"/></animateMotion>' +
+        '<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.85;1" dur="'+du+'s" begin="'+bg+'s" repeatCount="indefinite"/></circle>';
+    });
+    const gd = 7 + i;
+    const gb = (i*0.9).toFixed(1);
+    parts += '<g opacity="0"><rect x="-8" y="-6" width="16" height="12" rx="3" fill="'+p.c+'" opacity="0.6" filter="url(#glow'+s+')"/>' +
+      '<animateMotion dur="'+gd+'s" begin="'+gb+'s" repeatCount="indefinite"><mpath xlink:href="#'+p.id+'"/></animateMotion>' +
+      '<animate attributeName="opacity" values="0;0.85;0.85;0" keyTimes="0;0.12;0.78;1" dur="'+gd+'s" begin="'+gb+'s" repeatCount="indefinite"/></g>';
+  });
+
+  const NOTES = [
+    {x:120,y:300,t:'♪',c:'#00d4ff',du:3.4,b:0},
+    {x:690,y:288,t:'♫',c:'#22c55e',du:4.1,b:0.6},
+    {x:88,y:262,t:'♩',c:'#a855f7',du:5.2,b:1.2},
+    {x:722,y:252,t:'♬',c:'#f59e0b',du:4.6,b:0.3},
+    {x:400,y:300,t:'♪',c:'#00d4ff',du:6.0,b:1.8}
+  ];
+  let floaters = '';
+  NOTES.forEach(function(n){
+    floaters += '<text x="'+n.x+'" y="'+n.y+'" font-size="22" fill="'+n.c+'" opacity="0.85" text-anchor="middle">'+n.t+
+      '<animateTransform attributeName="transform" type="translate" values="0 0; 0 -14; 0 0" dur="'+n.du+'s" begin="'+n.b+'s" repeatCount="indefinite"/>' +
+      '<animate attributeName="opacity" values="0.15;0.85;0.15" dur="'+n.du+'s" begin="'+n.b+'s" repeatCount="indefinite"/></text>';
+  });
+
+  const EQ = [
+    {x:646,c:'#22c55e',du:'2.0s',h:[46,26,64,34,46]},
+    {x:668,c:'#00d4ff',du:'2.5s',h:[62,38,22,54,62]},
+    {x:690,c:'#a855f7',du:'3.0s',h:[30,58,40,20,30]},
+    {x:712,c:'#f59e0b',du:'3.5s',h:[54,30,70,44,54]},
+    {x:734,c:'#22c55e',du:'4.0s',h:[22,48,30,60,22]},
+    {x:756,c:'#00d4ff',du:'2.2s',h:[40,66,28,50,40]}
+  ];
+  let eqBars = '';
+  EQ.forEach(function(b){
+    const base = 386;
+    const hv = b.h.join(';');
+    const yv = b.h.map(function(v){ return base - v; }).join(';');
+    eqBars += '<rect x="'+b.x+'" y="'+(base-b.h[0])+'" width="16" height="'+b.h[0]+'" rx="4" fill="'+b.c+'" opacity="0.85" filter="url(#glow'+s+')">' +
+      '<animate attributeName="height" values="'+hv+'" dur="'+b.du+'" repeatCount="indefinite"/>' +
+      '<animate attributeName="y" values="'+yv+'" dur="'+b.du+'" repeatCount="indefinite"/></rect>';
+  });
+
+  // Explosiones radiales en el hub
+  let burst = '';
+  for(let k=0;k<6;k++){
+    const beg = (k*0.42).toFixed(2);
+    burst += '<g transform="rotate('+(k*60)+')">' +
+      '<line x1="0" y1="0" x2="0" y2="-26" stroke="#00d4ff" stroke-width="2" stroke-linecap="round">' +
+      '<animateTransform attributeName="transform" type="translate" values="0 0;0 -42" dur="5s" begin="'+beg+'s" repeatCount="indefinite"/>' +
+      '<animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.06;0.13;0.28;1" dur="5s" begin="'+beg+'s" repeatCount="indefinite"/>' +
+      '</line></g>';
+  }
+
+  let burst2 = '';
+  for(let k=0;k<5;k++){
+    const beg = (k*0.5).toFixed(2);
+    burst2 += '<g transform="rotate('+(k*72+20)+')">' +
+      '<line x1="0" y1="0" x2="0" y2="-16" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round">' +
+      '<animateTransform attributeName="transform" type="translate" values="0 0;0 -26" dur="4s" begin="'+beg+'s" repeatCount="indefinite"/>' +
+      '<animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.06;0.14;0.3;1" dur="4s" begin="'+beg+'s" repeatCount="indefinite"/>' +
+      '</line></g>';
+  }
+
+  return `
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Ilustración animada del Yamaha PSR-SX920: teclado, flujo de sonido y banda completa">
+  <defs>
+    <linearGradient id="bgG${s}" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#070b14"><animate attributeName="stop-color" values="#070b14;#101c3a;#070b14" dur="9s" repeatCount="indefinite"/></stop>
+      <stop offset="55%" stop-color="#0a0e1a"><animate attributeName="stop-color" values="#0a0e1a;#152a52;#0a0e1a" dur="7s" repeatCount="indefinite"/></stop>
+      <stop offset="100%" stop-color="#050810"><animate attributeName="stop-color" values="#050810;#0b1830;#050810" dur="11s" repeatCount="indefinite"/></stop>
+    </linearGradient>
+
+    <pattern id="gridG${s}" width="25" height="25" patternUnits="userSpaceOnUse">
+      <path d="M 25 0 L 0 0 0 25" fill="none" stroke="#00d4ff" stroke-width="0.6"/>
+    </pattern>
+
+    <radialGradient id="haloCy${s}">
+      <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloPu${s}">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloAm${s}">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloGr${s}">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vig${s}" cx="50%" cy="45%" r="72%">
+      <stop offset="55%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.65"/>
+    </radialGradient>
+
+    <filter id="glow${s}" x="-70%" y="-70%" width="240%" height="240%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowBig${s}" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="800" height="450" fill="url(#bgG${s})"/>
+  <rect width="800" height="450" fill="url(#gridG${s})" opacity="0.22">
+    <animate attributeName="opacity" values="0.10;0.34;0.10" dur="6s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- HALOS -->
+  <circle cx="400" cy="186" r="92" fill="url(#haloCy${s})" opacity="0.7">
+    <animate attributeName="r" values="72;104;72" dur="5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.30;0.80;0.30" dur="5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="110" cy="185" r="52" fill="url(#haloPu${s})" opacity="0.6">
+    <animate attributeName="r" values="42;62;42" dur="4.4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.25;0.7;0.25" dur="4.4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="690" cy="185" r="52" fill="url(#haloAm${s})" opacity="0.6">
+    <animate attributeName="r" values="42;62;42" dur="5.6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.25;0.7;0.25" dur="5.6s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="400" cy="360" r="60" fill="url(#haloGr${s})" opacity="0.45">
+    <animate attributeName="r" values="48;72;48" dur="6.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.18;0.5;0.18" dur="6.5s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- ANILLOS ORBITALES DEL HUB -->
+  <g transform="translate(400,186)">
+    <circle r="108" fill="none" stroke="#22c55e" stroke-width="0.9" stroke-dasharray="6 12" opacity="0.45">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="30s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="6 12;20 8;6 12" dur="11s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="86" fill="none" stroke="#00d4ff" stroke-width="1.2" stroke-dasharray="10 8" opacity="0.6">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="24s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="10 8;26 10;10 8" dur="9s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="64" fill="none" stroke="#a855f7" stroke-width="1" stroke-dasharray="4 9" opacity="0.6">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="18s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="4 9;14 6;4 9" dur="7s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="44" fill="none" stroke="#f59e0b" stroke-width="1.4" stroke-dasharray="2 7" opacity="0.7">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="13s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- ANILLOS DEL NODO DERECHO -->
+  <g transform="translate(690,185)">
+    <circle r="40" fill="none" stroke="#f59e0b" stroke-width="1" stroke-dasharray="5 8" opacity="0.55">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="16s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="56" fill="none" stroke="#00d4ff" stroke-width="0.8" stroke-dasharray="3 12" opacity="0.4">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="22s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- ANILLOS DEL NODO IZQUIERDO -->
+  <g transform="translate(110,185)">
+    <circle r="38" fill="none" stroke="#a855f7" stroke-width="1" stroke-dasharray="5 8" opacity="0.55">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="19s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- PATHS DE FLUJO -->
+  ${flow}
+
+  <!-- PARTÍCULAS Y GHOSTS -->
+  ${parts}
+
+  <!-- NÚCLEO DEL HUB -->
+  <circle cx="400" cy="186" r="34" fill="#0b1220" stroke="#00d4ff" stroke-width="1.6" filter="url(#glowBig${s})">
+    <animate attributeName="r" values="32;36;32" dur="3.5s" repeatCount="indefinite"/>
+    <animate attributeName="stroke" values="#00d4ff;#a855f7;#00d4ff" dur="9s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="400" cy="186" r="20" fill="none" stroke="#22c55e" stroke-width="1.2" opacity="0.8">
+    <animate attributeName="r" values="16;26;16" dur="3.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.8;0.15;0.8" dur="3.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="400" cy="186" r="7" fill="#00d4ff" filter="url(#glow${s})">
+    <animate attributeName="r" values="6;9;6" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- EXPLOSIONES -->
+  <g transform="translate(400,186)" stroke-linecap="round">${burst}</g>
+  <g transform="translate(690,185)" stroke-linecap="round">${burst2}</g>
+
+  <!-- NODOS -->
+  <circle cx="110" cy="185" r="26" fill="#0b1220" stroke="#a855f7" stroke-width="1.6" filter="url(#glow${s})">
+    <animate attributeName="stroke-width" values="1.2;2.6;1.2" dur="3.1s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="690" cy="185" r="26" fill="#0b1220" stroke="#f59e0b" stroke-width="1.6" filter="url(#glow${s})">
+    <animate attributeName="stroke-width" values="2.6;1.2;2.6" dur="3.7s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- TECLADO -->
+  ${keys}
+
+  <!-- ECUALIZADOR -->
+  ${eqBars}
+
+  <!-- FORMA DE ONDA -->
+  <path d="M 30 372 L 50 372 L 58 350 L 66 392 L 74 358 L 82 380 L 90 370 L 110 370 L 118 344 L 126 394 L 134 356 L 142 378 L 150 370 L 172 370"
+        fill="none" stroke="#00d4ff" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" opacity="0.75" stroke-dasharray="4 6">
+    <animate attributeName="stroke-dashoffset" values="0;-20" dur="2s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- NOTAS FLOTANTES -->
+  ${floaters}
+
+  <!-- INDICADOR LIVE -->
+  <g transform="translate(30,30)">
+    <circle cx="0" cy="0" r="5" fill="#ef4444">
+      <animate attributeName="r" values="4;6.5;4" dur="1.4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0.25;1" dur="1.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="0" cy="0" r="5" fill="none" stroke="#ef4444" stroke-width="1">
+      <animate attributeName="r" values="6;16;6" dur="2.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0;0.8" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="15" y="5" fill="#ef4444" font-size="13" font-weight="800" letter-spacing="2.5" font-family="'Segoe UI', system-ui, sans-serif">LIVE</text>
+  </g>
+
+  <!-- TÍTULO -->
+  <text x="400" y="46" text-anchor="middle" font-size="30" font-weight="800" letter-spacing="1.5" fill="#00d4ff" filter="url(#glow${s})" font-family="'Segoe UI', system-ui, sans-serif">YAMAHA PSR-SX920
+    <animate attributeName="fill" values="#00d4ff;#a855f7;#22c55e;#f59e0b;#00d4ff" dur="12s" repeatCount="indefinite"/>
+  </text>
+  <text x="400" y="70" text-anchor="middle" font-size="12" letter-spacing="4" fill="#94a3b8" font-family="'Segoe UI', system-ui, sans-serif">ARRANGER WORKSTATION · 50 PREGUNTAS &amp; RESPUESTAS
+    <animate attributeName="opacity" values="0.35;1;0.35" dur="4.5s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- ETIQUETAS DE ESTADO -->
+  <g font-size="11" letter-spacing="3" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif">
+    <text x="400" y="322" fill="#22c55e" opacity="0">VOICE READY
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.02;0.06;0.28;0.32;1" dur="9s" repeatCount="indefinite"/>
+    </text>
+    <text x="400" y="322" fill="#f59e0b" opacity="0">STYLE SYNC
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.35;0.39;0.61;0.65;1" dur="9s" repeatCount="indefinite"/>
+    </text>
+    <text x="400" y="322" fill="#a855f7" opacity="0">OTS LINK · CHORD LOOPER
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.68;0.72;0.94;0.98;1" dur="9s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- CLÍMAX -->
+  <g transform="translate(400,192)">
+    <g>
+      <animateTransform attributeName="transform" type="scale" values="0.85;0.85;1.18;1.18;0.85" keyTimes="0;0.63;0.70;0.80;1" dur="8s" repeatCount="indefinite"/>
+      <text x="0" y="0" text-anchor="middle" dominant-baseline="middle" font-size="30" font-weight="800" fill="#ffffff" filter="url(#glowBig${s})" opacity="0" font-family="'Segoe UI', system-ui, sans-serif">¡BANDA COMPLETA!
+        <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.62;0.66;0.79;0.84;1" dur="8s" repeatCount="indefinite"/>
+      </text>
+    </g>
+  </g>
+
+  <!-- FIRMA -->
+  <text x="770" y="438" text-anchor="end" font-size="11" letter-spacing="1.5" fill="#64748b" font-family="'Segoe UI', system-ui, sans-serif">Rubén Sbarsky
+    <animate attributeName="opacity" values="0.25;0.95;0.25" dur="7s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- VIÑETA Y FLASH -->
+  <rect width="800" height="450" fill="url(#vig${s})" pointer-events="none"/>
+  <rect width="800" height="450" fill="#ffffff" opacity="0" pointer-events="none">
+    <animate attributeName="opacity" values="0;0;0.12;0;0" keyTimes="0;0.63;0.66;0.72;1" dur="8s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="0.75" y="0.75" width="798.5" height="448.5" rx="12" fill="none" stroke="#1e3a5f" stroke-width="1.5"/>
+</svg>`;
+}
+
+/* =========================================================
+   5. INYECCIÓN Y REINICIO DEL SVG
+   ========================================================= */
+const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function injectSvg(){
+  const h = document.getElementById('homeSvg');
+  const c = document.getElementById('credSvg');
+  if(h) h.innerHTML = svgMarkup('h');
+  if(c) c.innerHTML = svgMarkup('c');
+  if(REDUCE){
+    [h,c].forEach(function(el){
+      if(!el) return;
+      const sv = el.querySelector('svg');
+      if(sv && sv.pauseAnimations) sv.pauseAnimations();
+    });
+  }
+}
+
+function restartSvg(){
+  const el = document.getElementById('credSvg');
+  if(!el) return;
+  const sv = el.querySelector('svg');
+  if(!sv) return;
+  if(sv.setCurrentTime){
+    try{ sv.setCurrentTime(0); }catch(e){}
+  }
+  if(REDUCE && sv.pauseAnimations) sv.pauseAnimations();
+}
+
+/* =========================================================
+   6. INTERACTIVIDAD
+   ========================================================= */
+function wireEvents(){
+  document.getElementById('nav').addEventListener('click', function(e){
+    const btn = e.target.closest('.nav-btn');
+    if(btn) showSection(btn.dataset.target);
+  });
+
+  document.getElementById('dynamicSections').addEventListener('click', function(e){
+    const q = e.target.closest('.qa-q');
+    if(q){
+      q.parentElement.classList.toggle('open');
+      return;
+    }
+    const act = e.target.closest('[data-act]');
+    if(act){
+      const list = act.closest('.container');
+      const open = act.dataset.act === 'expand';
+      list.querySelectorAll('.qa').forEach(function(item){
+        item.classList.toggle('open', open);
+      });
+    }
+  });
+
+  document.getElementById('toTop').addEventListener('click', function(){
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  window.addEventListener('resize', updateProgress);
+
+  wirePiano();
+}
+
+function wirePiano(){
+  const piano = document.getElementById('pianoLab');
+  if(!piano) return;
+  const keys = Array.prototype.slice.call(piano.querySelectorAll('.pkey'));
+
+  keys.forEach(function(k){
+    k.addEventListener('click', function(){
+      k.classList.toggle('active');
+    });
+  });
+
+  const btnC = document.getElementById('chordC');
+  if(btnC){
+    btnC.addEventListener('click', function(){
+      keys.forEach(function(k,i){
+        k.classList.toggle('active', i === 0 || i === 2 || i === 4);
+      });
+    });
+  }
+
+  const clear = document.getElementById('clearPiano');
+  if(clear){
+    clear.addEventListener('click', function(){
+      keys.forEach(function(k){ k.classList.remove('active'); });
+    });
+  }
+}
+
+/* =========================================================
+   7. ARRANQUE
+   ========================================================= */
+document.addEventListener('DOMContentLoaded', function(){
+  buildNav();
+  renderGroups();
+  injectSvg();
+  wireEvents();
+  updateProgress();
+});
+</script>
+</body>
+</html>
