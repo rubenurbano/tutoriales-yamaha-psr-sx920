@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutorial PSR-SX920 — Nivel Principiante</title>
+<style>
+:root{
+  --bg:#0a0e1a;
+  --card:#0f172a;
+  --border:#1e3a5f;
+  --accent:#00d4ff;
+  --green:#22c55e;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --purple:#a855f7;
+  --text:#e2e8f0;
+  --muted:#94a3b8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  line-height:1.6;
+  overflow-x:hidden;
+  padding-bottom:60px;
+}
+
+/* PROGRESS BAR */
+.progress-bar{
+  position:fixed;top:0;left:0;right:0;height:3px;
+  background:transparent;z-index:1000;
+}
+.progress-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--purple),var(--green));
+  transition:width .15s ease-out;
+  box-shadow:0 0 10px var(--accent);
+}
+
+/* NAVBAR */
+.navbar{
+  position:sticky;top:3px;z-index:900;
+  background:rgba(10,14,26,0.95);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:0;
+}
+.nav-scroll{
+  display:flex;gap:6px;overflow-x:auto;
+  padding:10px 12px;
+  scrollbar-width:thin;
+  scrollbar-color:var(--accent) transparent;
+}
+.nav-scroll::-webkit-scrollbar{height:4px}
+.nav-scroll::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+.nav-btn{
+  flex:0 0 auto;
+  background:var(--card);
+  border:1px solid var(--border);
+  color:var(--muted);
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:.82rem;
+  font-weight:600;
+  white-space:nowrap;
+  transition:all .2s;
+  font-family:inherit;
+}
+.nav-btn:hover{border-color:var(--accent);color:var(--accent)}
+.nav-btn.active{
+  background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(168,85,247,.15));
+  border-color:var(--accent);
+  color:var(--accent);
+  box-shadow:0 0 12px rgba(0,212,255,.3);
+}
+
+/* SECTIONS */
+.section{display:none;padding:20px 16px;max-width:1100px;margin:0 auto;animation:fadeIn .4s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* HOME */
+.hero-svg-wrap{
+  width:100%;
+  margin:0 auto 24px;
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:0 0 40px rgba(0,212,255,.15);
+  background:#050810;
+}
+.hero-svg{display:block;width:100%;height:auto}
+
+.badge{
+  display:inline-block;
+  background:linear-gradient(135deg,rgba(0,212,255,.2),rgba(168,85,247,.2));
+  border:1px solid var(--accent);
+  color:var(--accent);
+  padding:4px 12px;
+  border-radius:20px;
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:1.5px;
+  margin-bottom:14px;
+}
+h1.title{
+  font-size:clamp(1.6rem,5vw,2.6rem);
+  font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--purple));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  line-height:1.15;
+  margin-bottom:10px;
+}
+.subtitle{color:var(--muted);font-size:clamp(.9rem,2.5vw,1.05rem);margin-bottom:18px}
+.quote{
+  border-left:3px solid var(--accent);
+  padding:12px 16px;
+  background:rgba(0,212,255,.05);
+  border-radius:0 8px 8px 0;
+  font-style:italic;
+  color:var(--text);
+  margin:18px 0;
+  font-size:.9rem;
+}
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:10px;
+  margin:20px 0;
+}
+.metric{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px;
+  text-align:center;
+}
+.metric .num{font-size:1.6rem;font-weight:800;color:var(--accent)}
+.metric .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+
+/* CARDS */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:16px;
+}
+.card h2{
+  font-size:1.15rem;
+  color:var(--accent);
+  margin-bottom:14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:10px;
+}
+.card h3{
+  font-size:1rem;
+  color:var(--purple);
+  margin:16px 0 8px;
+}
+.card h4{
+  font-size:.9rem;
+  color:var(--amber);
+  margin:12px 0 6px;
+}
+.card p{margin-bottom:10px;font-size:.92rem}
+.card ul,.card ol{margin:8px 0 12px 22px;font-size:.9rem}
+.card li{margin-bottom:6px}
+.card li::marker{color:var(--accent)}
+
+.step-list{
+  counter-reset:step;
+  list-style:none;
+  margin-left:0 !important;
+}
+.step-list li{
+  counter-increment:step;
+  position:relative;
+  padding:10px 12px 10px 46px;
+  background:rgba(0,212,255,.04);
+  border-left:2px solid var(--accent);
+  border-radius:0 6px 6px 0;
+  margin-bottom:6px;
+}
+.step-list li::before{
+  content:counter(step);
+  position:absolute;
+  left:12px;top:50%;
+  transform:translateY(-50%);
+  width:22px;height:22px;
+  background:var(--accent);
+  color:#0a0e1a;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:.72rem;
+  font-weight:800;
+}
+
+/* CALLOUTS */
+.callout{
+  border-radius:8px;
+  padding:12px 14px;
+  margin:12px 0;
+  font-size:.88rem;
+  border-left:4px solid;
+}
+.callout.info{background:rgba(0,212,255,.08);border-color:var(--accent);color:#bae6fd}
+.callout.example{background:rgba(34,197,94,.08);border-color:var(--green);color:#bbf7d0}
+.callout.warn{background:rgba(245,158,11,.08);border-color:var(--amber);color:#fde68a}
+.callout.error{background:rgba(239,68,68,.08);border-color:var(--red);color:#fecaca}
+.callout strong{color:#fff}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;margin:12px 0;border-radius:8px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:420px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--border)}
+th{background:rgba(0,212,255,.1);color:var(--accent);font-weight:700;text-transform:uppercase;font-size:.72rem;letter-spacing:.5px}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(0,212,255,.03)}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{
+  background:rgba(168,85,247,.15);
+  border:1px solid var(--purple);
+  color:#ddd6fe;
+  padding:3px 10px;
+  border-radius:14px;
+  font-size:.72rem;
+  font-weight:600;
+}
+
+/* BUTTONS UI */
+.ui-key{
+  display:inline-block;
+  background:#1a2332;
+  border:1px solid var(--border);
+  color:var(--text);
+  padding:2px 8px;
+  border-radius:5px;
+  font-size:.8rem;
+  font-weight:700;
+  font-family:'Courier New',monospace;
+}
+
+/* METRIC SMALL */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0}
+
+/* BACK TO TOP */
+.back-to-top{
+  position:fixed;
+  bottom:20px;right:20px;
+  width:46px;height:46px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--purple));
+  border:none;
+  color:#fff;
+  font-size:1.3rem;
+  cursor:pointer;
+  box-shadow:0 4px 20px rgba(0,212,255,.4);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:800;
+  transition:transform .2s;
+}
+.back-to-top.show{display:flex}
+.back-to-top:hover{transform:scale(1.1)}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:24px 16px;
+  border-top:1px solid var(--border);
+  color:var(--muted);
+  font-size:.8rem;
+  margin-top:40px;
+}
+footer p{margin:4px 0}
+
+/* CREDITOS */
+.creditos-box{
+  text-align:center;
+  padding:30px 20px;
+}
+.creditos-box .nombre{
+  font-size:1.4rem;
+  font-weight:800;
+  color:var(--accent);
+  margin:10px 0;
+}
+.creditos-box .lat{
+  font-style:italic;
+  color:var(--purple);
+  margin-top:18px;
+  font-size:.9rem;
+}
+
+/* FUENTES */
+.source-item{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px;
+  margin-bottom:10px;
+}
+.source-item a{color:var(--accent);word-break:break-all;font-size:.85rem;text-decoration:none}
+.source-item a:hover{text-decoration:underline}
+.source-item .src-title{font-weight:700;color:var(--text);font-size:.95rem;margin-bottom:6px}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .section{padding:14px 10px}
+  .card{padding:14px}
+  .nav-btn{padding:7px 11px;font-size:.76rem}
+  .metric .num{font-size:1.3rem}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<nav class="navbar">
+  <div class="nav-scroll" id="navScroll">
+    <button class="nav-btn active" data-section="home">Inicio</button>
+    <button class="nav-btn" data-section="fundamentos">Fundamentos</button>
+    <button class="nav-btn" data-section="voces">Voces y Partes</button>
+    <button class="nav-btn" data-section="estilos">Estilos</button>
+    <button class="nav-btn" data-section="interpretacion">Interpretación</button>
+    <button class="nav-btn" data-section="configuracion">Configuración</button>
+    <button class="nav-btn" data-section="proyecto">Proyecto Final</button>
+    <button class="nav-btn" data-section="fuentes">Fuentes</button>
+    <button class="nav-btn" data-section="creditos">Créditos</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HOME ============ -->
+<section id="home" class="section active">
+
+  <div class="hero-svg-wrap">
+  <svg class="hero-svg" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#070b14">
+          <animate attributeName="stop-color" values="#070b14;#0a1a2e;#150a2e;#070b14" dur="12s" repeatCount="indefinite"/>
+        </stop>
+        <stop offset="55%" stop-color="#0a0e1a">
+          <animate attributeName="stop-color" values="#0a0e1a;#0d1428;#1a0a28;#0a0e1a" dur="14s" repeatCount="indefinite"/>
+        </stop>
+        <stop offset="100%" stop-color="#0f172a">
+          <animate attributeName="stop-color" values="#0f172a;#1a0f2a;#0f2038;#0f172a" dur="16s" repeatCount="indefinite"/>
+        </stop>
+      </linearGradient>
+
+      <pattern id="gridP" width="30" height="30" patternUnits="userSpaceOnUse">
+        <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#00d4ff" stroke-width="0.4">
+          <animate attributeName="opacity" values="0.05;0.22;0.05" dur="4s" repeatCount="indefinite"/>
+        </path>
+      </pattern>
+
+      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="glowStrong" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur stdDeviation="7" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+
+      <radialGradient id="haloCyan">
+        <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.7"/>
+        <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="haloPurple">
+        <stop offset="0%" stop-color="#a855f7" stop-opacity="0.7"/>
+        <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="haloGreen">
+        <stop offset="0%" stop-color="#22c55e" stop-opacity="0.6"/>
+        <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="haloAmber">
+        <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.6"/>
+        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+      </radialGradient>
+
+      <path id="chordPath" d="M 120 300 Q 260 180 400 220 T 680 180" fill="none"/>
+      <path id="notePath" d="M 80 380 Q 300 240 480 300 T 740 260" fill="none"/>
+
+      <!-- musical note symbols (paths) -->
+      <g id="noteN">
+        <ellipse cx="0" cy="0" rx="7" ry="5" transform="rotate(-20)" fill="#00d4ff"/>
+        <rect x="6" y="-24" width="1.6" height="24" fill="#00d4ff"/>
+        <path d="M 6 -24 Q 16 -22 14 -14 Q 12 -20 7.6 -22 Z" fill="#00d4ff"/>
+      </g>
+      <g id="noteDouble">
+        <ellipse cx="0" cy="0" rx="6" ry="4.5" transform="rotate(-20)" fill="#a855f7"/>
+        <ellipse cx="20" cy="-6" rx="6" ry="4.5" transform="rotate(-20)" fill="#a855f7"/>
+        <rect x="5" y="-22" width="1.4" height="22" fill="#a855f7"/>
+        <rect x="25" y="-28" width="1.4" height="22" fill="#a855f7"/>
+        <rect x="5" y="-22" width="21.4" height="3" fill="#a855f7"/>
+      </g>
+      <g id="noteQuarter">
+        <ellipse cx="0" cy="0" rx="6.5" ry="4.8" transform="rotate(-20)" fill="#22c55e"/>
+        <rect x="5.5" y="-22" width="1.5" height="22" fill="#22c55e"/>
+      </g>
+      <g id="noteBeamed">
+        <ellipse cx="0" cy="0" rx="6" ry="4.5" transform="rotate(-20)" fill="#f59e0b"/>
+        <ellipse cx="18" cy="-4" rx="6" ry="4.5" transform="rotate(-20)" fill="#f59e0b"/>
+        <rect x="5" y="-20" width="1.4" height="20" fill="#f59e0b"/>
+        <rect x="23" y="-24" width="1.4" height="20" fill="#f59e0b"/>
+        <rect x="5" y="-20" width="19.4" height="3" fill="#f59e0b"/>
+      </g>
+    </defs>
+
+    <!-- FONDO -->
+    <rect width="800" height="450" fill="url(#bgGrad)"/>
+    <rect width="800" height="450" fill="url(#gridP)"/>
+
+    <!-- ANILLOS ORBITALES -->
+    <g transform="translate(400,225)">
+      <circle r="195" fill="none" stroke="#00d4ff" stroke-width="1" opacity="0.35" stroke-dasharray="12 22">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="34s" repeatCount="indefinite"/>
+        <animate attributeName="stroke-dasharray" values="12 22;34 12;12 22" dur="7s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="150" fill="none" stroke="#a855f7" stroke-width="0.9" opacity="0.3" stroke-dasharray="6 16">
+        <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="24s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="240" fill="none" stroke="#22c55e" stroke-width="0.7" opacity="0.2" stroke-dasharray="2 14">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="48s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="110" fill="none" stroke="#f59e0b" stroke-width="0.6" opacity="0.25" stroke-dasharray="4 8">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="-360" dur="18s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- TECLADO DE PIANO (base) -->
+    <g transform="translate(100,368)">
+      <!-- cuerpo -->
+      <rect x="0" y="0" width="600" height="60" fill="#0a0e1a" stroke="#1e3a5f" stroke-width="1" rx="4"/>
+      <!-- 12 teclas blancas agrupadas -->
+      <g id="whiteKeys">
+        <!-- octava 1 -->
+        <g>
+          <rect x="6" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5">
+            <animate attributeName="fill" values="#e2e8f0;#bae6fd;#e2e8f0" dur="3s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="31" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="56" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="81" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="106" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="131" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="156" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+        </g>
+        <!-- octava 2 -->
+        <g transform="translate(180,0)">
+          <rect x="6" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="31" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="56" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="81" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="106" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="131" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="156" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+        </g>
+        <!-- octava 3 -->
+        <g transform="translate(360,0)">
+          <rect x="6" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="31" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="56" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="81" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="106" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="131" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+          <rect x="156" y="4" width="22" height="52" fill="#e2e8f0" rx="2" stroke="#1e3a5f" stroke-width="0.5"/>
+        </g>
+      </g>
+      <!-- teclas negras -->
+      <g id="blackKeys" fill="#0a0e1a">
+        <rect x="20" y="4" width="13" height="32" rx="1" stroke="#1e3a5f" stroke-width="0.5"/>
+        <rect x="45" y="4" width="13" height="32" rx="1" stroke="#1e3a5f" stroke-width="0.5"/>
+        <rect x="95" y="4" width="13" height="32" rx="1" stroke="#1e3a5f" stroke-width="0.5"/>
+        <rect x="120" y="4" width="13" height="32" rx="1" stroke="#1e3a5f" stroke-width="0.5"/>
+        <rect x="145" y="4" width="13" height="32" rx="1" stroke="#1e3a5f" stroke-width="0.5"/>
+        <rect x="200" y="4" width="13" height="32" rx="1" stroke="#1e3a5f" stroke-width="0.5"/>
+        <rect x="225" y="4" width="13" height="32" rx="1" stroke="#1e3a5f" stroke-width="0.5"/>
+        <rect x="275" y="4" width="13" height="32" rx="1" stroke="#1e3a5f" stroke-width="0.5"/>
+        <rect x="300" y="4" width="13" height="32" rx="1" stroke="#1e3a5f" stroke-width="0.5"/>
+        <rect x="325" y="4" width="13" height="32" rx="1" stroke="#1e3a5f" stroke-width="0.5"/>
+        <rect x="380" y="4" width="13" height="32" rx="1" stroke="#1e3a5f" stroke-width="0.5"/>
+        <rect x="405" y="4" width="13" height="32" rx="1" stroke="#1e3a5f" stroke-width="0.5"/>
+        <rect x="455" y="4" width="13" height="32" rx="1" stroke="#1e3a5f" stroke-width="0.5"/>
+        <rect x="480" y="4" width="13" height="32" rx="1" stroke="#1e3a5f" stroke-width="0.5"/>
+        <rect x="505" y="4" width="13" height="32" rx="1" stroke="#1e3a5f" stroke-width="0.5"/>
+      </g>
+    </g>
+
+    <!-- HALOS PULSANTES -->
+    <circle cx="160" cy="150" r="40" fill="url(#haloCyan)">
+      <animate attributeName="r" values="30;50;30" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;0.9;0.5" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="640" cy="130" r="40" fill="url(#haloPurple)">
+      <animate attributeName="r" values="35;55;35" dur="3.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4;0.85;0.4" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="400" cy="90" r="45" fill="url(#haloGreen)">
+      <animate attributeName="r" values="40;60;40" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4;0.8;0.4" dur="4s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- FLECHAS / PATHS CON FLUJO -->
+    <path d="M 120 300 Q 260 180 400 220 T 680 180" fill="none" stroke="#00d4ff" stroke-width="2" opacity="0.55" stroke-dasharray="8 10" filter="url(#glow)">
+      <animate attributeName="stroke-dashoffset" from="0" to="-36" dur="3s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 80 380 Q 300 240 480 300 T 740 260" fill="none" stroke="#a855f7" stroke-width="2" opacity="0.5" stroke-dasharray="6 12" filter="url(#glow)">
+      <animate attributeName="stroke-dashoffset" from="0" to="-36" dur="4s" repeatCount="indefinite"/>
+    </path>
+
+    <!-- NODOS DE ACORDES (C-F-G-C en notación americana) -->
+    <g>
+      <circle cx="120" cy="300" r="22" fill="none" stroke="#00d4ff" stroke-width="2">
+        <animate attributeName="r" values="20;26;20" dur="2.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <text x="120" y="306" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="14" font-weight="800" fill="#00d4ff">C</text>
+      <text x="120" y="336" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="9" fill="#94a3b8">I</text>
+
+      <circle cx="340" cy="200" r="22" fill="none" stroke="#22c55e" stroke-width="2">
+        <animate attributeName="r" values="20;26;20" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <text x="340" y="206" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="14" font-weight="800" fill="#22c55e">F</text>
+      <text x="340" y="236" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="9" fill="#94a3b8">IV</text>
+
+      <circle cx="520" cy="230" r="22" fill="none" stroke="#f59e0b" stroke-width="2">
+        <animate attributeName="r" values="20;26;20" dur="3.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="3.5s" repeatCount="indefinite"/>
+      </circle>
+      <text x="520" y="236" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="14" font-weight="800" fill="#f59e0b">G</text>
+      <text x="520" y="266" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="9" fill="#94a3b8">V</text>
+
+      <circle cx="700" cy="180" r="22" fill="none" stroke="#a855f7" stroke-width="2">
+        <animate attributeName="r" values="20;26;20" dur="2.8s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="2.8s" repeatCount="indefinite"/>
+      </circle>
+      <text x="700" y="186" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="14" font-weight="800" fill="#a855f7">C</text>
+      <text x="700" y="216" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="9" fill="#94a3b8">I</text>
+    </g>
+
+    <!-- PARTÍCULAS VIAJANDO POR EL CHORD PATH -->
+    <circle r="3.5" fill="#00d4ff" filter="url(#glowStrong)">
+      <animateMotion dur="4s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#chordPath"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="3" fill="#22c55e" filter="url(#glowStrong)">
+      <animateMotion dur="4s" begin="1.2s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#chordPath"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="4s" begin="1.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="3" fill="#f59e0b" filter="url(#glowStrong)">
+      <animateMotion dur="4s" begin="2.4s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#chordPath"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="4s" begin="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="3" fill="#a855f7" filter="url(#glowStrong)">
+      <animateMotion dur="5s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#notePath"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="5s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- GHOST NOTES (piezas fantasma recorriendo el path) -->
+    <use href="#noteN" filter="url(#glowStrong)">
+      <animateMotion dur="7s" repeatCount="indefinite">
+        <mpath href="#chordPath"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;0.9;0.9;0" dur="7s" repeatCount="indefinite"/>
+    </use>
+    <use href="#noteQuarter" filter="url(#glowStrong)">
+      <animateMotion dur="6s" begin="2s" repeatCount="indefinite">
+        <mpath href="#notePath"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;0.85;0.85;0" dur="6s" begin="2s" repeatCount="indefinite"/>
+    </use>
+    <use href="#noteDouble" filter="url(#glowStrong)">
+      <animateMotion dur="8s" begin="1s" repeatCount="indefinite">
+        <mpath href="#chordPath"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;0.8;0.8;0" dur="8s" begin="1s" repeatCount="indefinite"/>
+    </use>
+
+    <!-- NOTAS FLOTANTES DESINCRONIZADAS -->
+    <g>
+      <use href="#noteN">
+        <animateTransform attributeName="transform" type="translate" values="140,120;140,110;140,120" dur="3s" repeatCount="indefinite"/>
+      </use>
+      <use href="#noteBeamed">
+        <animateTransform attributeName="transform" type="translate" values="260,90;260,80;260,90" dur="3.5s" repeatCount="indefinite"/>
+      </use>
+      <use href="#noteDouble">
+        <animateTransform attributeName="transform" type="translate" values="460,110;460,100;460,110" dur="4s" repeatCount="indefinite"/>
+      </use>
+      <use href="#noteQuarter">
+        <animateTransform attributeName="transform" type="translate" values="600,80;600,70;600,80" dur="2.7s" repeatCount="indefinite"/>
+      </use>
+    </g>
+
+    <!-- EXPLOSIONES RADIALES EN PUNTOS DE IMPACTO -->
+    <g transform="translate(120,300)">
+      <line x1="0" y1="0" x2="0" y2="-20" stroke="#00d4ff" stroke-width="1.5">
+        <animate attributeName="y2" values="-5;-30" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="2s" repeatCount="indefinite"/>
+      </line>
+      <line x1="0" y1="0" x2="20" y2="0" stroke="#00d4ff" stroke-width="1.5">
+        <animate attributeName="x2" values="5;30" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="2s" repeatCount="indefinite"/>
+      </line>
+      <line x1="0" y1="0" x2="0" y2="20" stroke="#00d4ff" stroke-width="1.5">
+        <animate attributeName="y2" values="5;30" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="2s" repeatCount="indefinite"/>
+      </line>
+    </g>
+    <g transform="translate(700,180)">
+      <line x1="0" y1="0" x2="0" y2="-20" stroke="#a855f7" stroke-width="1.5">
+        <animate attributeName="y2" values="-5;-32" dur="2.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="2.4s" repeatCount="indefinite"/>
+      </line>
+      <line x1="0" y1="0" x2="-20" y2="0" stroke="#a855f7" stroke-width="1.5">
+        <animate attributeName="x2" values="-5;-32" dur="2.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="2.4s" repeatCount="indefinite"/>
+      </line>
+      <line x1="0" y1="0" x2="0" y2="20" stroke="#a855f7" stroke-width="1.5">
+        <animate attributeName="y2" values="5;32" dur="2.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="2.4s" repeatCount="indefinite"/>
+      </line>
+    </g>
+
+    <!-- LIVE INDICATOR -->
+    <g transform="translate(720,30)">
+      <circle r="4" fill="#ef4444">
+        <animate attributeName="opacity" values="1;0.2;1" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+      <text x="12" y="4" font-family="'Segoe UI',sans-serif" font-size="10" font-weight="800" fill="#ef4444" letter-spacing="1">LIVE</text>
+    </g>
+
+    <!-- TÍTULO PRINCIPAL -->
+    <text x="400" y="55" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="20" font-weight="900" letter-spacing="3">
+      <tspan fill="#00d4ff">
+        <animate attributeName="fill" values="#00d4ff;#a855f7;#22c55e;#f59e0b;#00d4ff" dur="10s" repeatCount="indefinite"/>
+        PSR-SX920 · ACADEMY
+      </tspan>
+    </text>
+
+    <!-- SUBTÍTULO PULSANTE -->
+    <text x="400" y="80" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="10" fill="#94a3b8" letter-spacing="2">
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="3.2s" repeatCount="indefinite"/>
+      ESTACIÓN DE TRABAJO DIGITAL · YAMAHA
+    </text>
+
+    <!-- ETIQUETA DE ESTADO ALTERNANTE -->
+    <text x="80" y="55" font-family="'Courier New',monospace" font-size="11" font-weight="700">
+      <animate attributeName="opacity" values="1;0;1" dur="4s" repeatCount="indefinite"/>
+      <tspan fill="#22c55e">▸ STATE: READY</tspan>
+    </text>
+
+    <!-- TEXTO GRANDE ANIMADO (momento culminante) -->
+    <text x="400" y="420" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="900" letter-spacing="6" fill="#22c55e">
+      <animate attributeName="opacity" values="0;1;1;0;0" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="fill" values="#22c55e;#00d4ff;#a855f7;#22c55e" dur="6s" repeatCount="indefinite"/>
+      ◤ HARMONY IN MOTION ◢
+    </text>
+
+    <!-- FIRMA DEL AUTOR -->
+    <text x="770" y="440" text-anchor="end" font-family="'Segoe UI',sans-serif" font-size="9" font-style="italic" fill="#94a3b8">
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="4.5s" repeatCount="indefinite"/>
+      Rubén Sbarsky
+    </text>
+
+  </svg>
+  </div>
+
+  <div class="badge">◆ TUTORIAL PRINCIPIANTE</div>
+  <h1 class="title">Tutorial práctico Yamaha PSR-SX920 desde cero: Nivel Principiante</h1>
+  <p class="subtitle">Aprende a dominar tu estación de trabajo digital paso a paso: voces, estilos, acompañamientos, multi pads y mucho más.</p>
+
+  <div class="callout info">
+    <strong>Fuente principal:</strong> Manual de instrucciones Yamaha PSR-SX920/SX720.<br>
+    <em>Nota:</em> Algunas funciones avanzadas requieren el <strong>Reference Manual</strong> (Manual de referencia) disponible en el sitio web indicado en el manual. Cuando sea así, se indicará claramente.
+  </div>
+
+  <blockquote class="quote">
+    "Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien."
+  </blockquote>
+
+  <div class="metrics">
+    <div class="metric"><div class="num">16</div><div class="lbl">Lecciones</div></div>
+    <div class="metric"><div class="num">1</div><div class="lbl">Proyecto Final</div></div>
+    <div class="metric"><div class="num">7</div><div class="lbl">Secciones</div></div>
+    <div class="metric"><div class="num">18</div><div class="lbl">Habilidades</div></div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 ¿Qué vas a conseguir?</h2>
+    <div class="chips">
+      <span class="chip">Encendido y volumen</span>
+      <span class="chip">Navegación por pantalla</span>
+      <span class="chip">Selección de voces</span>
+      <span class="chip">Partes RIGHT/LEFT</span>
+      <span class="chip">Estilos (Styles)</span>
+      <span class="chip">Acordes y acompañamiento</span>
+      <span class="chip">INTRO / MAIN / FILL / ENDING</span>
+      <span class="chip">Tempo</span>
+      <span class="chip">One Touch Setting</span>
+      <span class="chip">Multi Pads</span>
+      <span class="chip">Transpose y Octave</span>
+      <span class="chip">Metrónomo</span>
+      <span class="chip">Harmony / Arpeggio</span>
+      <span class="chip">Joystick</span>
+      <span class="chip">Registration Memory</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============ FUNDAMENTOS ============ -->
+<section id="fundamentos" class="section">
+
+  <div class="card">
+    <h2>🎹 Lección 1 — Conocer el instrumento</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Identificar las partes principales del PSR-SX920 y los controles básicos.</p>
+
+    <h3>Qué significa</h3>
+    <p>El PSR-SX920 es una <strong>estación de trabajo digital</strong>: un teclado que puede sonar como muchos instrumentos y que además puede generar acompañamientos automáticos.</p>
+
+    <h3>Antes de empezar</h3>
+    <p>Coloca el instrumento sobre una superficie estable. Conecta el adaptador de CA si no lo está.</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Mira el panel superior. Localiza la pantalla táctil LCD.</li>
+      <li>Debajo de la pantalla, localiza el dial de datos y los botones <span class="ui-key">DEC</span> / <span class="ui-key">INC</span>.</li>
+      <li>A la derecha de la pantalla, localiza el botón <span class="ui-key">MENU</span>.</li>
+      <li>En el lateral izquierdo, localiza el joystick.</li>
+      <li>En la parte inferior, localiza las teclas.</li>
+      <li>Localiza los botones PART SELECT: <span class="ui-key">LEFT</span>, <span class="ui-key">RIGHT1</span>, <span class="ui-key">RIGHT2</span>, <span class="ui-key">RIGHT3</span>.</li>
+      <li>Localiza los botones PART ON/OFF.</li>
+      <li>Localiza la sección STYLE CONTROL con <span class="ui-key">ACMP</span>, <span class="ui-key">SYNC START</span>, <span class="ui-key">START/STOP</span>, <span class="ui-key">INTRO</span>, <span class="ui-key">MAIN VARIATION</span>, <span class="ui-key">ENDING/rit.</span>.</li>
+      <li>Localiza la sección REGISTRATION MEMORY con los botones <span class="ui-key">1</span>–<span class="ui-key">8</span> y <span class="ui-key">MEMORY</span>.</li>
+      <li>Localiza la sección MULTI PAD CONTROL con <span class="ui-key">SELECT</span>, <span class="ui-key">1</span>–<span class="ui-key">4</span> y <span class="ui-key">STOP</span>.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> Todos estos botones están etiquetados en el panel.<br>
+      <strong>Qué deberías oír:</strong> Nada todavía; el instrumento está apagado o en espera.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Señala con el dedo cada botón mencionado sin pulsarlo.</p>
+
+    <h4>Comprobación</h4>
+    <p>Eres capaz de encontrar la pantalla, el dial, <span class="ui-key">MENU</span>, los botones PART, STYLE CONTROL, REGISTRATION MEMORY y MULTI PAD CONTROL.</p>
+
+    <h4>Mini reto</h4>
+    <p>Cierra los ojos y localiza el botón <span class="ui-key">START/STOP</span> y el botón <span class="ui-key">ACMP</span>.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Las zonas principales del panel del PSR-SX920.</div>
+  </div>
+
+  <div class="card">
+    <h2>⚡ Lección 2 — Encender, apagar y volumen</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Encender el instrumento, ajustar el volumen general y apagarlo correctamente.</p>
+
+    <h3>Qué significa</h3>
+    <p>El volumen general se controla con <span class="ui-key">MASTER VOLUME</span>. El interruptor <span class="ui-key">[ ]</span> (en espera/encendido) enciende y apaga.</p>
+
+    <h3>Antes de empezar</h3>
+    <p>Asegúrate de que el adaptador de CA está conectado según el manual (página 20).</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Baja el control <span class="ui-key">MASTER VOLUME</span> a "MIN".</li>
+      <li>Pulsa el interruptor <span class="ui-key">[ ]</span> (en espera/encendido).</li>
+      <li>Espera unos segundos. Aparecerá la pantalla de inicio.</li>
+      <li>Mientras tocas el teclado, sube poco a poco <span class="ui-key">MASTER VOLUME</span> hasta un nivel cómodo.</li>
+      <li>Para apagar, mantén pulsado el interruptor <span class="ui-key">[ ]</span> durante aproximadamente un segundo.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> La pantalla de inicio con voces, estilo y canción.<br>
+      <strong>Qué deberías oír:</strong> El sonido del teclado al subir el volumen.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Enciende el instrumento, toca una tecla, sube y baja el volumen. Luego apágalo.</p>
+
+    <h4>Comprobación</h4>
+    <p>El instrumento se enciende, suena y se apaga correctamente.</p>
+
+    <div class="callout warn">
+      <strong>Si no funciona:</strong>
+      <ul>
+        <li>Si no se enciende, comprueba la conexión del adaptador de CA.</li>
+        <li>Si no suena, sube <span class="ui-key">MASTER VOLUME</span> y asegúrate de que no hay auriculares conectados.</li>
+      </ul>
+    </div>
+
+    <h4>Mini reto</h4>
+    <p>Enciende el instrumento y ajústalo a un volumen bajo pero audible sin mirar el manual.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Encendido, apagado y control de volumen general.</div>
+  </div>
+
+  <div class="card">
+    <h2>🖥️ Lección 3 — Navegar por la pantalla</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Usar la pantalla táctil, volver atrás y abrir el menú.</p>
+
+    <h3>Qué significa</h3>
+    <p>La pantalla es táctil. Puedes tocar elementos, deslizar controles y girar el dial de datos para cambiar valores.</p>
+
+    <h3>Antes de empezar</h3>
+    <p>El instrumento debe estar encendido.</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Toca un nombre de voz en la pantalla de inicio. Se abrirá la pantalla de selección de voces.</li>
+      <li>Pulsa <span class="ui-key">EXIT</span> para volver a la pantalla anterior.</li>
+      <li>Pulsa <span class="ui-key">MENU</span>. Aparecerá la pantalla de menú.</li>
+      <li>Toca un icono, por ejemplo <span class="ui-key">Metronome</span>. Se abrirá esa pantalla.</li>
+      <li>Pulsa <span class="ui-key">EXIT</span> para cerrarla.</li>
+      <li>Gira el dial de datos mientras observas cómo cambia un valor seleccionado.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> Diferentes pantallas y menús.<br>
+      <strong>Qué deberías oír:</strong> Ningún sonido necesario.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Abre el menú, entra en <span class="ui-key">Metronome</span> y vuelve a la pantalla de inicio.</p>
+
+    <h4>Comprobación</h4>
+    <p>Puedes abrir y cerrar pantallas usando <span class="ui-key">MENU</span> y <span class="ui-key">EXIT</span>.</p>
+
+    <h4>Mini reto</h4>
+    <p>Abre la pantalla de selección de voces y vuelve a inicio sin usar <span class="ui-key">EXIT</span>, usando solo la pantalla táctil.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Navegación básica por la interfaz.</div>
+  </div>
+
+</section>
+
+<!-- ============ VOCES Y PARTES ============ -->
+<section id="voces" class="section">
+
+  <div class="card">
+    <h2>🎼 Lección 4 — Tu primer sonido: Voice</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Qué es una Voice y cómo seleccionar una.</p>
+
+    <h3>Qué significa</h3>
+    <p><strong>Voice (voz):</strong> es el sonido que produce el teclado al pulsar una tecla, por ejemplo piano, guitarra, órgano o saxofón.</p>
+
+    <h3>Antes de empezar</h3>
+    <p>Instrumento encendido y volumen ajustado.</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Pulsa el botón PART SELECT <span class="ui-key">RIGHT1</span>.</li>
+      <li>Aparecerá la pantalla de selección de voz para RIGHT1.</li>
+      <li>Toca una categoría, por ejemplo <span class="ui-key">Piano &amp; E.Piano</span>.</li>
+      <li>Toca una voz, por ejemplo "CFX ConcertGrand".</li>
+      <li>Toca el teclado.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> El nombre de la voz seleccionada en la pantalla.<br>
+      <strong>Qué deberías oír:</strong> El sonido de piano en todo el teclado.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Selecciona tres voces diferentes: piano, guitarra y órgano. Toca una melodía sencilla con cada una.</p>
+
+    <h4>Comprobación</h4>
+    <p>Cada vez que seleccionas una voz, el teclado suena diferente.</p>
+
+    <div class="callout warn"><strong>Si no funciona:</strong> Si no suena, comprueba que la parte RIGHT1 está activada con el botón PART ON/OFF.</div>
+
+    <h4>Mini reto</h4>
+    <p>Selecciona la voz "70sSuitcaseClean" sin mirar el manual.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Seleccionar y tocar una voz.</div>
+  </div>
+
+  <div class="card">
+    <h2>🎚️ Lección 5 — Partes RIGHT 1, RIGHT 2, RIGHT 3 y LEFT</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Qué son las partes del teclado y cómo activarlas o desactivarlas.</p>
+
+    <h3>Qué significa</h3>
+    <p>El teclado se divide en partes:</p>
+    <ul>
+      <li><strong>RIGHT 1, 2, 3:</strong> para la mano derecha.</li>
+      <li><strong>LEFT:</strong> para la mano izquierda.</li>
+    </ul>
+    <p>Puedes combinarlas para crear sonidos superpuestos o dividir el teclado.</p>
+
+    <h3>Antes de empezar</h3>
+    <p>Instrumento encendido.</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Pulsa PART ON/OFF <span class="ui-key">RIGHT1</span> para activarlo o desactivarlo.</li>
+      <li>Pulsa PART ON/OFF <span class="ui-key">RIGHT2</span> y toca el teclado. Ahora suenan dos voces a la vez si ambas están activas.</li>
+      <li>Pulsa PART SELECT <span class="ui-key">RIGHT2</span> y selecciona otra voz.</li>
+      <li>Pulsa PART ON/OFF <span class="ui-key">LEFT</span> para activar la parte izquierda.</li>
+      <li>Toca teclas a la izquierda y a la derecha del punto de división (F#2 por defecto).</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> Los indicadores luminosos de las partes activas.<br>
+      <strong>Qué deberías oír:</strong> Diferentes voces en cada sección o superpuestas.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Activa RIGHT1 y RIGHT2 con voces diferentes. Luego activa LEFT y toca con ambas manos.</p>
+
+    <h4>Comprobación</h4>
+    <p>Puedes distinguir la voz de la mano izquierda y las de la mano derecha.</p>
+
+    <h4>Mini reto</h4>
+    <p>Desactiva todas las partes y luego activa solo RIGHT1.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Partes del teclado y combinaciones básicas.</div>
+  </div>
+
+  <div class="card">
+    <h2>🎵 Lección 12 — Transpose y Upper Octave</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Transponer el tono y cambiar de octava.</p>
+
+    <h3>Qué significa</h3>
+    <ul>
+      <li><strong>TRANSPOSE:</strong> cambia el tono en semitonos.</li>
+      <li><strong>UPPER OCTAVE:</strong> cambia la octava de las partes RIGHT 1–3.</li>
+    </ul>
+
+    <h3>Antes de empezar</h3>
+    <p>Instrumento encendido.</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Pulsa TRANSPOSE <span class="ui-key">–</span> o <span class="ui-key">+</span> para bajar o subir semitonos.</li>
+      <li>Toca el teclado y observa el cambio de tono.</li>
+      <li>Pulsa simultáneamente TRANSPOSE <span class="ui-key">–</span> y <span class="ui-key">+</span> para volver a 0.</li>
+      <li>Pulsa UPPER OCTAVE <span class="ui-key">–</span> o <span class="ui-key">+</span> para cambiar la octava de la mano derecha.</li>
+      <li>Vuelve a 0 pulsando ambos a la vez.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> El valor de transposición y octava en pantalla.<br>
+      <strong>Qué deberías oír:</strong> El tono más agudo o más grave.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Transpone +2 semitonos y toca una melodía. Luego vuelve a 0.</p>
+
+    <h4>Comprobación</h4>
+    <p>Puedes diferenciar transposición de octava.</p>
+
+    <h4>Mini reto</h4>
+    <p>Baja una octava la mano derecha sin mirar.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Transponer y cambiar de octava.</div>
+  </div>
+
+</section>
+
+<!-- ============ ESTILOS ============ -->
+<section id="estilos" class="section">
+
+  <div class="card">
+    <h2>🥁 Lección 6 — Tu primer Style</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Qué es un Style y cómo iniciar y detener el acompañamiento.</p>
+
+    <h3>Qué significa</h3>
+    <p><strong>Style (estilo):</strong> es un acompañamiento automático de ritmo, bajo y acordes. Suena como una banda completa.</p>
+
+    <h3>Antes de empezar</h3>
+    <p>Instrumento encendido.</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Pulsa un botón de selección de categoría de STYLE, por ejemplo <span class="ui-key">POP</span>.</li>
+      <li>Toca un estilo, por ejemplo "20sDisco".</li>
+      <li>Pulsa <span class="ui-key">START/STOP</span> en STYLE CONTROL. El estilo comenzará a sonar.</li>
+      <li>Vuelve a pulsar <span class="ui-key">START/STOP</span> para detenerlo.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> El nombre del estilo en la pantalla.<br>
+      <strong>Qué deberías oír:</strong> Ritmo y acompañamiento.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Selecciona un estilo de la categoría <span class="ui-key">JAZZ &amp; EASY LISTENING</span> y escúchalo.</p>
+
+    <h4>Comprobación</h4>
+    <p>El estilo suena y se detiene con <span class="ui-key">START/STOP</span>.</p>
+
+    <div class="callout warn"><strong>Si no funciona:</strong> Si no suena, comprueba que el volumen no está a cero y que el estilo tiene datos.</div>
+
+    <h4>Mini reto</h4>
+    <p>Inicia un estilo y deténlo sin mirar el botón.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Seleccionar y reproducir un Style.</div>
+  </div>
+
+  <div class="card">
+    <h2>🎼 Lección 7 — Acordes y acompañamiento automático</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Tocar acordes con la mano izquierda para que el estilo cambie.</p>
+
+    <h3>Qué significa</h3>
+    <p>El acompañamiento automático detecta los acordes que tocas en la sección de acordes (mano izquierda) y adapta el estilo.</p>
+
+    <h3>Antes de empezar</h3>
+    <p>Haber seleccionado un estilo. Punto de división por defecto: F#2.</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Pulsa <span class="ui-key">ACMP</span> para activar el acompañamiento automático.</li>
+      <li>Pulsa <span class="ui-key">SYNC START</span> para poner el estilo en espera.</li>
+      <li>Toca un acorde con la mano izquierda, por ejemplo C(I) mayor (C–E–G).</li>
+      <li>El estilo comenzará automáticamente.</li>
+      <li>Cambia a otro acorde, por ejemplo F(IV) mayor (F–A–C).</li>
+      <li>Toca una melodía con la mano derecha.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> El nombre del acorde en la pantalla.<br>
+      <strong>Qué deberías oír:</strong> El acompañamiento cambia según el acorde.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Toca la progresión: <strong>C(I) → F(IV) → G(V) → C(I)</strong>.</p>
+
+    <h4>Comprobación</h4>
+    <p>El estilo sigue sonando y cambia de acorde.</p>
+
+    <div class="callout warn">
+      <strong>Si no funciona:</strong>
+      <ul>
+        <li>Si no cambia, comprueba que <span class="ui-key">ACMP</span> está activado y que tocas en la sección izquierda del teclado.</li>
+        <li>Si no reconoces acordes, prueba a cambiar el tipo de digitado a "Single Finger" en <span class="ui-key">MENU</span> → <span class="ui-key">Split &amp; Fingering</span>.</li>
+      </ul>
+    </div>
+
+    <h4>Mini reto</h4>
+    <p>Toca una progresión de dos acordes sin mirar la pantalla.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Acompañamiento automático con acordes.</div>
+  </div>
+
+  <div class="card">
+    <h2>🎬 Lección 8 — INTRO, MAIN, FILL y ENDING</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Usar las secciones del estilo.</p>
+
+    <h3>Qué significa</h3>
+    <ul>
+      <li><strong>INTRO:</strong> introducción antes del estilo.</li>
+      <li><strong>MAIN VARIATION A–D:</strong> secciones principales.</li>
+      <li><strong>FILL:</strong> relleno rítmico.</li>
+      <li><strong>ENDING:</strong> final.</li>
+      <li><strong>BREAK:</strong> pausa.</li>
+    </ul>
+
+    <h3>Antes de empezar</h3>
+    <p>Estilo seleccionado y <span class="ui-key">ACMP</span> activado.</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Pulsa <span class="ui-key">INTRO I</span>. Luego toca un acorde para iniciar.</li>
+      <li>Cuando termine la intro, sonará MAIN A.</li>
+      <li>Pulsa <span class="ui-key">MAIN VARIATION B</span> para cambiar a otra sección.</li>
+      <li>Pulsa de nuevo <span class="ui-key">MAIN VARIATION B</span> para reproducir un FILL.</li>
+      <li>Pulsa <span class="ui-key">ENDING I</span> para terminar.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> Los botones se iluminan según la sección.<br>
+      <strong>Qué deberías oír:</strong> Cambios en el acompañamiento.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Haz una interpretación: INTRO I → MAIN A → FILL → MAIN B → ENDING I.</p>
+
+    <h4>Comprobación</h4>
+    <p>El estilo cambia de sección correctamente.</p>
+
+    <h4>Mini reto</h4>
+    <p>Usa <span class="ui-key">BREAK</span> durante la reproducción.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Secciones de un estilo.</div>
+  </div>
+
+  <div class="card">
+    <h2>⏱️ Lección 9 — Tempo</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Cambiar la velocidad del estilo o canción.</p>
+
+    <h3>Qué significa</h3>
+    <p><strong>Tempo:</strong> velocidad de la música, medida en negras por minuto (BPM).</p>
+
+    <h3>Antes de empezar</h3>
+    <p>Estilo o canción seleccionados.</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Pulsa TEMPO <span class="ui-key">–</span> o <span class="ui-key">+</span> para abrir la pantalla de tempo.</li>
+      <li>Usa TEMPO <span class="ui-key">–</span>/<span class="ui-key">+</span> para reducir o aumentar.</li>
+      <li>Para volver al tempo por defecto, pulsa simultáneamente TEMPO <span class="ui-key">–</span> y <span class="ui-key">+</span>.</li>
+      <li>Para ajustar con <span class="ui-key">RESET/TAP TEMPO</span>, pulsa dos veces al ritmo deseado.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> El valor de tempo en pantalla.<br>
+      <strong>Qué deberías oír:</strong> La música más rápida o más lenta.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Cambia el tempo de un estilo de 120 a 80 y luego vuelve al original.</p>
+
+    <h4>Comprobación</h4>
+    <p>El tempo cambia y se mantiene.</p>
+
+    <h4>Mini reto</h4>
+    <p>Ajusta el tempo con <span class="ui-key">RESET/TAP TEMPO</span> sin mirar la pantalla.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Controlar el tempo.</div>
+  </div>
+
+</section>
+
+<!-- ============ INTERPRETACIÓN ============ -->
+<section id="interpretacion" class="section">
+
+  <div class="card">
+    <h2>✨ Lección 10 — One Touch Setting (OTS)</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Usar OTS para configurar automáticamente voces y efectos para un estilo.</p>
+
+    <h3>Qué significa</h3>
+    <p><strong>OTS (One Touch Setting):</strong> ajuste de un solo toque. Al pulsar un botón, el instrumento configura voces y efectos adecuados para el estilo.</p>
+
+    <h3>Antes de empezar</h3>
+    <p>Estilo seleccionado.</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Pulsa uno de los botones ONE TOUCH SETTING <span class="ui-key">1</span>–<span class="ui-key">4</span>.</li>
+      <li>Se activarán automáticamente ACMP y SYNC START.</li>
+      <li>Toca un acorde con la mano izquierda para iniciar.</li>
+      <li>Prueba los otros botones OTS <span class="ui-key">1</span>–<span class="ui-key">4</span>.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> El nombre de la voz cambia en pantalla.<br>
+      <strong>Qué deberías oír:</strong> Diferentes combinaciones de sonidos.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Selecciona un estilo y prueba los cuatro OTS.</p>
+
+    <h4>Comprobación</h4>
+    <p>Cada OTS cambia la configuración del panel.</p>
+
+    <h4>Mini reto</h4>
+    <p>Elige el OTS 3 sin mirar el manual.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Usar One Touch Setting.</div>
+  </div>
+
+  <div class="card">
+    <h2>🎛️ Lección 11 — Multi Pad</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Reproducir frases cortas con Multi Pad.</p>
+
+    <h3>Qué significa</h3>
+    <p><strong>Multi Pad:</strong> pequeños patrones rítmicos o melódicos que se añaden a la interpretación.</p>
+
+    <h3>Antes de empezar</h3>
+    <p>Instrumento encendido.</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Pulsa MULTI PAD CONTROL <span class="ui-key">SELECT</span>.</li>
+      <li>Toca un banco, por ejemplo "Cymbal&amp;Chimes1".</li>
+      <li>Pulsa MULTI PAD CONTROL <span class="ui-key">1</span> para reproducir la frase.</li>
+      <li>Pulsa <span class="ui-key">STOP</span> para detenerla.</li>
+      <li>Para sincronizar con el estilo, pulsa <span class="ui-key">SELECT</span> + <span class="ui-key">1</span>–<span class="ui-key">4</span> y luego inicia el estilo.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> El banco seleccionado en pantalla.<br>
+      <strong>Qué deberías oír:</strong> La frase del Multi Pad.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Reproduce el Multi Pad 1 y luego deténlo. Prueba el 2 y el 3.</p>
+
+    <h4>Comprobación</h4>
+    <p>El Multi Pad suena y se detiene.</p>
+
+    <h4>Mini reto</h4>
+    <p>Activa el Multi Pad 4 en modo de espera y luego inícialo con un acorde.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Reproducir Multi Pads.</div>
+  </div>
+
+  <div class="card">
+    <h2>🌈 Lección 14 — Harmony / Arpeggio</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Aplicar armonía o arpegio a la mano derecha.</p>
+
+    <h3>Qué significa</h3>
+    <ul>
+      <li><strong>Harmony:</strong> añade notas armónicas a la melodía.</li>
+      <li><strong>Arpeggio:</strong> reproduce acordes quebrados automáticamente.</li>
+    </ul>
+
+    <h3>Antes de empezar</h3>
+    <p>Instrumento encendido.</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Pulsa <span class="ui-key">HARMONY/ARPEGGIO</span> para activar.</li>
+      <li>Para cambiar el tipo, pulsa <span class="ui-key">MENU</span> → <span class="ui-key">Kbd Harmony/Arp</span>.</li>
+      <li>Selecciona una categoría, por ejemplo "Harmony" o "Arpeggio".</li>
+      <li>Toca el teclado.</li>
+      <li>Para desactivar, vuelve a pulsar <span class="ui-key">HARMONY/ARPEGGIO</span>.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> El botón se ilumina.<br>
+      <strong>Qué deberías oír:</strong> Efecto de armonía o arpegio.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Activa "Standard Duet" y toca una melodía. Luego prueba un arpegio.</p>
+
+    <h4>Comprobación</h4>
+    <p>El efecto se aplica solo a la mano derecha.</p>
+
+    <h4>Mini reto</h4>
+    <p>Activa y desactiva Harmony sin mirar el botón.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Uso básico de Harmony/Arpeggio.</div>
+  </div>
+
+  <div class="card">
+    <h2>🕹️ Lección 15 — Joystick</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Usar el joystick para inflexión de tono y modulación.</p>
+
+    <h3>Qué significa</h3>
+    <ul>
+      <li><strong>Eje X:</strong> inflexión del tono (pitch bend).</li>
+      <li><strong>Eje Y:</strong> modulación (vibrato).</li>
+    </ul>
+
+    <h3>Antes de empezar</h3>
+    <p>Instrumento encendido y una voz seleccionada.</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Mueve el joystick a la derecha e izquierda mientras tocas una nota.</li>
+      <li>Mueve el joystick hacia arriba y abajo.</li>
+      <li>Pulsa <span class="ui-key">JOYSTICK HOLD</span> para retener la modulación.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> No es necesario mirar la pantalla.<br>
+      <strong>Qué deberías oír:</strong> El tono se dobla o se aplica vibrato.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Toca una nota larga y mueve el joystick en ambas direcciones.</p>
+
+    <h4>Comprobación</h4>
+    <p>Puedes controlar el sonido con el joystick.</p>
+
+    <h4>Mini reto</h4>
+    <p>Activa <span class="ui-key">JOYSTICK HOLD</span> y suelta el joystick sin que desaparezca la modulación.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Uso básico del joystick.</div>
+  </div>
+
+</section>
+
+<!-- ============ CONFIGURACIÓN ============ -->
+<section id="configuracion" class="section">
+
+  <div class="card">
+    <h2>⏰ Lección 13 — Metrónomo</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Usar el metrónomo.</p>
+
+    <h3>Qué significa</h3>
+    <p>El metrónomo produce un clic para mantener el tempo.</p>
+
+    <h3>Antes de empezar</h3>
+    <p>Instrumento encendido.</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Pulsa <span class="ui-key">MENU</span> → <span class="ui-key">Metronome</span>.</li>
+      <li>Toca el icono para activar o desactivar el metrónomo.</li>
+      <li>Ajusta el volumen si es necesario.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> La pantalla del metrónomo.<br>
+      <strong>Qué deberías oír:</strong> Un clic constante.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Activa el metrónomo a 100 BPM y toca una escala.</p>
+
+    <h4>Comprobación</h4>
+    <p>El metrónomo suena y puedes seguirlo.</p>
+
+    <h4>Mini reto</h4>
+    <p>Activa el metrónomo y luego desactívalo sin mirar la pantalla.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Usar el metrónomo.</div>
+  </div>
+
+  <div class="card">
+    <h2>💾 Lección 16 — Registration Memory</h2>
+    <h3>Qué vamos a aprender</h3>
+    <p>Guardar y recuperar configuraciones del panel.</p>
+
+    <h3>Qué significa</h3>
+    <p><strong>Registration Memory:</strong> memoria que guarda ajustes como voz, estilo, tempo, etc.</p>
+
+    <h3>Antes de empezar</h3>
+    <p>Configura una voz, un estilo y un tempo que te gusten.</p>
+
+    <h3>Pasos exactos</h3>
+    <ol class="step-list">
+      <li>Pulsa <span class="ui-key">MEMORY</span> en REGISTRATION MEMORY.</li>
+      <li>Selecciona los elementos que quieres guardar (deja marcados los deseados).</li>
+      <li>Pulsa uno de los botones REGISTRATION MEMORY <span class="ui-key">1</span>–<span class="ui-key">8</span>.</li>
+      <li>El botón se ilumina en naranja.</li>
+      <li>Para recuperar, pulsa ese botón.</li>
+      <li>Para guardar el banco completo, pulsa REGIST BANK <span class="ui-key">–</span> y <span class="ui-key">+</span> simultáneamente y guarda el archivo.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> El botón iluminado.<br>
+      <strong>Qué deberías oír:</strong> La configuración guardada al recuperarla.
+    </div>
+
+    <h4>Ejercicio práctico</h4>
+    <p>Guarda dos configuraciones diferentes en los botones 1 y 2. Recupéralas alternativamente.</p>
+
+    <h4>Comprobación</h4>
+    <p>Al pulsar el botón, vuelven todos los ajustes guardados.</p>
+
+    <h4>Mini reto</h4>
+    <p>Guarda una configuración en el botón 8 y recupérala.</p>
+
+    <div class="callout info"><strong>Qué acabas de aprender:</strong> Guardar y recuperar configuraciones.</div>
+  </div>
+
+</section>
+
+<!-- ============ PROYECTO FINAL ============ -->
+<section id="proyecto" class="section">
+
+  <div class="card">
+    <h2>🏆 Proyecto Final — Mi primera canción con el PSR-SX920</h2>
+    <p>Vamos a preparar una canción sencilla usando todo lo aprendido.</p>
+
+    <h3>Paso 1 — Elige una voz</h3>
+    <ol class="step-list">
+      <li>Pulsa PART SELECT <span class="ui-key">RIGHT1</span>.</li>
+      <li>Selecciona "CFX ConcertGrand".</li>
+    </ol>
+
+    <h3>Paso 2 — Elige un estilo</h3>
+    <ol class="step-list">
+      <li>Pulsa <span class="ui-key">POP</span>.</li>
+      <li>Selecciona "20sDisco".</li>
+    </ol>
+
+    <h3>Paso 3 — Activa el acompañamiento</h3>
+    <ol class="step-list">
+      <li>Pulsa <span class="ui-key">ACMP</span>.</li>
+      <li>Pulsa <span class="ui-key">SYNC START</span>.</li>
+    </ol>
+
+    <h3>Paso 4 — Usa OTS</h3>
+    <ol class="step-list">
+      <li>Pulsa ONE TOUCH SETTING <span class="ui-key">1</span>.</li>
+    </ol>
+
+    <h3>Paso 5 — Añade Multi Pad</h3>
+    <ol class="step-list">
+      <li>Pulsa MULTI PAD CONTROL <span class="ui-key">SELECT</span>.</li>
+      <li>Selecciona "Cymbal&amp;Chimes1".</li>
+      <li>Pulsa MULTI PAD CONTROL <span class="ui-key">1</span> para reproducirlo.</li>
+    </ol>
+
+    <h3>Paso 6 — Toca la canción</h3>
+    <ol class="step-list">
+      <li>Pulsa <span class="ui-key">INTRO I</span>.</li>
+      <li>Toca un acorde con la mano izquierda para empezar.</li>
+      <li>Toca la melodía con la mano derecha.</li>
+      <li>Cambia a <span class="ui-key">MAIN VARIATION B</span>.</li>
+      <li>Pulsa de nuevo <span class="ui-key">MAIN VARIATION B</span> para un FILL.</li>
+      <li>Pulsa <span class="ui-key">ENDING I</span> para terminar.</li>
+    </ol>
+
+    <h3>Paso 7 — Guarda la configuración</h3>
+    <ol class="step-list">
+      <li>Pulsa <span class="ui-key">MEMORY</span>.</li>
+      <li>Pulsa REGISTRATION MEMORY <span class="ui-key">1</span>.</li>
+      <li>Guarda el banco con REGIST BANK <span class="ui-key">–</span> y <span class="ui-key">+</span>.</li>
+    </ol>
+
+    <h3>Paso 8 — Recupera y vuelve a tocar</h3>
+    <ol class="step-list">
+      <li>Pulsa REGISTRATION MEMORY <span class="ui-key">1</span>.</li>
+      <li>Toca de nuevo la canción.</li>
+    </ol>
+
+    <div class="callout example">
+      <strong>Qué deberías ver:</strong> Todos los ajustes se recuperan.<br>
+      <strong>Qué deberías oír:</strong> Tu canción con intro, acompañamiento, melodía, fill y ending.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>✅ YA PUEDO...</h2>
+    <div class="chips">
+      <span class="chip">Encender y apagar correctamente el PSR-SX920</span>
+      <span class="chip">Ajustar el volumen general</span>
+      <span class="chip">Navegar por la pantalla y el menú</span>
+      <span class="chip">Seleccionar una Voice</span>
+      <span class="chip">Activar y desactivar partes RIGHT y LEFT</span>
+      <span class="chip">Seleccionar un Style</span>
+      <span class="chip">Iniciar y detener el acompañamiento</span>
+      <span class="chip">Tocar acordes y melodía</span>
+      <span class="chip">Usar INTRO, MAIN, FILL y ENDING</span>
+      <span class="chip">Cambiar el tempo</span>
+      <span class="chip">Utilizar One Touch Setting (OTS)</span>
+      <span class="chip">Reproducir Multi Pads</span>
+      <span class="chip">Transponer y cambiar de octava</span>
+      <span class="chip">Usar el metrónomo</span>
+      <span class="chip">Aplicar Harmony/Arpeggio</span>
+      <span class="chip">Usar el joystick</span>
+      <span class="chip">Guardar y recuperar con Registration Memory</span>
+      <span class="chip">Preparar y tocar una canción sencilla</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🛠️ Si no funciona (general)</h2>
+    <div class="callout error"><strong>No suena nada:</strong> Comprueba <span class="ui-key">MASTER VOLUME</span>, que las partes estén activadas y que no haya auriculares conectados.</div>
+    <div class="callout warn"><strong>El estilo no cambia de acorde:</strong> Comprueba <span class="ui-key">ACMP</span> y que tocas en la sección izquierda. Si es necesario, cambia el tipo de digitado a "Single Finger" en <span class="ui-key">MENU</span> → <span class="ui-key">Split &amp; Fingering</span>.</div>
+    <div class="callout info"><strong>No encuentro una función:</strong> Pulsa <span class="ui-key">MENU</span> y revisa la lista de funciones. Si no está en el manual de instrucciones, consulta el Reference Manual.</div>
+    <div class="callout info"><strong>Un procedimiento no está claro:</strong> El manual de instrucciones no detalla todas las funciones avanzadas. Indica claramente que se necesita el Reference Manual.</div>
+  </div>
+
+</section>
+
+<!-- ============ FUENTES ============ -->
+<section id="fuentes" class="section">
+  <div class="card">
+    <h2>📚 Fuentes y Referencias</h2>
+    <p>A continuación se listan las fuentes documentales utilizadas como base para este tutorial.</p>
+
+    <div class="source-item">
+      <div class="src-title">Manual de instrucciones Yamaha PSR-SX920/SX720</div>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:6px">Fuente principal del tutorial. Contiene toda la información sobre el manejo del instrumento.</p>
+      <p><strong>Sitio indicado en el manual:</strong> <a href="https://manual.yamaha.com/" target="_blank" rel="noopener">https://manual.yamaha.com/</a></p>
+    </div>
+
+    <div class="source-item">
+      <div class="src-title">Reference Manual (Manual de referencia) — Yamaha PSR-SX920/SX720</div>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:6px">Documento complementario para funciones avanzadas no detalladas en el manual de instrucciones. Disponible en el sitio web indicado en el manual.</p>
+      <p><strong>Sitio web:</strong> <a href="https://usa.yamaha.com/support/manuals/" target="_blank" rel="noopener">https://usa.yamaha.com/support/manuals/</a></p>
+    </div>
+
+    <div class="callout info">
+      <strong>Nota:</strong> Este tutorial es un material educativo de divulgación. Todo el contenido proviene del manual oficial de Yamaha. Los nombres de botones, funciones y categorías se reproducen tal como aparecen en el instrumento.
+    </div>
+  </div>
+</section>
+
+<!-- ============ CRÉDITOS ============ -->
+<section id="creditos" class="section">
+
+  <div class="hero-svg-wrap" id="svgCreditos">
+    <!-- SVG reutilizado idéntico a HOME. Se reinicia su animación vía JS -->
+  </div>
+
+  <div class="card creditos-box">
+    <div class="badge">◆ CRÉDITOS</div>
+    <h1 class="title" style="font-size:clamp(1.3rem,4vw,2rem)">Tutorial práctico Yamaha PSR-SX920 desde cero: Nivel Principiante</h1>
+    <p class="nombre">Rubén Sbarsky</p>
+    <p style="color:var(--muted);font-size:.9rem">Autor y compilador del material educativo</p>
+    <div class="metrics" style="max-width:400px;margin:20px auto">
+      <div class="metric"><div class="num" style="font-size:1rem">📅</div><div class="lbl">20/09/2026</div></div>
+      <div class="metric"><div class="num" style="font-size:1rem">🕒</div><div class="lbl">03:59:16</div></div>
+    </div>
+    <p style="color:var(--muted);font-size:.85rem;margin-top:10px">
+      📚 Tutorial solo con fines Educativos y Divulgación
+    </p>
+    <p class="lat">Fiat iustitia, ruat caelum.</p>
+  </div>
+
+</section>
+
+</main>
+
+<footer>
+  <p>📚 Tutorial solo con fines Educativos y Divulgación</p>
+  <p>👨‍💻 Créditos: Rubén Sbarsky</p>
+  <p>📅 FECHA: 20/09/2026 &nbsp;·&nbsp; Hora: 03:59:16</p>
+  <p style="font-style:italic;color:var(--purple);margin-top:6px">Fiat iustitia, ruat caelum.</p>
+</footer>
+
+<button class="back-to-top" id="backToTop" aria-label="Volver arriba">↑</button>
+
+<script>
+(function(){
+  "use strict";
+
+  // ============ SPA NAVIGATION ============
+  const navBtns = document.querySelectorAll('.nav-btn');
+  const sections = document.querySelectorAll('.section');
+  const homeSvgWrap = document.querySelector('#home .hero-svg-wrap');
+  const creditosWrap = document.getElementById('svgCreditos');
+
+  // Guardar el SVG original de HOME y clonarlo una vez en CRÉDITOS
+  const originalSvgHTML = homeSvgWrap.innerHTML;
+  creditosWrap.innerHTML = originalSvgHTML;
+
+  function showSection(id){
+    sections.forEach(s=>s.classList.remove('active'));
+    navBtns.forEach(b=>b.classList.remove('active'));
+    const target = document.getElementById(id);
+    if(target){ target.classList.add('active'); }
+    const btn = document.querySelector('.nav-btn[data-section="'+id+'"]');
+    if(btn){ btn.classList.add('active'); }
+    window.scrollTo({top:0,behavior:'smooth'});
+    // Reiniciar la animación del SVG en créditos
+    if(id === 'creditos'){
+      restartSvgAnimations(creditosWrap);
+    }
+    updateProgress();
+  }
+
+  function restartSvgAnimations(container){
+    // Reiniciar todas las animaciones SVG del contenedor
+    const svg = container.querySelector('svg');
+    if(!svg) return;
+    try{
+      // Forzar reinicio: setCurrentTime(0)
+      if(typeof svg.setCurrentTime === 'function'){
+        svg.setCurrentTime(0);
+      }
+      // Alternativa: pausar y reanudar todas las animaciones
+      const anims = svg.querySelectorAll('animate, animateTransform, animateMotion, set');
+      anims.forEach(a=>{
+        try{ a.beginElement && a.beginElement(); }catch(e){}
+      });
+    }catch(e){ /* noop */ }
+  }
+
+  navBtns.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = btn.getAttribute('data-section');
+      showSection(id);
+    });
+  });
+
+  // ============ PROGRESS BAR ============
+  const progressFill = document.getElementById('progressFill');
+  function updateProgress(){
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressFill.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+
+  // ============ BACK TO TOP ============
+  const backBtn = document.getElementById('backToTop');
+  window.addEventListener('scroll', ()=>{
+    if((window.scrollY || window.scrollY === 0) && window.scrollY > 300){
+      backBtn.classList.add('show');
+    } else {
+      backBtn.classList.remove('show');
+    }
+  }, {passive:true});
+  backBtn.addEventListener('click', ()=>{
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  // Inicializar
+  updateProgress();
+})();
+</script>
+
+</body>
+</html>
