@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conversión de MIDI a Estilos Yamaha · Guía Maestra Interactiva</title>
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --card:#0f172a;
+    --border:#1e3a5f;
+    --cyan:#00d4ff;
+    --green:#22c55e;
+    --amber:#f59e0b;
+    --red:#ef4444;
+    --purple:#a855f7;
+    --txt:#e2e8f0;
+    --muted:#94a3b8;
+    --dim:#64748b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--txt);
+    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  /* ============ BARRA DE PROGRESO ============ */
+  #progressBar{
+    position:fixed;top:0;left:0;height:3px;width:0%;
+    background:linear-gradient(90deg,#00d4ff,#22c55e,#a855f7);
+    z-index:9999;
+    box-shadow:0 0 12px rgba(0,212,255,.7);
+    transition:width .08s linear;
+  }
+  /* ============ NAVBAR ============ */
+  #navbar{
+    position:fixed;top:3px;left:0;right:0;z-index:9998;
+    background:rgba(10,14,26,.92);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner{
+    display:flex;align-items:center;gap:6px;
+    padding:8px 10px;
+    overflow-x:auto;
+    scrollbar-width:thin;
+    scrollbar-color:var(--border) transparent;
+  }
+  .nav-inner::-webkit-scrollbar{height:5px;}
+  .nav-inner::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+  .nav-brand{
+    flex:0 0 auto;
+    font-size:.72rem;font-weight:700;letter-spacing:.12em;
+    color:var(--cyan);
+    padding:6px 10px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:#0d1526;
+    white-space:nowrap;
+  }
+  .nav-btn{
+    flex:0 0 auto;
+    background:transparent;
+    border:1px solid transparent;
+    color:var(--muted);
+    font-family:inherit;
+    font-size:.74rem;
+    font-weight:600;
+    letter-spacing:.05em;
+    padding:7px 11px;
+    border-radius:8px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:.2s;
+  }
+  .nav-btn:hover{color:var(--txt);background:#131d33;border-color:var(--border);}
+  .nav-btn.active{
+    color:#04121c;
+    background:linear-gradient(135deg,#00d4ff,#38bdf8);
+    border-color:#00d4ff;
+    box-shadow:0 0 14px rgba(0,212,255,.45);
+  }
+  .nav-btn.credits.active{
+    background:linear-gradient(135deg,#a855f7,#7c3aed);
+    border-color:#a855f7;
+    color:#fff;
+    box-shadow:0 0 14px rgba(168,85,247,.5);
+  }
+  /* ============ LAYOUT ============ */
+  main{
+    max-width:1100px;
+    margin:0 auto;
+    padding:96px 14px 60px;
+  }
+  .section{display:none;animation:fadeIn .45s ease;}
+  .section.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  /* ============ HOME ============ */
+  .hero-badge{
+    display:inline-block;
+    font-size:.68rem;font-weight:700;letter-spacing:.2em;
+    color:var(--cyan);
+    background:rgba(0,212,255,.08);
+    border:1px solid rgba(0,212,255,.35);
+    padding:5px 13px;border-radius:999px;
+    margin-bottom:14px;
+  }
+  .hero-svg{
+    width:100%;height:auto;display:block;
+    border-radius:14px;
+    border:1px solid var(--border);
+    background:#070b14;
+    box-shadow:0 0 42px rgba(0,212,255,.13), 0 18px 46px rgba(0,0,0,.6);
+    margin-bottom:26px;
+  }
+  h1.hero-title{
+    font-size:clamp(1.6rem,5.2vw,2.7rem);
+    font-weight:800;
+    line-height:1.15;
+    letter-spacing:-.02em;
+    background:linear-gradient(100deg,#00d4ff,#22c55e 45%,#a855f7);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    margin-bottom:12px;
+  }
+  .hero-sub{
+    color:var(--muted);
+    font-size:clamp(.92rem,2.4vw,1.08rem);
+    margin-bottom:18px;
+    max-width:760px;
+  }
+  .hero-desc{
+    color:#b6c2d4;
+    font-size:.94rem;
+    max-width:820px;
+    margin-bottom:22px;
+  }
+  .quote-box{
+    background:linear-gradient(135deg,#0f172a,#111d33);
+    border-left:3px solid var(--cyan);
+    border-radius:10px;
+    padding:18px 20px;
+    margin:22px 0;
+    font-style:italic;
+    color:#cbd5e1;
+    font-size:.98rem;
+    box-shadow:inset 0 0 30px rgba(0,212,255,.05);
+  }
+  .quote-box .qmark{color:var(--cyan);font-size:1.4rem;font-style:normal;font-weight:800;}
+  .metrics{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+    gap:12px;margin:26px 0;
+  }
+  .metric{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:11px;
+    padding:16px 14px;
+    text-align:center;
+    transition:.25s;
+  }
+  .metric:hover{transform:translateY(-3px);border-color:var(--cyan);box-shadow:0 0 20px rgba(0,212,255,.18);}
+  .metric .num{font-size:1.55rem;font-weight:800;color:var(--cyan);display:block;line-height:1.2;}
+  .metric .lbl{font-size:.68rem;letter-spacing:.11em;color:var(--dim);text-transform:uppercase;}
+  .dateline{
+    display:flex;flex-wrap:wrap;gap:10px;
+    margin-top:20px;
+  }
+  .date-chip{
+    background:#0d1526;border:1px solid var(--border);
+    border-radius:8px;padding:8px 14px;
+    font-size:.78rem;color:var(--muted);
+  }
+  .date-chip b{color:var(--cyan);}
+  /* ============ SECCIONES ============ */
+  .sec-head{
+    display:flex;align-items:center;gap:13px;
+    margin-bottom:20px;padding-bottom:14px;
+    border-bottom:1px solid var(--border);
+  }
+  .sec-icon{
+    flex:0 0 auto;
+    width:44px;height:44px;border-radius:11px;
+    display:grid;place-items:center;
+    font-size:1.3rem;
+    background:rgba(0,212,255,.08);
+    border:1px solid rgba(0,212,255,.3);
+  }
+  .sec-head h2{
+    font-size:clamp(1.15rem,3.6vw,1.6rem);
+    font-weight:800;letter-spacing:-.01em;
+  }
+  .sec-head .kicker{
+    display:block;font-size:.66rem;letter-spacing:.18em;
+    color:var(--dim);text-transform:uppercase;font-weight:700;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px 18px;
+    margin-bottom:16px;
+    transition:.25s;
+  }
+  .card:hover{border-color:#2a4d7a;}
+  .card h3{
+    font-size:1rem;font-weight:700;color:var(--cyan);
+    margin-bottom:10px;display:flex;align-items:center;gap:8px;
+  }
+  .card h3 .dot{
+    width:7px;height:7px;border-radius:50%;background:var(--cyan);
+    box-shadow:0 0 9px var(--cyan);flex:0 0 auto;
+  }
+  .card p{color:#b6c2d4;font-size:.92rem;margin-bottom:9px;}
+  .card p:last-child{margin-bottom:0;}
+  ul.clean,ol.clean{margin:8px 0 0 0;padding-left:0;list-style:none;}
+  ul.clean li,ol.clean li{
+    color:#b6c2d4;font-size:.92rem;
+    padding-left:24px;position:relative;margin-bottom:8px;
+  }
+  ul.clean li::before{
+    content:"▸";position:absolute;left:6px;color:var(--cyan);font-weight:700;
+  }
+  ol.clean{counter-reset:step;}
+  ol.clean li{counter-increment:step;padding-left:40px;margin-bottom:14px;}
+  ol.clean li::before{
+    content:counter(step);
+    position:absolute;left:0;top:1px;
+    width:26px;height:26px;border-radius:8px;
+    display:grid;place-items:center;
+    background:rgba(0,212,255,.1);
+    border:1px solid rgba(0,212,255,.35);
+    color:var(--cyan);font-size:.76rem;font-weight:800;
+  }
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;}
+  .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;}
+  /* ============ CALLOUTS ============ */
+  .callout{
+    border-radius:10px;padding:14px 16px;margin:14px 0;
+    font-size:.9rem;
+    border-left:4px solid;
+    display:flex;gap:12px;align-items:flex-start;
+  }
+  .callout .ci{font-size:1.05rem;flex:0 0 auto;line-height:1.4;}
+  .callout .cb{flex:1;}
+  .callout .ct{font-weight:800;font-size:.72rem;letter-spacing:.14em;display:block;margin-bottom:4px;}
+  .callout.info{background:rgba(0,212,255,.06);border-color:var(--cyan);}
+  .callout.info .ct{color:var(--cyan);}
+  .callout.example{background:rgba(34,197,94,.06);border-color:var(--green);}
+  .callout.example .ct{color:var(--green);}
+  .callout.warn{background:rgba(245,158,11,.07);border-color:var(--amber);}
+  .callout.warn .ct{color:var(--amber);}
+  .callout.error{background:rgba(239,68,68,.07);border-color:var(--red);}
+  .callout.error .ct{color:var(--red);}
+  /* ============ TABLAS ============ */
+  .tbl-wrap{overflow-x:auto;border-radius:11px;border:1px solid var(--border);margin:16px 0;-webkit-overflow-scrolling:touch;}
+  table{width:100%;border-collapse:collapse;min-width:520px;font-size:.87rem;}
+  thead th{
+    background:#101a2e;color:var(--cyan);
+    font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+    padding:12px 14px;text-align:left;
+    border-bottom:1px solid var(--border);
+    white-space:nowrap;
+  }
+  tbody td{
+    padding:12px 14px;border-bottom:1px solid rgba(30,58,95,.5);
+    color:#b6c2d4;vertical-align:top;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:rgba(0,212,255,.035);}
+  tbody td:first-child{color:#e2e8f0;font-weight:600;}
+  /* ============ TABS ============ */
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+  .tab-btn{
+    background:#0d1526;border:1px solid var(--border);
+    color:var(--muted);font-family:inherit;font-size:.78rem;font-weight:700;
+    padding:8px 15px;border-radius:9px;cursor:pointer;transition:.2s;
+  }
+  .tab-btn:hover{color:var(--txt);border-color:#2a4d7a;}
+  .tab-btn.active{
+    background:rgba(0,212,255,.14);color:var(--cyan);
+    border-color:var(--cyan);box-shadow:0 0 14px rgba(0,212,255,.2);
+  }
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;animation:fadeIn .3s ease;}
+  /* ============ ACORDEÓN ============ */
+  .acc-item{
+    border:1px solid var(--border);border-radius:11px;
+    margin-bottom:10px;overflow:hidden;background:var(--card);
+  }
+  .acc-head{
+    width:100%;text-align:left;background:transparent;border:none;
+    color:var(--txt);font-family:inherit;font-size:.9rem;font-weight:700;
+    padding:15px 16px;cursor:pointer;
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    transition:.2s;
+  }
+  .acc-head:hover{background:rgba(0,212,255,.05);}
+  .acc-head .arw{
+    color:var(--cyan);font-size:1.05rem;transition:transform .3s;flex:0 0 auto;
+  }
+  .acc-item.open .acc-head .arw{transform:rotate(90deg);}
+  .acc-body{
+    max-height:0;overflow:hidden;
+    transition:max-height .38s ease;
+    padding:0 16px;
+  }
+  .acc-item.open .acc-body{max-height:900px;padding-bottom:16px;}
+  .acc-body p{color:#b6c2d4;font-size:.9rem;}
+  /* ============ CHECKLIST ============ */
+  .check-item{
+    display:flex;align-items:flex-start;gap:12px;
+    background:var(--card);border:1px solid var(--border);
+    border-radius:10px;padding:13px 15px;margin-bottom:9px;
+    cursor:pointer;transition:.2s;
+  }
+  .check-item:hover{border-color:#2a4d7a;}
+  .check-item.done{border-color:rgba(34,197,94,.55);background:rgba(34,197,94,.05);}
+  .check-box{
+    flex:0 0 auto;width:21px;height:21px;border-radius:6px;
+    border:2px solid var(--border);display:grid;place-items:center;
+    font-size:.75rem;color:transparent;transition:.2s;margin-top:1px;
+  }
+  .check-item.done .check-box{
+    background:var(--green);border-color:var(--green);color:#04140a;
+  }
+  .check-item span.ctxt{font-size:.88rem;color:#b6c2d4;}
+  .check-item.done span.ctxt{color:#86efac;text-decoration:line-through;text-decoration-color:rgba(34,197,94,.5);}
+  /* ============ GLOSARIO ============ */
+  .gloss{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:11px;padding:15px;transition:.25s;
+  }
+  .gloss:hover{border-color:var(--purple);box-shadow:0 0 18px rgba(168,85,247,.14);}
+  .gloss .gterm{
+    font-weight:800;color:var(--purple);font-size:.9rem;
+    letter-spacing:.03em;margin-bottom:6px;display:block;
+  }
+  .gloss .gdef{font-size:.85rem;color:#b6c2d4;}
+  /* ============ CHIPS FLOW ============ */
+  .flow-row{
+    display:flex;flex-wrap:wrap;align-items:center;gap:9px;
+    margin:16px 0;
+  }
+  .fchip{
+    background:#101a2e;border:1px solid var(--border);
+    border-radius:9px;padding:9px 13px;
+    font-size:.78rem;font-weight:700;color:#b6c2d4;
+    transition:.25s;
+  }
+  .fchip:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-2px);}
+  .farrow{color:var(--cyan);font-weight:800;font-size:.9rem;}
+  /* ============ FUENTES ============ */
+  .src-item{
+    display:flex;gap:14px;align-items:flex-start;
+    background:var(--card);border:1px solid var(--border);
+    border-radius:11px;padding:16px;margin-bottom:12px;
+    transition:.25s;
+  }
+  .src-item:hover{border-color:var(--cyan);transform:translateX(3px);}
+  .src-num{
+    flex:0 0 auto;width:34px;height:34px;border-radius:9px;
+    display:grid;place-items:center;
+    background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.35);
+    color:var(--cyan);font-weight:800;font-size:.85rem;
+  }
+  .src-body h4{font-size:.92rem;color:#e2e8f0;margin-bottom:4px;font-weight:700;}
+  .src-body .ch{
+    font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--green);font-weight:700;margin-bottom:6px;display:block;
+  }
+  .src-body p{font-size:.85rem;color:var(--muted);}
+  /* ============ CRÉDITOS ============ */
+  .credits-wrap{text-align:center;padding:6px 0 30px;}
+  .credits-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:14px;padding:26px 18px;margin-top:24px;
+  }
+  .credits-card h3{
+    font-size:1.15rem;color:var(--cyan);font-weight:800;margin-bottom:8px;
+  }
+  .credits-name{
+    font-size:1.5rem;font-weight:800;
+    background:linear-gradient(100deg,#00d4ff,#a855f7);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    margin:12px 0 6px;
+  }
+  .credits-meta{
+    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:18px 0;
+  }
+  .credits-meta .date-chip{font-size:.8rem;}
+  .fiat{
+    font-style:italic;color:var(--amber);
+    font-size:1rem;margin-top:18px;
+    letter-spacing:.04em;
+  }
+  .edu-note{
+    font-size:.82rem;color:var(--dim);margin-top:10px;
+  }
+  /* ============ BOTÓN ARRIBA ============ */
+  #toTop{
+    position:fixed;right:16px;bottom:18px;z-index:9997;
+    width:46px;height:46px;border-radius:13px;
+    background:rgba(15,23,42,.95);
+    border:1px solid var(--border);
+    color:var(--cyan);font-size:1.15rem;
+    cursor:pointer;display:none;
+    place-items:center;
+    transition:.25s;
+    backdrop-filter:blur(10px);
+    box-shadow:0 6px 20px rgba(0,0,0,.5);
+  }
+  #toTop.show{display:grid;}
+  #toTop:hover{border-color:var(--cyan);box-shadow:0 0 20px rgba(0,212,255,.35);}
+  /* ============ FOOTER ============ */
+  footer{
+    border-top:1px solid var(--border);
+    margin-top:40px;padding:24px 14px 34px;
+    text-align:center;
+  }
+  footer p{font-size:.8rem;color:var(--muted);margin-bottom:6px;}
+  footer .fname{color:var(--cyan);font-weight:700;}
+  footer .ffiat{color:var(--amber);font-style:italic;margin-top:10px;font-size:.84rem;}
+  /* ============ RESPONSIVE ============ */
+  @media(max-width:640px){
+    main{padding:92px 11px 50px;}
+    .card{padding:15px 14px;}
+    .sec-head{gap:10px;}
+    .sec-icon{width:38px;height:38px;font-size:1.1rem;}
+    .quote-box{padding:15px 15px;font-size:.9rem;}
+    .nav-btn{font-size:.7rem;padding:7px 10px;}
+    .nav-brand{font-size:.66rem;}
+    #toTop{width:42px;height:42px;right:12px;bottom:14px;}
+    .gloss{padding:13px;}
+  }
+  @media(max-width:380px){
+    .nav-brand{display:none;}
+    .metric{padding:13px 9px;}
+    .metric .num{font-size:1.3rem;}
+  }
+  /* ============ ACCESIBILIDAD ============ */
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important;transition-duration:.01ms !important;}
+    html{scroll-behavior:auto;}
+    .hero-svg *{opacity:.85;}
+  }
+  ::selection{background:rgba(0,212,255,.3);color:#fff;}
+  :focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<div id="progressBar"></div>
+
+<nav id="navbar" aria-label="Navegación principal">
+  <div class="nav-inner">
+    <span class="nav-brand">◈ MIDI→STYLE</span>
+    <button class="nav-btn active" data-target="home">INICIO</button>
+    <button class="nav-btn" data-target="intro">INTRODUCCIÓN</button>
+    <button class="nav-btn" data-target="config">CONFIGURACIÓN</button>
+    <button class="nav-btn" data-target="conversion">CONVERSIÓN</button>
+    <button class="nav-btn" data-target="edit">MODO EDIT</button>
+    <button class="nav-btn" data-target="refinamiento">REFINAMIENTO</button>
+    <button class="nav-btn" data-target="recursos">RECURSOS · FAQ</button>
+    <button class="nav-btn" data-target="fuentes">FUENTES</button>
+    <button class="nav-btn credits" data-target="creditos">CRÉDITOS</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============================================================ -->
+<!-- HOME                                                          -->
+<!-- ============================================================ -->
+<section id="home" class="section active">
+
+  <svg id="heroSvgHome" class="hero-svg" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid meet"
+       xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+       role="img" aria-label="Animación: un archivo MIDI se transforma en un Estilo Yamaha interactivo">
+    <defs>
+      <linearGradient id="gBg" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#070b14">
+          <animate attributeName="stop-color" values="#070b14;#0b1730;#140a26;#070b14" dur="12s" repeatCount="indefinite"/>
+        </stop>
+        <stop offset="50%" stop-color="#0a0e1a">
+          <animate attributeName="stop-color" values="#0a0e1a;#132a4a;#1d1038;#0a0e1a" dur="9s" repeatCount="indefinite"/>
+        </stop>
+        <stop offset="100%" stop-color="#0d1226">
+          <animate attributeName="stop-color" values="#0d1226;#0f2138;#241243;#0d1226" dur="10.5s" repeatCount="indefinite"/>
+        </stop>
+      </linearGradient>
+
+      <linearGradient id="gMid" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00d4ff" stop-opacity=".95"/>
+        <stop offset="100%" stop-color="#22c55e" stop-opacity=".9"/>
+      </linearGradient>
+
+      <linearGradient id="gSty" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b" stop-opacity=".95"/>
+        <stop offset="100%" stop-color="#a855f7" stop-opacity=".95"/>
+      </linearGradient>
+
+      <linearGradient id="gFlow" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#00d4ff"/>
+        <stop offset="50%" stop-color="#22c55e"/>
+        <stop offset="100%" stop-color="#f59e0b"/>
+      </linearGradient>
+
+      <linearGradient id="gTitle" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#00d4ff">
+          <animate attributeName="stop-color" values="#00d4ff;#22c55e;#f59e0b;#a855f7;#00d4ff" dur="8s" repeatCount="indefinite"/>
+        </stop>
+        <stop offset="50%" stop-color="#22c55e">
+          <animate attributeName="stop-color" values="#22c55e;#f59e0b;#a855f7;#00d4ff;#22c55e" dur="8s" repeatCount="indefinite"/>
+        </stop>
+        <stop offset="100%" stop-color="#a855f7">
+          <animate attributeName="stop-color" values="#a855f7;#00d4ff;#22c55e;#f59e0b;#a855f7" dur="8s" repeatCount="indefinite"/>
+        </stop>
+      </linearGradient>
+
+      <pattern id="pGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#00d4ff" stroke-width="0.6" opacity="0.6"/>
+      </pattern>
+
+      <filter id="fGlowC" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur stdDeviation="4" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="fGlowG" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur stdDeviation="3.4" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="fGlowA" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur stdDeviation="4.6" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="fGlowP" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur stdDeviation="5" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="fSoft" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="7"/>
+      </filter>
+
+      <!-- RUTAS NARRATIVAS -->
+      <path id="flowA" d="M 258 148 C 340 104, 462 190, 542 148" fill="none"/>
+      <path id="flowB" d="M 258 225 C 348 225, 452 225, 542 225" fill="none"/>
+      <path id="flowC" d="M 258 302 C 340 346, 462 260, 542 302" fill="none"/>
+
+      <radialGradient id="gHalo">
+        <stop offset="0%" stop-color="#00d4ff" stop-opacity=".55"/>
+        <stop offset="70%" stop-color="#00d4ff" stop-opacity=".08"/>
+        <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="gHaloP">
+        <stop offset="0%" stop-color="#a855f7" stop-opacity=".55"/>
+        <stop offset="70%" stop-color="#a855f7" stop-opacity=".08"/>
+        <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+
+    <!-- FONDO -->
+    <rect x="0" y="0" width="800" height="450" fill="url(#gBg)"/>
+    <rect x="0" y="0" width="800" height="450" fill="url(#pGrid)">
+      <animate attributeName="opacity" values="0.07;0.2;0.07" dur="6s" repeatCount="indefinite"/>
+    </rect>
+
+    <!-- ANILLOS ORBITALES -->
+    <g>
+      <ellipse cx="400" cy="225" rx="330" ry="150" fill="none" stroke="#00d4ff" stroke-width="1"
+               stroke-dasharray="5 16" opacity="0.3">
+        <animateTransform attributeName="transform" type="rotate" from="0 400 225" to="360 400 225" dur="28s" repeatCount="indefinite"/>
+        <animate attributeName="stroke-dasharray" values="5 16;16 8;5 16" dur="11s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="400" cy="225" rx="272" ry="196" fill="none" stroke="#a855f7" stroke-width="1"
+               stroke-dasharray="3 12" opacity="0.26">
+        <animateTransform attributeName="transform" type="rotate" from="360 400 225" to="0 400 225" dur="21s" repeatCount="indefinite"/>
+        <animate attributeName="stroke-dasharray" values="3 12;12 6;3 12" dur="8.5s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="400" cy="225" rx="212" ry="238" fill="none" stroke="#22c55e" stroke-width="1"
+               stroke-dasharray="8 20" opacity="0.2">
+        <animateTransform attributeName="transform" type="rotate" from="0 400 225" to="360 400 225" dur="36s" repeatCount="indefinite"/>
+      </ellipse>
+    </g>
+
+    <!-- ================= PANEL MIDI (IZQUIERDA) ================= -->
+    <g>
+      <rect x="40" y="96" width="218" height="258" rx="12" fill="#0b1424" stroke="#1e3a5f" stroke-width="1.2" opacity="0.96"/>
+      <rect x="40" y="96" width="218" height="30" rx="12" fill="#101f38" opacity="0.9"/>
+      <rect x="40" y="114" width="218" height="12" fill="#101f38" opacity="0.9"/>
+      <circle cx="56" cy="111" r="3.4" fill="#ef4444">
+        <animate attributeName="opacity" values="1;0.25;1" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="68" cy="111" r="3.4" fill="#f59e0b">
+        <animate attributeName="opacity" values="1;0.25;1" dur="3.1s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="80" cy="111" r="3.4" fill="#22c55e">
+        <animate attributeName="opacity" values="1;0.25;1" dur="3.7s" repeatCount="indefinite"/>
+      </circle>
+      <text x="150" y="115" text-anchor="middle" font-family="monospace" font-size="11"
+            fill="#00d4ff" letter-spacing="1.5">MIDI · SMF</text>
+
+      <!-- pistas MIDI animadas -->
+      <g>
+        <rect x="54" y="140" width="30" height="7" rx="3.5" fill="#00d4ff" opacity=".85">
+          <animate attributeName="width" values="30;150;70;120;30" dur="9s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="54" y="156" width="70" height="7" rx="3.5" fill="#22c55e" opacity=".8">
+          <animate attributeName="width" values="70;40;170;90;70" dur="7.5s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="54" y="172" width="120" height="7" rx="3.5" fill="#00d4ff" opacity=".7">
+          <animate attributeName="width" values="120;60;35;180;120" dur="8.2s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="54" y="188" width="45" height="7" rx="3.5" fill="#f59e0b" opacity=".8">
+          <animate attributeName="width" values="45;165;95;55;45" dur="6.6s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="54" y="204" width="95" height="7" rx="3.5" fill="#a855f7" opacity=".75">
+          <animate attributeName="width" values="95;35;145;75;95" dur="7.1s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="54" y="220" width="160" height="7" rx="3.5" fill="#22c55e" opacity=".7">
+          <animate attributeName="width" values="160;80;45;130;160" dur="8.8s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="54" y="236" width="55" height="7" rx="3.5" fill="#00d4ff" opacity=".65">
+          <animate attributeName="width" values="55;140;60;100;55" dur="6.2s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="54" y="252" width="110" height="7" rx="3.5" fill="#f59e0b" opacity=".65">
+          <animate attributeName="width" values="110;50;155;85;110" dur="9.4s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+
+      <!-- teclado miniatura -->
+      <g opacity="0.85">
+        <rect x="54" y="278" width="190" height="26" rx="4" fill="#08101f" stroke="#1e3a5f" stroke-width=".8"/>
+        <g fill="#e2e8f0" opacity=".8">
+          <rect x="58" y="281" width="13" height="20" rx="2"/>
+          <rect x="74" y="281" width="13" height="20" rx="2"/>
+          <rect x="90" y="281" width="13" height="20" rx="2"/>
+          <rect x="106" y="281" width="13" height="20" rx="2"/>
+          <rect x="122" y="281" width="13" height="20" rx="2"/>
+          <rect x="138" y="281" width="13" height="20" rx="2"/>
+          <rect x="154" y="281" width="13" height="20" rx="2"/>
+          <rect x="170" y="281" width="13" height="20" rx="2"/>
+          <rect x="186" y="281" width="13" height="20" rx="2"/>
+          <rect x="202" y="281" width="13" height="20" rx="2"/>
+          <rect x="218" y="281" width="13" height="20" rx="2"/>
+        </g>
+        <g fill="#0a0e1a">
+          <rect x="66" y="281" width="8" height="12" rx="1.5"/>
+          <rect x="82" y="281" width="8" height="12" rx="1.5"/>
+          <rect x="114" y="281" width="8" height="12" rx="1.5"/>
+          <rect x="130" y="281" width="8" height="12" rx="1.5"/>
+          <rect x="146" y="281" width="8" height="12" rx="1.5"/>
+          <rect x="178" y="281" width="8" height="12" rx="1.5"/>
+          <rect x="194" y="281" width="8" height="12" rx="1.5"/>
+          <rect x="210" y="281" width="8" height="12" rx="1.5"/>
+        </g>
+        <!-- tecla pulsante -->
+        <rect x="122" y="281" width="13" height="20" rx="2" fill="#00d4ff" opacity="0.55">
+          <animate attributeName="opacity" values="0;0.75;0" dur="2.4s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="170" y="281" width="13" height="20" rx="2" fill="#22c55e" opacity="0.4">
+          <animate attributeName="opacity" values="0;0.7;0" dur="3.3s" begin="-1.1s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="90" y="281" width="13" height="20" rx="2" fill="#a855f7" opacity="0.4">
+          <animate attributeName="opacity" values="0;0.65;0" dur="4.1s" begin="-2.2s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+
+      <text x="149" y="326" text-anchor="middle" font-family="monospace" font-size="9.5"
+            fill="#64748b" letter-spacing="1.2">ESTRUCTURA FIJA · FOTOGRAFÍA</text>
+      <text x="149" y="342" text-anchor="middle" font-family="monospace" font-size="9.5"
+            fill="#64748b" letter-spacing="1.2">REPRODUCE LO GRABADO</text>
+
+      <!-- halo MIDI -->
+      <ellipse cx="149" cy="225" rx="130" ry="150" fill="url(#gHalo)" opacity="0.4">
+        <animate attributeName="opacity" values="0.18;0.5;0.18" dur="5.5s" repeatCount="indefinite"/>
+      </ellipse>
+    </g>
+
+    <!-- ================= PANEL STYLE (DERECHA) ================= -->
+    <g>
+      <rect x="542" y="96" width="218" height="258" rx="12" fill="#100f22" stroke="#3b2f5f" stroke-width="1.2" opacity="0.96"/>
+      <rect x="542" y="96" width="218" height="30" rx="12" fill="#1a1330" opacity="0.9"/>
+      <rect x="542" y="114" width="218" height="12" fill="#1a1330" opacity="0.9"/>
+      <circle cx="558" cy="111" r="3.4" fill="#22c55e">
+        <animate attributeName="opacity" values="1;0.2;1" dur="2.2s" repeatCount="indefinite"/>
+      </circle>
+      <text x="660" y="115" text-anchor="middle" font-family="monospace" font-size="11"
+            fill="#a855f7" letter-spacing="1.5">STYLE .sty</text>
+
+      <!-- secciones del estilo -->
+      <g font-family="monospace" font-size="10" font-weight="bold">
+        <rect x="556" y="140" width="190" height="24" rx="6" fill="#0d1b2e" stroke="#00d4ff" stroke-width="1">
+          <animate attributeName="stroke-opacity" values="0.3;1;0.3" dur="3.2s" repeatCount="indefinite"/>
+        </rect>
+        <text x="566" y="156" fill="#00d4ff">INTRO</text>
+        <rect x="716" y="146" width="22" height="12" rx="3" fill="#00d4ff" opacity=".3">
+          <animate attributeName="opacity" values="0.15;0.85;0.15" dur="2.8s" repeatCount="indefinite"/>
+        </rect>
+
+        <rect x="556" y="172" width="190" height="24" rx="6" fill="#0d1b2e" stroke="#22c55e" stroke-width="1">
+          <animate attributeName="stroke-opacity" values="1;0.3;1" dur="3.8s" begin="-1s" repeatCount="indefinite"/>
+        </rect>
+        <text x="566" y="188" fill="#22c55e">MAIN A</text>
+        <rect x="716" y="178" width="22" height="12" rx="3" fill="#22c55e" opacity=".3">
+          <animate attributeName="opacity" values="0.85;0.15;0.85" dur="3.8s" begin="-1s" repeatCount="indefinite"/>
+        </rect>
+
+        <rect x="556" y="204" width="190" height="24" rx="6" fill="#0d1b2e" stroke="#22c55e" stroke-width="1">
+          <animate attributeName="stroke-opacity" values="0.3;1;0.3" dur="4.4s" begin="-2s" repeatCount="indefinite"/>
+        </rect>
+        <text x="566" y="220" fill="#22c55e">MAIN B · C · D</text>
+
+        <rect x="556" y="236" width="190" height="24" rx="6" fill="#0d1b2e" stroke="#f59e0b" stroke-width="1">
+          <animate attributeName="stroke-opacity" values="1;0.3;1" dur="5s" begin="-3s" repeatCount="indefinite"/>
+        </rect>
+        <text x="566" y="252" fill="#f59e0b">ENDING</text>
+        <rect x="716" y="242" width="22" height="12" rx="3" fill="#f59e0b" opacity=".3">
+          <animate attributeName="opacity" values="0.15;0.9;0.15" dur="2.6s" begin="-0.6s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+
+      <text x="651" y="292" text-anchor="middle" font-family="monospace" font-size="9.5"
+            fill="#7c6fa8" letter-spacing="1.2">ORGANISMO VIVO · REACCIONA</text>
+      <text x="651" y="308" text-anchor="middle" font-family="monospace" font-size="9.5"
+            fill="#7c6fa8" letter-spacing="1.2">A TUS ACORDES EN TIEMPO REAL</text>
+
+      <!-- anillo orbitando el panel Style -->
+      <ellipse cx="651" cy="225" rx="132" ry="152" fill="none" stroke="#a855f7"
+               stroke-width="1.3" stroke-dasharray="6 14" opacity="0.45">
+        <animateTransform attributeName="transform" type="rotate" from="0 651 225" to="360 651 225" dur="17s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="651" cy="225" rx="150" ry="128" fill="none" stroke="#f59e0b"
+               stroke-width="1" stroke-dasharray="2 10" opacity="0.35">
+        <animateTransform attributeName="transform" type="rotate" from="360 651 225" to="0 651 225" dur="23s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="651" cy="225" rx="140" ry="150" fill="url(#gHaloP)" opacity="0.35">
+        <animate attributeName="opacity" values="0.15;0.5;0.15" dur="6.5s" begin="-2s" repeatCount="indefinite"/>
+      </ellipse>
+    </g>
+
+    <!-- ================= FLUJOS NARRATIVOS ================= -->
+    <g>
+      <use xlink:href="#flowA" href="#flowA" fill="none" stroke="url(#gFlow)" stroke-width="2.2"
+           stroke-dasharray="9 7" opacity="0.75" filter="url(#fGlowC)">
+        <animate attributeName="stroke-dashoffset" from="0" to="-160" dur="3s" repeatCount="indefinite"/>
+      </use>
+      <use xlink:href="#flowB" href="#flowB" fill="none" stroke="url(#gFlow)" stroke-width="2.6"
+           stroke-dasharray="11 8" opacity="0.85" filter="url(#fGlowG)">
+        <animate attributeName="stroke-dashoffset" from="0" to="-190" dur="2.5s" repeatCount="indefinite"/>
+      </use>
+      <use xlink:href="#flowC" href="#flowC" fill="none" stroke="url(#gFlow)" stroke-width="2.2"
+           stroke-dasharray="9 7" opacity="0.75" filter="url(#fGlowA)">
+        <animate attributeName="stroke-dashoffset" from="0" to="-160" dur="3.5s" repeatCount="indefinite"/>
+      </use>
+    </g>
+
+    <!-- PARTÍCULAS VIAJERAS -->
+    <g>
+      <circle r="4" fill="#00d4ff" filter="url(#fGlowC)">
+        <animateMotion dur="3s" repeatCount="indefinite"><mpath xlink:href="#flowA" href="#flowA"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.82;1" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="3" fill="#22c55e" filter="url(#fGlowG)">
+        <animateMotion dur="3s" begin="-1.5s" repeatCount="indefinite"><mpath xlink:href="#flowA" href="#flowA"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.82;1" dur="3s" begin="-1.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="4.5" fill="#f59e0b" filter="url(#fGlowA)">
+        <animateMotion dur="2.5s" repeatCount="indefinite"><mpath xlink:href="#flowB" href="#flowB"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="3.2" fill="#a855f7" filter="url(#fGlowP)">
+        <animateMotion dur="2.5s" begin="-0.8s" repeatCount="indefinite"><mpath xlink:href="#flowB" href="#flowB"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="2.5s" begin="-0.8s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="3.2" fill="#00d4ff" filter="url(#fGlowC)">
+        <animateMotion dur="2.5s" begin="-1.7s" repeatCount="indefinite"><mpath xlink:href="#flowB" href="#flowB"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="2.5s" begin="-1.7s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="4" fill="#22c55e" filter="url(#fGlowG)">
+        <animateMotion dur="3.5s" repeatCount="indefinite"><mpath xlink:href="#flowC" href="#flowC"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.82;1" dur="3.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="2.6" fill="#f59e0b" filter="url(#fGlowA)">
+        <animateMotion dur="3.5s" begin="-2.1s" repeatCount="indefinite"><mpath xlink:href="#flowC" href="#flowC"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.82;1" dur="3.5s" begin="-2.1s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- GHOST ELEMENTS: partes del estilo viajando de MIDI a STYLE -->
+    <g>
+      <rect x="-7" y="-6" width="14" height="12" rx="3" fill="#00d4ff" opacity="0.9" filter="url(#fGlowC)">
+        <animateMotion dur="4.5s" repeatCount="indefinite"><mpath xlink:href="#flowA" href="#flowA"/></animateMotion>
+        <animate attributeName="opacity" values="0;0.95;0.95;0" keyTimes="0;0.1;0.8;1" dur="4.5s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="-7" y="-6" width="14" height="12" rx="3" fill="#22c55e" opacity="0.9" filter="url(#fGlowG)">
+        <animateMotion dur="4.5s" begin="-1.5s" repeatCount="indefinite"><mpath xlink:href="#flowA" href="#flowA"/></animateMotion>
+        <animate attributeName="opacity" values="0;0.95;0.95;0" keyTimes="0;0.1;0.8;1" dur="4.5s" begin="-1.5s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="-8" y="-7" width="16" height="14" rx="3.5" fill="#f59e0b" opacity="0.95" filter="url(#fGlowA)">
+        <animateMotion dur="3.8s" repeatCount="indefinite"><mpath xlink:href="#flowB" href="#flowB"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.82;1" dur="3.8s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="-8" y="-7" width="16" height="14" rx="3.5" fill="#a855f7" opacity="0.95" filter="url(#fGlowP)">
+        <animateMotion dur="3.8s" begin="-1.3s" repeatCount="indefinite"><mpath xlink:href="#flowB" href="#flowB"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.82;1" dur="3.8s" begin="-1.3s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="-7" y="-6" width="14" height="12" rx="3" fill="#00d4ff" opacity="0.9" filter="url(#fGlowC)">
+        <animateMotion dur="5.2s" repeatCount="indefinite"><mpath xlink:href="#flowC" href="#flowC"/></animateMotion>
+        <animate attributeName="opacity" values="0;0.95;0.95;0" keyTimes="0;0.1;0.8;1" dur="5.2s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+
+    <!-- EXPLOSIONES RADIALES EN PUNTOS DE IMPACTO -->
+    <g stroke="#00d4ff" stroke-width="1.8" stroke-linecap="round" filter="url(#fGlowC)">
+      <g>
+        <line x1="542" y1="148" x2="542" y2="148">
+          <animate attributeName="x2" values="542;566" dur="2.2s" repeatCount="indefinite"/>
+          <animate attributeName="y2" values="148;132" dur="2.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.9;0" dur="2.2s" repeatCount="indefinite"/>
+        </line>
+        <line x1="542" y1="148" x2="542" y2="148">
+          <animate attributeName="x2" values="542;562" dur="2.2s" repeatCount="indefinite"/>
+          <animate attributeName="y2" values="148;168" dur="2.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.9;0" dur="2.2s" repeatCount="indefinite"/>
+        </line>
+        <line x1="542" y1="148" x2="542" y2="148">
+          <animate attributeName="x2" values="542;520" dur="2.2s" repeatCount="indefinite"/>
+          <animate attributeName="y2" values="148;138" dur="2.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.9;0" dur="2.2s" repeatCount="indefinite"/>
+        </line>
+      </g>
+    </g>
+    <g stroke="#f59e0b" stroke-width="2" stroke-linecap="round" filter="url(#fGlowA)">
+      <g>
+        <line x1="542" y1="225" x2="542" y2="225">
+          <animate attributeName="x2" values="542;572" dur="1.9s" repeatCount="indefinite"/>
+          <animate attributeName="y2" values="225;205" dur="1.9s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="1;0" dur="1.9s" repeatCount="indefinite"/>
+        </line>
+        <line x1="542" y1="225" x2="542" y2="225">
+          <animate attributeName="x2" values="542;572" dur="1.9s" begin="-0.63s" repeatCount="indefinite"/>
+          <animate attributeName="y2" values="225;245" dur="1.9s" begin="-0.63s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="1;0" dur="1.9s" begin="-0.63s" repeatCount="indefinite"/>
+        </line>
+        <line x1="542" y1="225" x2="542" y2="225">
+          <animate attributeName="x2" values="542;514" dur="1.9s" begin="-1.26s" repeatCount="indefinite"/>
+          <animate attributeName="y2" values="225;225" dur="1.9s" begin="-1.26s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="1;0" dur="1.9s" begin="-1.26s" repeatCount="indefinite"/>
+        </line>
+      </g>
+    </g>
+    <g stroke="#22c55e" stroke-width="1.8" stroke-linecap="round" filter="url(#fGlowG)">
+      <g>
+        <line x1="542" y1="302" x2="542" y2="302">
+          <animate attributeName="x2" values="542;566" dur="2.6s" repeatCount="indefinite"/>
+          <animate attributeName="y2" values="302;318" dur="2.6s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.9;0" dur="2.6s" repeatCount="indefinite"/>
+        </line>
+        <line x1="542" y1="302" x2="542" y2="302">
+          <animate attributeName="x2" values="542;560" dur="2.6s" begin="-1.3s" repeatCount="indefinite"/>
+          <animate attributeName="y2" values="302;282" dur="2.6s" begin="-1.3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.9;0" dur="2.6s" begin="-1.3s" repeatCount="indefinite"/>
+        </line>
+      </g>
+    </g>
+
+    <!-- NODOS CLAVE PARPADEANTES -->
+    <g>
+      <circle cx="258" cy="148" r="4" fill="#00d4ff" filter="url(#fGlowC)">
+        <animate attributeName="r" values="3;6.5;3" dur="2.2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0.35;1" dur="2.2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="258" cy="225" r="4" fill="#22c55e" filter="url(#fGlowG)">
+        <animate attributeName="r" values="3;6.5;3" dur="2.8s" begin="-0.9s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0.35;1" dur="2.8s" begin="-0.9s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="258" cy="302" r="4" fill="#f59e0b" filter="url(#fGlowA)">
+        <animate attributeName="r" values="3;6.5;3" dur="3.4s" begin="-1.7s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0.35;1" dur="3.4s" begin="-1.7s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="542" cy="148" r="4" fill="#00d4ff" filter="url(#fGlowC)">
+        <animate attributeName="r" values="3;6.5;3" dur="2.5s" begin="-0.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0.35;1" dur="2.5s" begin="-0.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="542" cy="225" r="4" fill="#f59e0b" filter="url(#fGlowA)">
+        <animate attributeName="r" values="3;6.5;3" dur="2.1s" begin="-1.2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0.35;1" dur="2.1s" begin="-1.2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="542" cy="302" r="4" fill="#22c55e" filter="url(#fGlowG)">
+        <animate attributeName="r" values="3;6.5;3" dur="2.9s" begin="-1.8s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0.35;1" dur="2.9s" begin="-1.8s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- ETIQUETA DE PROCESO -->
+    <g>
+      <rect x="300" y="60" width="200" height="26" rx="13" fill="#0b1424" stroke="#1e3a5f" stroke-width="1" opacity="0.95"/>
+      <text x="400" y="77" text-anchor="middle" font-family="monospace" font-size="11"
+            fill="#22c55e" letter-spacing="1.6">
+        ANÁLISIS
+        <animate attributeName="fill" values="#22c55e;#00d4ff;#f59e0b;#a855f7;#22c55e" dur="6s" repeatCount="indefinite"/>
+      </text>
+      <text x="400" y="103" text-anchor="middle" font-family="monospace" font-size="9.5"
+            fill="#64748b" letter-spacing="1.4" opacity="0.9">
+        SEGMENTACIÓN
+        <animate attributeName="opacity" values="0.35;1;0.35" dur="3.5s" repeatCount="indefinite"/>
+      </text>
+    </g>
+
+    <!-- TÍTULOS ANIMADOS -->
+    <text x="400" y="386" text-anchor="middle" font-family="monospace" font-size="19"
+          font-weight="bold" fill="url(#gTitle)" letter-spacing="2.4">
+      MIDI · SMF → ESTILO YAMAHA
+    </text>
+    <text x="400" y="410" text-anchor="middle" font-family="monospace" font-size="10"
+          fill="#64748b" letter-spacing="2.2" opacity="0.9">
+      <animate attributeName="opacity" values="0.35;0.95;0.35" dur="4.2s" repeatCount="indefinite"/>
+      DE FOTOGRAFÍA MUSICAL A ORGANISMO VIVO
+    </text>
+    <text x="400" y="431" text-anchor="middle" font-family="monospace" font-size="10"
+          fill="#a855f7" letter-spacing="2">
+      RUBÉN SBARSKY
+      <animate attributeName="opacity" values="0.3;0.95;0.3" dur="5.5s" repeatCount="indefinite"/>
+    </text>
+
+    <!-- FLASH CULMINANTE -->
+    <g>
+      <rect x="0" y="0" width="800" height="450" fill="#00d4ff" opacity="0">
+        <animate attributeName="opacity" values="0;0;0;0.16;0;0" keyTimes="0;0.6;0.74;0.78;0.83;1" dur="8s" repeatCount="indefinite"/>
+      </rect>
+      <text x="400" y="222" text-anchor="middle" font-family="monospace" font-size="30"
+            font-weight="bold" fill="#ffffff" opacity="0" letter-spacing="4" filter="url(#fGlowC)">
+        STYLE READY
+        <animate attributeName="opacity" values="0;0;0;0.95;0;0" keyTimes="0;0.6;0.74;0.78;0.84;1" dur="8s" repeatCount="indefinite"/>
+      </text>
+    </g>
+
+    <!-- INDICADOR LIVE -->
+    <g>
+      <rect x="690" y="22" width="88" height="26" rx="13" fill="#0b1424" stroke="#ef4444" stroke-width="1" opacity="0.95"/>
+      <circle cx="707" cy="35" r="4.5" fill="#ef4444" filter="url(#fGlowC)">
+        <animate attributeName="opacity" values="1;0.15;1" dur="1.6s" repeatCount="indefinite"/>
+        <animate attributeName="r" values="4.5;6;4.5" dur="1.6s" repeatCount="indefinite"/>
+      </circle>
+      <text x="740" y="39" text-anchor="middle" font-family="monospace" font-size="10"
+            fill="#ef4444" letter-spacing="2" font-weight="bold">LIVE</text>
+    </g>
+
+    <!-- ETIQUETA SUPERIOR IZQUIERDA -->
+    <text x="24" y="34" font-family="monospace" font-size="10" fill="#00d4ff"
+          letter-spacing="2" opacity="0.85">MIDI SONG TO STYLE · YAMAHA
+      <animate attributeName="opacity" values="0.3;0.95;0.3" dur="4.8s" repeatCount="indefinite"/>
+    </text>
+  </svg>
+
+  <span class="hero-badge">◈ GUÍA MAESTRA · ECOSISTEMA YAMAHA</span>
+  <h1 class="hero-title">Conversión de MIDI a Estilos Yamaha</h1>
+  <p class="hero-sub">De reproductor de secuencias a ingeniero de acompañamientos: el proceso completo, paso a paso, con la herramienta <strong>MIDI Song to Style</strong>.</p>
+  <p class="hero-desc">Esta guía documenta la transición estratégica desde un archivo MIDI (SMF) —estructura fija y estática— hacia un Estilo (.sty), un organismo vivo que interactúa con tu interpretación en tiempo real. Cubre configuración del entorno, el proceso de conversión, la ingeniería en modo EDIT, el refinamiento musical y la finalización del estilo.</p>
+
+  <div class="quote-box">
+    <span class="qmark">“</span> Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien. <span class="qmark">”</span>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><span class="num">7</span><span class="lbl">Secciones</span></div>
+    <div class="metric"><span class="num">16</span><span class="lbl">Pistas MIDI</span></div>
+    <div class="metric"><span class="num">.sty</span><span class="lbl">Formato salida</span></div>
+    <div class="metric"><span class="num">2</span><span class="lbl">Modos de trabajo</span></div>
+  </div>
+
+  <div class="dateline">
+    <span class="date-chip">📅 Fecha: <b>21/09/2026</b></span>
+    <span class="date-chip">🕘 Hora: <b>09:59:16</b></span>
+    <span class="date-chip">👨‍💻 Créditos: <b>Rubén Sbarsky</b></span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- INTRODUCCIÓN                                                  -->
+<!-- ============================================================ -->
+<section id="intro" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">🎛️</div>
+    <div>
+      <span class="kicker">Sección 01</span>
+      <h2>Introducción al Ecosistema de Creación de Estilos</h2>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot"></span>La diferencia entre un teclista estándar y un arreglista de alto nivel</h3>
+    <p>Como especialista en el ecosistema Yamaha, entender que la diferencia entre un teclista estándar y un arreglista de alto nivel radica en su capacidad para dominar sus herramientas es el punto de partida.</p>
+    <p>Convertir archivos MIDI en Estilos (.sty) <strong>no es solo un proceso técnico, es una transición estratégica</strong>.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="dot"></span>Archivo MIDI (SMF)</h3>
+      <p>Es una <strong>estructura fija y estática</strong> — una <em>“fotografía”</em> musical que se limita a reproducir lo grabado.</p>
+    </div>
+    <div class="card">
+      <h3><span class="dot"></span>Estilo (.sty)</h3>
+      <p>Es un <strong>organismo vivo</strong> que interactúa con tu interpretación.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot"></span>El puente tecnológico</h3>
+    <p>La aplicación <strong>MIDI Song to Style</strong> actúa como ese puente tecnológico esencial.</p>
+    <p>Dominar esta herramienta te permite <em>“desarmar un traje a medida para crear un patrón que le sirva a cualquier persona”</em>.</p>
+    <p>En lugar de estar atado a una pista, transformas la esencia de una canción en un <strong>acompañamiento inteligente</strong> que reacciona a los acordes que decidas tocar en tiempo real.</p>
+  </div>
+
+  <div class="callout info">
+    <span class="ci">ℹ️</span>
+    <div class="cb">
+      <span class="ct">INFO</span>
+      Esta guía te enseñará a dejar de ser un reproductor de secuencias para convertirte en un <strong>ingeniero de acompañamientos</strong>.
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- CONFIGURACIÓN                                                 -->
+<!-- ============================================================ -->
+<section id="config" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">⚙️</div>
+    <div>
+      <span class="kicker">Sección 02</span>
+      <h2>Requisitos y Configuración del Entorno de Trabajo</h2>
+    </div>
+  </div>
+
+  <div class="card">
+    <p>Antes de realizar el primer compás, debemos asegurar que la base técnica sea impecable. Una configuración incorrecta provocará latencias y, lo que es peor, una asignación errónea de instrumentos que arruinará tu flujo creativo.</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot"></span>Pasos para la Configuración Profesional</h3>
+    <ol class="clean">
+      <li>
+        <strong>Instalación:</strong> Descarga la versión oficial para Windows o Mac desde el sitio de Yamaha.
+      </li>
+      <li>
+        <strong>Conectividad:</strong> Utiliza un cable USB tipo A-B. Conecta el extremo “B” al puerto “To HOST” de tu teclado. Es vital <strong>encender el instrumento antes de lanzar la aplicación</strong> para que el sistema reconozca el driver MIDI.
+      </li>
+      <li>
+        <strong>Configuración MIDI (E/S):</strong> Accede al icono de “MIDI Settings”. Selecciona tu teclado tanto en <em>Input Device</em> como en <em>Output Device</em>. Esto permite que el audio del software se escuche por los altavoces de tu Genos o PSR-SX y que el teclado controle la aplicación.
+      </li>
+      <li>
+        <strong>Importación de la “Voice List” (Pilar Crítico):</strong> Por defecto, el software utiliza la lista de voces de Genos2. Si utilizas un Genos1, PSR-SX900 o modelos anteriores, debes cargar el archivo de lista de voces específico de tu modelo.
+      </li>
+    </ol>
+  </div>
+
+  <div class="callout warn">
+    <span class="ci">⚠️</span>
+    <div class="cb">
+      <span class="ct">NOTA DEL EXPERTO</span>
+      Si ignoras este paso, el estilo sonará <strong>“roto”</strong>. Instrumentos que deberían ser bajos podrían sonar como flautas o efectos especiales, ya que las direcciones de memoria de las voces no coincidirán entre el software y tu hardware.
+    </div>
+  </div>
+
+  <div class="flow-row">
+    <span class="fchip">1 · Instalación</span>
+    <span class="farrow">→</span>
+    <span class="fchip">2 · USB A-B / To HOST</span>
+    <span class="farrow">→</span>
+    <span class="fchip">3 · MIDI Settings E/S</span>
+    <span class="farrow">→</span>
+    <span class="fchip">4 · Voice List del modelo</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- CONVERSIÓN                                                    -->
+<!-- ============================================================ -->
+<section id="conversion" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">🔀</div>
+    <div>
+      <span class="kicker">Sección 03</span>
+      <h2>El Proceso de Conversión: Modo “EASY” vs. Modo “EDIT”</h2>
+    </div>
+  </div>
+
+  <div class="card">
+    <p>Al arrastrar un archivo MIDI a la aplicación, el sistema realiza un análisis automático. Aquí es donde debes tomar una decisión de flujo de trabajo basada en tu nivel de exigencia.</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="tab-comp">📊 Comparativa</button>
+    <button class="tab-btn" data-tab="tab-easy">⚡ Modo EASY</button>
+    <button class="tab-btn" data-tab="tab-edit">🔬 Modo EDIT</button>
+  </div>
+
+  <div id="tab-comp" class="tab-panel active">
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Característica</th>
+            <th>Modo EASY</th>
+            <th>Modo EDIT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Flujo de Trabajo</td>
+            <td>Automático (Un clic).</td>
+            <td>Quirúrgico y manual.</td>
+          </tr>
+          <tr>
+            <td>Control</td>
+            <td>El software decide las secciones.</td>
+            <td>Control total sobre cada compás y pista.</td>
+          </tr>
+          <tr>
+            <td>Resultado</td>
+            <td>A menudo insatisfactorio o genérico.</td>
+            <td>Profesional y fiel a la intención musical.</td>
+          </tr>
+          <tr>
+            <td>Interacción</td>
+            <td>Guardado rápido a USB o Teclado.</td>
+            <td>Personalización profunda de voces y mezcla.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="tab-easy" class="tab-panel">
+    <div class="card">
+      <h3><span class="dot"></span>Modo EASY</h3>
+      <ul class="clean">
+        <li>Flujo de trabajo automático con un solo clic.</li>
+        <li>El software decide las secciones.</li>
+        <li>Resultado a menudo insatisfactorio o genérico.</li>
+        <li>Guardado rápido a USB o al teclado.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="tab-edit" class="tab-panel">
+    <div class="card">
+      <h3><span class="dot"></span>Modo EDIT</h3>
+      <ul class="clean">
+        <li>Flujo de trabajo quirúrgico y manual.</li>
+        <li>Control total sobre cada compás y pista.</li>
+        <li>Resultado profesional y fiel a la intención musical.</li>
+        <li>Personalización profunda de voces y mezcla.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <span class="ci">⚠️</span>
+    <div class="cb">
+      <span class="ct">ADVERTENCIA DE CONSULTOR</span>
+      El modo EASY puede ser frustrante. En mi experiencia, y como bien señalan otros expertos como <strong>Casper</strong>, los resultados automáticos suelen ser tan pobres que muchos usuarios cierran el programa por decepción. Mi recomendación es usar el modo Easy solo como un <strong>boceto</strong> y saltar inmediatamente al modo <strong>EDIT</strong> para obtener resultados que realmente puedas usar en un escenario.
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- MODO EDIT                                                     -->
+<!-- ============================================================ -->
+<section id="edit" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">🧪</div>
+    <div>
+      <span class="kicker">Sección 04</span>
+      <h2>Ingeniería del Estilo en Modo EDIT: Segmentación y Asignación</h2>
+    </div>
+  </div>
+
+  <div class="card">
+    <p>En el modo EDIT es donde ocurre la magia. Aquí visualizamos las <strong>16 pistas MIDI</strong> en una línea de tiempo y procedemos a la <strong>segmentación quirúrgica</strong> de la canción.</p>
+  </div>
+
+  <h3 style="color:var(--cyan);font-size:1rem;margin:22px 0 12px;">▸ Segmentación Musical</h3>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="dot"></span>Asignación de Secciones</h3>
+      <p>Debes identificar las partes clave (<strong>Intro, Main A-D, Ending</strong>) y asignarlas manualmente. Selecciona un rango de compases en la línea de tiempo y haz clic en <strong>“Assign”</strong> para convertirlo en una parte del estilo.</p>
+    </div>
+    <div class="card">
+      <h3><span class="dot"></span>Ajuste de Precisión</h3>
+      <p>Utiliza el <strong>Zoom</strong> para arrastrar los límites de las secciones. Asegúrate de capturar el <strong>“groove” completo del compás</strong>.</p>
+    </div>
+    <div class="card">
+      <h3><span class="dot"></span>Gestión de Pistas (Style Parts)</h3>
+      <p>No todas las pistas MIDI deben ir al estilo. Puedes <strong>silenciar (Mute)</strong>, <strong>eliminar (-)</strong> o <strong>añadir (+)</strong> pistas.</p>
+    </div>
+    <div class="card">
+      <h3><span class="dot"></span>Intercambio Quirúrgico</h3>
+      <p>Puedes arrastrar y soltar para intercambiar qué parte del MIDI se asigna a qué <strong>“pista de estilo” (Style Part)</strong>.</p>
+    </div>
+  </div>
+
+  <h3 style="color:var(--cyan);font-size:1rem;margin:26px 0 12px;">▸ Funciones Avanzadas de Edición</h3>
+
+  <div class="acc-item open">
+    <button class="acc-head">
+      <span>🧩 Modo Assembly (Pro-Tip)</span>
+      <span class="arw">▶</span>
+    </button>
+    <div class="acc-body">
+      <p>Esta es una <strong>herramienta de coherencia</strong>. Si el bajo de tu <strong>“Main A”</strong> es perfecto y quieres que el <strong>“Main C”</strong> mantenga esa misma base, usa el modo Assembly para <strong>copiar pistas específicas entre secciones</strong>.</p>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <button class="acc-head">
+      <span>🔁 Reanalyze (Melody vs. Assign)</span>
+      <span class="arw">▶</span>
+    </button>
+    <div class="acc-body">
+      <p>Si el análisis automático falla, usa esta pestaña.</p>
+      <ul class="clean" style="margin-top:10px;">
+        <li><strong>En MELODY:</strong> marca las pistas que contienen la melodía principal o lo que tú vas a tocar con la mano derecha. Esto evita que el software las incluya erróneamente en el acompañamiento automático.</li>
+        <li><strong>En ASSIGN:</strong> bloquea pistas para evitar que se reasignen automáticamente.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <button class="acc-head">
+      <span>⏱️ Tempo View</span>
+      <span class="arw">▶</span>
+    </button>
+    <div class="acc-body">
+      <p><strong>Crucial para los Endings.</strong> Si el MIDI original tiene un <em>ritardando</em> (una disminución gradual de velocidad) al final, abre el Tempo View para visualizar y asegurar que el estilo respete esa intención musical en el teclado.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- REFINAMIENTO                                                  -->
+<!-- ============================================================ -->
+<section id="refinamiento" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">🎚️</div>
+    <div>
+      <span class="kicker">Sección 05</span>
+      <h2>Refinamiento Musical y Finalización</h2>
+    </div>
+  </div>
+
+  <div class="card">
+    <p>Un estilo técnicamente correcto puede sonar musicalmente pobre si no se refina la armonía y la mezcla.</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot"></span>Armonía y Chord Palette</h3>
+    <p>Para que el acompañamiento (<strong>ACMP</strong>) responda a tus dedos, la <strong>Key Signature</strong> (Armadura) de cada sección debe ser exacta. Si el software detecta mal la tonalidad, <strong>el estilo no cambiará de acordes correctamente</strong>.</p>
+  </div>
+
+  <div class="callout example">
+    <span class="ci">✅</span>
+    <div class="cb">
+      <span class="ct">AUTOMATISMO</span>
+      La ventana <strong>Chord Palette</strong> se abrirá automáticamente la primera vez que reproduzcas una sección. Úsala para probar cómo suena el estilo con diferentes tipos de acordes (<strong>Mayores, Menores, 7mas</strong>) antes de exportar.
+    </div>
+  </div>
+
+  <h3 style="color:var(--cyan);font-size:1rem;margin:26px 0 12px;">▸ El Toque Final: Mixing y Detailed Edit</h3>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="dot"></span>Detailed Edit Window</h3>
+      <p>Este es el <strong>centro de control sonoro</strong>. Aquí puedes cambiar la voz (instrumento) asignada a cada canal MIDI de forma individual. Es el momento de elegir ese <strong>“S.Art!” Voice</strong> que hará que tu estilo destaque.</p>
+    </div>
+    <div class="card">
+      <h3><span class="dot"></span>Mixing</h3>
+      <p>Ajusta los <strong>volúmenes relativos de las 16 pistas</strong> para que la mezcla sea equilibrada y no sature la salida de tu Workstation.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot"></span>Guardado Estratégico</h3>
+    <ul class="clean">
+      <li><strong>Save Style (.sty):</strong> El archivo ejecutable para tu teclado.</li>
+      <li><strong>Save Project:</strong> Es <strong>imperativo</strong> guardar el archivo de proyecto. Sin él, no podrás realizar ajustes quirúrgicos en el futuro sin empezar desde cero.</li>
+    </ul>
+  </div>
+
+  <div class="callout error">
+    <span class="ci">❗</span>
+    <div class="cb">
+      <span class="ct">ERROR A EVITAR</span>
+      No guardar el <strong>Project</strong> implica perder toda la capacidad de ajuste quirúrgico futuro sobre el estilo. Es un paso imperativo, no opcional.
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- RECURSOS / FAQ / GLOSARIO                                     -->
+<!-- ============================================================ -->
+<section id="recursos" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">📚</div>
+    <div>
+      <span class="kicker">Sección 06</span>
+      <h2>Recursos, FAQ y Glosario</h2>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot"></span>Checklist de Calidad</h3>
+    <p style="margin-bottom:14px;">Marca cada punto a medida que verificas tu conversión.</p>
+
+    <div class="check-item" role="checkbox" aria-checked="false" tabindex="0">
+      <span class="check-box">✓</span>
+      <span class="ctxt">¿He cargado la Voice List específica de mi modelo de teclado?</span>
+    </div>
+    <div class="check-item" role="checkbox" aria-checked="false" tabindex="0">
+      <span class="check-box">✓</span>
+      <span class="ctxt">¿He verificado el Tempo View en las secciones de Ending?</span>
+    </div>
+    <div class="check-item" role="checkbox" aria-checked="false" tabindex="0">
+      <span class="check-box">✓</span>
+      <span class="ctxt">¿He utilizado el Detailed Edit para asignar las mejores voces?</span>
+    </div>
+    <div class="check-item" role="checkbox" aria-checked="false" tabindex="0">
+      <span class="check-box">✓</span>
+      <span class="ctxt">¿He marcado las pistas melódicas en el menú Reanalyze?</span>
+    </div>
+  </div>
+
+  <h3 style="color:var(--cyan);font-size:1rem;margin:26px 0 12px;">▸ Preguntas Frecuentes (FAQ)</h3>
+
+  <div class="acc-item">
+    <button class="acc-head">
+      <span>❓ ¿Por qué mi teclado no reconoce el estilo?</span>
+      <span class="arw">▶</span>
+    </button>
+    <div class="acc-body">
+      <p>Asegúrate de guardarlo en una <strong>memoria USB formateada por el propio teclado</strong> o transferirlo directamente vía USB <strong>“To HOST”</strong>.</p>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <button class="acc-head">
+      <span>❓ ¿Puedo usar cualquier MIDI?</span>
+      <span class="arw">▶</span>
+    </button>
+    <div class="acc-body">
+      <p>Sí, pero los <strong>archivos de alta calidad con 16 canales bien definidos</strong> darán mejores resultados.</p>
+    </div>
+  </div>
+
+  <h3 style="color:var(--cyan);font-size:1rem;margin:26px 0 12px;">▸ Glosario Técnico</h3>
+
+  <div class="grid-2">
+    <div class="gloss">
+      <span class="gterm">SMF</span>
+      <span class="gdef">Standard MIDI File (Archivo MIDI estándar).</span>
+    </div>
+    <div class="gloss">
+      <span class="gterm">Detailed Edit</span>
+      <span class="gdef">Ventana avanzada para cambiar instrumentos por canal.</span>
+    </div>
+    <div class="gloss">
+      <span class="gterm">Tempo View</span>
+      <span class="gdef">Visualizador de cambios de velocidad dentro del archivo.</span>
+    </div>
+    <div class="gloss">
+      <span class="gterm">ACMP</span>
+      <span class="gdef">Auto-Accompaniment (Acompañamiento automático).</span>
+    </div>
+    <div class="gloss">
+      <span class="gterm">Reanalyze</span>
+      <span class="gdef">Herramienta para corregir la interpretación automática del software.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- FUENTES                                                       -->
+<!-- ============================================================ -->
+<section id="fuentes" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">🎬</div>
+    <div>
+      <span class="kicker">Sección 07</span>
+      <h2>Fuentes y Referencias Audiovisuales</h2>
+    </div>
+  </div>
+
+  <div class="card">
+    <p>Para una comprensión visual profunda, se recomienda consultar los siguientes canales y títulos. Los enlaces URL no fueron proporcionados en el documento fuente; se conservan únicamente el canal y el título originales.</p>
+  </div>
+
+  <div class="src-item">
+    <div class="src-num">1</div>
+    <div class="src-body">
+      <span class="ch">Yamaha Global</span>
+      <h4>“How To Use MIDI Song To Style”</h4>
+      <p>El tutorial oficial definitivo.</p>
+    </div>
+  </div>
+
+  <div class="src-item">
+    <div class="src-num">2</div>
+    <div class="src-body">
+      <span class="ch">Yamaha Global</span>
+      <h4>“What is MIDI Song to Style”</h4>
+      <p>Resumen de capacidades del ecosistema.</p>
+    </div>
+  </div>
+
+  <div class="src-item">
+    <div class="src-num">3</div>
+    <div class="src-body">
+      <span class="ch">Casper tutorSynth</span>
+      <h4>“MIDI Song to Style - Convert any standard MIDI file”</h4>
+      <p>Ejemplo práctico de ensamblaje (Assembly) y gestión de intros/finales.</p>
+    </div>
+  </div>
+
+  <div class="src-item">
+    <div class="src-num">4</div>
+    <div class="src-body">
+      <span class="ch">Casper tutorSynth</span>
+      <h4>“Yamaha PC software - Installation and Setup”</h4>
+      <p>Guía detallada de conectividad física.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- CRÉDITOS                                                      -->
+<!-- ============================================================ -->
+<section id="creditos" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">🏅</div>
+    <div>
+      <span class="kicker">Sección 08</span>
+      <h2>Créditos</h2>
+    </div>
+  </div>
+
+  <div class="credits-wrap">
+    <div id="creditsSvgHost" aria-hidden="false"></div>
+
+    <div class="credits-card">
+      <h3>Conversión de MIDI a Estilos Yamaha</h3>
+      <p style="color:var(--muted);font-size:.88rem;">Guía Maestra · Tutorial interactivo</p>
+
+      <div class="credits-name">Rubén Sbarsky</div>
+      <p style="color:var(--dim);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;">Autor y Especialista en el Ecosistema Yamaha</p>
+
+      <div class="credits-meta">
+        <span class="date-chip">📅 Fecha: <b>21/09/2026</b></span>
+        <span class="date-chip">🕘 Hora: <b>09:59:16</b></span>
+      </div>
+
+      <p class="edu-note">📚 Tutorial con fines exclusivamente Educativos y de Divulgación.</p>
+      <p class="fiat">Fiat iustitia, ruat caelum.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>📚 Tutorial solo con fines Educativos y Divulgación</p>
+  <p>👨‍💻 Créditos: <span class="fname">Rubén Sbarsky</span></p>
+  <p>📅 FECHA: 21/09/2026 &nbsp;·&nbsp; Hora: 09:59:16</p>
+  <p class="ffiat">Fiat iustitia, ruat caelum.</p>
+</footer>
+
+<button id="toTop" aria-label="Volver arriba">▲</button>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- SPA: NAVEGACIÓN ---------- */
+  var navBtns = document.querySelectorAll('.nav-btn');
+  var sections = document.querySelectorAll('.section');
+
+  function showSection(id){
+    var found = false;
+    for (var i = 0; i < sections.length; i++){
+      if (sections[i].id === id){ found = true; }
+    }
+    if (!found) { id = 'home'; }
+
+    for (var j = 0; j < sections.length; j++){
+      sections[j].classList.remove('active');
+    }
+    var target = document.getElementById(id);
+    if (target){ target.classList.add('active'); }
+
+    for (var k = 0; k < navBtns.length; k++){
+      navBtns[k].classList.toggle('active', navBtns[k].getAttribute('data-target') === id);
+    }
+
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    updateProgress();
+
+    if (id === 'creditos'){
+      restartCreditsSvg();
+    }
+  }
+
+  for (var n = 0; n < navBtns.length; n++){
+    navBtns[n].addEventListener('click', function(){
+      showSection(this.getAttribute('data-target'));
+    });
+  }
+
+  /* ---------- CLONAR EL SVG ANIMADO EN CRÉDITOS ---------- */
+  var heroSource = document.getElementById('heroSvgHome');
+  var creditsHost = document.getElementById('creditsSvgHost');
+  var creditsSvg = null;
+
+  function buildCreditsSvg(){
+    if (!heroSource || !creditsHost) return;
+    if (creditsSvg) return;
+    var clone = heroSource.cloneNode(true);
+    clone.removeAttribute('id');
+    clone.classList.add('hero-svg');
+    clone.style.marginBottom = '0';
+    creditsHost.appendChild(clone);
+    creditsSvg = clone;
+  }
+
+  function restartCreditsSvg(){
+    if (!creditsSvg) return;
+    try {
+      if (typeof creditsSvg.setCurrentTime === 'function'){
+        creditsSvg.setCurrentTime(0);
+      }
+    } catch(e){ /* silencioso */ }
+  }
+
+  buildCreditsSvg();
+
+  /* ---------- TABS ---------- */
+  var tabBtns = document.querySelectorAll('.tab-btn');
+  for (var t = 0; t < tabBtns.length; t++){
+    tabBtns[t].addEventListener('click', function(){
+      var group = this.parentElement;
+      var allBtns = group.querySelectorAll('.tab-btn');
+      for (var a = 0; a < allBtns.length; a++){ allBtns[a].classList.remove('active'); }
+      this.classList.add('active');
+
+      var panels = group.parentElement.querySelectorAll('.tab-panel');
+      for (var p = 0; p < panels.length; p++){ panels[p].classList.remove('active'); }
+      var targetPanel = document.getElementById(this.getAttribute('data-tab'));
+      if (targetPanel){ targetPanel.classList.add('active'); }
+    });
+  }
+
+  /* ---------- ACORDEONES ---------- */
+  var accHeads = document.querySelectorAll('.acc-head');
+  for (var h = 0; h < accHeads.length; h++){
+    accHeads[h].addEventListener('click', function(){
+      var item = this.parentElement;
+      item.classList.toggle('open');
+    });
+  }
+
+  /* ---------- CHECKLIST INTERACTIVO ---------- */
+  var checks = document.querySelectorAll('.check-item');
+  function toggleCheck(el){
+    el.classList.toggle('done');
+    var isDone = el.classList.contains('done');
+    el.setAttribute('aria-checked', isDone ? 'true' : 'false');
+  }
+  for (var c = 0; c < checks.length; c++){
+    checks[c].addEventListener('click', function(){ toggleCheck(this); });
+    checks[c].addEventListener('keydown', function(ev){
+      if (ev.key === ' ' || ev.key === 'Enter'){
+        ev.preventDefault();
+        toggleCheck(this);
+      }
+    });
+  }
+
+  /* ---------- BARRA DE PROGRESO ---------- */
+  var progressBar = document.getElementById('progressBar');
+  var toTop = document.getElementById('toTop');
+
+  function updateProgress(){
+    var docEl = document.documentElement;
+    var scrollTop = window.pageYOffset || docEl.scrollTop || 0;
+    var scrollHeight = (docEl.scrollHeight || 0) - (window.innerHeight || 0);
+    var pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+    if (pct < 0) pct = 0;
+    if (pct > 100) pct = 100;
+    if (progressBar){ progressBar.style.width = pct + '%'; }
+    if (toTop){
+      if (scrollTop > 320){ toTop.classList.add('show'); }
+      else { toTop.classList.remove('show'); }
+    }
+  }
+
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress);
+
+  if (toTop){
+    toTop.addEventListener('click', function(){
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  /* ---------- INICIALIZACIÓN ---------- */
+  updateProgress();
+  showSection('home');
+
+  /* ---------- RESPETO A prefers-reduced-motion ---------- */
+  try {
+    var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mq && mq.matches){
+      var svgs = document.querySelectorAll('svg');
+      for (var s = 0; s < svgs.length; s++){
+        try { svgs[s].pauseAnimations && svgs[s].pauseAnimations(); } catch(e){}
+      }
+    }
+  } catch(e){}
+
+})();
+</script>
+</body>
+</html>
