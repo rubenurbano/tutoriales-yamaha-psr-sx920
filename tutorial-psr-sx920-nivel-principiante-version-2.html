@@ -1,0 +1,2241 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0e1a">
+<title>Tutorial-PSR-SX920 Nivel Principiante Versión 2 by Rubén Sbarsky (2026)</title>
+<style>
+:root{
+  --bg:#0a0e1a;
+  --card:#0f172a;
+  --border:#1e3a5f;
+  --accent:#00d4ff;
+  --green:#22c55e;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --purple:#a855f7;
+  --text:#e6edf7;
+  --muted:#8ea2c0;
+  --dim:#5b6b8a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+/* Progress bar */
+#progress{
+  position:fixed;top:0;left:0;height:3px;width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--purple),var(--green));
+  z-index:1000;
+  transition:width .15s linear;
+  box-shadow:0 0 8px rgba(0,212,255,.6);
+}
+/* Navbar */
+nav#navbar{
+  position:fixed;top:3px;left:0;right:0;
+  background:rgba(10,14,26,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  z-index:999;
+  padding:0;
+}
+.nav-wrap{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 12px;
+  overflow-x:auto;
+  scrollbar-width:thin;
+  scrollbar-color:var(--accent) transparent;
+  -webkit-overflow-scrolling:touch;
+}
+.nav-wrap::-webkit-scrollbar{height:5px}
+.nav-wrap::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+.nav-btn{
+  flex:0 0 auto;
+  background:transparent;
+  color:var(--muted);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:7px 12px;
+  font-size:13px;
+  font-family:inherit;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:all .2s;
+  font-weight:500;
+}
+.nav-btn:hover{color:var(--accent);border-color:var(--accent);background:rgba(0,212,255,.05)}
+.nav-btn.active{
+  color:#04131e;
+  background:linear-gradient(135deg,var(--accent),#3da8ff);
+  border-color:var(--accent);
+  box-shadow:0 0 12px rgba(0,212,255,.4);
+  font-weight:600;
+}
+.nav-btn.credits{color:var(--purple);border-color:rgba(168,85,247,.5)}
+.nav-btn.credits.active{background:linear-gradient(135deg,var(--purple),#c084fc);color:#1a0530;border-color:var(--purple)}
+.nav-btn.sources{color:var(--green);border-color:rgba(34,197,94,.5)}
+.nav-btn.sources.active{background:linear-gradient(135deg,var(--green),#4ade80);color:#052012;border-color:var(--green)}
+.nav-sep{flex:0 0 auto;width:1px;height:20px;background:var(--border);margin:0 4px}
+
+/* Main */
+main{padding:70px 16px 80px;max-width:1180px;margin:0 auto}
+.section{display:none;animation:fadeIn .35s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Home */
+.home-hero{
+  text-align:center;
+  padding:6px 0 20px;
+}
+.svg-shell{
+  width:100%;
+  max-width:1000px;
+  margin:0 auto 20px;
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:0 8px 40px rgba(0,0,0,.6),0 0 60px rgba(0,212,255,.08);
+  background:#070b14;
+}
+.svg-shell svg{display:block;width:100%;height:auto}
+
+.home-badge{
+  display:inline-block;
+  padding:5px 14px;
+  border:1px solid var(--accent);
+  color:var(--accent);
+  border-radius:999px;
+  font-size:12px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  margin:10px 0 14px;
+  background:rgba(0,212,255,.05);
+  font-weight:600;
+}
+h1.home-title{
+  font-size:clamp(22px,4.5vw,38px);
+  margin:6px 0 10px;
+  line-height:1.2;
+  background:linear-gradient(135deg,#00d4ff,#a855f7 50%,#22c55e);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  font-weight:800;
+  letter-spacing:-.5px;
+}
+.home-sub{
+  color:var(--muted);
+  font-size:clamp(14px,2.2vw,17px);
+  max-width:760px;
+  margin:0 auto 18px;
+}
+.home-quote{
+  border-left:3px solid var(--accent);
+  background:linear-gradient(90deg,rgba(0,212,255,.08),transparent);
+  padding:14px 18px;
+  margin:20px auto;
+  max-width:760px;
+  text-align:left;
+  border-radius:0 10px 10px 0;
+  font-style:italic;
+  color:#cfe4ff;
+  font-size:15px;
+}
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:12px;
+  margin:22px auto;
+  max-width:900px;
+}
+.metric{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px 10px;
+  text-align:center;
+}
+.metric .val{
+  font-size:24px;
+  font-weight:800;
+  color:var(--accent);
+  display:block;
+  line-height:1.1;
+  text-shadow:0 0 12px rgba(0,212,255,.4);
+}
+.metric .lbl{
+  font-size:11px;
+  color:var(--muted);
+  letter-spacing:1px;
+  text-transform:uppercase;
+  margin-top:4px;
+  display:block;
+}
+.date-strip{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:10px;
+  margin:18px 0 8px;
+  font-size:13px;color:var(--dim);
+}
+.date-strip span{
+  background:var(--card);
+  border:1px solid var(--border);
+  padding:5px 12px;
+  border-radius:999px;
+}
+
+/* Sections general */
+.sec-head{
+  display:flex;align-items:center;gap:14px;
+  margin:0 0 18px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--border);
+}
+.sec-icon{
+  flex:0 0 auto;
+  width:46px;height:46px;
+  border-radius:12px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(168,85,247,.15));
+  border:1px solid var(--border);
+  font-size:22px;
+}
+.sec-head h2{
+  margin:0;font-size:clamp(20px,3.2vw,28px);
+  color:#e6edf7;font-weight:700;letter-spacing:-.3px;
+}
+.sec-head .sec-sub{color:var(--muted);font-size:13px;display:block;margin-top:2px}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  margin:0 0 18px;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
+}
+.card h3{
+  margin:0 0 12px;
+  color:var(--accent);
+  font-size:17px;
+  letter-spacing:.3px;
+}
+.card h4{margin:16px 0 8px;color:#bcd3f1;font-size:14px;letter-spacing:.5px;text-transform:uppercase}
+.card p{margin:8px 0}
+.card ul,.card ol{margin:8px 0 8px 20px;padding:0}
+.card li{margin:5px 0}
+.card strong{color:#fff}
+.card code{
+  background:#0a1322;border:1px solid var(--border);
+  border-radius:5px;padding:1px 7px;font-size:.9em;color:var(--accent);
+  font-family:'Consolas',monospace;
+}
+.card kbd{
+  background:#132238;border:1px solid var(--border);
+  border-bottom-width:2px;border-radius:6px;padding:1px 7px;
+  font-size:12px;color:#cfe4ff;font-family:inherit;white-space:nowrap;
+}
+
+/* Lesson layout */
+.lesson-hero{
+  background:linear-gradient(135deg,rgba(0,212,255,.08),rgba(168,85,247,.06));
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:18px 20px;
+  margin:0 0 18px;
+}
+.lesson-hero .lnum{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--accent),var(--purple));
+  color:#04131e;font-weight:800;font-size:12px;
+  padding:3px 10px;border-radius:999px;letter-spacing:1px;
+  margin-bottom:8px;
+}
+.lesson-hero h2{margin:6px 0 0;font-size:clamp(19px,3vw,26px)}
+
+.part{
+  border-left:3px solid var(--border);
+  padding:2px 0 2px 14px;
+  margin:16px 0;
+}
+.part .pnum{
+  display:inline-block;
+  background:rgba(0,212,255,.1);
+  color:var(--accent);
+  font-size:11px;font-weight:700;letter-spacing:1px;
+  padding:2px 9px;border-radius:5px;
+  margin-bottom:6px;
+}
+.part.t2{border-left-color:var(--purple)}
+.part.t2 .pnum{background:rgba(168,85,247,.12);color:var(--purple)}
+.part.t3{border-left-color:var(--green)}
+.part.t3 .pnum{background:rgba(34,197,94,.12);color:var(--green)}
+.part.t4{border-left-color:var(--amber)}
+.part.t4 .pnum{background:rgba(245,158,11,.12);color:var(--amber)}
+.part.t5{border-left-color:#3da8ff}
+.part.t5 .pnum{background:rgba(61,168,255,.12);color:#3da8ff}
+.part.t6{border-left-color:var(--red)}
+.part.t6 .pnum{background:rgba(239,68,68,.12);color:var(--red)}
+
+/* Tables */
+.tbl-wrap{overflow-x:auto;margin:10px 0;border-radius:10px;border:1px solid var(--border);-webkit-overflow-scrolling:touch}
+table{
+  width:100%;border-collapse:collapse;font-size:14px;min-width:520px;
+  background:#0b1322;
+}
+th{
+  background:#101d33;color:var(--accent);
+  text-align:left;padding:10px 12px;font-size:12px;
+  letter-spacing:.6px;text-transform:uppercase;font-weight:700;
+  border-bottom:1px solid var(--border);white-space:nowrap;
+}
+td{
+  padding:10px 12px;border-bottom:1px solid rgba(30,58,95,.5);
+  color:#cfe0f5;vertical-align:top;
+}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:rgba(15,23,42,.5)}
+
+/* Callouts */
+.callout{
+  border-radius:10px;padding:12px 16px;margin:12px 0;
+  border-left:4px solid;font-size:14px;line-height:1.55;
+}
+.callout .co-t{font-weight:800;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;display:block;margin-bottom:4px}
+.co-info{background:rgba(0,212,255,.07);border-color:var(--accent);color:#c9ecff}
+.co-info .co-t{color:var(--accent)}
+.co-ex{background:rgba(34,197,94,.07);border-color:var(--green);color:#c8f2d8}
+.co-ex .co-t{color:var(--green)}
+.co-warn{background:rgba(245,158,11,.08);border-color:var(--amber);color:#ffe2b8}
+.co-warn .co-t{color:var(--amber)}
+.co-err{background:rgba(239,68,68,.08);border-color:var(--red);color:#ffd0d0}
+.co-err .co-t{color:var(--red)}
+.co-purple{background:rgba(168,85,247,.08);border-color:var(--purple);color:#e8d7ff}
+.co-purple .co-t{color:var(--purple)}
+
+/* mini reto solution */
+details.sol{
+  background:rgba(34,197,94,.05);
+  border:1px solid rgba(34,197,94,.35);
+  border-radius:10px;padding:10px 14px;margin:10px 0;
+}
+details.sol summary{
+  cursor:pointer;color:var(--green);font-weight:700;font-size:13px;
+  letter-spacing:.5px;list-style:none;
+}
+details.sol summary::-webkit-details-marker{display:none}
+details.sol summary::before{content:"✅ ";}
+details.sol[open] summary{margin-bottom:8px}
+details.sol p{margin:6px 0;color:#c8f2d8}
+
+/* Chips / badges */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{
+  font-size:12px;padding:3px 10px;border-radius:999px;
+  background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);
+  color:var(--accent);font-weight:600;
+}
+.chip.g{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:var(--green)}
+.chip.a{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:var(--amber)}
+.chip.p{background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.3);color:var(--purple)}
+.chip.r{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--red)}
+
+/* Steps */
+.steps{counter-reset:s;margin:10px 0;padding:0;list-style:none}
+.steps li{
+  position:relative;padding:8px 0 8px 40px;
+  border-bottom:1px dashed rgba(30,58,95,.5);
+}
+.steps li:last-child{border-bottom:none}
+.steps li::before{
+  counter-increment:s;content:counter(s);
+  position:absolute;left:0;top:8px;
+  width:26px;height:26px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#3da8ff);
+  color:#04131e;font-weight:800;font-size:13px;
+  display:grid;place-items:center;
+}
+
+/* Grid for appendix cards */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+
+/* Footer */
+footer{
+  border-top:1px solid var(--border);
+  padding:28px 16px 40px;
+  text-align:center;
+  color:var(--muted);
+  font-size:14px;
+  background:#070b14;
+}
+footer .frow{margin:4px 0}
+footer .fiat{
+  color:var(--purple);
+  font-style:italic;
+  margin-top:14px;
+  font-size:13px;
+  opacity:.85;
+}
+footer .ftitle{color:var(--accent);font-weight:600;margin-bottom:10px}
+
+/* Back to top */
+#toTop{
+  position:fixed;right:16px;bottom:16px;
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--purple));
+  color:#04131e;font-size:20px;font-weight:900;
+  border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(0,212,255,.4);
+  display:none;z-index:998;
+  transition:transform .2s;
+}
+#toTop:hover{transform:translateY(-3px)}
+#toTop.show{display:grid;place-items:center}
+
+/* Responsive */
+@media(max-width:640px){
+  main{padding:64px 10px 70px}
+  .card{padding:15px}
+  .sec-head h2{font-size:19px}
+  .sec-icon{width:38px;height:38px;font-size:18px}
+  table{font-size:13px}
+  th,td{padding:8px 9px}
+  .nav-btn{padding:6px 10px;font-size:12px}
+  .metric .val{font-size:20px}
+  .home-title{font-size:22px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001s !important;transition-duration:.001s !important}
+}
+
+/* Sources */
+.src-list{list-style:none;padding:0;margin:0}
+.src-list li{
+  background:#0b1322;border:1px solid var(--border);
+  border-radius:10px;padding:14px 16px;margin:10px 0;
+}
+.src-list a{color:var(--accent);word-break:break-all;text-decoration:none}
+.src-list a:hover{text-decoration:underline}
+.src-list .src-t{color:#fff;font-weight:700;display:block;margin-bottom:4px}
+
+/* Credits */
+.credit-box{
+  background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(0,212,255,.05));
+  border:1px solid var(--border);border-radius:14px;
+  padding:24px;text-align:center;margin:18px 0;
+}
+.credit-box .author{
+  font-size:26px;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--purple));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  margin:8px 0;
+}
+.credit-box .clabel{color:var(--muted);font-size:12px;letter-spacing:2px;text-transform:uppercase}
+.credit-box .fiat{
+  margin-top:18px;color:var(--purple);font-style:italic;font-size:15px;
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav id="navbar">
+  <div class="nav-wrap" id="navWrap">
+    <button class="nav-btn active" data-target="home">🏠 HOME</button>
+    <button class="nav-btn" data-target="como-usar">📖 CÓMO USAR</button>
+    <span class="nav-sep"></span>
+    <button class="nav-btn" data-target="l1">1 · Panel</button>
+    <button class="nav-btn" data-target="l2">2 · Encender</button>
+    <button class="nav-btn" data-target="l3">3 · Pantallas</button>
+    <button class="nav-btn" data-target="l4">4 · Voz</button>
+    <button class="nav-btn" data-target="l5">5 · Partes</button>
+    <button class="nav-btn" data-target="l6">6 · Capas</button>
+    <button class="nav-btn" data-target="l7">7 · Estilo</button>
+    <button class="nav-btn" data-target="l8">8 · Acompañamiento</button>
+    <button class="nav-btn" data-target="l9">9 · Secciones</button>
+    <button class="nav-btn" data-target="l10">10 · Tempo</button>
+    <button class="nav-btn" data-target="l11">11 · OTS</button>
+    <button class="nav-btn" data-target="l12">12 · Multi Pad</button>
+    <button class="nav-btn" data-target="l13">13 · Transposición</button>
+    <button class="nav-btn" data-target="l14">14 · Metrónomo</button>
+    <button class="nav-btn" data-target="l15">15 · Harmony</button>
+    <button class="nav-btn" data-target="l16">16 · Joystick</button>
+    <button class="nav-btn" data-target="l17">17 · Registros</button>
+    <button class="nav-btn" data-target="l18">18 · Recuperar</button>
+    <span class="nav-sep"></span>
+    <button class="nav-btn" data-target="proyecto">🎵 PROYECTO</button>
+    <button class="nav-btn" data-target="apendices">📎 APÉNDICES</button>
+    <span class="nav-sep"></span>
+    <button class="nav-btn sources" data-target="fuentes">🔗 FUENTES</button>
+    <button class="nav-btn credits" data-target="creditos">✦ CRÉDITOS</button>
+  </div>
+</nav>
+
+<!-- SVG TEMPLATE (used both in Home & Credits) -->
+<template id="heroSvgTemplate">
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Ilustración animada del flujo de un teclado arranger Yamaha PSR-SX920">
+  <defs>
+    <radialGradient id="bgG" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#0f1a30">
+        <animate attributeName="stop-color" values="#0f1a30;#1c1030;#0f2e22;#0f1a30" dur="14s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#070b14">
+        <animate attributeName="stop-color" values="#070b14;#0a0714;#060b08;#070b14" dur="14s" repeatCount="indefinite"/>
+      </stop>
+    </radialGradient>
+    <linearGradient id="accentL" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00d4ff"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient>
+    <linearGradient id="keyWhite" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e9f4ff"/>
+      <stop offset="100%" stop-color="#8fa8c7"/>
+    </linearGradient>
+    <linearGradient id="keyBlack" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1b2739"/>
+      <stop offset="100%" stop-color="#050810"/>
+    </linearGradient>
+    <radialGradient id="haloG" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloP" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloG2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="2.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowStrong" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="gridP" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#00d4ff" stroke-width="0.4">
+        <animate attributeName="opacity" values="0.06;0.2;0.06" dur="5s" repeatCount="indefinite"/>
+      </path>
+    </pattern>
+    <path id="pChord" d="M 120 340 Q 260 270 400 270"/>
+    <path id="pMelody" d="M 680 340 Q 540 270 400 270"/>
+    <path id="pBand" d="M 400 270 Q 400 210 400 150"/>
+    <path id="pNotes" d="M 400 150 Q 470 110 560 100"/>
+    <path id="pGhost" d="M 130 335 Q 260 265 395 265"/>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="url(#bgG)"/>
+  <rect width="800" height="450" fill="url(#gridP)"/>
+
+  <!-- Orbital rings -->
+  <g transform="translate(400,270)" opacity="0.55">
+    <circle r="200" fill="none" stroke="#00d4ff" stroke-width="1" stroke-dasharray="8 14">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="22s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="8 14;14 8;8 14" dur="7s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="160" fill="none" stroke="#a855f7" stroke-width="1" stroke-dasharray="4 10">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="16s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="225" fill="none" stroke="#22c55e" stroke-width="0.7" stroke-dasharray="2 16">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="30s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4;0.85;0.4" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="120" fill="none" stroke="#f59e0b" stroke-width="0.6" stroke-dasharray="3 12">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="11s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Halo pulsing behind engine -->
+  <circle cx="400" cy="270" r="60" fill="url(#haloG)">
+    <animate attributeName="r" values="55;95;55" dur="3.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.35;0.9;0.35" dur="3.5s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- LEFT: Chord zone -->
+  <g transform="translate(60,315)">
+    <rect x="0" y="0" width="130" height="70" rx="8" fill="#0b1322" stroke="#00d4ff" stroke-width="1" opacity="0.9">
+      <animate attributeName="stroke-width" values="1;1.8;1" dur="3s" repeatCount="indefinite"/>
+    </rect>
+    <g transform="translate(10,12)">
+      <!-- white keys -->
+      <g>
+        <rect x="0" y="0" width="14" height="46" rx="3" fill="url(#keyWhite)" stroke="#1e3a5f"/>
+        <rect x="16" y="0" width="14" height="46" rx="3" fill="url(#keyWhite)" stroke="#1e3a5f"/>
+        <rect x="32" y="0" width="14" height="46" rx="3" fill="url(#keyWhite)" stroke="#1e3a5f"/>
+        <rect x="48" y="0" width="14" height="46" rx="3" fill="url(#keyWhite)" stroke="#1e3a5f"/>
+        <rect x="64" y="0" width="14" height="46" rx="3" fill="url(#keyWhite)" stroke="#1e3a5f"/>
+        <rect x="80" y="0" width="14" height="46" rx="3" fill="url(#keyWhite)" stroke="#1e3a5f"/>
+        <rect x="96" y="0" width="14" height="46" rx="3" fill="url(#keyWhite)" stroke="#1e3a5f"/>
+      </g>
+      <!-- black keys -->
+      <rect x="11" y="0" width="9" height="28" rx="2" fill="url(#keyBlack)" stroke="#000"/>
+      <rect x="27" y="0" width="9" height="28" rx="2" fill="url(#keyBlack)" stroke="#000"/>
+      <rect x="59" y="0" width="9" height="28" rx="2" fill="url(#keyBlack)" stroke="#000"/>
+      <rect x="75" y="0" width="9" height="28" rx="2" fill="url(#keyBlack)" stroke="#000"/>
+      <rect x="91" y="0" width="9" height="28" rx="2" fill="url(#keyBlack)" stroke="#000"/>
+    </g>
+    <text x="65" y="-10" fill="#00d4ff" font-size="11" font-family="Segoe UI,sans-serif" text-anchor="middle" font-weight="700" letter-spacing="1">LEFT · ACORDES</text>
+    <!-- pressed key animation -->
+    <rect x="66" y="12" width="14" height="46" rx="3" fill="#00d4ff" opacity="0.85" filter="url(#glow)">
+      <animate attributeName="opacity" values="0.9;0.3;0.9" dur="2s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- RIGHT: Melody zone -->
+  <g transform="translate(610,315)">
+    <rect x="0" y="0" width="130" height="70" rx="8" fill="#0b1322" stroke="#a855f7" stroke-width="1" opacity="0.9">
+      <animate attributeName="stroke-width" values="1;1.8;1" dur="3.7s" repeatCount="indefinite"/>
+    </rect>
+    <g transform="translate(10,12)">
+      <rect x="0" y="0" width="14" height="46" rx="3" fill="url(#keyWhite)" stroke="#1e3a5f"/>
+      <rect x="16" y="0" width="14" height="46" rx="3" fill="url(#keyWhite)" stroke="#1e3a5f"/>
+      <rect x="32" y="0" width="14" height="46" rx="3" fill="url(#keyWhite)" stroke="#1e3a5f"/>
+      <rect x="48" y="0" width="14" height="46" rx="3" fill="url(#keyWhite)" stroke="#1e3a5f"/>
+      <rect x="64" y="0" width="14" height="46" rx="3" fill="url(#keyWhite)" stroke="#1e3a5f"/>
+      <rect x="80" y="0" width="14" height="46" rx="3" fill="url(#keyWhite)" stroke="#1e3a5f"/>
+      <rect x="96" y="0" width="14" height="46" rx="3" fill="url(#keyWhite)" stroke="#1e3a5f"/>
+      <rect x="11" y="0" width="9" height="28" rx="2" fill="url(#keyBlack)" stroke="#000"/>
+      <rect x="27" y="0" width="9" height="28" rx="2" fill="url(#keyBlack)" stroke="#000"/>
+      <rect x="59" y="0" width="9" height="28" rx="2" fill="url(#keyBlack)" stroke="#000"/>
+      <rect x="75" y="0" width="9" height="28" rx="2" fill="url(#keyBlack)" stroke="#000"/>
+      <rect x="91" y="0" width="9" height="28" rx="2" fill="url(#keyBlack)" stroke="#000"/>
+    </g>
+    <text x="65" y="-10" fill="#a855f7" font-size="11" font-family="Segoe UI,sans-serif" text-anchor="middle" font-weight="700" letter-spacing="1">RIGHT · MELODÍA</text>
+    <rect x="34" y="12" width="14" height="46" rx="3" fill="#a855f7" opacity="0.85" filter="url(#glow)">
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="2.4s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- Flow paths -->
+  <use href="#pChord" fill="none" stroke="#00d4ff" stroke-width="1.6" opacity="0.55" stroke-dasharray="6 8">
+    <animate attributeName="stroke-dashoffset" from="0" to="-140" dur="3s" repeatCount="indefinite"/>
+  </use>
+  <use href="#pMelody" fill="none" stroke="#a855f7" stroke-width="1.6" opacity="0.55" stroke-dasharray="6 8">
+    <animate attributeName="stroke-dashoffset" from="0" to="-140" dur="3.5s" repeatCount="indefinite"/>
+  </use>
+  <use href="#pBand" fill="none" stroke="#22c55e" stroke-width="2" opacity="0.7" stroke-dasharray="5 7">
+    <animate attributeName="stroke-dashoffset" from="0" to="-120" dur="2.5s" repeatCount="indefinite"/>
+  </use>
+  <use href="#pNotes" fill="none" stroke="#f59e0b" stroke-width="1.4" opacity="0.5" stroke-dasharray="4 6">
+    <animate attributeName="stroke-dashoffset" from="0" to="-100" dur="2.8s" repeatCount="indefinite"/>
+  </use>
+
+  <!-- Engine (ACMP center) -->
+  <g transform="translate(400,270)">
+    <circle r="38" fill="#0b1322" stroke="url(#accentL)" stroke-width="2" filter="url(#glowStrong)">
+      <animate attributeName="r" values="36;40;36" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="26" fill="none" stroke="#00d4ff" stroke-width="1" stroke-dasharray="3 6" opacity="0.8">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <text y="-2" text-anchor="middle" fill="#00d4ff" font-size="10" font-weight="800" font-family="Segoe UI,sans-serif" letter-spacing="1">ACMP</text>
+    <text y="10" text-anchor="middle" fill="#8ea2c0" font-size="8" font-family="Segoe UI,sans-serif" letter-spacing="1">ENGINE</text>
+    <!-- rotating ring around engine -->
+    <g>
+      <circle r="50" fill="none" stroke="#22c55e" stroke-width="1" stroke-dasharray="2 10" opacity="0.7">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="8s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+  </g>
+
+  <!-- Particles travelling along chord path -->
+  <circle r="3" fill="#00d4ff" filter="url(#glow)">
+    <animateMotion dur="3s" repeatCount="indefinite" begin="0s"><mpath href="#pChord"/></animateMotion>
+  </circle>
+  <circle r="2.5" fill="#00d4ff" filter="url(#glow)">
+    <animateMotion dur="3s" repeatCount="indefinite" begin="1.2s"><mpath href="#pChord"/></animateMotion>
+  </circle>
+  <circle r="3" fill="#a855f7" filter="url(#glow)">
+    <animateMotion dur="3.5s" repeatCount="indefinite" begin="0.4s"><mpath href="#pMelody"/></animateMotion>
+  </circle>
+  <circle r="2.5" fill="#a855f7" filter="url(#glow)">
+    <animateMotion dur="3.5s" repeatCount="indefinite" begin="1.8s"><mpath href="#pMelody"/></animateMotion>
+  </circle>
+  <circle r="3.5" fill="#22c55e" filter="url(#glow)">
+    <animateMotion dur="2.5s" repeatCount="indefinite" begin="0s"><mpath href="#pBand"/></animateMotion>
+  </circle>
+  <circle r="2.5" fill="#f59e0b" filter="url(#glow)">
+    <animateMotion dur="2.8s" repeatCount="indefinite" begin="1.4s"><mpath href="#pNotes"/></animateMotion>
+  </circle>
+
+  <!-- Ghost note travelling the full chord path -->
+  <g>
+    <text font-size="20" fill="#00d4ff" opacity="0.85" text-anchor="middle" filter="url(#glow)">♪
+      <animateMotion dur="5s" repeatCount="indefinite" begin="0s"><mpath href="#pGhost"/></animateMotion>
+      <animate attributeName="opacity" values="0;0.95;0.95;0" dur="5s" repeatCount="indefinite"/>
+    </text>
+  </g>
+  <g>
+    <text font-size="18" fill="#a855f7" opacity="0.85" text-anchor="middle" filter="url(#glow)">♫
+      <animateMotion dur="6s" repeatCount="indefinite" begin="1.5s"><mpath href="#pMelody"/></animateMotion>
+      <animate attributeName="opacity" values="0;0.95;0.95;0" dur="6s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- Radial particle burst from engine -->
+  <g transform="translate(400,150)">
+    <g opacity="0.9">
+      <line x1="0" y1="0" x2="0" y2="-16" stroke="#22c55e" stroke-width="1.4">
+        <animate attributeName="y2" values="0;-26" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="2s" repeatCount="indefinite"/>
+      </line>
+      <line x1="0" y1="0" x2="14" y2="-8" stroke="#22c55e" stroke-width="1.4">
+        <animate attributeName="x2" values="0;24" dur="2s" begin="0.3s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="0;-14" dur="2s" begin="0.3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="2s" begin="0.3s" repeatCount="indefinite"/>
+      </line>
+      <line x1="0" y1="0" x2="-14" y2="-8" stroke="#22c55e" stroke-width="1.4">
+        <animate attributeName="x2" values="0;-24" dur="2s" begin="0.6s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="0;-14" dur="2s" begin="0.6s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="2s" begin="0.6s" repeatCount="indefinite"/>
+      </line>
+      <line x1="0" y1="0" x2="20" y2="6" stroke="#f59e0b" stroke-width="1.4">
+        <animate attributeName="x2" values="0;32" dur="2.5s" begin="0.9s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="2.5s" begin="0.9s" repeatCount="indefinite"/>
+      </line>
+      <line x1="0" y1="0" x2="-20" y2="6" stroke="#f59e0b" stroke-width="1.4">
+        <animate attributeName="x2" values="0;-32" dur="2.5s" begin="1.1s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="2.5s" begin="1.1s" repeatCount="indefinite"/>
+      </line>
+    </g>
+  </g>
+
+  <!-- Pulsing key nodes -->
+  <g>
+    <rect x="392" y="248" width="16" height="16" rx="3" fill="none" stroke="#00d4ff" stroke-width="1.5">
+      <animate attributeName="stroke-width" values="1;2.6;1" dur="1.6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0.4;1" dur="1.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="118" y="332" width="14" height="14" rx="3" fill="none" stroke="#00d4ff" stroke-width="1.4">
+      <animate attributeName="opacity" values="1;0.35;1" dur="1.9s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="664" y="332" width="14" height="14" rx="3" fill="none" stroke="#a855f7" stroke-width="1.4">
+      <animate attributeName="opacity" values="0.35;1;0.35" dur="2.1s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- Title -->
+  <g>
+    <text x="400" y="48" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="22" font-weight="900" letter-spacing="3" filter="url(#glow)">
+      YAMAHA PSR-SX920
+      <animate attributeName="fill" values="#00d4ff;#a855f7;#22c55e;#f59e0b;#00d4ff" dur="9s" repeatCount="indefinite"/>
+    </text>
+    <text x="400" y="70" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#8ea2c0" letter-spacing="4" opacity="0.9">
+      TUTORIAL · NIVEL PRINCIPIANTE
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="3.2s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- Big flash text -->
+  <g>
+    <text x="400" y="415" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="26" font-weight="900" letter-spacing="8" fill="#f59e0b" filter="url(#glowStrong)">
+      ¡A TOCAR!
+      <animate attributeName="opacity" values="0;0;1;1;0;0" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="fill" values="#f59e0b;#ef4444;#f59e0b" dur="6s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- LIVE indicator -->
+  <g transform="translate(738,26)">
+    <circle r="5" fill="#ef4444">
+      <animate attributeName="opacity" values="1;0.25;1" dur="1.1s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="4;6.5;4" dur="1.1s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="9" fill="none" stroke="#ef4444" stroke-width="1" opacity="0.6">
+      <animate attributeName="r" values="6;14;6" dur="1.1s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.7;0;0.7" dur="1.1s" repeatCount="indefinite"/>
+    </circle>
+    <text x="14" y="4" fill="#ef4444" font-family="Segoe UI,sans-serif" font-size="9" font-weight="800" letter-spacing="1.5">LIVE</text>
+  </g>
+
+  <!-- Status labels alternating -->
+  <g>
+    <text x="60" y="30" fill="#22c55e" font-family="Segoe UI,sans-serif" font-size="9" letter-spacing="1.5" font-weight="700">
+      <animate attributeName="opacity" values="1;0;0;1" dur="6s" repeatCount="indefinite"/>
+      ● ACMP ON
+    </text>
+    <text x="60" y="30" fill="#f59e0b" font-family="Segoe UI,sans-serif" font-size="9" letter-spacing="1.5" font-weight="700">
+      <animate attributeName="opacity" values="0;0;1;0" dur="6s" repeatCount="indefinite"/>
+      ◆ SYNC START
+    </text>
+    <text x="60" y="30" fill="#00d4ff" font-family="Segoe UI,sans-serif" font-size="9" letter-spacing="1.5" font-weight="700">
+      <animate attributeName="opacity" values="0;1;0;0" dur="6s" repeatCount="indefinite"/>
+      ▲ OTS LINK
+    </text>
+  </g>
+
+  <!-- Author signature -->
+  <text x="790" y="440" text-anchor="end" font-family="Segoe UI,sans-serif" font-size="10" fill="#a855f7" letter-spacing="2" opacity="0.85">
+    by Rubén Sbarsky
+    <animate attributeName="opacity" values="0.35;0.9;0.35" dur="4.5s" repeatCount="indefinite"/>
+  </text>
+</svg>
+</template>
+
+<main>
+
+<!-- HOME -->
+<section id="home" class="section active">
+  <div class="home-hero">
+    <div class="svg-shell" id="svgHome"></div>
+    <span class="home-badge">◆ Tutorial Interactivo · Yamaha Arranger</span>
+    <h1 class="home-title">Tutorial-PSR-SX920 Nivel Principiante Versión 2</h1>
+    <p class="home-sub">Aprende desde cero a tocar con el Yamaha PSR-SX920: voces, estilos, acompañamiento automático, OTS, Multi Pad, registros y tu primera canción completa.</p>
+    <div class="home-quote">"Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien."</div>
+    <div class="metrics">
+      <div class="metric"><span class="val">18</span><span class="lbl">Lecciones</span></div>
+      <div class="metric"><span class="val">10–15'</span><span class="lbl">Por lección</span></div>
+      <div class="metric"><span class="val">6</span><span class="lbl">Partes / lección</span></div>
+      <div class="metric"><span class="val">1</span><span class="lbl">Proyecto final</span></div>
+      <div class="metric"><span class="val">6</span><span class="lbl">Apéndices</span></div>
+    </div>
+    <div class="date-strip">
+      <span>📅 20/09/2026</span>
+      <span>🕒 03:59:16</span>
+      <span>👨‍💻 Rubén Sbarsky</span>
+    </div>
+    <div class="callout co-info" style="max-width:820px;margin:24px auto 0;text-align:left">
+      <span class="co-t">Fuente única</span>
+      Todo el contenido de este tutorial proviene del <strong>Manual de instrucciones PSR-SX920/SX720</strong> (v1.10). Cuando algo solo aparece en el <em>Reference Manual</em>, se indica con 📘. Cuando el manual no permite verificar algo, se dice expresamente.
+    </div>
+  </div>
+</section>
+
+<!-- CÓMO USAR -->
+<section id="como-usar" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">📖</div>
+    <div><h2>Cómo usar este tutorial</h2><span class="sec-sub">Lee esto antes de empezar la Lección 1</span></div>
+  </div>
+
+  <div class="card">
+    <div class="callout co-info">
+      <span class="co-t">Para quién es</span>
+      Para alguien que <strong>nunca ha tocado un teclado "arranger"</strong> (un teclado que acompaña con banda automática) y no conoce su vocabulario.
+    </div>
+    <div class="callout co-ex">
+      <span class="co-t">Qué conseguirás</span>
+      Encender el teclado y tocar con soltura usando sonidos, ritmos y acompañamientos automáticos, y terminar preparando una canción completa.
+    </div>
+    <div class="callout co-purple">
+      <span class="co-t">Fuente</span>
+      <em>Manual de instrucciones PSR-SX920/SX720</em> (el PDF de la portada indica v1.10). Todo lo que se explica sale de ese manual.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Estructura de cada lección</h3>
+    <p><strong>Cada lección dura unos 10–15 minutos</strong> y tiene siempre las mismas seis partes:</p>
+    <ol class="steps">
+      <li>Qué vamos a aprender</li>
+      <li>Qué significa</li>
+      <li>Pasos exactos</li>
+      <li>Ejercicio práctico</li>
+      <li>Resultado esperado</li>
+      <li>Mini reto (hazlo <strong>sin mirar</strong> los pasos; la solución está justo debajo)</li>
+    </ol>
+    <p><strong>Haz las lecciones en orden.</strong> Cada una usa lo aprendido en las anteriores. Ten el teclado encendido a tu lado mientras lees.</p>
+  </div>
+
+  <div class="card">
+    <h3>Cómo se escriben las instrucciones</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Se escribe así</th><th>Significa</th></tr></thead>
+        <tbody>
+          <tr><td><code>[START/STOP]</code></td><td>Un <strong>botón físico</strong> del panel (así lo escribe el manual).</td></tr>
+          <tr><td><strong>[Pop]</strong></td><td>Una <strong>zona de la pantalla táctil</strong> que debes tocar con un dedo.</td></tr>
+          <tr><td><code>[MENU]</code> → <strong>[Utility]</strong> → <strong>[System]</strong></td><td>Una secuencia: pulsa el botón, luego toca en la pantalla los elementos en ese orden (convención del manual, p. 29).</td></tr>
+          <tr><td><em>(p. 40)</em></td><td>Página del Manual de instrucciones donde está explicado.</td></tr>
+          <tr><td>📘 <strong>Reference Manual</strong></td><td>Esa función <strong>no está explicada a fondo en el Manual de instrucciones</strong>; hay que consultar el <em>Reference Manual</em>. Se descarga gratis (ver pestaña FUENTES).</td></tr>
+          <tr><td>⚠️</td><td>Precaución.</td></tr>
+          <tr><td>✅</td><td>Solución de un mini reto.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Reglas de honestidad de este tutorial</h3>
+    <ul>
+      <li>Si algo <strong>no aparece en el Manual de instrucciones</strong>, se dice con la frase: <em>"El material disponible no permite verificar este procedimiento"</em>. No se rellena con suposiciones.</li>
+      <li>Si el manual <strong>se contradice</strong> en algún detalle, se avisa (hay una lista al final, en Apéndices).</li>
+      <li>Los nombres de la pantalla se escriben <strong>en inglés</strong>, como en el manual (las pantallas del manual están en inglés, p. 6). Si tu pantalla está en español, algunos nombres pueden variar; el manual no da la lista de traducciones.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Índice de lecciones</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Nº</th><th>Lección</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Conocer el panel y la pantalla táctil</td></tr>
+          <tr><td>2</td><td>Encender, volumen y apagar</td></tr>
+          <tr><td>3</td><td>Moverte por las pantallas (y cómo volver al inicio)</td></tr>
+          <tr><td>4</td><td>Elegir una voz</td></tr>
+          <tr><td>5</td><td>Las cuatro partes: RIGHT 1, RIGHT 2, RIGHT 3 y LEFT</td></tr>
+          <tr><td>6</td><td>Activar y desactivar partes (capas y división)</td></tr>
+          <tr><td>7</td><td>Elegir un estilo y hacerlo sonar</td></tr>
+          <tr><td>8</td><td>Acompañamiento automático: acordes con la izquierda, melodía con la derecha</td></tr>
+          <tr><td>9</td><td>INTRO, MAIN, FILL, BREAK y ENDING</td></tr>
+          <tr><td>10</td><td>Cambiar el tempo</td></tr>
+          <tr><td>11</td><td>One Touch Setting (OTS)</td></tr>
+          <tr><td>12</td><td>Multi Pad</td></tr>
+          <tr><td>13</td><td>Transposición y octavas</td></tr>
+          <tr><td>14</td><td>Metrónomo</td></tr>
+          <tr><td>15</td><td>Harmony / Arpeggio</td></tr>
+          <tr><td>16</td><td>El joystick</td></tr>
+          <tr><td>17</td><td>Registration Memory: guardar una configuración</td></tr>
+          <tr><td>18</td><td>Registration Memory: recuperarla</td></tr>
+          <tr><td>—</td><td><strong>Proyecto final: tu primera canción completa</strong></td></tr>
+          <tr><td>—</td><td>Apéndices: problemas típicos, glosario, chuleta de botones, lista de cosas que requieren el Reference Manual</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 1 -->
+<section id="l1" class="section">
+  <div class="lesson-hero">
+    <span class="lnum">LECCIÓN 1</span>
+    <h2>Conocer el panel y la pantalla táctil</h2>
+  </div>
+
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span>
+      <p>A ubicar las zonas del teclado y a saber qué es cada cosa, sin miedo a tocarla.</p>
+    </div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span>
+      <ul>
+        <li><strong>Panel:</strong> toda la superficie con botones, mandos y pantalla que hay encima del teclado de piano.</li>
+        <li><strong>Pantalla táctil:</strong> la pantalla grande, en la que tocas con un dedo. Es una pantalla especial: <strong>no reconoce dos dedos a la vez</strong> y no debes usar objetos duros o afilados (p. 30).</li>
+        <li><strong>Botones con luz:</strong> muchos botones tienen un piloto de color que te dice si su función está activada, desactivada o parpadeando (p. 23).</li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span>
+      <p>(Todavía no hace falta encenderlo.) Recorre el teclado con la vista, de izquierda a derecha. Según los dibujos del manual (pp. 16-17):</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Zona</th><th>Qué hay</th><th>Lo usarás en</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Extremo izquierdo, arriba</strong></td><td>Interruptor de encendido <code>[⏻]</code>, mando <code>MASTER VOLUME</code>, botón <code>[ASSIGN]</code> y dos mandos <code>LIVE CONTROL</code></td><td>Lección 2</td></tr>
+            <tr><td><strong>Extremo izquierdo, junto al teclado</strong></td><td>El <strong>joystick</strong>, el botón <code>[JOYSTICK HOLD]</code> y los botones <code>ASSIGNABLE [1][2]</code>. Debajo, la toma <code>[PHONES]</code> (auriculares)</td><td>Lección 16</td></tr>
+            <tr><td><strong>Arriba, a la izquierda de la pantalla</strong></td><td><code>SONG</code> (reproductor y grabación), los botones de <strong>categoría de STYLE</strong> (POP, ROCK&RETRO POP, DANCE…), <code>TRANSPOSE [−][+]</code>, <code>TEMPO [−][+]</code>, <code>[RESET/TAP TEMPO]</code>, <code>[MIXER/EQ]</code>, <code>CHORD LOOPER</code>, <code>[DIRECT ACCESS]</code></td><td>Lecciones 7, 10, 13</td></tr>
+            <tr><td><strong>En el centro</strong></td><td>La <strong>pantalla táctil</strong>. Justo debajo: los botones <code>ASSIGNABLE [A]–[F]</code></td><td>Todas</td></tr>
+            <tr><td><strong>A la derecha de la pantalla</strong></td><td><code>[MENU]</code>, <code>[PLAYLIST]</code>, el <strong>dial de datos</strong> (rueda grande) con <code>[DEC]</code>/<code>[INC]</code> y <code>[EXIT]</code>; los botones de categoría de <strong>VOICE</strong>; <code>[HARMONY/ARPEGGIO]</code>, <code>[SUSTAIN]</code>; <code>PART SELECT</code> y <code>PART ON/OFF</code></td><td>Lecciones 3, 4, 5, 6, 15</td></tr>
+            <tr><td><strong>Fila justo encima del teclado, de izquierda a derecha</strong></td><td><code>STYLE CONTROL</code> (ACMP, INTRO, MAIN, BREAK, ENDING, START/STOP…) → <code>REGIST BANK</code>, <code>[FREEZE]</code>, <code>[MEMORY]</code> → <code>REGISTRATION MEMORY [1]–[8]</code> → <code>ONE TOUCH SETTING [1]–[4]</code> → <code>MULTI PAD CONTROL</code> → <code>UPPER OCTAVE [−][+]</code></td><td>Lecciones 7-18</td></tr>
+            <tr><td><strong>Panel trasero</strong></td><td>Toma de corriente, salidas de audio, micrófono/guitarra, USB, pedales</td><td>(no lo necesitamos)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO — "BÚSQUEDA DEL TESORO"</span>
+      <p>Señala con el dedo, sin pulsar, estos 10 controles. Cuando los encuentres, márcalos:</p>
+      <ul>
+        <li>☐ <code>[⏻]</code> encendido</li>
+        <li>☐ <code>MASTER VOLUME</code></li>
+        <li>☐ El joystick</li>
+        <li>☐ <code>[START/STOP]</code></li>
+        <li>☐ <code>ONE TOUCH SETTING [1]–[4]</code></li>
+        <li>☐ <code>MULTI PAD CONTROL [SELECT]</code></li>
+        <li>☐ <code>[MEMORY]</code></li>
+        <li>☐ <code>[HARMONY/ARPEGGIO]</code></li>
+        <li>☐ <code>TEMPO [−][+]</code></li>
+        <li>☐ <code>TRANSPOSE [−][+]</code></li>
+      </ul>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>Sabes dónde está cada cosa. No hace falta memorizar nada: el propio panel tiene los nombres impresos y volveremos a cada botón en su lección.</p>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Sin mirar la tabla: ¿en qué zona está la fila de botones <code>A B C D</code> (MAIN VARIATION) y en qué zona están los botones <code>PART ON/OFF</code>?</p>
+      <details class="sol"><summary>Ver solución</summary>
+        <p><code>MAIN VARIATION [A]–[D]</code> está en la <strong>fila de encima del teclado</strong>, dentro del grupo <code>STYLE CONTROL</code> (a la izquierda). <code>PART ON/OFF</code> está <strong>a la derecha de la pantalla</strong>, debajo de <code>PART SELECT</code>.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 2 -->
+<section id="l2" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 2</span><h2>Encender, volumen y apagar</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>A encender, ajustar el volumen y apagar el teclado de forma segura.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span>
+      <ul>
+        <li><strong>MASTER VOLUME:</strong> el mando que controla el volumen de todo el instrumento.</li>
+        <li><strong>Pantalla de inicio (Home):</strong> la pantalla que aparece al encender. Resume las voces, el estilo y otros ajustes actuales de un vistazo (p. 26).</li>
+        <li><strong>Auto Power Off (apagado automático):</strong> el teclado se apaga solo si no lo usas durante un tiempo, unos <strong>15 minutos</strong> por defecto (p. 21).</li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span><p>(p. 20)</p>
+      <ol class="steps">
+        <li>Asegúrate de que el adaptador de corriente está bien conectado al teclado (toma <code>DC IN</code> de atrás) y al enchufe de la pared.</li>
+        <li>Gira <code>MASTER VOLUME</code> hasta <strong><code>MIN</code></strong> (todo a la izquierda).</li>
+        <li>Pulsa el interruptor <code>[⏻]</code>.</li>
+        <li><strong>Espera</strong> a que aparezca la pantalla de inicio. ⚠️ Hasta que aparezca, el teclado no responde a nada, ni siquiera a apagarlo (p. 20).</li>
+        <li>Toca teclas mientras subes poco a poco <code>MASTER VOLUME</code> hasta un nivel cómodo.</li>
+        <li>Para <strong>apagar</strong>: mantén pulsado <code>[⏻]</code> <strong>aproximadamente un segundo</strong>.</li>
+      </ol>
+      <div class="callout co-warn"><span class="co-t">⚠️ Precauciones del manual</span>
+        <ul>
+          <li>No uses el teclado ni los auriculares con volumen alto durante mucho tiempo: puedes dañar tu oído (p. 5).</li>
+          <li>No apagues durante una grabación, una edición o mientras haya un mensaje en pantalla. Si el teclado se queda bloqueado, mantén <code>[⏻]</code> más de <strong>3 segundos</strong>; es un apagado forzado y puede perder datos (p. 20).</li>
+          <li><strong>Lo que no guardas, se pierde al apagar.</strong> (En lecciones 11 y 17 verás qué se guarda y cómo.)</li>
+        </ul>
+      </div>
+      <p><strong>Opcional — auriculares:</strong> enchufa unos auriculares en <code>[PHONES]</code> (p. 19). Al hacerlo, el manual indica que se desactiva la salida de los altavoces (p. 117).</p>
+      <p><strong>Opcional — evitar que se apague solo:</strong> enciende el teclado <strong>manteniendo pulsada la nota más grave</strong> del teclado; aparece un aviso breve y el apagado automático queda desactivado (p. 21). También se puede cambiar en <code>[MENU]</code> → <strong>[Utility]</strong> → <strong>[System]</strong> → <strong>[Auto Power Off]</strong> (p. 21).</p>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <p>Enciende con el volumen en MIN, espera a la pantalla de inicio, toca una tecla sola varias veces mientras subes el volumen hasta un nivel agradable, y luego apaga.</p>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>Ves la pantalla de inicio con recuadros de voces, canción, estilo y Multi Pad y una fila de iconos en la parte inferior (así aparece en el manual, p. 26). Al tocar una tecla, suena. Al mantener <code>[⏻]</code> un segundo, la pantalla se apaga.</p>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>¿Qué debes hacer con el volumen <strong>antes</strong> de encender, y cuánto tiempo mantienes pulsado el interruptor para apagar?</p>
+      <details class="sol"><summary>Ver solución</summary><p>Bajarlo a <code>MIN</code>. Mantener <code>[⏻]</code> aproximadamente <strong>un segundo</strong>.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 3 -->
+<section id="l3" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 3</span><h2>Moverte por las pantallas (y cómo volver al inicio)</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>A tocar la pantalla, abrir el menú, salir de cualquier pantalla y <strong>restablecer el panel</strong> si te pierdes.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span>
+      <ul>
+        <li><strong>Pantalla de inicio (Home):</strong> el "portal". Mientras tocas el teclado, lo habitual es tener esta pantalla a la vista (p. 26). Tiene zonas:
+          <ul>
+            <li><strong>Área de voces:</strong> las voces de LEFT, RIGHT 1, 2 y 3 y si cada parte está activada o no.</li>
+            <li><strong>Área de canciones:</strong> información de reproducción/grabación de canciones.</li>
+            <li><strong>Área de estilos:</strong> el estilo actual, la sección que suena y el <strong>acorde detectado</strong>.</li>
+            <li><strong>Área Multi Pad:</strong> el banco de Multi Pad actual.</li>
+            <li><strong>Otra información:</strong> compás/tempo, octava/transposición y banco de Registration Memory.</li>
+            <li><strong>Área de atajos:</strong> iconos de acceso rápido.</li>
+          </ul>
+        </li>
+        <li><strong>Pantalla de menú:</strong> una "lista de funciones" con iconos. Se abre con <code>[MENU]</code> y tiene <strong>dos páginas</strong> (<strong>[Menu 1]</strong> y <strong>[Menu 2]</strong>).</li>
+        <li><strong>Pantalla de selección de archivos:</strong> la pantalla donde eliges voces, estilos, Multi Pad, etc. Tiene fichas <strong>Preset</strong> (de fábrica), <strong>User</strong> (tuyos) y <strong>Favorite</strong> (favoritos) (p. 28).</li>
+        <li><strong>Dial de datos:</strong> la rueda grande a la derecha de la pantalla. Con ella y con <code>[DEC]</code>/<code>[INC]</code> cambias valores o recorres listas (p. 31).</li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span>
+      <p><strong>Gestos en la pantalla</strong> (p. 30):</p>
+      <ul>
+        <li><strong>Tocar:</strong> un toque suave sobre el elemento.</li>
+        <li><strong>Deslizar:</strong> mantén el dedo sobre un control deslizante y muévelo.</li>
+        <li><strong>Girar:</strong> en un mando de pantalla, primero tócalo (queda con marco naranja) y luego gira con el dedo.</li>
+        <li><strong>Tocar y mantener:</strong> sobre un valor, lo <strong>restablece al valor por defecto</strong>.</li>
+      </ul>
+      <p><strong>Abrir el menú y salir:</strong></p>
+      <ol class="steps">
+        <li>Pulsa <code>[MENU]</code>. Aparece la pantalla de menú.</li>
+        <li>Toca <strong>[Menu 2]</strong> (o vuelve a pulsar <code>[MENU]</code>) para ver la segunda página.</li>
+        <li>Para salir de una pantalla: pulsa <code>[EXIT]</code>, o toca la <strong>X</strong> de la esquina superior derecha, o <strong>[Close]</strong> abajo a la derecha en las ventanas emergentes (p. 29).</li>
+        <li>Para volver <strong>de golpe a la pantalla de inicio:</strong> pulsa <strong>a la vez</strong> <code>[DIRECT ACCESS]</code> y <code>[EXIT]</code> (p. 29).</li>
+      </ol>
+      <p><strong>Restablecer el panel (tu "botón de emergencia")</strong> (p. 32):</p>
+      <ol class="steps">
+        <li>Pulsa <code>[DIRECT ACCESS]</code>.</li>
+        <li>Toca <strong>[Panel Reset]</strong>.</li>
+        <li>En el mensaje de confirmación, toca <strong>[Reset]</strong>.</li>
+      </ol>
+      <p>Esto devuelve a su estado básico los ajustes de voces, estilos, MIDI, etc., sin apagar el teclado. Es útil si tocas y "no suena nada" o si te has liado (p. 32). Puede no estar disponible durante una grabación.</p>
+      <p><strong>Acceso directo:</strong> <code>[DIRECT ACCESS]</code> + otro botón abre la pantalla de ajustes de ese botón. Ejemplo del manual: <code>[DIRECT ACCESS]</code> + <code>REGISTRATION MEMORY [1]</code> abre la información del banco de registros (p. 32).</p>
+      <p><strong>Opcional — escuchar las demos:</strong> <code>[MENU]</code> → <strong>[Demo]</strong>. Toca <strong>[Pause]</strong> para pausar y tocar encima; <code>[EXIT]</code> para salir (p. 32).</p>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <ol class="steps">
+        <li>Ve a la pantalla de menú y pasa a la página 2.</li>
+        <li>Sal con <code>[EXIT]</code>.</li>
+        <li>Toca el nombre de un estilo en la pantalla de inicio; verás que se abre otra pantalla. Vuelve con <code>[EXIT]</code>.</li>
+        <li>Abre <code>[MENU]</code> otra vez, y esta vez vuelve a inicio con <code>[DIRECT ACCESS]</code> + <code>[EXIT]</code>.</li>
+        <li>Haz un <strong>Panel Reset</strong>.</li>
+      </ol>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>Sabes entrar y salir de cualquier pantalla. Tras el Panel Reset, el teclado queda en un estado básico. (El manual no detalla cuál es la voz o el estilo exactos tras el reset: <em>El material disponible no permite verificar este procedimiento</em> en ese punto.)</p>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Estás en una pantalla que no reconoces y quieres volver a la de inicio en un solo gesto. ¿Cuál?</p>
+      <details class="sol"><summary>Ver solución</summary><p>Pulsar a la vez <code>[DIRECT ACCESS]</code> y <code>[EXIT]</code>.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 4 -->
+<section id="l4" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 4</span><h2>Elegir una voz</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>A cambiar el sonido con el que tocas (piano, cuerdas, guitarra…).</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span>
+      <ul>
+        <li><strong>Voz (Voice):</strong> cada sonido individual del teclado: piano, guitarra, cuerdas, viento, metal… (p. 14). Las voces las tocas tú con el teclado, pero también las usan los estilos y los Multi Pad.</li>
+        <li><strong>Categorías de voz:</strong> hay 12 botones <code>VOICE</code> con grupos de sonidos (por ejemplo <code>[PIANO&amp;E.PIANO]</code>, <code>[STRINGS]</code>, <code>[A.GUITAR]</code>…).</li>
+        <li><strong>Parte (Part):</strong> el teclado tiene cuatro "carriles" de voz (LEFT y RIGHT 1, 2, 3). En esta lección usamos solo <strong>RIGHT 1</strong> (la principal de la mano derecha). Las cuatro partes se explican en la lección 5.</li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span><p>(p. 48)</p>
+      <ol class="steps">
+        <li>Pulsa <code>PART SELECT [RIGHT 1]</code>. Se abre la pantalla de selección de voces para RIGHT 1.</li>
+        <li>Toca la voz que quieras. Puedes elegir subcategorías con las fichas de la pantalla o pulsando uno de los botones de categoría <code>VOICE</code>.</li>
+        <li>Comprueba que <code>PART ON/OFF [RIGHT 1]</code> está <strong>activado</strong> (con su luz encendida).</li>
+        <li>Toca el teclado con la mano derecha.</li>
+      </ol>
+      <p><strong>Otra vía:</strong> en la pantalla de inicio, <strong>toca el nombre de la voz</strong> de una parte: se abre la selección de voces de esa parte (p. 26).</p>
+      <p><strong>Truco para escuchar antes de elegir:</strong> en la pantalla de selección de voces, toca el icono <strong>Demo</strong> para oír una demo de la voz seleccionada; vuelve a tocarlo para pararla (p. 48).</p>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <p>Prueba <strong>cuatro voces de cuatro categorías distintas</strong> (por ejemplo, una de piano, una de cuerdas, una de guitarra y una de órgano). Para cada una: tócala un par de notas y toca dos acordes con la mano derecha.</p>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>Cada vez que eliges una voz, el nombre bajo RIGHT 1 cambia en la pantalla de inicio y el teclado suena distinto.</p>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Cambia RIGHT 1 a una voz de <strong>guitarra</strong> <strong>sin usar el botón</strong> <code>PART SELECT</code>.</p>
+      <details class="sol"><summary>Ver solución</summary><p>Ir a la pantalla de inicio, tocar el <strong>nombre de la voz de RIGHT 1</strong> y, en la pantalla que se abre, elegir una voz de guitarra (dentro de esa pantalla también puedes pulsar el botón de categoría <code>[A.GUITAR]</code> para saltar a ese grupo).</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 5 -->
+<section id="l5" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 5</span><h2>Las cuatro partes: RIGHT 1, RIGHT 2, RIGHT 3 y LEFT</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>Qué son las cuatro "partes" del teclado y a darle una voz distinta a cada una.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span>
+      <ul>
+        <li><strong>Parte de teclado:</strong> un "carril" que lleva <strong>una voz</strong>. Hay cuatro para tocar a mano: <strong>LEFT, RIGHT 1, RIGHT 2 y RIGHT 3</strong> (p. 14, 44).</li>
+        <li>Las partes <strong>RIGHT 1, 2 y 3</strong> son para la <strong>mano derecha</strong> (zona alta del teclado, llamada <em>UPPER</em>). La parte <strong>LEFT</strong> es para la <strong>mano izquierda</strong> (zona baja, llamada <em>LOWER</em>).</li>
+        <li>La nota que divide el teclado en zona izquierda y derecha se llama <strong>punto de división</strong> (<em>Split Point</em>). Por defecto es <strong>F#2</strong> (Fa sostenido; una tecla negra en la zona grave del teclado). (p. 44)</li>
+        <li><strong>Dos grupos de botones que no debes confundir:</strong>
+          <ul>
+            <li><code>PART SELECT</code>: <strong>elige la parte</strong> cuyo sonido quieres cambiar (abre la pantalla de voces de esa parte).</li>
+            <li><code>PART ON/OFF</code>: <strong>enciende o apaga</strong> cada parte (decide si suena o no). El manual pide comprobar que la parte está activada después de elegir voz (p. 48), así que trátalos como dos cosas independientes.</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span>
+      <ol class="steps">
+        <li>Pulsa <code>PART SELECT [RIGHT 1]</code> y elige una voz de <strong>piano</strong>.</li>
+        <li>Pulsa <code>PART SELECT [RIGHT 2]</code> y elige una voz de <strong>cuerdas</strong> (<code>[STRINGS]</code>).</li>
+        <li>Pulsa <code>PART SELECT [LEFT]</code> y elige una voz de <strong>bajo</strong> (<code>[BASS]</code>).</li>
+        <li>Pulsa <code>[EXIT]</code> para ir a la pantalla de inicio (o usa <code>[DIRECT ACCESS]</code> + <code>[EXIT]</code>).</li>
+        <li>En el <strong>área de voces</strong> de la pantalla de inicio, lee el nombre de la voz de cada parte. Las partes apagadas se muestran atenuadas (en el dibujo del manual, p. 26, solo <em>Right1</em> aparece resaltada).</li>
+      </ol>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <p>Deja preparadas estas tres voces: piano (RIGHT 1), cuerdas (RIGHT 2), bajo (LEFT). En la pantalla de inicio, comprueba cuáles de las cuatro partes están activadas ahora mismo (aún no las cambies).</p>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>En la pantalla de inicio ves las cuatro partes con sus voces. Algunas están activadas y otras no; eso lo cambiamos en la lección 6.</p>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Cambia <strong>solo la voz de RIGHT 2</strong> a un órgano, <strong>sin usar</strong> <code>PART SELECT</code>.</p>
+      <details class="sol"><summary>Ver solución</summary><p>En la pantalla de inicio, tocar el <strong>nombre de la voz de RIGHT 2</strong>; se abre la selección de voces de esa parte; tocar una voz de la subcategoría <strong>[Organ&amp;Accordion]</strong> (o usar <code>[ORGAN&amp;ACCORDION]</code>).</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 6 -->
+<section id="l6" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 6</span><h2>Activar y desactivar partes (capas y división)</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>A combinar partes para tocar con <strong>una voz</strong>, con <strong>varias voces a la vez</strong> o con <strong>una voz por mano</strong>.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span>
+      <ul>
+        <li><strong>Layer (capa):</strong> dos o tres voces de la mano derecha sonando <strong>a la vez</strong> (p. 44). Ejemplo: piano + cuerdas.</li>
+        <li><strong>Split (división):</strong> una voz distinta en cada mano. La tecla F#2 y las más graves suenan con LEFT; las más agudas con RIGHT 1, 2 y 3 (p. 44).</li>
+        <li><strong>LEFT HOLD:</strong> con la parte LEFT activada, mantiene sonando la voz de LEFT aunque sueltes las teclas (p. 45).</li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span>
+      <p>(Usa las voces de la lección 5.) Los botones son <code>PART ON/OFF [LEFT]</code>, <code>[RIGHT 1]</code>, <code>[RIGHT 2]</code>, <code>[RIGHT 3]</code> (y <code>[LEFT HOLD]</code>). Cada uno tiene su luz.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Quieres…</th><th>Activa</th><th>Apaga</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Una sola voz en todo el teclado</strong></td><td>RIGHT 1</td><td>LEFT (y RIGHT 2/3)</td></tr>
+            <tr><td><strong>Capa (dos voces a la vez)</strong></td><td>RIGHT 1 <strong>y</strong> RIGHT 2</td><td>LEFT</td></tr>
+            <tr><td><strong>División (una voz por mano)</strong></td><td>LEFT <strong>y</strong> RIGHT 1</td><td>RIGHT 2, RIGHT 3</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout co-warn"><span class="co-t">⚠️</span> Evita capas con la misma voz en dos partes: produce un sonido raro de fluctuación o duplicación (p. 118). Usa voces diferentes.</div>
+      <div class="callout co-info"><span class="co-t">ℹ️ Sobre RIGHT 3</span> Existe un tercer punto de división (<em>Right 3</em>) que puede limitar dónde suena esa parte (p. 45). Si al activar RIGHT 3 la oyes solo en la zona aguda, es por eso. El material disponible no permite verificar más detalles en el Manual de instrucciones; 📘 <strong>Reference Manual</strong> para ajustes finos.</div>
+      <p><strong>Encontrar el punto de división de oído:</strong> con la configuración de <strong>división</strong> (LEFT + RIGHT 1), empieza en la tecla más grave y sube de tecla en tecla. <strong>La última tecla en la que oyes el bajo es el punto de división.</strong></p>
+      <p><strong>Opcional — cambiar el punto de división</strong> (p. 45-46):</p>
+      <ol class="steps">
+        <li><code>[MENU]</code> → <strong>[Split &amp; Fingering]</strong>.</li>
+        <li>Mantén pulsado <strong>[Style+Left]</strong> en la pantalla y, a la vez, <strong>pulsa la tecla del teclado</strong> que quieras como nueva división. (Así se mueven a la vez el punto de la zona de acordes y el de la parte LEFT, que por defecto están en la misma nota.)</li>
+      </ol>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <p>Prepara las tres configuraciones de la tabla, una tras otra. En cada una toca una escala corta (Do–Re–Mi–Fa–Sol) con la mano derecha y unas notas graves con la izquierda. Después, activa <code>[LEFT HOLD]</code> en la división y toca una nota grave; suéltala y escucha cómo sigue sonando.</p>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <ul>
+        <li>Una voz: suena lo mismo a lo largo de todo el teclado.</li>
+        <li>Capa: cada nota suena mezclando piano y cuerdas.</li>
+        <li>División: graves con el bajo, agudos con el piano.</li>
+        <li>Con <code>[LEFT HOLD]</code>, la nota grave se sostiene después de soltarla.</li>
+      </ul>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Quieres <strong>piano con cuerdas por encima</strong> (capa) y <strong>nada</strong> en la mano izquierda. ¿Qué botones <code>PART ON/OFF</code> dejas activados?</p>
+      <details class="sol"><summary>Ver solución</summary><p><code>[RIGHT 1]</code> (piano) y <code>[RIGHT 2]</code> (cuerdas) activados; <code>[LEFT]</code> y <code>[RIGHT 3]</code> apagados.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 7 -->
+<section id="l7" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 7</span><h2>Elegir un estilo y hacerlo sonar</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>A elegir un <strong>estilo</strong> (ritmo + banda automática) y a arrancarlo y pararlo.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span>
+      <ul>
+        <li><strong>Estilo (Style):</strong> un patrón de <strong>acompañamiento automático</strong> y ritmo de un género musical (pop, jazz, etc.). Un estilo se compone de varias partes o "canales" (batería, bajo, acordes…). Con él, el teclado suena como una banda entera aunque toques solo (p. 14, 41).</li>
+        <li><strong>Categoría de estilo:</strong> los 10 botones <code>STYLE</code> de la izquierda (POP, ROCK&amp;RETRO POP, DANCE, R&amp;B&amp;OLDIES, JAZZ&amp;EASY LISTENING, COUNTRY&amp;BALLROOM, MOVIE&amp;SHOW, ENTERTAINER, LATIN&amp;WORLD, EXPANSION/USER).</li>
+        <li><strong>Tipos especiales:</strong> el tipo aparece en la esquina superior izquierda del nombre del estilo (p. 41).
+          <ul>
+            <li><strong>Session:</strong> más realista, pero no siempre armónicamente correcto con cualquier canción.</li>
+            <li><strong>Free Play:</strong> sin tempo estricto (<em>rubato</em>).</li>
+          </ul>
+          Para aprender, elige estilos <strong>sin</strong> la etiqueta <em>Free Play</em>.
+        </li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span><p>(p. 40-41)</p>
+      <ol class="steps">
+        <li>Pulsa un botón de categoría de <code>STYLE</code>, por ejemplo <code>[POP]</code>. Se abre la pantalla de selección de estilos.</li>
+        <li>Toca el estilo que quieras. El ejemplo del manual es <strong>[Pop]</strong> → <strong>[20sDisco]</strong>; si no lo ves, elige cualquier otro.</li>
+        <li>Comprueba que <code>[ACMP]</code> está <strong>apagado</strong> (luz apagada). En esta lección oiremos solo el ritmo.</li>
+        <li>Pulsa <code>[START/STOP]</code>: empieza a sonar el ritmo del estilo. Vuelve a pulsarlo para pararlo.</li>
+      </ol>
+      <p>También puedes abrir la selección de estilos tocando el <strong>nombre del estilo</strong> en la pantalla de inicio (p. 26).</p>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <p>Prueba <strong>cinco estilos</strong> de <strong>tres categorías</strong> distintas. Para cada uno: arranca, escucha unos segundos, para. Apunta el nombre de dos que te gusten; los usarás en el resto del tutorial.</p>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>Al pulsar <code>[START/STOP]</code> suena una base rítmica (batería/percusión). En el área de estilos de la pantalla de inicio ves el nombre del estilo. Al pulsarlo de nuevo, se detiene.</p>
+      <div class="callout co-info"><span class="co-t">ℹ️</span> Si un estilo no suena nada al arrancar, puede que su canal de ritmo no tenga datos. En ese caso, activa <code>[ACMP]</code> y toca en la zona izquierda del teclado para que suene el acompañamiento (p. 118).</div>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Arranca un estilo de la categoría <strong>DANCE</strong> sin usar la pantalla de inicio.</p>
+      <details class="sol"><summary>Ver solución</summary><p>Pulsar <code>STYLE [DANCE]</code>, tocar un estilo en la pantalla y pulsar <code>[START/STOP]</code>.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 8 -->
+<section id="l8" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 8</span><h2>Acompañamiento automático: acordes con la izquierda, melodía con la derecha</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>La técnica central del teclado: <strong>acordes con la mano izquierda</strong> (que dirigen la banda) y <strong>melodía con la derecha</strong>.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span>
+      <ul>
+        <li><strong>ACMP (Auto Accompaniment, acompañamiento automático):</strong> cuando lo activas, además del ritmo suena la banda (bajo, acordes…) siguiendo los acordes que tocas.</li>
+        <li><strong>Sección de acordes:</strong> la zona de la mano izquierda del teclado, a la izquierda del punto de división (p. 40). El teclado <strong>detecta</strong> el acorde que tocas ahí y adapta la banda.</li>
+        <li><strong>Acorde:</strong> varias notas sonando a la vez. Se nombran con letras: <strong>C = Do, D = Re, E = Mi, F = Fa, G = Sol, A = La, B = Si</strong>. Una <strong>"m"</strong> detrás indica acorde menor (por ejemplo, <strong>Am</strong> = La menor). <em>(Esto es teoría musical general, no está explicado en el manual; la pantalla usa estas letras.)</em></li>
+        <li><strong>Tipo de digitado (Fingering Type):</strong> la forma de tocar acordes. Con <strong>Single Finger</strong> se tocan acordes con <strong>uno, dos o tres dedos</strong> (p. 42):
+          <ul>
+            <li><strong>Mayor:</strong> solo la tecla de la nota fundamental (ej.: C = la tecla Do).</li>
+            <li><strong>Menor:</strong> la fundamental <strong>+ la tecla negra que está a su izquierda</strong> (ej.: Am = La + la tecla negra que queda justo a su izquierda).</li>
+            <li><strong>Séptima:</strong> la fundamental + la tecla blanca que está a su izquierda.</li>
+            <li><strong>Séptima menor:</strong> la fundamental + las teclas blanca y negra que están a su izquierda.</li>
+          </ul>
+        </li>
+        <li><strong>SYNC START:</strong> deja el estilo "en espera" y arranca solo cuando tocas un acorde (p. 59).</li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span>
+      <p><strong>A) Poner Single Finger</strong> (p. 42)</p>
+      <ol class="steps">
+        <li><code>[MENU]</code> → <strong>[Split &amp; Fingering]</strong>.</li>
+        <li>Toca la fila <strong>Fingering Type</strong> para seleccionarla y cámbiala a <strong>Single Finger</strong> con el dial de datos o con <code>[DEC]</code>/<code>[INC]</code> (p. 31).</li>
+        <li>Sal con <code>[EXIT]</code>.</li>
+      </ol>
+      <div class="callout co-info"><span class="co-t">ℹ️</span> En el dibujo del manual (p. 45) el tipo aparece como <em>Multi Finger</em>, un tipo que el Manual de instrucciones <strong>no describe</strong>; por eso usamos Single Finger. Cómo se ve exactamente la lista de tipos: <em>El material disponible no permite verificar este procedimiento</em>. 📘 <strong>Reference Manual</strong> para los otros tipos.</div>
+      <p><strong>B) Preparar la banda</strong></p>
+      <ol class="steps">
+        <li>Elige un estilo (lección 7).</li>
+        <li>Pulsa <code>[ACMP]</code> para <strong>activarlo</strong>.</li>
+        <li>Pulsa <code>[SYNC START]</code> (estilo en espera).</li>
+      </ol>
+      <p><strong>C) Tocar</strong></p>
+      <ol class="steps">
+        <li>Con la mano izquierda, toca un acorde en la <strong>zona baja</strong> del teclado (usa la octava más grave, que seguro está a la izquierda de la división). El estilo <strong>arranca</strong>.</li>
+        <li>Con la derecha, toca notas <strong>blancas</strong> de la zona alta. Con estos acordes, las teclas blancas encajan bien; si alguna nota suena menos redonda, es normal: pasa a otra.</li>
+        <li>Para parar: <code>[START/STOP]</code>.</li>
+      </ol>
+      <p><strong>Tus cuatro acordes de trabajo (en la octava más grave):</strong></p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Acorde</th><th>Cómo tocarlo (Single Finger)</th></tr></thead>
+          <tbody>
+            <tr><td><strong>C</strong> (Do)</td><td>Solo la tecla <strong>Do</strong></td></tr>
+            <tr><td><strong>F</strong> (Fa)</td><td>Solo la tecla <strong>Fa</strong></td></tr>
+            <tr><td><strong>G</strong> (Sol)</td><td>Solo la tecla <strong>Sol</strong></td></tr>
+            <tr><td><strong>Am</strong> (La menor)</td><td>La tecla <strong>La</strong> + la tecla negra que está justo a su izquierda</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>En el <strong>área de estilos</strong> de la pantalla de inicio aparece el nombre del acorde que el teclado detecta (p. 26). <strong>Úsalo para comprobar</strong> que lo estás tocando bien.</p>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <p>Toca la secuencia <strong>C – Am – F – G</strong>, un acorde por cada cuatro pulsos (cuenta "1-2-3-4" en voz alta para cada uno). Con la derecha, toca notas largas y sencillas de la escala de Do (solo teclas blancas). Repite cuatro veces.</p>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <ul>
+        <li>El estilo empieza al tocar el primer acorde.</li>
+        <li>Al cambiar de acorde, <strong>cambia el bajo y los acordes</strong> de la banda.</li>
+        <li>La pantalla muestra C, Am, F, G según lo que toques.</li>
+        <li>Si solo oyes el ritmo, revisa que <code>[ACMP]</code> esté activado y que estés tocando en la zona de acordes (p. 118).</li>
+      </ul>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Con el estilo sonando, quieres <strong>pararlo</strong> y dejarlo listo para <strong>arrancar cuando toques un acorde</strong>, con un solo botón.</p>
+      <details class="sol"><summary>Ver solución</summary><p>Pulsar <code>[SYNC START]</code> durante la reproducción: detiene el estilo y lo deja en espera (p. 59).</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 9 -->
+<section id="l9" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 9</span><h2>INTRO, MAIN, FILL, BREAK y ENDING</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>A dar forma a una canción con las <strong>secciones</strong> del estilo: empezar, cambiar de intensidad y terminar.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span><p>(p. 59-61)</p>
+      <ul>
+        <li><strong>INTRO [I]–[III]:</strong> tres introducciones. Se pulsan <strong>antes</strong> de arrancar. Al terminar, el estilo pasa solo a la sección principal.</li>
+        <li><strong>MAIN VARIATION [A]–[D]:</strong> cuatro patrones principales que se repiten sin fin. Piensa en ellos como "estrofa", "estribillo"… (sugerencia orientativa, no del manual).</li>
+        <li><strong>FILL IN (relleno):</strong> un pequeño "redoble" que anima el paso de una sección a otra.</li>
+        <li><strong>BREAK:</strong> una pausa rítmica de un compás; luego vuelve a la sección principal.</li>
+        <li><strong>ENDING/rit. [I]–[III]:</strong> tres finales.</li>
+        <li><strong>AUTO FILL IN:</strong> al activarlo, cada vez que cambias de MAIN, el relleno suena automáticamente.</li>
+        <li><strong>Compás:</strong> cada "bloque" del tiempo musical; en este tutorial contamos 4 pulsos por compás.</li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span>
+      <p>Prepara: estilo elegido, <code>[ACMP]</code> activado, <code>[SYNC START]</code> activado.</p>
+      <ol class="steps">
+        <li>Pulsa <code>INTRO [I]</code>. Toca un acorde: suena la introducción y después el estilo pasa <strong>automáticamente</strong> a la sección principal.</li>
+        <li>Pulsa <code>MAIN VARIATION [B]</code> para cambiar de sección principal. La sección elegida se ilumina.</li>
+        <li><strong>Relleno manual:</strong> pulsa <strong>otra vez</strong> la sección principal ya seleccionada. Suena un relleno y vuelve a esa misma sección.</li>
+        <li><strong>Relleno automático:</strong> activa <code>[AUTO FILL IN]</code>; al cambiar de MAIN, el relleno suena solo.</li>
+        <li><code>[BREAK]</code>: pausa de un compás.</li>
+        <li><strong>Final:</strong> con el estilo sonando, pulsa <code>ENDING [I]</code>. Suena el final y el estilo <strong>se detiene solo</strong>. Si pulsas <strong>de nuevo</strong> <code>ENDING [I]</code> mientras suena el final, este <strong>se va ralentizando</strong> (<em>ritardando</em>).</li>
+      </ol>
+      <p><strong>Luces de los botones de sección:</strong></p>
+      <ul>
+        <li><strong>Naranja:</strong> sección elegida.</li>
+        <li><strong>Naranja parpadeando:</strong> será la siguiente en sonar (también parpadean los MAIN cuando suena un relleno).</li>
+        <li><strong>Azul:</strong> tiene datos pero no está elegida.</li>
+        <li><strong>Apagada:</strong> esa sección no tiene datos y no se puede usar. (p. 61)</li>
+      </ul>
+      <div class="callout co-warn"><span class="co-t">⚠️ El manual se contradice en un detalle</span> En la p. 60 dice que el MAIN elegido se ilumina en <strong>rojo</strong>; en la p. 61 dice <strong>naranja</strong>. Fíjate en lo que veas en tu teclado: la sección elegida es la que está encendida en un color distinto al azul. El momento exacto del cambio de sección se puede configurar (📘 <strong>Reference Manual</strong>, "Sincronización de cambio de sección de estilos"). El material disponible no permite verificar aquí en qué instante exacto cambia por defecto.</div>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO — "MINI CANCIÓN"</span>
+      <p>Con los acordes <strong>C – Am – F – G</strong> repetidos, haz este recorrido:</p>
+      <p><code>INTRO [I]</code> → toca un acorde y deja sonar la introducción → <code>MAIN [A]</code> (unas vueltas) → relleno → <code>MAIN [B]</code> (unas vueltas) → <code>[BREAK]</code> → <code>MAIN [A]</code> → <code>ENDING [I]</code>.</p>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>La banda arranca con introducción, cambia de intensidad al cambiar de MAIN, hace un silencio con el BREAK y termina sola con el ENDING.</p>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Estás en MAIN A, quieres un relleno <strong>sin cambiar de sección</strong>, y luego terminar con un final que se ralentice. ¿Qué pulsas, en orden?</p>
+      <details class="sol"><summary>Ver solución</summary><p>Pulsar <strong><code>MAIN [A]</code></strong> otra vez (relleno y vuelve a A). Después <code>ENDING [I]</code> (o II/III) y, <strong>mientras suena</strong>, pulsar el mismo <code>ENDING</code> otra vez.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 10 -->
+<section id="l10" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 10</span><h2>Cambiar el tempo</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>A hacer que el estilo suene más rápido o más lento.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span>
+      <ul>
+        <li><strong>Tempo:</strong> la velocidad de la música. Se mide en <strong>negras por minuto</strong> (también llamado <em>BPM</em>, "pulsos por minuto"). El teclado admite de <strong>5 a 500</strong> (p. 42).</li>
+        <li>Los botones <code>TEMPO</code> cambian el tempo del <strong>estilo</strong>, de las canciones MIDI y del <strong>metrónomo</strong> (p. 42).</li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span><p>(p. 42, 60)</p>
+      <p><strong>Con los botones TEMPO:</strong></p>
+      <ol class="steps">
+        <li>Pulsa <code>TEMPO [−]</code> o <code>TEMPO [+]</code>. Aparece una ventana con el tempo.</li>
+        <li>Mantén el botón pulsado para que cambie de forma continua.</li>
+        <li>Pulsa <strong><code>TEMPO [−]</code> y <code>[+]</code> a la vez</strong> para volver al tempo por defecto del último estilo o canción.</li>
+      </ol>
+      <p><strong>Con el dial:</strong> en la pantalla de inicio, <strong>gira el dial de datos</strong> para abrir la ventana de tempo y ajustarlo (p. 27).</p>
+      <p><strong>Con el botón <code>[RESET/TAP TEMPO]</code> ("marcar el tempo con el dedo"):</strong></p>
+      <ul>
+        <li><strong>Con el estilo parado:</strong> pulsa el botón <strong>cuatro veces</strong> (si el compás es 4/4) al ritmo que quieras: el ritmo arranca a ese tempo.</li>
+        <li><strong>Con el estilo sonando:</strong> pulsa <strong>dos veces</strong> al tempo deseado para cambiarlo.</li>
+        <li>Una pulsación <strong>suelta</strong> durante un estilo lo <strong>"rebobina"</strong> al inicio de la sección (<em>Restablecimiento de sección de estilo</em>).</li>
+        <li>Ese comportamiento se puede ajustar en <code>[MENU]</code> → <strong>[Metronome]</strong> → <strong>[Tap Tempo]</strong> (📘 <strong>Reference Manual</strong>).</li>
+      </ul>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <p>Arranca tu estilo con acordes C – Am – F – G. Baja el tempo unos 20 puntos con <code>TEMPO [−]</code>, toca tranquilo; súbelo unos 20 con <code>TEMPO [+]</code>. Vuelve al tempo original con los dos botones a la vez. Después prueba el tap tempo.</p>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>El estilo se acelera o se ralentiza al instante, sin pararse. La pantalla de inicio muestra el valor del tempo (arriba a la izquierda, junto al símbolo de la negra).</p>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Has cambiado el tempo sin querer y no recuerdas el original. Vuelve al tempo original <strong>en un solo gesto</strong>.</p>
+      <details class="sol"><summary>Ver solución</summary><p>Pulsar <strong>a la vez</strong> <code>TEMPO [−]</code> y <code>TEMPO [+]</code> (p. 42).</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 11 -->
+<section id="l11" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 11</span><h2>One Touch Setting (OTS)</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>A dejar que el teclado prepare <strong>por ti</strong> los sonidos que mejor van con cada estilo.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span>
+      <ul>
+        <li><strong>One Touch Setting (OTS, "ajuste de un solo toque"):</strong> con <strong>un botón</strong>, el teclado carga las voces, efectos y otros ajustes más adecuados para el estilo elegido (p. 43).</li>
+        <li>Cada estilo tiene <strong>cuatro</strong> OTS: <code>ONE TOUCH SETTING [1]</code>–<code>[4]</code>.</li>
+        <li>Al pulsar un OTS, el teclado <strong>activa solo</strong> <code>[ACMP]</code> y <code>[SYNC START]</code>: ya puedes empezar a tocar acordes y arranca el estilo (p. 43).</li>
+        <li><strong>OTS LINK:</strong> con este botón activado, cada vez que cambias de sección <strong>MAIN A, B, C, D</strong>, el OTS cambia solo a <strong>1, 2, 3, 4</strong> respectivamente (p. 61).</li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span>
+      <ol class="steps">
+        <li>Elige un estilo (lección 7).</li>
+        <li>Pulsa <code>ONE TOUCH SETTING [1]</code>. Mira la pantalla de inicio: las voces de las partes han cambiado, y <code>[ACMP]</code> y <code>[SYNC START]</code> están activos.</li>
+        <li>Toca un acorde con la mano izquierda: el estilo arranca.</li>
+        <li>Prueba <code>[2]</code>, <code>[3]</code> y <code>[4]</code>; cada uno da un carácter distinto.</li>
+        <li><strong>Ver qué contiene cada OTS:</strong> en la pantalla de selección de estilos, toca el icono <strong>(Menu)</strong> y luego <strong>[Style Information]</strong>. Verás las voces asignadas a los OTS 1–4. También puedes tocar los números 1–4 de esa ventana para cargarlos (p. 43).</li>
+        <li><strong>OTS LINK:</strong> pulsa <code>[OTS LINK]</code> (a la izquierda de <code>INTRO</code>, encima de <code>[AUTO FILL IN]</code>). Ahora, al pulsar <code>MAIN [A]</code>, <code>[B]</code>, <code>[C]</code> o <code>[D]</code>, cambia también el OTS correspondiente.</li>
+      </ol>
+      <div class="callout co-warn"><span class="co-t">⚠️</span> Al pulsar un OTS, <strong>cambian las voces</strong> que habías puesto en tus partes. Si quieres conservar las tuyas, cámbialas <strong>después</strong> de pulsar el OTS.</div>
+      <div class="callout co-info"><span class="co-t">ℹ️ Más adelante</span> Puedes guardar <strong>tus propios</strong> ajustes en los botones OTS (p. 55). Ojo: ese ajuste se pierde si cambias de estilo o apagas sin guardar. No lo necesitas para este tutorial. 📘 <strong>Reference Manual:</strong> el momento exacto en que cambia el OTS al cambiar de MAIN se puede ajustar en <code>[MENU]</code> → <strong>[Style Setting]</strong> → <strong>[Setting]</strong> (p. 61).</div>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <p>Con C – Am – F – G y tu estilo favorito, prueba los cuatro OTS (uno por cada vuelta de la progresión). Elige tus dos favoritos. Después activa <code>[OTS LINK]</code> y recorre <code>MAIN [A]</code> → <code>[B]</code> → <code>[C]</code> → <code>[D]</code> escuchando cómo cambian los sonidos.</p>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>Los cuatro OTS suenan diferentes (voces distintas). Con OTS LINK activado, cambiar de MAIN cambia también los sonidos, y la pantalla de inicio muestra las nuevas voces.</p>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Quieres que, al pulsar <code>MAIN [C]</code>, se cargue automáticamente el OTS 3. ¿Qué haces?</p>
+      <details class="sol"><summary>Ver solución</summary><p>Activar <code>[OTS LINK]</code>. Con él, MAIN A/B/C/D equivalen a OTS 1/2/3/4 (p. 61).</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 12 -->
+<section id="l12" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 12</span><h2>Multi Pad</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>A añadir frases musicales cortas ya grabadas (adornos, ritmos, melodías) con solo pulsar un botón.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span><p>(p. 14, 54, 66-67)</p>
+      <ul>
+        <li><strong>Multi Pad:</strong> cuatro botones que lanzan <strong>frases cortas</strong> rítmicas o melódicas grabadas. Sirven para dar impacto y variedad.</li>
+        <li><strong>Banco:</strong> un grupo de cuatro frases. El teclado trae muchos bancos de distintos géneros.</li>
+        <li><strong>Dos tipos de frase:</strong> unas suenan <strong>una vez</strong> y paran; otras se repiten en <strong>bucle</strong>.</li>
+        <li><strong>Chord Match (correspondencia de acordes):</strong> si <code>[ACMP]</code> o la parte LEFT están activados, las frases se <strong>adaptan al acorde</strong> que tocas en la zona de acordes. A algunos Multi Pad no les afecta.</li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span>
+      <p><strong>Elegir un banco</strong></p>
+      <ol class="steps">
+        <li>Pulsa <code>MULTI PAD CONTROL [SELECT]</code> (o toca el nombre del Multi Pad en la pantalla de inicio). Se abre la selección de bancos.</li>
+        <li>Toca un banco.</li>
+      </ol>
+      <p><strong>Tocar los pads</strong></p>
+      <ol class="steps">
+        <li>Pulsa <code>MULTI PAD CONTROL [1]</code>, <code>[2]</code>, <code>[3]</code>, <code>[4]</code>: cada uno lanza su frase. Puedes tocar <strong>hasta cuatro a la vez</strong>.</li>
+        <li>Si pulsas un pad mientras suena, <strong>vuelve a empezar</strong> desde el principio.</li>
+        <li>Para parar todos: <code>[STOP]</code>. Para parar <strong>uno solo</strong>: mantén <code>[STOP]</code> y pulsa ese pad.</li>
+      </ol>
+      <p><strong>Luces de los pads:</strong></p>
+      <ul>
+        <li><strong>Azul:</strong> el pad tiene frase.</li>
+        <li><strong>Naranja:</strong> está sonando.</li>
+        <li><strong>Parpadeando:</strong> en espera (ver "inicio sincronizado").</li>
+        <li><strong>Apagada:</strong> no tiene frase.</li>
+      </ul>
+      <p><strong>Con un estilo sonando:</strong></p>
+      <ul>
+        <li>Si el estilo (o una canción MIDI) suena, el pad <strong>empieza al principio del siguiente compás</strong>. Si todo está parado, empieza <strong>al instante</strong> (p. 66).</li>
+        <li>Al pulsar <code>[START/STOP]</code> del estilo, los pads <strong>también se detienen</strong> (p. 66).</li>
+        <li>Para oír el Chord Match: toca un acorde en la zona de acordes <strong>antes o después</strong> de pulsar el pad (p. 66).</li>
+      </ul>
+      <p><strong>Inicio sincronizado de un pad (opcional)</strong></p>
+      <ol class="steps">
+        <li>Mantén pulsado <code>MULTI PAD CONTROL [SELECT]</code> y pulsa el/los pads <code>[1]</code>–<code>[4]</code> que quieras. Parpadean: están en espera.</li>
+        <li>Para lanzarlos: si <code>[ACMP]</code> está <strong>apagado</strong>, pulsa cualquier tecla o arranca un estilo. Si <code>[ACMP]</code> está <strong>activado</strong>, toca un acorde en la zona de acordes o arranca un estilo.</li>
+        <li>Para cancelar la espera: repite el gesto o pulsa <code>[STOP]</code> (p. 67).</li>
+      </ol>
+      <div class="callout co-warn"><span class="co-t">⚠️ El manual dice dos colores para "en espera"</span> <em>Naranja intermitente</em> (p. 66) y <em>rojo intermitente</em> (p. 67). Si tu pad parpadea, en cualquiera de los dos colores, está en espera. 📘 <strong>Reference Manual:</strong> crear tus propios Multi Pad (grabar frases, editarlas o enlazar archivos de audio). Resumen en p. 54.</div>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <ol class="steps">
+        <li>Elige un banco y prueba los cuatro pads <strong>con el estilo parado</strong> (escucha cuáles son de una vez y cuáles en bucle).</li>
+        <li>Arranca tu estilo con C – Am – F – G. Lanza el pad <code>[1]</code> al comenzar una vuelta y observa que entra <strong>en el siguiente compás</strong>. Cambia el acorde y fíjate si la frase se adapta.</li>
+        <li>Para todos los pads con <code>[STOP]</code> sin parar el estilo.</li>
+      </ol>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>Cada pad suena su frase; con el estilo sonando, los pads entran al inicio del compás siguiente; <code>[STOP]</code> los silencia sin parar el estilo.</p>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Deja el pad <code>[2]</code> <strong>en espera</strong> para que empiece <strong>cuando toques el primer acorde</strong> (con <code>[ACMP]</code> activado).</p>
+      <details class="sol"><summary>Ver solución</summary><p>Mantener <code>[SELECT]</code> y pulsar <code>[2]</code> (parpadea); después tocar un acorde en la zona de acordes.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 13 -->
+<section id="l13" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 13</span><h2>Transposición y octavas</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>A cambiar la <strong>altura</strong> de todo lo que suena (más agudo o más grave) sin cambiar lo que tocas.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span>
+      <ul>
+        <li><strong>Semitono:</strong> la distancia entre dos teclas contiguas (blancas o negras).</li>
+        <li><strong>Transposición (<code>TRANSPOSE</code>):</strong> sube o baja <strong>todo el sonido</strong> por semitonos, de <strong>−12 a +12</strong> (p. 56). Es útil para adaptar una canción a tu voz sin cambiar tus dedos.</li>
+        <li><strong>Octava:</strong> la distancia entre una nota y la misma nota más aguda o más grave (por ejemplo, de un Do al siguiente Do).</li>
+        <li><strong><code>UPPER OCTAVE</code>:</strong> sube o baja <strong>una octava</strong> las voces de la mano derecha (<strong>RIGHT 1–3</strong>) (p. 56).</li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span><p>(p. 56)</p>
+      <p><strong>Transponer en semitonos</strong></p>
+      <ol class="steps">
+        <li>Pulsa <code>TRANSPOSE [+]</code>. Aparece una ventana de transposición. Toca un acorde: suena <strong>un semitono más agudo</strong>.</li>
+        <li>Pulsa otra vez para subir más. <code>TRANSPOSE [−]</code> baja.</li>
+        <li>Para volver a <strong>0</strong> de golpe: pulsa <code>[−]</code> y <code>[+]</code> a la vez.</li>
+        <li>Los botones transponen el <strong>tono general del instrumento</strong> (<em>Master</em>: teclado, estilo, canción MIDI…). Tocando la ventana emergente varias veces puedes cambiar la parte que se transpone: <em>Master</em>, <em>Keyboard</em> o <em>Song</em> (p. 56).</li>
+        <li>Los sonidos de batería y de efectos especiales <strong>no</strong> se transponen (p. 56).</li>
+      </ol>
+      <p><strong>Cambiar de octava</strong></p>
+      <ol class="steps">
+        <li>Pulsa <code>UPPER OCTAVE [+]</code>: la mano derecha suena una octava más aguda. <code>[−]</code> la baja.</li>
+        <li>Para volver a 0: pulsa <code>[−]</code> y <code>[+]</code> a la vez.</li>
+      </ol>
+      <p>La pantalla de inicio muestra los valores actuales de octava y transposición en su zona de información (p. 27).</p>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <p>Con tu estilo y C – Am – F – G:</p>
+      <ol class="steps">
+        <li>Sube <code>TRANSPOSE</code> +2 y toca la progresión con los mismos dedos: suena en otra tonalidad.</li>
+        <li>Prueba −3.</li>
+        <li>Vuelve a 0.</li>
+        <li>Baja <code>UPPER OCTAVE</code> una octava, toca una melodía, y vuelve a 0.</li>
+      </ol>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>Todo suena más agudo o más grave y, al pulsar los dos botones a la vez, vuelve a su tono. Los valores se ven en la pantalla de inicio.</p>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Quieres que <strong>solo la mano derecha</strong> suene una octava más grave, sin mover la izquierda ni el estilo.</p>
+      <details class="sol"><summary>Ver solución</summary><p>Pulsar <code>UPPER OCTAVE [−]</code> una vez (afecta solo a RIGHT 1–3).</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 14 -->
+<section id="l14" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 14</span><h2>Metrónomo</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>A usar el metrónomo (el "clic" regular) para practicar a tempo.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span>
+      <p>El <strong>metrónomo</strong> emite un clic como guía de tempo. Sirve para practicar o para comprobar cómo suena un tempo concreto (p. 37). Su velocidad se controla con los botones <code>TEMPO [−]</code>/<code>[+]</code> (p. 42).</p>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span><p>(p. 37)</p>
+      <ol class="steps">
+        <li>Pulsa <code>[MENU]</code> → <strong>[Metronome]</strong>.</li>
+        <li>Toca el <strong>icono</strong> de activar/desactivar metrónomo. Empieza a sonar el clic.</li>
+        <li>Cambia la velocidad con <code>TEMPO [−]</code>/<code>[+]</code>.</li>
+        <li>Para apagarlo, vuelve a tocar el icono.</li>
+      </ol>
+      <div class="callout co-info"><span class="co-t">ℹ️</span> 📘 <strong>Reference Manual:</strong> los ajustes detallados del metrónomo ("Metronome Settings"). El manual describe el metrónomo sobre todo para practicar o grabar <strong>sin estilo</strong>. No describe su uso simultáneo con la reproducción de un estilo: <em>El material disponible no permite verificar este procedimiento</em>.</div>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <p>Con el estilo <strong>parado</strong>: pon el tempo en un valor bajo (por ejemplo, 70). Con el metrónomo sonando, toca <strong>C, Am, F, G</strong> con la mano izquierda, <strong>un acorde por cada cuatro clics</strong>. Sube el tempo de 5 en 5 cada vez que salga limpio.</p>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>Oyes un clic regular; tus acordes caen en el clic. Al subir el tempo, el clic acelera.</p>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Activa el metrónomo a un tempo de 90 y apágalo después.</p>
+      <details class="sol"><summary>Ver solución</summary><p><code>[MENU]</code> → <strong>[Metronome]</strong> → tocar el icono (on); ajustar a 90 con <code>TEMPO [−]/[+]</code>; volver a tocar el icono (off).</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 15 -->
+<section id="l15" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 15</span><h2>Harmony / Arpeggio</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>A hacer que tu mano derecha suene <strong>más rica</strong> con un efecto automático.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span><p>(p. 51-53)</p>
+      <ul>
+        <li><strong>Keyboard Harmony (armonía de teclado):</strong> añade a la nota que tocas con la derecha <strong>otras notas</strong> (dúo, trío…) o efectos de interpretación como <strong>eco</strong>, <strong>trémolo</strong> o <strong>trino</strong>. Se aplica a las partes <strong>RIGHT 1–3</strong>.</li>
+        <li><strong>Arpeggio (arpegio):</strong> en lugar de sonar el acorde entero de golpe, suenan sus notas <strong>una tras otra</strong> (un "acorde quebrado"), formando una frase rítmica. Ejemplo del manual: tocar <strong>Do–Mi–Sol</strong> activa frases interesantes.</li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span>
+      <p><strong>A) Armonía o eco</strong></p>
+      <ol class="steps">
+        <li><code>[MENU]</code> → <strong>[Kbd Harmony/Arp]</strong> (o pulsa <code>[HARMONY/ARPEGGIO]</code>).</li>
+        <li>Pon <strong>Keyboard Harmony/Arpeggio</strong> en <strong>On</strong>.</li>
+        <li>Toca la categoría <strong>Harmony</strong> o <strong>Echo</strong>.</li>
+        <li>Toca el tipo que quieras (por ejemplo, <strong>Standard Duet</strong>).</li>
+        <li>Toca una melodía con la mano derecha.</li>
+        <li>Para quitar el efecto: pulsa <code>[HARMONY/ARPEGGIO]</code>.</li>
+      </ol>
+      <p><strong>Notas del manual:</strong></p>
+      <ul>
+        <li>Los tipos <strong>Harmony</strong> (de <em>Standard Duet</em> a <em>Strum</em>) se basan en <strong>los acordes</strong> que toques en la zona izquierda. Con <code>[ACMP]</code> activo, esa zona es la zona de acordes. (Los ajustes "1+5" y "Octave" <strong>no</strong> dependen del acorde.)</li>
+        <li><strong>Echo, Tremolo y Trill</strong> siguen el tempo y no dependen de ACMP ni de LEFT. <strong>Trill</strong> solo suena si mantienes dos notas y las alternas.</li>
+        <li><strong>Multi Assign:</strong> reparte automáticamente las notas de un acorde de la mano derecha entre RIGHT 1, 2 y 3.</li>
+      </ul>
+      <p><strong>B) Arpegio</strong></p>
+      <ol class="steps">
+        <li>Igual que arriba, pero en el paso 3 elige una categoría <strong>distinta de "Harmony" y "Echo"</strong>.</li>
+        <li>Toca el tipo de arpegio que quieras.</li>
+        <li>Toca una o varias notas (por ejemplo, <strong>Do–Mi–Sol</strong> juntas). Suena una frase distinta según las notas.</li>
+        <li>Para quitarlo: <code>[HARMONY/ARPEGGIO]</code>.</li>
+      </ol>
+      <div class="callout co-warn"><span class="co-t">⚠️ Trampa</span> Cuando eliges otra voz para <strong>RIGHT 1</strong>, el tipo de armonía/arpegio se cambia automáticamente al que esa voz trae memorizado (p. 51). Si de repente cambia el efecto, es por eso. 📘 <strong>Reference Manual:</strong> ajustes detallados de cada tipo (icono de ajustes detallados), cuantización de arpegio y arpegio sostenido con pedal (pp. 51-53).</div>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <ol class="steps">
+        <li>Con estilo y <code>[ACMP]</code>: activa <strong>Standard Duet</strong> y toca una melodía sencilla con la derecha mientras la izquierda hace C – Am – F – G.</li>
+        <li>Cambia a un tipo de <strong>Echo</strong>.</li>
+        <li>Cambia a una categoría de <strong>arpegio</strong> y toca <strong>Do–Mi–Sol</strong> con la derecha; mantenlas.</li>
+        <li>Apaga el efecto.</li>
+      </ol>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>Con armonía, cada nota tuya suena acompañada de otra(s); con eco, se repite; con arpegio, un acorde mantenido se convierte en una frase.</p>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>El arpegio te está molestando y quieres tocar normal, con un solo gesto.</p>
+      <details class="sol"><summary>Ver solución</summary><p>Pulsar <code>[HARMONY/ARPEGGIO]</code> para apagarlo.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 16 -->
+<section id="l16" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 16</span><h2>El joystick</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>A dar <strong>expresión</strong> a las notas con el joystick, el pequeño mando de la izquierda del teclado.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span><p>(p. 63)</p>
+      <ul>
+        <li><strong>Joystick:</strong> mando que se mueve en dos ejes. Al soltarlo, vuelve solo al centro.
+          <ul>
+            <li><strong>Eje X (izquierda–derecha): inflexión del tono (<em>pitch bend</em>).</strong> Moverlo a la derecha sube el tono; a la izquierda, lo baja. Por defecto actúa en todas las partes (RIGHT 1–3 y LEFT).</li>
+            <li><strong>Eje Y (arriba–abajo): modulación.</strong> Aplica un <strong>vibrato</strong> (una pequeña oscilación del tono). Por defecto actúa en RIGHT 1–3.</li>
+          </ul>
+        </li>
+        <li><strong><code>[JOYSTICK HOLD]</code>:</strong> retiene el valor actual del joystick aunque lo sueltes. Por defecto retiene solo la <strong>modulación</strong> (eje Y); la inflexión del tono no se retiene.</li>
+        <li><strong><code>[SUSTAIN]</code>:</strong> hace que las notas de la mano derecha (RIGHT 1–3) <strong>duren más</strong> al soltar las teclas.</li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span>
+      <ol class="steps">
+        <li>Elige una voz que se preste (por ejemplo, un instrumento de cuerdas o un viento).</li>
+        <li>Mantén una nota con la derecha y mueve el joystick <strong>a la derecha</strong> y luego <strong>a la izquierda</strong>: oyes el tono subir y bajar.</li>
+        <li>Mantén otra nota y mueve el joystick <strong>hacia arriba</strong> (+Y en el manual) y luego <strong>hacia abajo</strong> (−Y). El manual solo dice "eje Y = modulación" y dibuja +Y arriba; <strong>comprueba con tu voz cuál de las dos direcciones te da el vibrato</strong>.</li>
+        <li><strong>Retener:</strong> pulsa <code>[JOYSTICK HOLD]</code>, empuja el joystick en el eje Y y suéltalo: el vibrato se mantiene. Vuelve a pulsar <code>[JOYSTICK HOLD]</code> para liberarlo.</li>
+        <li><strong>Resonancia:</strong> pulsa <code>[SUSTAIN]</code>, toca una nota y suéltala: sigue sonando más tiempo. Vuelve a pulsar para quitarla.</li>
+      </ol>
+      <div class="callout co-info"><span class="co-t">ℹ️</span> En algunas voces el joystick hace cosas especiales: por ejemplo, con las voces <strong>S.Art+</strong> de cuerdas, moverlo hacia arriba pasa de arco normal a <strong>trémolo</strong> (p. 64). 📘 <strong>Reference Manual:</strong> cambiar qué hace el joystick, el margen del <em>pitch bend</em>, y los mandos <code>LIVE CONTROL</code> (p. 57, 63).</div>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <p>Toca una melodía sencilla con teclas blancas (como en la lección 8), con voz de cuerdas o viento. Añade un <strong>giro de tono</strong> al final de una frase con el eje X, y un <strong>vibrato</strong> en una nota larga con el eje Y. Después activa <code>[JOYSTICK HOLD]</code> y toca una frase con el vibrato retenido.</p>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>Al mover el joystick, las notas suben o bajan, y hay una oscilación (vibrato) con el otro eje. Al soltar, todo vuelve a su sitio salvo lo retenido por <code>[JOYSTICK HOLD]</code>.</p>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Quieres mantener el vibrato en una nota larga <strong>sin sujetar</strong> el joystick.</p>
+      <details class="sol"><summary>Ver solución</summary><p>Pulsar <code>[JOYSTICK HOLD]</code>, mover el joystick en el eje Y hasta el vibrato deseado y soltarlo.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 17 -->
+<section id="l17" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 17</span><h2>Registration Memory: guardar una configuración</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>A guardar tus ajustes del panel (estilo, voces, tempo…) para recuperarlos con <strong>un botón</strong>.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span><p>(p. 88-89)</p>
+      <ul>
+        <li><strong>Ajustes del panel:</strong> todo lo que has ido configurando: voces, partes activadas, estilo, tempo, efectos, etc.</li>
+        <li><strong>Registration Memory (memoria de registros):</strong> guarda casi cualquier ajuste del panel en uno de <strong>ocho botones</strong> numerados <code>REGISTRATION MEMORY [1]</code>–<code>[8]</code>.</li>
+        <li><strong>Banco de registros (Regist Bank):</strong> los <strong>ocho</strong> botones se guardan juntos en un único archivo (lección 18).</li>
+        <li><strong>Luz de cada botón:</strong>
+          <ul>
+            <li><strong>Naranja:</strong> hay datos registrados y ese botón está seleccionado.</li>
+            <li><strong>Azul:</strong> hay datos registrados, pero no seleccionado.</li>
+            <li><strong>Apagada:</strong> no hay datos.</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span><p>(p. 89)</p>
+      <ol class="steps">
+        <li><strong>Prepara el panel</strong> como quieras que quede: estilo, voces, partes activadas, tempo, OTS, Multi Pad…</li>
+        <li>Pulsa <code>[MEMORY]</code> (junto a <code>[FREEZE]</code> y <code>REGIST BANK</code>, a la izquierda de los botones numerados). Aparece la ventana <strong>Registration Memory</strong> con una <strong>lista de elementos</strong> que se van a registrar.</li>
+        <li><strong>Deja las marcas como están</strong> (se registran los elementos con marca de verificación; si quieres, toca un elemento para quitar o poner la marca).</li>
+        <li>Pulsa el botón <code>REGISTRATION MEMORY [1]</code>. Se ilumina en <strong>naranja</strong>: ya está guardado.</li>
+        <li>Si la ventana sigue en pantalla, ciérrala con <code>[EXIT]</code> (p. 29).</li>
+        <li>Cambia algo (otra voz u otro estilo) y regístralo en el botón <code>[2]</code>. Así sucesivamente.</li>
+      </ol>
+      <div class="callout co-warn"><span class="co-t">⚠️ Ojo</span> Si eliges un botón cuya luz está <strong>naranja o azul</strong>, lo que había se <strong>borra y se sustituye</strong> por lo nuevo (p. 89).</div>
+      <div class="callout co-info"><span class="co-t">ℹ️</span> Lo registrado en los botones numerados <strong>se conserva aunque apagues</strong> el teclado (p. 89). Aun así, en la lección 18 lo guardaremos como archivo, que es lo que te da seguridad. 📘 Qué parámetros se registran exactamente: sección <em>Registration</em> del <em>Parameter Chart</em>, dentro del <strong>Data List</strong> (material web, p. 89).</div>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <p>Prepara <strong>dos configuraciones</strong>:</p>
+      <ul>
+        <li><strong>Registro [1]:</strong> un estilo, OTS <code>[1]</code>, tu voz favorita para RIGHT 1, tempo cómodo.</li>
+        <li><strong>Registro [2]:</strong> el mismo estilo pero con capa de cuerdas (RIGHT 1 + RIGHT 2) y otro tempo.</li>
+      </ul>
+      <p>Regístralas en <code>[1]</code> y <code>[2]</code>. Comprueba que ambos botones tienen luz.</p>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>Los botones <code>[1]</code> y <code>[2]</code> están encendidos (uno naranja, el otro azul), y el resto apagados o, si ya había datos previos, en azul.</p>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Guarda tu ajuste actual en el botón <code>[3]</code> <strong>sin tocar</strong> los registros <code>[1]</code> y <code>[2]</code>.</p>
+      <details class="sol"><summary>Ver solución</summary><p>Pulsar <code>[MEMORY]</code> y luego <code>REGISTRATION MEMORY [3]</code> (comprobando que <code>[3]</code> estaba con la luz apagada para no sobrescribir nada).</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- LECCIÓN 18 -->
+<section id="l18" class="section">
+  <div class="lesson-hero"><span class="lnum">LECCIÓN 18</span><h2>Registration Memory: recuperarla</h2></div>
+  <div class="card">
+    <div class="part t1"><span class="pnum">1 · QUÉ VAMOS A APRENDER</span><p>A <strong>recuperar</strong> tus ajustes y a <strong>guardarlos como archivo</strong> para que no se pierdan.</p></div>
+    <div class="part t2"><span class="pnum">2 · QUÉ SIGNIFICA</span>
+      <ul>
+        <li><strong>Recuperar:</strong> pulsar un botón numerado para que el panel vuelva a como lo guardaste.</li>
+        <li><strong>Archivo de banco:</strong> copia de seguridad de tus <strong>ocho</strong> registros, con nombre.</li>
+        <li><strong>Unidad de usuario (User):</strong> la memoria interna del teclado donde se guardan tus archivos (p. 28, 33).</li>
+      </ul>
+    </div>
+    <div class="part t3"><span class="pnum">3 · PASOS EXACTOS</span>
+      <p><strong>A) Recuperar un registro</strong> (p. 89-90)</p>
+      <ol class="steps">
+        <li>Pulsa un botón <code>REGISTRATION MEMORY [1]</code>–<code>[8]</code> con luz <strong>azul</strong> (registrado). Se ilumina en naranja y el panel cambia.</li>
+      </ol>
+      <p><strong>B) Guardar el banco como archivo</strong> (p. 90 y 33-34)</p>
+      <ol class="steps">
+        <li>Pulsa <strong>a la vez</strong> <code>REGIST BANK [−]</code> y <code>[+]</code>. Se abre la pantalla de selección de banco.</li>
+        <li>Toca el icono <strong>File Edit</strong> y luego <strong>[Save]</strong>.</li>
+        <li>Elige dónde guardar (por ejemplo, <strong>User</strong>) y toca <strong>[Save here]</strong>.</li>
+        <li>Escribe el nombre (por ejemplo, "Prueba 1") con el teclado de la pantalla: toca cada letra; <strong>[Delete]</strong> borra la última; toca <strong>[OK]</strong> al terminar (p. 36). El archivo queda guardado en la lista, por orden alfabético (p. 34).</li>
+      </ol>
+      <p><strong>C) Recuperar un banco guardado</strong> (p. 90)</p>
+      <ol class="steps">
+        <li>Pulsa <code>REGIST BANK [−]</code> y <code>[+]</code> a la vez.</li>
+        <li>Toca el banco que quieras (o usa <code>REGIST BANK [−]</code>/<code>[+]</code> para moverte).</li>
+        <li>Pulsa un botón azul <code>[1]</code>–<code>[8]</code>.</li>
+      </ol>
+      <p><strong>D) Ver qué guarda cada registro</strong> (p. 91)</p>
+      <ol class="steps">
+        <li>En la pantalla de selección de banco, selecciona el banco, toca <strong>(Menu)</strong> y luego <strong>[Regist Bank Info]</strong>.</li>
+        <li>Alterna entre <strong>[Voice]</strong> y <strong>[Style]</strong>. Al tocar un registro, <strong>se carga automáticamente</strong>.</li>
+        <li>Sal con <code>[EXIT]</code>.</li>
+      </ol>
+      <div class="callout co-info"><span class="co-t">ℹ️</span> 📘 <strong>Reference Manual:</strong> <code>[FREEZE]</code> (impedir que ciertos elementos cambien al recuperar), <strong>Regist Sequence</strong> (recorrer los registros en orden con pedal o botón asignable), etiquetas y búsqueda de bancos. ⚠️ Los archivos guardados en una unidad USB requieren esa unidad conectada al recuperar (p. 90).</div>
+    </div>
+    <div class="part t4"><span class="pnum">4 · EJERCICIO PRÁCTICO</span>
+      <ol class="steps">
+        <li>Con <code>[1]</code> y <code>[2]</code> de la lección 17, guarda un banco llamado <strong>"Prueba 1"</strong>.</li>
+        <li>Haz un <strong>Panel Reset</strong> (lección 3): el teclado queda "en blanco".</li>
+        <li>Pulsa <code>REGISTRATION MEMORY [1]</code>: todo vuelve.</li>
+        <li>Pulsa <code>[2]</code> y comprueba la diferencia.</li>
+      </ol>
+    </div>
+    <div class="part t5"><span class="pnum">5 · RESULTADO ESPERADO</span>
+      <p>Tras el Panel Reset, con <strong>un solo botón</strong> recuperas tu estilo, voces y tempo.</p>
+    </div>
+    <div class="part t6"><span class="pnum">6 · MINI RETO</span>
+      <p>Guarda tus ocho registros como archivo con el nombre <strong>"Ensayo"</strong> y explica cómo se recupera después.</p>
+      <details class="sol"><summary>Ver solución</summary><p><code>REGIST BANK [−]</code>+<code>[+]</code> → <strong>File Edit</strong> → <strong>[Save]</strong> → destino → <strong>[Save here]</strong> → escribir "Ensayo" → <strong>[OK]</strong>. Para recuperarlo: <code>REGIST BANK [−]</code>+<code>[+]</code> → tocar "Ensayo" → pulsar un botón azul <code>[1]</code>–<code>[8]</code>.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- PROYECTO FINAL -->
+<section id="proyecto" class="section">
+  <div class="sec-head"><div class="sec-icon">🎵</div><div><h2>Proyecto Final — Tu primera canción completa</h2><span class="sec-sub">Integra todo lo aprendido</span></div></div>
+
+  <div class="card">
+    <p><strong>Objetivo:</strong> preparar y tocar una canción sencilla de principio a fin usando <strong>un estilo, una voz, OTS, Multi Pad y Registration Memory</strong>, y después <strong>recuperarlo todo con un botón</strong>.</p>
+    <p><strong>La canción:</strong> usa una canción sencilla que ya conozcas o, si prefieres, <strong>tararea/toca una melodía inventada</strong>. La progresión de acordes de abajo es muy común y <strong>no pertenece a ninguna canción concreta</strong>. Solo usa los acordes que ya dominas: <strong>C, Am, F, G</strong>.</p>
+  </div>
+
+  <div class="card">
+    <h3>Ficha de la canción (rellénala con lápiz)</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Elemento</th><th>Tu elección</th></tr></thead>
+        <tbody>
+          <tr><td>Nombre de tu canción</td><td>______________________</td></tr>
+          <tr><td>Estilo (sin etiqueta <em>Free Play</em>)</td><td>______________________</td></tr>
+          <tr><td>Tempo</td><td>______</td></tr>
+          <tr><td>OTS que usarás</td><td>Estrofa: ___ · Estribillo: ___</td></tr>
+          <tr><td>Voz de RIGHT 1 (melodía)</td><td>______________________</td></tr>
+          <tr><td>Voz de RIGHT 2 (capa opcional en el estribillo)</td><td>______________________</td></tr>
+          <tr><td>Multi Pad (banco y pad)</td><td>______________________</td></tr>
+          <tr><td>Registro donde lo guardarás</td><td><code>REGISTRATION MEMORY [1]</code> (y <code>[2]</code> para la variante)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Estructura de la canción</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Parte</th><th>Sección del estilo</th><th>Acordes (uno por compás)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Introducción</strong></td><td><code>INTRO [I]</code></td><td>(Arranca tocando <strong>C</strong>)</td></tr>
+          <tr><td><strong>Estrofa</strong> (×2)</td><td><code>MAIN [A]</code></td><td>C · Am · F · G</td></tr>
+          <tr><td><strong>Relleno</strong></td><td>Pulsar de nuevo <code>MAIN [A]</code></td><td>—</td></tr>
+          <tr><td><strong>Estribillo</strong></td><td><code>MAIN [B]</code> + pad de Multi Pad</td><td>F · G · C · Am · F · G · C · C</td></tr>
+          <tr><td><strong>Pausa</strong></td><td><code>[BREAK]</code></td><td>—</td></tr>
+          <tr><td><strong>Estrofa</strong> (otra vez)</td><td><code>MAIN [A]</code></td><td>C · Am · F · G</td></tr>
+          <tr><td><strong>Final</strong></td><td><code>ENDING [I]</code></td><td>Termina en <strong>C</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Fase 1 — Preparación (con el panel en blanco)</h3>
+    <ol class="steps">
+      <li><strong>Empieza limpio:</strong> <code>[DIRECT ACCESS]</code> → <strong>[Panel Reset]</strong> → <strong>[Reset]</strong> (lección 3).</li>
+      <li><strong>Estilo:</strong> elige tu estilo con un botón de categoría de <code>STYLE</code> (lección 7).</li>
+      <li><strong>OTS:</strong> pulsa <code>ONE TOUCH SETTING [1]</code>; ahora <code>[ACMP]</code> y <code>[SYNC START]</code> están activos (lección 11).</li>
+      <li><strong>Tipo de acordes:</strong> comprueba que estás en <strong>Single Finger</strong> (<code>[MENU]</code> → <strong>[Split &amp; Fingering]</strong> → <strong>Fingering Type</strong>; lección 8).</li>
+      <li><strong>OTS LINK:</strong> pulsa <code>[OTS LINK]</code> para que <code>MAIN [A]</code> use el OTS 1 y <code>MAIN [B]</code> el OTS 2 (lección 11).</li>
+      <li><strong>Tempo:</strong> ajusta uno cómodo con <code>TEMPO [−]/[+]</code> (lección 10).</li>
+      <li><strong>Voz:</strong> deja la voz de RIGHT 1 que te gusta (o cámbiala con <code>PART SELECT [RIGHT 1]</code>; lección 4). <strong>Hazlo después de pulsar el OTS</strong>, o el OTS la sustituirá.</li>
+      <li><strong>Multi Pad:</strong> pulsa <code>MULTI PAD CONTROL [SELECT]</code>, elige un banco y prueba los pads. Decide cuál usarás al entrar el estribillo (lección 12).</li>
+      <li><strong>Ensayo:</strong> haz un recorrido completo de la estructura de arriba (cuenta los compases en voz alta). Ajusta lo que no te guste.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Fase 2 — Guardar</h3>
+    <ol class="steps" start="10">
+      <li><strong>Comprueba</strong> que el panel está exactamente como quieres empezar la canción (INTRO elegido, <code>[SYNC START]</code> activo).</li>
+      <li>Pulsa <code>[MEMORY]</code>, mira la lista de elementos (si ves que falta alguno que necesites, márcalo) y pulsa <code>REGISTRATION MEMORY [1]</code> (lección 17).</li>
+      <li><strong>Variante opcional:</strong> activa una capa de cuerdas en RIGHT 2 para el estribillo, pulsa <code>[MEMORY]</code> y <code>REGISTRATION MEMORY [2]</code>.</li>
+      <li><strong>Guarda el banco:</strong> <code>REGIST BANK [−]</code>+<code>[+]</code> → <strong>File Edit</strong> → <strong>[Save]</strong> → <strong>[Save here]</strong> → nombre (por ejemplo, "Mi primera canción") → <strong>[OK]</strong> (lección 18).</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Fase 3 — Recuperar</h3>
+    <ol class="steps" start="14">
+      <li><strong>Prueba de fuego:</strong> <code>[DIRECT ACCESS]</code> → <strong>[Panel Reset]</strong> → <strong>[Reset]</strong>.</li>
+      <li>Pulsa <code>REGISTRATION MEMORY [1]</code>. <strong>Todo vuelve:</strong> estilo, voces, tempo, etc.</li>
+      <li>Toca la canción entera <strong>sin mirar estas instrucciones</strong>.</li>
+    </ol>
+    <div class="callout co-info"><span class="co-t">ℹ️</span> Si al cambiar de <code>[1]</code> a <code>[2]</code> con el estilo sonando notas algún corte o cambio brusco: <em>El material disponible no permite verificar el comportamiento exacto de ese cambio</em>. Pruébalo con calma, con el estilo parado, y decide cuándo cambiar.</div>
+  </div>
+
+  <div class="card">
+    <h3>Guía de interpretación (para tocar la canción)</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Momento</th><th>Qué haces</th><th>Botón / gesto</th></tr></thead>
+        <tbody>
+          <tr><td>Antes de empezar</td><td>Comprobar que todo está listo</td><td><code>REGISTRATION MEMORY [1]</code></td></tr>
+          <tr><td>Empezar</td><td>Elegir introducción y tocar el primer acorde</td><td><code>INTRO [I]</code> → acorde <strong>C</strong></td></tr>
+          <tr><td>Estrofa</td><td>Tocar C · Am · F · G, melodía a la derecha</td><td><code>MAIN [A]</code></td></tr>
+          <tr><td>Antes del estribillo</td><td>Relleno de transición</td><td>Pulsar <code>MAIN [A]</code> otra vez (o <code>[AUTO FILL IN]</code>)</td></tr>
+          <tr><td>Estribillo</td><td>Pasar a la sección fuerte, lanzar el pad</td><td><code>MAIN [B]</code> + <code>MULTI PAD CONTROL [n]</code></td></tr>
+          <tr><td>Pausa dramática</td><td>Silencio rítmico</td><td><code>[BREAK]</code></td></tr>
+          <tr><td>Volver a la estrofa</td><td></td><td><code>MAIN [A]</code></td></tr>
+          <tr><td>Final</td><td>Cerrar la canción</td><td><code>ENDING [I]</code> (otra vez para ralentizar)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Preguntas de situación (con respuesta)</h3>
+    <p>Contesta <strong>antes</strong> de mirar la solución.</p>
+    <details class="sol"><summary>1. Estás a punto de empezar y el estilo está parado. Quieres que arranque al tocar el primer acorde. ¿Qué botón debe estar activado?</summary><p><code>[SYNC START]</code> (con <code>[ACMP]</code> activado). Con un OTS pulsado ya vienen activados los dos (p. 43, 59).</p></details>
+    <details class="sol"><summary>2. Empieza el estribillo y quieres más energía. ¿Qué haces?</summary><p>Pulsar <code>MAIN [B]</code>. Con <code>[OTS LINK]</code> activado, además cambian las voces al OTS 2 (p. 60-61).</p></details>
+    <details class="sol"><summary>3. Quieres un pequeño redoble justo antes del estribillo, sin cambiar todavía de sección. ¿Qué pulsas?</summary><p>Pulsar otra vez el <code>MAIN</code> que está sonando: suena un relleno y vuelve a él (p. 60). Con <code>[AUTO FILL IN]</code> activo, el relleno suena solo al cambiar de MAIN.</p></details>
+    <details class="sol"><summary>4. La canción te queda demasiado aguda para cantarla cómodo. ¿Qué haces sin cambiar los dedos?</summary><p>Pulsar <code>TRANSPOSE [−]</code> los semitonos necesarios. Para volver, <code>[−]</code>+<code>[+]</code> a la vez (p. 56).</p></details>
+    <details class="sol"><summary>5. Quieres que la frase del Multi Pad empiece en el compás del estribillo aunque llegues un poco tarde. ¿Qué debes saber?</summary><p>Con el estilo sonando, el pad <strong>empieza al principio del siguiente compás</strong>, no al instante (p. 66).</p></details>
+    <details class="sol"><summary>6. Quieres terminar la canción con un final que se ralentice. ¿Qué haces?</summary><p>Pulsar <code>ENDING [I]</code> durante el estilo, y <strong>volver a pulsarlo</strong> mientras suena el final (p. 59).</p></details>
+    <details class="sol"><summary>7. Te has liado, no sabes qué has tocado y el teclado suena raro. ¿Cómo lo dejas todo como al empezar la canción?</summary><p><code>[DIRECT ACCESS]</code> → <strong>[Panel Reset]</strong> → <strong>[Reset]</strong>, y después <code>REGISTRATION MEMORY [1]</code>.</p></details>
+  </div>
+
+  <div class="card">
+    <h3>Autoevaluación final</h3>
+    <p>Marca lo que <strong>haces sin mirar</strong> el tutorial:</p>
+    <ul style="list-style:none;margin-left:0">
+      <li>☐ Enciendo con el volumen a <code>MIN</code>, espero al inicio y apago con una pulsación larga</li>
+      <li>☐ Vuelvo a la pantalla de inicio con <code>[DIRECT ACCESS]</code> + <code>[EXIT]</code> y sé hacer un <strong>Panel Reset</strong></li>
+      <li>☐ Cambio la voz de RIGHT 1 desde <code>PART SELECT</code> y desde la pantalla de inicio</li>
+      <li>☐ Sé qué hace cada parte (RIGHT 1, 2, 3 y LEFT) y hago <strong>capas</strong> y <strong>división</strong></li>
+      <li>☐ Elijo un estilo y lo arranco/paro con <code>[START/STOP]</code></li>
+      <li>☐ Toco acordes (C, Am, F, G) con <code>[ACMP]</code> y melodía con la derecha</li>
+      <li>☐ Manejo <code>INTRO</code>, <code>MAIN A–D</code>, relleno, <code>BREAK</code> y <code>ENDING</code></li>
+      <li>☐ Cambio el tempo (botones, dial y tap tempo)</li>
+      <li>☐ Uso los cuatro OTS y <code>[OTS LINK]</code></li>
+      <li>☐ Lanzo, paro y dejo en espera los Multi Pad</li>
+      <li>☐ Transpongo en semitonos y cambio de octava</li>
+      <li>☐ Uso el metrónomo</li>
+      <li>☐ Activo armonía, eco y arpegio</li>
+      <li>☐ Muevo el joystick para dar expresión y uso <code>[JOYSTICK HOLD]</code></li>
+      <li>☐ Guardo y recupero registros y guardo un banco como archivo</li>
+    </ul>
+    <div class="callout co-ex"><span class="co-t">Si marcas 12 o más, ya tocas con soltura.</span> Repite las lecciones de las casillas vacías.</div>
+  </div>
+</section>
+
+<!-- APÉNDICES -->
+<section id="apendices" class="section">
+  <div class="sec-head"><div class="sec-icon">📎</div><div><h2>Apéndices</h2><span class="sec-sub">Problemas típicos, glosario, chuleta y más</span></div></div>
+
+  <div class="card">
+    <h3>A. Problemas típicos (según el manual, pp. 117-118)</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Síntoma</th><th>Qué comprobar</th></tr></thead>
+        <tbody>
+          <tr><td><strong>No suena nada</strong></td><td><code>MASTER VOLUME</code> demasiado bajo · <strong>Todas las partes del teclado apagadas</strong> (<code>PART ON/OFF</code>) · volumen de la parte demasiado bajo o canal desactivado en la pantalla <strong>Mixer</strong> (<code>[MIXER/EQ]</code>) · <strong>auriculares enchufados</strong> (silencian los altavoces)</td></tr>
+          <tr><td><strong>Solo suena el ritmo</strong></td><td>Activa <code>[ACMP]</code> y toca en la <strong>zona de acordes</strong> (izquierda del punto de división)</td></tr>
+          <tr><td><strong>El estilo no cambia al cambiar de acorde</strong></td><td>Estás tocando fuera de la zona de acordes, o el acorde no es reconocido</td></tr>
+          <tr><td><strong>El estilo no arranca con <code>[START/STOP]</code></strong></td><td>Puede que el canal de ritmo de ese estilo esté vacío: activa <code>[ACMP]</code> y toca en la zona izquierda</td></tr>
+          <tr><td><strong>La voz elegida no suena</strong></td><td>Comprueba que la parte está activada en <code>PART ON/OFF</code></td></tr>
+          <tr><td><strong>Sonido raro de "duplicación" o fluctuación</strong></td><td>RIGHT 1/2/3 activas con <strong>la misma voz</strong>: usa voces distintas o solo una parte</td></tr>
+          <tr><td><strong>Distorsión o ruido</strong></td><td>Volumen demasiado alto o efectos del Mixer; baja los volúmenes</td></tr>
+          <tr><td><strong>El sonido se corta de vez en cuando</strong></td><td>Protección del altavoz por volumen alto: baja <code>MASTER VOLUME</code></td></tr>
+          <tr><td><strong>Faltan notas cuando tocas mucho</strong></td><td>Se supera la polifonía máxima (128 notas simultáneas contando teclado, estilo, canción y Multi Pad)</td></tr>
+          <tr><td><strong>El teclado se apaga solo</strong></td><td>Es el <strong>Auto Power Off</strong> (lección 2)</td></tr>
+          <tr><td><strong>Todo va raro</strong></td><td><strong>Panel Reset</strong> (lección 3)</td></tr>
+          <tr><td><strong>Suena un clic o pop al encender/apagar</strong></td><td>Es normal (p. 117)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>B. Glosario rápido</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Término</th><th>Qué significa</th></tr></thead>
+        <tbody>
+          <tr><td><strong>ACMP</strong></td><td>Acompañamiento automático: la banda sigue los acordes que tocas</td></tr>
+          <tr><td><strong>Acorde</strong></td><td>Varias notas sonando a la vez</td></tr>
+          <tr><td><strong>Arpegio</strong></td><td>Las notas de un acorde sonando una tras otra</td></tr>
+          <tr><td><strong>Banco de registros</strong></td><td>Los 8 registros guardados juntos en un archivo</td></tr>
+          <tr><td><strong>BPM / tempo</strong></td><td>Pulsos por minuto; velocidad de la música</td></tr>
+          <tr><td><strong>BREAK</strong></td><td>Pausa rítmica de un compás en un estilo</td></tr>
+          <tr><td><strong>Capa (Layer)</strong></td><td>Dos o más voces de la mano derecha a la vez</td></tr>
+          <tr><td><strong>Compás</strong></td><td>Bloque del tiempo musical (aquí, 4 pulsos)</td></tr>
+          <tr><td><strong>Dial de datos</strong></td><td>La rueda para cambiar valores o recorrer listas</td></tr>
+          <tr><td><strong>División (Split)</strong></td><td>Una voz en cada mano</td></tr>
+          <tr><td><strong>ENDING</strong></td><td>Final de un estilo</td></tr>
+          <tr><td><strong>Estilo (Style)</strong></td><td>Ritmo y acompañamiento automático de un género</td></tr>
+          <tr><td><strong>FILL IN</strong></td><td>Relleno: pequeño redoble entre secciones</td></tr>
+          <tr><td><strong>Fingering Type</strong></td><td>La forma de tocar acordes (Single Finger, Fingered…)</td></tr>
+          <tr><td><strong>Joystick</strong></td><td>Mando de expresión (tono y vibrato)</td></tr>
+          <tr><td><strong>INTRO</strong></td><td>Introducción de un estilo</td></tr>
+          <tr><td><strong>MAIN</strong></td><td>Sección principal (A–D) de un estilo que se repite</td></tr>
+          <tr><td><strong>Multi Pad</strong></td><td>Frases cortas grabadas que se lanzan con 4 botones</td></tr>
+          <tr><td><strong>Octava</strong></td><td>Distancia entre una nota y su misma nota más aguda/grave</td></tr>
+          <tr><td><strong>OTS</strong></td><td>One Touch Setting: ajustes de panel listos para un estilo, con un botón</td></tr>
+          <tr><td><strong>OTS LINK</strong></td><td>Enlaza MAIN A–D con OTS 1–4</td></tr>
+          <tr><td><strong>Panel Reset</strong></td><td>Devuelve el panel a su estado básico</td></tr>
+          <tr><td><strong>Parte (Part)</strong></td><td>Uno de los cuatro carriles de voz: LEFT, RIGHT 1, 2 y 3</td></tr>
+          <tr><td><strong>Pantalla de inicio</strong></td><td>La pantalla de resumen que aparece al encender</td></tr>
+          <tr><td><strong>Preset / User</strong></td><td>Datos de fábrica / datos tuyos</td></tr>
+          <tr><td><strong>Punto de división</strong></td><td>Nota que separa la mano izquierda de la derecha (por defecto F#2)</td></tr>
+          <tr><td><strong>Registration Memory</strong></td><td>8 botones para guardar y recuperar ajustes del panel</td></tr>
+          <tr><td><strong>Semitono</strong></td><td>Distancia entre dos teclas contiguas</td></tr>
+          <tr><td><strong>SYNC START</strong></td><td>El estilo espera y arranca al tocar un acorde</td></tr>
+          <tr><td><strong>Transposición</strong></td><td>Subir o bajar el tono de todo por semitonos</td></tr>
+          <tr><td><strong>Voz (Voice)</strong></td><td>Un sonido de instrumento del teclado</td></tr>
+          <tr><td><strong>Zona de acordes</strong></td><td>Parte del teclado donde tocas los acordes que dirigen la banda</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>C. Chuleta de botones</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Quiero…</th><th>Pulso / toco</th></tr></thead>
+        <tbody>
+          <tr><td>Encender / apagar</td><td><code>[⏻]</code> (apagar: mantener ~1 s)</td></tr>
+          <tr><td>Subir o bajar volumen</td><td><code>MASTER VOLUME</code></td></tr>
+          <tr><td>Volver a inicio</td><td><code>[DIRECT ACCESS]</code> + <code>[EXIT]</code></td></tr>
+          <tr><td>Restablecer el panel</td><td><code>[DIRECT ACCESS]</code> → <strong>[Panel Reset]</strong> → <strong>[Reset]</strong></td></tr>
+          <tr><td>Cambiar la voz de una parte</td><td><code>PART SELECT</code> → tocar voz</td></tr>
+          <tr><td>Activar/apagar una parte</td><td><code>PART ON/OFF</code></td></tr>
+          <tr><td>Elegir estilo</td><td>Botón de categoría <code>STYLE</code> → tocar estilo</td></tr>
+          <tr><td>Arrancar/parar estilo</td><td><code>[START/STOP]</code></td></tr>
+          <tr><td>Acompañamiento automático</td><td><code>[ACMP]</code></td></tr>
+          <tr><td>Arrancar al tocar un acorde</td><td><code>[SYNC START]</code></td></tr>
+          <tr><td>Introducción / final</td><td><code>INTRO [I–III]</code> / <code>ENDING [I–III]</code></td></tr>
+          <tr><td>Cambiar sección</td><td><code>MAIN VARIATION [A–D]</code></td></tr>
+          <tr><td>Relleno</td><td>Pulsar de nuevo el MAIN activo / <code>[AUTO FILL IN]</code></td></tr>
+          <tr><td>Pausa</td><td><code>[BREAK]</code></td></tr>
+          <tr><td>Cambiar tempo</td><td><code>TEMPO [−]/[+]</code>, dial en inicio, <code>[RESET/TAP TEMPO]</code></td></tr>
+          <tr><td>Ajustes automáticos del estilo</td><td><code>ONE TOUCH SETTING [1–4]</code></td></tr>
+          <tr><td>OTS cambia con MAIN</td><td><code>[OTS LINK]</code></td></tr>
+          <tr><td>Frases Multi Pad</td><td><code>MULTI PAD CONTROL [SELECT]</code> / <code>[1–4]</code> / <code>[STOP]</code></td></tr>
+          <tr><td>Subir/bajar tono</td><td><code>TRANSPOSE [−]/[+]</code></td></tr>
+          <tr><td>Octava mano derecha</td><td><code>UPPER OCTAVE [−]/[+]</code></td></tr>
+          <tr><td>Metrónomo</td><td><code>[MENU]</code> → <strong>[Metronome]</strong> → icono</td></tr>
+          <tr><td>Armonía/arpegio</td><td><code>[HARMONY/ARPEGGIO]</code></td></tr>
+          <tr><td>Vibrato retenido</td><td><code>[JOYSTICK HOLD]</code></td></tr>
+          <tr><td>Resonancia</td><td><code>[SUSTAIN]</code></td></tr>
+          <tr><td>Guardar registro</td><td><code>[MEMORY]</code> → <code>REGISTRATION MEMORY [1–8]</code></td></tr>
+          <tr><td>Recuperar registro</td><td><code>REGISTRATION MEMORY [1–8]</code></td></tr>
+          <tr><td>Guardar/abrir banco</td><td><code>REGIST BANK [−]</code>+<code>[+]</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>D. Lo que requiere el Reference Manual</h3>
+    <p>Todo esto queda <strong>fuera</strong> del Manual de instrucciones o solo se menciona superficialmente. Descárgalo en la sección FUENTES de este tutorial.</p>
+    <ul>
+      <li>📘 Comportamiento del botón <code>[RESET/TAP TEMPO]</code> (<code>[MENU]</code> → <strong>[Metronome]</strong> → <strong>[Tap Tempo]</strong>) (p. 42, 60)</li>
+      <li>📘 Ajustes del metrónomo (<strong>Metronome Settings</strong>) (p. 37)</li>
+      <li>📘 Otros tipos de digitado (Fingered, AI Full Keyboard, Smart Chord, Multi Finger, etc.) y los acordes que reconoce cada uno (p. 42)</li>
+      <li>📘 Sincronización del cambio de sección de estilo y del enlace de OTS (pp. 60-61)</li>
+      <li>📘 Detalles del punto de división de RIGHT 3 (p. 45)</li>
+      <li>📘 Ajustes detallados de armonía/arpegio, cuantización y arpegio sostenido (pp. 51-53)</li>
+      <li>📘 Crear y editar Multi Pad; Audio Link de Multi Pad (p. 54)</li>
+      <li>📘 Cambiar las funciones del joystick y los mandos <code>LIVE CONTROL</code>; asignar botones y pedales (pp. 57-58, 63)</li>
+      <li>📘 <code>[FREEZE]</code> y <strong>Regist Sequence</strong> (pp. 90, 113)</li>
+      <li>📘 Favoritos (ficha <em>Favorite</em>) y búsqueda avanzada de archivos (p. 35)</li>
+      <li>📘 <strong>Style Creator</strong>, <strong>Voice Edit</strong>, <strong>Chord Tutor</strong> y otras funciones avanzadas del menú (p. 113-114)</li>
+      <li>📘 Lista de parámetros que guarda la Registration Memory: <em>Parameter Chart</em> del <strong>Data List</strong> (p. 89)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>E. Detalles en los que el manual no es coherente</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Tema</th><th>Qué dice el manual</th></tr></thead>
+        <tbody>
+          <tr><td>Color del MAIN seleccionado</td><td><strong>Rojo</strong> (p. 60) frente a <strong>naranja</strong> (p. 61)</td></tr>
+          <tr><td>Color del Multi Pad "en espera"</td><td><strong>Naranja intermitente</strong> (p. 66) frente a <strong>rojo intermitente</strong> (p. 67)</td></tr>
+          <tr><td>Tipo de digitado</td><td>El texto describe Single Finger, Fingered, AI Full Keyboard y Smart Chord (p. 42), pero la pantalla del manual (p. 45) muestra "Multi Finger"</td></tr>
+          <tr><td>Punto de división por defecto</td><td>El texto dice <strong>F#2</strong> (pp. 40, 44); la pantalla de ejemplo (p. 45) muestra otros valores para Left y Right 3. <em>El material disponible no permite verificar si esos valores son de fábrica</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Si algo de esto te desorienta, guíate por <strong>lo que ves en tu teclado</strong>.</p>
+  </div>
+
+  <div class="card">
+    <h3>F. Después de este tutorial</h3>
+    <p>El manual explica, en las páginas que se indican, estos pasos naturales:</p>
+    <ul>
+      <li><strong>Guardar tus propios OTS</strong> (p. 55)</li>
+      <li><strong>Chord Looper</strong> (bucle de acordes: el teclado repite tu secuencia de acordes) (p. 61)</li>
+      <li><strong>Mezclador</strong> (<code>[MIXER/EQ]</code>): volumen de cada parte, activar/desactivar canales de un estilo (pp. 82-85)</li>
+      <li><strong>Lista de reproducción</strong> (Playlist) para gestionar un repertorio grande (p. 92)</li>
+      <li><strong>Micrófono y guitarra</strong>, y <strong>Vocal Harmony</strong> (solo PSR-SX920) (pp. 72, 102-103)</li>
+      <li><strong>Grabación rápida</strong> de tu interpretación (pp. 86-87)</li>
+    </ul>
+    <p><em>Este tutorial se basa exclusivamente en el <strong>Manual de instrucciones del Yamaha PSR-SX920/SX720</strong>. Si tu teclado tiene una versión de firmware distinta, algunos detalles pueden variar.</em></p>
+  </div>
+</section>
+
+<!-- FUENTES -->
+<section id="fuentes" class="section">
+  <div class="sec-head"><div class="sec-icon">🔗</div><div><h2>Fuentes</h2><span class="sec-sub">Material de referencia oficial</span></div></div>
+  <div class="card">
+    <ul class="src-list">
+      <li>
+        <span class="src-t">Manual de instrucciones PSR-SX920 / PSR-SX720</span>
+        <p>Documento base del que procede íntegramente el contenido de este tutorial (portada v1.10).</p>
+      </li>
+      <li>
+        <span class="src-t">Descargas oficiales Yamaha — PSR-SX920 / PSR-SX720</span>
+        <p>Desde aquí se descarga gratuitamente el <em>Reference Manual</em> (manual de referencia) citado con 📘 en varias lecciones, así como el <em>Data List</em> y otros materiales web.</p>
+        <p><a href="https://manual.yamaha.com/mi/kb-ekb/psrsx920_720/direct/downloads/" target="_blank" rel="noopener">https://manual.yamaha.com/mi/kb-ekb/psrsx920_720/direct/downloads/</a></p>
+      </li>
+    </ul>
+    <div class="callout co-info"><span class="co-t">Nota</span> Este tutorial es de carácter educativo y divulgativo. No está afiliado ni patrocinado por Yamaha Corporation. Las marcas citadas pertenecen a sus respectivos propietarios.</div>
+  </div>
+</section>
+
+<!-- CRÉDITOS -->
+<section id="creditos" class="section">
+  <div class="sec-head"><div class="sec-icon">✦</div><div><h2>Créditos</h2><span class="sec-sub">Autoría y datos de edición</span></div></div>
+
+  <div class="svg-shell" id="svgCredits"></div>
+
+  <div class="credit-box">
+    <div class="clabel">Tutorial</div>
+    <div style="font-size:20px;font-weight:700;margin:6px 0 4px;color:#e6edf7">Tutorial-PSR-SX920 Nivel Principiante Versión 2</div>
+    <div class="clabel" style="margin-top:14px">Autor</div>
+    <div class="author">Rubén Sbarsky</div>
+    <div class="clabel" style="margin-top:14px">Fecha</div>
+    <div style="font-size:16px;color:#cfe4ff;margin-top:2px">20/09/2026</div>
+    <div class="clabel" style="margin-top:10px">Hora</div>
+    <div style="font-size:16px;color:#cfe4ff;margin-top:2px">03:59:16</div>
+    <div class="fiat">Fiat iustitia, ruat caelum.</div>
+  </div>
+
+  <div class="card">
+    <div class="callout co-ex"><span class="co-t">📚 Indicación educativa</span> Este tutorial tiene únicamente fines educativos y de divulgación. Todo el contenido técnico se basa en el <em>Manual de instrucciones del Yamaha PSR-SX920/SX720</em>. No está afiliado ni patrocinado por Yamaha Corporation.</div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="ftitle">Tutorial-PSR-SX920 Nivel Principiante Versión 2</div>
+  <div class="frow">📚 Tutorial solo con fines Educativos y Divulgación</div>
+  <div class="frow">👨‍💻 Créditos: Rubén Sbarsky</div>
+  <div class="frow">📅 FECHA: 20/09/2026 · Hora: 03:59:16</div>
+  <div class="fiat">Fiat iustitia, ruat caelum.</div>
+</footer>
+
+<button id="toTop" aria-label="Volver arriba">↑</button>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- SVG mounting ----------
+  function mountHeroSvg(targetId){
+    var tpl = document.getElementById('heroSvgTemplate');
+    var host = document.getElementById(targetId);
+    if(!tpl || !host) return null;
+    host.innerHTML = '';
+    var clone = tpl.content.cloneNode(true);
+    host.appendChild(clone);
+    var svg = host.querySelector('svg');
+    // restart animations
+    try{
+      if(svg && svg.setCurrentTime){ svg.setCurrentTime(0); }
+    }catch(e){}
+    return svg;
+  }
+
+  // Initial mount: Home
+  mountHeroSvg('svgHome');
+  var creditsMounted = false;
+
+  // ---------- SPA navigation ----------
+  var navBtns = Array.prototype.slice.call(document.querySelectorAll('.nav-btn'));
+  var sections = Array.prototype.slice.call(document.querySelectorAll('.section'));
+
+  function setActive(targetId){
+    sections.forEach(function(s){
+      s.classList.toggle('active', s.id === targetId);
+    });
+    navBtns.forEach(function(b){
+      b.classList.toggle('active', b.getAttribute('data-target') === targetId);
+    });
+
+    // Mount/restart SVG in credits
+    if(targetId === 'creditos'){
+      mountHeroSvg('svgCredits');
+      creditsMounted = true;
+    }
+
+    // Scroll active nav button into view (for horizontal scroll)
+    var activeBtn = document.querySelector('.nav-btn.active');
+    if(activeBtn && activeBtn.scrollIntoView){
+      try{ activeBtn.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'}); }catch(e){}
+    }
+
+    // scroll to top of main
+    window.scrollTo({top:0, behavior:'smooth'});
+    updateProgress();
+  }
+
+  navBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      setActive(btn.getAttribute('data-target'));
+      // update hash without reloading
+      try{ history.replaceState(null,'','#'+btn.getAttribute('data-target')); }catch(e){}
+    });
+  });
+
+  // ---------- progress bar ----------
+  var progress = document.getElementById('progress');
+  function updateProgress(){
+    var h = document.documentElement;
+    var scrolled = h.scrollTop || document.body.scrollTop;
+    var max = (h.scrollHeight || document.body.scrollHeight) - h.clientHeight;
+    var pct = max > 0 ? (scrolled / max) * 100 : 0;
+    progress.style.width = pct.toFixed(2) + '%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  window.addEventListener('resize', updateProgress);
+
+  // ---------- back to top ----------
+  var toTop = document.getElementById('toTop');
+  window.addEventListener('scroll', function(){
+    if((window.scrollY||document.documentElement.scrollTop) > 260){
+      toTop.classList.add('show');
+    } else {
+      toTop.classList.remove('show');
+    }
+  }, {passive:true});
+  toTop.addEventListener('click', function(){
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  // ---------- hash on load ----------
+  (function initFromHash(){
+    var id = (location.hash||'').replace('#','');
+    if(id && document.getElementById(id)){
+      setActive(id);
+    }
+  })();
+
+  updateProgress();
+})();
+</script>
+
+</body>
+</html>
