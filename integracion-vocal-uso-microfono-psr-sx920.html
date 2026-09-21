@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutorial Completo: Integración Vocal y Micrófono — PSR-SX920 / PSR-SX720</title>
+<style>
+:root{
+  --bg:#0a0e1a;
+  --card:#0f172a;
+  --card-2:#0c1424;
+  --border:#1e3a5f;
+  --accent:#00d4ff;
+  --green:#22c55e;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --purple:#a855f7;
+  --text:#e2e8f0;
+  --text-dim:#94a3b8;
+  --text-dim2:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.65;
+  min-height:100vh;
+  overflow-x:hidden;
+  padding-top:64px;
+}
+/* ===== Progress bar ===== */
+#progressBar{
+  position:fixed;top:0;left:0;height:3px;width:0%;
+  background:linear-gradient(90deg,#00d4ff,#22c55e,#f59e0b,#a855f7);
+  z-index:2000;
+  transition:width .08s linear;
+  box-shadow:0 0 10px rgba(0,212,255,.7);
+}
+/* ===== Navbar ===== */
+nav#navbar{
+  position:fixed;top:3px;left:0;right:0;height:60px;
+  background:rgba(10,14,26,.94);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  z-index:1500;
+  display:flex;align-items:center;
+  padding:0 12px;
+}
+.nav-brand{
+  color:var(--accent);
+  font-weight:700;
+  font-size:.92rem;
+  letter-spacing:.5px;
+  white-space:nowrap;
+  margin-right:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.nav-brand .dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 8px var(--green);
+  animation:pulseDot 2s infinite;
+}
+@keyframes pulseDot{
+  0%,100%{opacity:1;transform:scale(1);}
+  50%{opacity:.5;transform:scale(1.3);}
+}
+.nav-scroll{
+  flex:1;
+  overflow-x:auto;
+  overflow-y:hidden;
+  white-space:nowrap;
+  scrollbar-width:thin;
+  scrollbar-color:var(--border) transparent;
+  -webkit-overflow-scrolling:touch;
+}
+.nav-scroll::-webkit-scrollbar{height:4px;}
+.nav-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.nav-scroll::-webkit-scrollbar-track{background:transparent;}
+.nav-btn{
+  display:inline-block;
+  padding:8px 14px;
+  margin:0 2px;
+  border-radius:8px;
+  background:transparent;
+  color:var(--text-dim);
+  border:1px solid transparent;
+  cursor:pointer;
+  font-size:.82rem;
+  font-family:inherit;
+  transition:all .2s;
+  white-space:nowrap;
+}
+.nav-btn:hover{color:var(--accent);border-color:var(--border);}
+.nav-btn.active{
+  color:var(--accent);
+  background:rgba(0,212,255,.08);
+  border-color:var(--accent);
+  box-shadow:0 0 10px rgba(0,212,255,.25);
+}
+.nav-btn.credits{
+  color:var(--amber);
+  border-color:rgba(245,158,11,.35);
+}
+.nav-btn.credits.active{
+  background:rgba(245,158,11,.12);
+  border-color:var(--amber);
+  box-shadow:0 0 10px rgba(245,158,11,.35);
+}
+/* ===== Container ===== */
+.container{max-width:1100px;margin:0 auto;padding:24px 16px 60px;}
+section.page{display:none;animation:fadeIn .35s ease;}
+section.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+/* ===== HOME hero ===== */
+.hero-svg-wrap{
+  width:100%;
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  background:#070b14;
+  box-shadow:0 0 40px rgba(0,212,255,.08),inset 0 0 0 1px rgba(0,212,255,.05);
+  margin-bottom:26px;
+  line-height:0;
+}
+.hero-svg-wrap svg{width:100%;height:auto;display:block;}
+/* ===== Badges, titles ===== */
+.badge-top{
+  display:inline-block;
+  padding:5px 12px;
+  border:1px solid var(--accent);
+  border-radius:20px;
+  color:var(--accent);
+  font-size:.72rem;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  background:rgba(0,212,255,.06);
+  margin-bottom:14px;
+}
+.hero-title{
+  font-size:2rem;
+  font-weight:700;
+  letter-spacing:-.5px;
+  line-height:1.2;
+  background:linear-gradient(90deg,#00d4ff,#a855f7 50%,#22c55e);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:8px;
+}
+.hero-sub{
+  font-size:1rem;
+  color:var(--text-dim);
+  margin-bottom:18px;
+}
+.hero-desc{
+  color:var(--text-dim);
+  font-size:.95rem;
+  margin-bottom:20px;
+  max-width:840px;
+}
+.quote{
+  border-left:3px solid var(--accent);
+  padding:12px 16px;
+  background:rgba(0,212,255,.05);
+  border-radius:0 8px 8px 0;
+  color:var(--accent);
+  font-style:italic;
+  font-size:.9rem;
+  margin-bottom:24px;
+}
+/* ===== Metrics ===== */
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:12px;
+  margin-bottom:24px;
+}
+.metric{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px;
+  text-align:center;
+}
+.metric .num{
+  font-size:1.5rem;
+  font-weight:700;
+  color:var(--accent);
+  display:block;
+  line-height:1.2;
+}
+.metric .lbl{
+  font-size:.72rem;
+  color:var(--text-dim2);
+  text-transform:uppercase;
+  letter-spacing:.8px;
+}
+/* ===== Content cards ===== */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:22px;
+  margin-bottom:20px;
+}
+.card h2{
+  font-size:1.35rem;
+  color:var(--accent);
+  margin-bottom:6px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  line-height:1.3;
+}
+.card h3{
+  font-size:1.05rem;
+  color:var(--purple);
+  margin:18px 0 8px;
+  line-height:1.3;
+}
+.card h4{
+  font-size:.95rem;
+  color:var(--amber);
+  margin:14px 0 6px;
+}
+.card p{color:var(--text);font-size:.92rem;margin-bottom:10px;}
+.card ul,.card ol{margin:8px 0 12px 22px;}
+.card li{color:var(--text-dim);font-size:.9rem;margin-bottom:6px;}
+.card li strong{color:var(--text);}
+.section-num{
+  display:inline-flex;
+  align-items:center;justify-content:center;
+  width:32px;height:32px;
+  border-radius:8px;
+  background:linear-gradient(135deg,#00d4ff,#a855f7);
+  color:#04101c;
+  font-weight:800;
+  font-size:.95rem;
+  flex-shrink:0;
+}
+/* ===== Steps ===== */
+.step{
+  display:flex;
+  gap:12px;
+  padding:12px;
+  background:var(--card-2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  margin-bottom:10px;
+  align-items:flex-start;
+}
+.step-num{
+  flex-shrink:0;
+  width:26px;height:26px;
+  border-radius:50%;
+  background:var(--accent);
+  color:#04101c;
+  font-weight:700;
+  font-size:.82rem;
+  display:flex;align-items:center;justify-content:center;
+  margin-top:2px;
+}
+.step-body{flex:1;min-width:0;}
+.step-body strong{color:var(--text);}
+.step-body p{color:var(--text-dim);font-size:.88rem;margin-bottom:4px;}
+/* ===== Callouts ===== */
+.callout{
+  border-radius:10px;
+  padding:12px 16px;
+  margin:14px 0;
+  font-size:.88rem;
+  border-left:4px solid;
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+}
+.callout .icon{flex-shrink:0;font-weight:800;font-size:.78rem;letter-spacing:1px;}
+.callout.info{background:rgba(0,212,255,.07);border-color:var(--accent);color:#bfeaf6;}
+.callout.info .icon{color:var(--accent);}
+.callout.example{background:rgba(34,197,94,.07);border-color:var(--green);color:#c6f0d5;}
+.callout.example .icon{color:var(--green);}
+.callout.warn{background:rgba(245,158,11,.07);border-color:var(--amber);color:#f6dfae;}
+.callout.warn .icon{color:var(--amber);}
+.callout.error{background:rgba(239,68,68,.07);border-color:var(--red);color:#f3bcbc;}
+.callout.error .icon{color:var(--red);}
+/* ===== Tables ===== */
+.table-wrap{overflow-x:auto;margin:14px 0;border-radius:10px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:.86rem;min-width:420px;}
+th{
+  background:var(--card-2);
+  color:var(--accent);
+  text-align:left;
+  padding:10px 12px;
+  font-size:.76rem;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+  border-bottom:1px solid var(--border);
+}
+td{
+  padding:10px 12px;
+  border-bottom:1px solid rgba(30,58,95,.6);
+  color:var(--text-dim);
+  vertical-align:top;
+}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(0,212,255,.03);}
+/* ===== Chips ===== */
+.chip{
+  display:inline-block;
+  padding:2px 9px;
+  border-radius:20px;
+  font-size:.72rem;
+  letter-spacing:.5px;
+  font-weight:600;
+  margin:0 4px 4px 0;
+  border:1px solid;
+}
+.chip.blue{color:var(--accent);border-color:var(--accent);background:rgba(0,212,255,.08);}
+.chip.green{color:var(--green);border-color:var(--green);background:rgba(34,197,94,.08);}
+.chip.amber{color:var(--amber);border-color:var(--amber);background:rgba(245,158,11,.08);}
+.chip.red{color:var(--red);border-color:var(--red);background:rgba(239,68,68,.08);}
+.chip.purple{color:var(--purple);border-color:var(--purple);background:rgba(168,85,247,.08);}
+/* ===== Accordion ===== */
+details.acc{
+  background:var(--card-2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  margin-bottom:10px;
+  overflow:hidden;
+}
+details.acc summary{
+  padding:12px 16px;
+  cursor:pointer;
+  color:var(--accent);
+  font-weight:600;
+  font-size:.9rem;
+  list-style:none;
+  display:flex;align-items:center;gap:10px;
+}
+details.acc summary::-webkit-details-marker{display:none;}
+details.acc summary::before{
+  content:'▸';
+  transition:transform .2s;
+  display:inline-block;
+  color:var(--accent);
+}
+details.acc[open] summary::before{transform:rotate(90deg);}
+details.acc .acc-body{padding:0 16px 14px;color:var(--text-dim);font-size:.88rem;}
+/* ===== Grids ===== */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media(max-width:720px){
+  .grid-2,.grid-3{grid-template-columns:1fr;}
+}
+.mini-card{
+  background:var(--card-2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px;
+}
+.mini-card .mc-title{
+  color:var(--accent);
+  font-weight:700;
+  font-size:.88rem;
+  margin-bottom:6px;
+  display:flex;align-items:center;gap:8px;
+}
+.mini-card p{font-size:.85rem;color:var(--text-dim);margin:0;}
+/* ===== Back to top ===== */
+#toTop{
+  position:fixed;
+  right:16px;bottom:16px;
+  width:46px;height:46px;
+  border-radius:50%;
+  background:var(--accent);
+  color:#04101c;
+  border:none;
+  font-size:1.2rem;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 0 20px rgba(0,212,255,.6);
+  z-index:1400;
+  display:none;
+  align-items:center;justify-content:center;
+  transition:transform .2s;
+}
+#toTop:hover{transform:scale(1.1);}
+#toTop.show{display:flex;}
+/* ===== Footer ===== */
+footer{
+  border-top:1px solid var(--border);
+  padding:24px 16px;
+  text-align:center;
+  color:var(--text-dim2);
+  font-size:.82rem;
+  background:var(--card-2);
+}
+footer p{margin-bottom:5px;}
+footer .fiat{color:var(--amber);font-style:italic;margin-top:8px;}
+/* ===== Credits ===== */
+.credits-box{
+  text-align:center;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:26px 18px;
+}
+.credits-box h2{
+  color:var(--accent);
+  font-size:1.4rem;
+  margin-bottom:14px;
+}
+.credits-box .author{
+  font-size:1.15rem;
+  color:var(--text);
+  font-weight:600;
+  margin:6px 0;
+}
+.credits-box .meta{
+  color:var(--text-dim);
+  font-size:.9rem;
+  margin:4px 0;
+}
+.credits-box .fiat{
+  color:var(--amber);
+  font-style:italic;
+  margin-top:16px;
+  font-size:.92rem;
+}
+/* ===== Fuentes ===== */
+.fuente-item{
+  background:var(--card-2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px 16px;
+  margin-bottom:10px;
+  font-size:.88rem;
+  color:var(--text-dim);
+}
+.fuente-item strong{color:var(--accent);display:block;margin-bottom:4px;}
+/* ===== Responsive tweaks ===== */
+@media(max-width:640px){
+  body{padding-top:60px;}
+  .nav-brand{font-size:.78rem;margin-right:8px;}
+  .nav-btn{padding:7px 10px;font-size:.74rem;}
+  .hero-title{font-size:1.4rem;}
+  .hero-sub{font-size:.88rem;}
+  .container{padding:16px 12px 60px;}
+  .card{padding:16px;}
+  .card h2{font-size:1.12rem;}
+  .card h3{font-size:.98rem;}
+  .metrics{grid-template-columns:repeat(2,1fr);}
+  .metric .num{font-size:1.2rem;}
+  .step{padding:10px;}
+  #toTop{width:42px;height:42px;right:12px;bottom:12px;}
+}
+@media(max-width:380px){
+  .nav-brand span.brand-text{display:none;}
+  .hero-title{font-size:1.22rem;}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important;}
+  section.page{animation:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="progressBar"></div>
+
+<nav id="navbar">
+  <div class="nav-brand"><span class="dot"></span><span class="brand-text">PSR-SX920</span></div>
+  <div class="nav-scroll" id="navScroll">
+    <button class="nav-btn active" data-target="home">HOME</button>
+    <button class="nav-btn" data-target="sec1">1 · Conexión y Ganancia</button>
+    <button class="nav-btn" data-target="sec2">2 · Sonido y Talk</button>
+    <button class="nav-btn" data-target="sec3">3 · Armonía y Vocoder</button>
+    <button class="nav-btn" data-target="sec4">4 · Karaoke</button>
+    <button class="nav-btn" data-target="sec5">5 · Mezcla y Registro</button>
+    <button class="nav-btn" data-target="sec6">6 · Problemas</button>
+    <button class="nav-btn" data-target="sec7">7 · Banco de Registros</button>
+    <button class="nav-btn" data-target="sec8">8 · Playlist</button>
+    <button class="nav-btn" data-target="fuentes">FUENTES</button>
+    <button class="nav-btn credits" data-target="creditos">CRÉDITOS</button>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- ================= HOME ================= -->
+  <section class="page active" id="home">
+    <div class="hero-svg-wrap" id="homeSvgContainer"></div>
+
+    <span class="badge-top">Tutorial Técnico · Nivel Profesional</span>
+    <h1 class="hero-title">Integración Vocal y Uso de Micrófono en el PSR-SX920</h1>
+    <p class="hero-sub">Guía completa paso a paso: conexión física, procesamiento de voz, armonía vocal, vocoder, karaoke, mezcla, memoria de registros y playlist para el repertorio en vivo.</p>
+
+    <p class="hero-desc">Este tutorial desarrolla, en ocho bloques temáticos, todo el flujo de trabajo profesional para integrar la voz en el Yamaha PSR-SX920 (y las funciones equivalentes del PSR-SX720): desde la calibración de la ganancia de entrada hasta la organización del repertorio con la Playlist. Se preserva íntegramente el contenido original del documento técnico, transformado en una interfaz educativa interactiva.</p>
+
+    <div class="quote">"Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien."</div>
+
+    <div class="metrics">
+      <div class="metric"><span class="num">8</span><span class="lbl">Secciones</span></div>
+      <div class="metric"><span class="num">2</span><span class="lbl">Modelos</span></div>
+      <div class="metric"><span class="num">2500</span><span class="lbl">Registros/Playlist</span></div>
+      <div class="metric"><span class="num">7"</span><span class="lbl">Pantalla LCD</span></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="section-num">i</span> Cómo usar este tutorial</h2>
+      <p>Navega por las secciones mediante la barra superior. Cada bloque contiene procedimientos numerados, tablas comparativas, advertencias y notas del documento original. La barra de progreso superior refleja tu avance de lectura, y el botón inferior derecho te devuelve rápidamente al inicio.</p>
+      <div class="callout info"><span class="icon">INFO</span><span>Los atajos y nombres de botones aparecen entre corchetes <strong>[ ]</strong> exactamente como en el panel del instrumento. Las rutas de menú se indican con la flecha <strong>→</strong>.</span></div>
+    </div>
+  </section>
+
+  <!-- ================= SEC 1 ================= -->
+  <section class="page" id="sec1">
+    <div class="card">
+      <h2><span class="section-num">1</span> Conexión física y ajuste inicial de ganancia</h2>
+      <p>Antes de cualquier conexión es imprescindible proteger el equipo y calibrar correctamente la entrada del micrófono. Sigue el orden exacto de estos cuatro pasos.</p>
+
+      <div class="step"><div class="step-num">1</div><div class="step-body">
+        <strong>Prevención de daños.</strong>
+        <p>Antes de realizar cualquier conexión, coloca el nivel de volumen general del instrumento al mínimo y gira el mando <strong>[GAIN]</strong> en el panel posterior hacia la posición mínima.</p>
+      </div></div>
+
+      <div class="step"><div class="step-num">2</div><div class="step-body">
+        <strong>Selección del tipo de entrada.</strong>
+        <p>Ajusta el selector <strong>[MIC GUITAR]</strong> (ubicado junto a la toma de entrada en el panel posterior) en la posición <strong>"MIC"</strong>.</p>
+      </div></div>
+
+      <div class="step"><div class="step-num">3</div><div class="step-body">
+        <strong>Conexión física.</strong>
+        <p>Conecta el micrófono a la toma <strong>[MIC/GUITAR INPUT]</strong> utilizando una clavija de auriculares estándar de 1/4" (jack de 6,3 mm).</p>
+      </div></div>
+
+      <div class="step"><div class="step-num">4</div><div class="step-body">
+        <strong>Calibración del nivel de entrada.</strong>
+        <p>Cantando al micrófono con el volumen habitual de interpretación, ajusta gradualmente el mando <strong>[GAIN]</strong>. Comprueba el medidor de entrada en la pantalla de inicio o el indicador luminoso <strong>SIGNAL</strong> del botón <strong>[MIC SETTING/VOCAL HARMONY]</strong> (PSR-SX920) / <strong>[MIC SETTING]</strong> (PSR-SX720): debe iluminarse en <strong>verde o amarillo</strong>, asegurándote de que <strong>nunca se ilumine en rojo u naranja</strong> para evitar distorsiones en el sonido.</p>
+      </div></div>
+
+      <h3>Referencia rápida del indicador SIGNAL</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Color del indicador</th><th>Estado</th><th>Acción recomendada</th></tr></thead>
+          <tbody>
+            <tr><td><span class="chip green">VERDE</span></td><td>Nivel óptimo</td><td>Mantener ajuste</td></tr>
+            <tr><td><span class="chip amber">AMARILLO</span></td><td>Nivel aceptable / picos</td><td>Reducir ligeramente la ganancia si es persistente</td></tr>
+            <tr><td><span class="chip red">ROJO / NARANJA</span></td><td>Sobrecarga</td><td>Reducir <strong>[GAIN]</strong> inmediatamente para evitar distorsión</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout warn"><span class="icon">ADVERTENCIA</span><span>El indicador <strong>nunca</strong> debe iluminarse en rojo u naranja durante el canto normal: esto indica que la señal de entrada está saturando y producirá distorsión audible.</span></div>
+    </div>
+  </section>
+
+  <!-- ================= SEC 2 ================= -->
+  <section class="page" id="sec2">
+    <div class="card">
+      <h2><span class="section-num">2</span> Ajuste del sonido del micrófono y función Talk</h2>
+
+      <h3>Pantalla de configuración del micrófono</h3>
+      <p>Presiona el botón <strong>[MIC SETTING/VOCAL HARMONY]</strong> (PSR-SX920) o <strong>[MIC SETTING]</strong> (PSR-SX720) para abrir el menú de ajuste del micrófono. También se puede acceder desde <strong>[MENU] → [Mic Setting]</strong>.</p>
+
+      <h3>Procesamiento de voz dedicado</h3>
+      <p>El canal de micrófono cuenta con procesamiento interno que incluye:</p>
+      <ul>
+        <li><strong>Puerta de ruido (Noise Gate)</strong> — Silencia la señal cuando no cantas.</li>
+        <li><strong>Compresor</strong> — Uniformiza la dinámica de la voz.</li>
+        <li><strong>Ecualizador (EQ) de 3 bandas</strong> — Permite esculpir el tono de la voz.</li>
+      </ul>
+
+      <h3>Uso de la función Talk (Conversación)</h3>
+      <div class="step"><div class="step-num">1</div><div class="step-body">
+        <strong>Activar Talk.</strong>
+        <p>Para hablar con la audiencia entre canciones, activa la función <strong>Talk</strong> tocando <strong>[Talk]</strong> en la pantalla. Esta función cambia instantáneamente los ajustes del micrófono para que las palabras se escuchen claras y sin los efectos musicales aplicados al cantar.</p>
+      </div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body">
+        <strong>Volver al canto.</strong>
+        <p>Para volver al modo de canto, toca <strong>[Vocal]</strong>.</p>
+      </div></div>
+
+      <div class="callout info"><span class="icon">NOTA</span><span>En el PSR-SX920, la armonía vocal se desactiva automáticamente mientras la función <strong>Talk</strong> está activa.</span></div>
+    </div>
+  </section>
+
+  <!-- ================= SEC 3 ================= -->
+  <section class="page" id="sec3">
+    <div class="card">
+      <h2><span class="section-num">3</span> Armonía Vocal y Sintetizador Vocoder (PSR-SX920)</h2>
+      <p>El modelo PSR-SX920 incluye un procesador de armonía vocal y sintetizador vocoder.</p>
+
+      <h3>Activación de Vocal Harmony</h3>
+      <div class="step"><div class="step-num">1</div><div class="step-body"><p>Accede desde <strong>[MENU] → [Vocal Harmony]</strong> o presiona el botón <strong>[MIC SETTING/VOCAL HARMONY]</strong>.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><p>Asegúrate de que la función de armonía esté configurada en <strong>"On"</strong>.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><p>Toca el nombre del tipo de armonía para abrir la pantalla de selección de presets (ej. <em>DuetHarmony</em>, <em>StandardHarmony</em>, <em>BigChoir</em>).</p></div></div>
+
+      <h3>Modos de funcionamiento de la Armonía Vocal</h3>
+      <div class="grid-3">
+        <div class="mini-card">
+          <div class="mc-title"><span class="chip blue">CHORDAL</span> Modo Acorde</div>
+          <p>Añade voces armónicas automáticas a tu voz basadas en los acordes que tocas en el teclado. Para que funcione, activa el acompañamiento <strong>[ACMP ON/OFF]</strong> y toca acordes con la mano izquierda, o activa la parte <strong>LEFT</strong>, o reproduce una canción MIDI que contenga datos de acordes.</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-title"><span class="chip purple">VOCODER</span> Modo Vocoder</div>
+          <p>La salida de tu voz se transforma según las notas exactas de las teclas que mantengas pulsadas (hasta un máximo de tres notas simultáneas) o las notas de una canción.</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-title"><span class="chip amber">MONO</span> Vocoder-Mono</div>
+          <p>Similar al Vocoder, pero procesa únicamente líneas melódicas de una sola nota (dando prioridad a la última nota tocada).</p>
+        </div>
+      </div>
+
+      <h3>Sintetizador Vocoder (Synth Vocoder)</h3>
+      <div class="step"><div class="step-num">1</div><div class="step-body"><p>En la pantalla de selección de tipos de armonía vocal, elige la pestaña/subcategoría <strong>Synth Vocoder</strong>.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><p>Selecciona un preset de efecto especial (ej. efectos robóticos o coros sintetizados).</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><p>Mantén pulsada una o varias notas en el teclado mientras hablas o cantas por el micrófono para generar el efecto sintetizado modulado por tu voz.</p></div></div>
+    </div>
+  </section>
+
+  <!-- ================= SEC 4 ================= -->
+  <section class="page" id="sec4">
+    <div class="card">
+      <h2><span class="section-num">4</span> Integración vocal con canciones de audio y MIDI (Modo Karaoke)</h2>
+
+      <h3>Cancelación Vocal (Vocal Cancel en canciones de audio)</h3>
+      <p>Si reproduces un archivo de audio (WAV o MP3) desde la unidad de usuario o USB, pulsa el botón <strong>[Vocal Cancel]</strong> en la pantalla del reproductor de audio (<strong>Song Player</strong>). Esta función atenúa o elimina la voz principal situada en el centro estéreo del archivo para permitirte cantar encima como en un karaoke.</p>
+
+      <h3>Ajuste de velocidad y tono del audio</h3>
+      <div class="grid-2">
+        <div class="mini-card">
+          <div class="mc-title"><span class="chip green">TIME STRETCH</span></div>
+          <p>Permite acelerar o ralentizar la reproducción del archivo de audio entre un <strong>70% y un 160%</strong> sin alterar el tono de la voz o de la música.</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-title"><span class="chip blue">PITCH SHIFT</span></div>
+          <p>Permite subir o bajar el tono de la canción de audio en pasos de semitono (<strong>de −12 a +12</strong>) para adaptarlo perfectamente a tu rango vocal.</p>
+        </div>
+      </div>
+
+      <h3>Partitura y letras en pantalla</h3>
+      <p>Si la canción MIDI contiene texto o letras, presiona el botón <strong>[Lyrics]</strong> o <strong>[Score]</strong> para visualizar la letra o la partitura en la pantalla LCD de 7 pulgadas mientras cantas.</p>
+
+      <h3>Resumen de rangos de ajuste</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Función</th><th>Rango</th><th>Efecto</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Time Stretch</strong></td><td>70% – 160%</td><td>Cambia la velocidad sin alterar el tono</td></tr>
+            <tr><td><strong>Pitch Shift</strong></td><td>−12 a +12 semitonos</td><td>Cambia el tono sin alterar la velocidad</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SEC 5 ================= -->
+  <section class="page" id="sec5">
+    <div class="card">
+      <h2><span class="section-num">5</span> Mezcla, control en vivo y almacenamiento</h2>
+
+      <h3>Ajuste del balance en el Mezclador</h3>
+      <p>Pulsa el botón <strong>[MIXER/EQ]</strong> para abrir la pantalla Mixer. Ajusta el nivel de volumen individual del micrófono respecto a las partes del teclado (<strong>RIGHT 1-3</strong>, <strong>LEFT</strong>), el estilo (<strong>Style</strong>) y las canciones (<strong>Song</strong>) para lograr un balance profesional.</p>
+
+      <h3>Asignación de controles en directo (Botones ASSIGNABLE y Pedales)</h3>
+      <div class="step"><div class="step-num">1</div><div class="step-body"><p>Para controlar el micrófono sin soltar las manos del teclado, accede a <strong>[MENU] → [Assignable]</strong>.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><p>Puedes asignar a los botones <strong>ASSIGNABLE [A]–[F]</strong> o a un pedal conectado a <strong>FOOT PEDAL</strong> (como los pedales FC4A o FC5) funciones esenciales como <strong>"VH Harmony On/Off"</strong> (activar/desactivar armonía vocal) o <strong>"Talk On/Off"</strong> (activar modo conversación).</p></div></div>
+
+      <h3>Guardar configuraciones en la Memoria de Registros</h3>
+      <p>Una vez configurado el micrófono, el tipo de armonía vocal y el balance del mezclador, presiona <strong>[MEMORY]</strong> y selecciona uno de los botones de <strong>REGISTRATION MEMORY</strong> para memorizar todos los ajustes del panel y recuperarlos al instante durante una actuación.</p>
+
+      <h3>Funciones asignables recomendadas</h3>
+      <div class="grid-2">
+        <div class="mini-card">
+          <div class="mc-title"><span class="chip purple">VH Harmony On/Off</span></div>
+          <p>Permite activar o desactivar la armonía vocal sin soltar el teclado.</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-title"><span class="chip amber">Talk On/Off</span></div>
+          <p>Cambia instantáneamente al modo conversación con la audiencia.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SEC 6 ================= -->
+  <section class="page" id="sec6">
+    <div class="card">
+      <h2><span class="section-num">6</span> Solución de problemas vocales comunes</h2>
+
+      <details class="acc" open>
+        <summary>El efecto de armonía vocal no suena o desafina</summary>
+        <div class="acc-body">
+          <p><strong>Causa:</strong> El micrófono puede estar captando el sonido de los altavoces del propio teclado (especialmente las frecuencias graves del acompañamiento).</p>
+          <p><strong>Solución:</strong> Canta lo más cerca posible de la cápsula del micrófono, utiliza un micrófono de patrón direccional y reduce el volumen principal (<strong>Master Volume</strong>) o el volumen del estilo en el mezclador.</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>No se genera armonía en modo acorde</summary>
+        <div class="acc-body">
+          <p><strong>Solución:</strong> Comprueba que el botón <strong>[ACMP ON/OFF]</strong> está activado y estás tocando acordes en la sección izquierda del teclado, o asegúrate de que la parte <strong>LEFT</strong> está encendida.</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>La voz del micrófono no se graba en la canción</summary>
+        <div class="acc-body">
+          <p><strong>Solución:</strong> La señal de la toma <strong>MIC/GUITAR INPUT</strong> no se puede grabar mediante la grabación rápida MIDI. Para grabar tu voz junto con el teclado, debes utilizar la <strong>Grabación Rápida de Audio</strong> (<strong>Quick Recording Audio</strong>), la cual genera un archivo WAV estéreo de calidad CD.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================= SEC 7 ================= -->
+  <section class="page" id="sec7">
+    <div class="card">
+      <h2><span class="section-num">7</span> Configuración del Banco de Memoria de Registros</h2>
+      <p>La <strong>Memoria de Registros</strong> permite guardar prácticamente cualquier configuración del panel (estilo, voces, tempo, efectos de micrófono y armonía vocal) en uno de los ocho botones numerados del panel para recuperarla al instante durante una interpretación. Los ocho botones se almacenan colectivamente en un único archivo denominado <strong>banco de memoria de registros</strong> (<code>.rgt</code>).</p>
+
+      <h3>1. Programación paso a paso de los 8 botones de registro</h3>
+      <div class="step"><div class="step-num">1</div><div class="step-body">
+        <strong>Ajuste del panel.</strong>
+        <p>Configura el teclado con todos los parámetros necesarios para la canción o sección (selecciona la voz principal, el estilo, el tempo, los efectos del micrófono y el tipo de armonía vocal).</p>
+      </div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body">
+        <strong>Selección de elementos a memorizar.</strong>
+        <p>Mantén pulsado el botón <strong>[MEMORY]</strong> ubicado en la sección REGISTRATION MEMORY. Aparecerá una ventana en la pantalla táctil donde puedes activar o desactivar las marcas de verificación de los elementos que deseas registrar (asegúrate de que la casilla de micrófono/armonía vocal y estilo estén marcadas).</p>
+      </div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body">
+        <strong>Asignación al botón.</strong>
+        <p>Sin soltar el botón <strong>[MEMORY]</strong>, presiona uno de los botones numerados <strong>[1]–[8]</strong>.</p>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body">
+        <strong>Estado de los indicadores luminosos.</strong>
+        <ul>
+          <li><span class="chip amber">NARANJA</span> Indica que el botón contiene datos y está seleccionado actualmente.</li>
+          <li><span class="chip blue">AZUL</span> Indica que el botón contiene datos guardados, pero no está seleccionado en ese momento.</li>
+          <li><span class="chip red">APAGADO</span> Indica que el botón está vacío.</li>
+        </ul>
+      </div></div>
+
+      <h3>2. Guardar el Banco de Registros</h3>
+      <div class="step"><div class="step-num">1</div><div class="step-body"><p>Presiona simultáneamente los botones <strong>REGIST BANK [−]</strong> y <strong>[+]</strong> para abrir la pantalla de selección de banco de registros.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><p>Toca el icono de edición de archivos <strong>(File Edit)</strong> y selecciona <strong>[Save]</strong> para guardar los ocho ajustes juntos como un archivo de banco en la unidad de usuario interna o en una memoria flash USB.</p></div></div>
+
+      <h3>3. Recuperación en vivo y función Freeze</h3>
+      <ul>
+        <li><strong>Recuperación:</strong> Presiona <strong>REGIST BANK [−]/[+]</strong> simultáneamente, selecciona el banco en la pantalla y pulsa el botón iluminado en azul (<strong>[1]–[8]</strong>) correspondiente a la sección de la canción que vas a interpretar.</li>
+        <li><strong>Uso del botón [FREEZE]:</strong> Si deseas cambiar de registro durante una canción pero quieres mantener fijos ciertos parámetros (como el volumen del micrófono o el acompañamiento), activa el botón <strong>[FREEZE]</strong>, el cual bloquea los elementos configurados para que no cambien al presionar un nuevo botón de registro.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= SEC 8 ================= -->
+  <section class="page" id="sec8">
+    <div class="card">
+      <h2><span class="section-num">8</span> Estructuración de la Lista de Reproducción (Playlist) para el Repertorio en Vivo</h2>
+      <p>La función <strong>Playlist</strong> permite gestionar y organizar el repertorio del concierto seleccionando archivos específicos de los bancos de registros guardados, sin alterar los archivos de banco originales. Cada archivo de lista de reproducción puede gestionar hasta un máximo de <strong>2500 registros</strong>.</p>
+
+      <h3>1. Creación y adición de canciones a la Playlist</h3>
+      <div class="step"><div class="step-num">1</div><div class="step-body"><p>Presiona el botón <strong>[PLAYLIST]</strong> en el panel frontal para abrir la pantalla de la lista de reproducción.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><p>Toca el icono <strong>(New)</strong> en la pantalla para crear un nuevo archivo de lista de reproducción.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><p>Toca <strong>[Add Record]</strong> para abrir la ventana de vinculación. Puedes añadir canciones utilizando cualquiera de estos métodos:</p>
+        <ul>
+          <li><strong>[Search from Registration Bank]:</strong> Busca por palabra clave el nombre de la canción o banco.</li>
+          <li><strong>[Select from Registration Bank]:</strong> Navega directamente por la carpeta de usuario o USB para elegir el banco de registros guardado.</li>
+        </ul>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><p>Selecciona el banco de la canción y toca <strong>[Add to Playlist]</strong> para añadirla a la lista.</p></div></div>
+
+      <h3>2. Configuración avanzada de cada entrada en vivo ([Edit])</h3>
+      <p>Para que la lista de reproducción funcione de manera automatizada en el escenario:</p>
+      <div class="step"><div class="step-num">1</div><div class="step-body"><p>Selecciona la canción agregada en la lista y toca <strong>[Edit]</strong> para abrir la pantalla de edición de registros.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body">
+        <strong>Carga automática de registro.</strong>
+        <p>En el apartado <strong>Load Regist Memory</strong>, selecciona cuál de los botones numerados (<strong>[1]–[8]</strong>) se activará automáticamente al seleccionar esa canción en la lista.</p>
+      </div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body">
+        <strong>Pantalla de vista automática (View).</strong>
+        <p>Elige qué información debe abrirse en la pantalla del teclado de forma automática al seleccionar el tema:</p>
+        <ul>
+          <li><strong>Score:</strong> Muestra la partitura de la canción MIDI vinculada.</li>
+          <li><strong>Lyrics:</strong> Muestra la letra del tema.</li>
+          <li><strong>Text:</strong> Abre un archivo de texto (<code>.txt</code>) cargado previamente con apuntes, notas de interpretación o esquemas de acordes.</li>
+        </ul>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><p>Toca el icono de guardado <strong>(Save)</strong> para consolidar los cambios en el archivo de la lista de reproducción.</p></div></div>
+
+      <h3>3. Ejecución en el escenario</h3>
+      <p>Durante la actuación, simplemente presiona <strong>[PLAYLIST]</strong>, toca el nombre del tema correspondiente en la lista y presiona <strong>[Load]</strong>. El teclado cargará al instante el banco de memoria de registros configurado, activará el botón de registro seleccionado y desplegará la letra, partitura o texto en la pantalla LCD sin interrupciones.</p>
+    </div>
+  </section>
+
+  <!-- ================= FUENTES ================= -->
+  <section class="page" id="fuentes">
+    <div class="card">
+      <h2><span class="section-num">§</span> Fuentes y referencias</h2>
+      <p>Este tutorial se ha construido a partir del siguiente material documental. Toda la información técnica, procedimientos y advertencias provienen íntegramente de esta fuente.</p>
+
+      <div class="fuente-item">
+        <strong>Documento base</strong>
+        Tutorial completo de integración vocal y uso de micrófono PSR-SX920 — by Rubén Sbarsky.
+      </div>
+      <div class="fuente-item">
+        <strong>Equipo de referencia</strong>
+        Yamaha PSR-SX920 · Yamaha PSR-SX720 (funciones equivalentes indicadas en el documento original).
+      </div>
+      <div class="fuente-item">
+        <strong>Accesorios mencionados</strong>
+        Pedales FC4A / FC5 (control asignable de funciones vocales).
+      </div>
+      <div class="fuente-item">
+        <strong>Formatos de archivo citados</strong>
+        Banco de registros: <code>.rgt</code> · Audio: <code>WAV</code>, <code>MP3</code> · Texto de referencia: <code>.txt</code>.
+      </div>
+
+      <div class="callout info"><span class="icon">INFO</span><span>No se ha añadido información externa al documento original. Cualquier nombre de botón, rango de valores o procedimiento reflejado aquí proviene literalmente del contenido proporcionado por el autor.</span></div>
+    </div>
+  </section>
+
+  <!-- ================= CRÉDITOS ================= -->
+  <section class="page" id="creditos">
+    <div class="hero-svg-wrap" id="creditsSvgContainer"></div>
+    <div class="credits-box">
+      <h2>Tutorial Completo: Integración Vocal y Micrófono PSR-SX920</h2>
+      <p class="author">Rubén Sbarsky</p>
+      <p class="meta">📅 Fecha: 20/09/2026</p>
+      <p class="meta">🕒 Hora: 03:59:16</p>
+      <p class="meta">📚 Tutorial solo con fines Educativos y Divulgación</p>
+      <p class="meta" style="margin-top:14px;color:var(--text-dim2);">Material elaborado como recurso didáctico para usuarios de los arreglistas Yamaha PSR-SX920 y PSR-SX720. Todos los procedimientos, rangos y advertencias técnicos se conservan íntegramente del documento original.</p>
+      <p class="fiat">Fiat iustitia, ruat caelum.</p>
+    </div>
+  </section>
+
+</div>
+
+<button id="toTop" aria-label="Volver arriba">↑</button>
+
+<footer>
+  <p>📚 Tutorial solo con fines Educativos y Divulgación</p>
+  <p>👨‍💻 Créditos: Rubén Sbarsky</p>
+  <p>📅 FECHA: 20/09/2026 · Hora: 03:59:16</p>
+  <p class="fiat">Fiat iustitia, ruat caelum.</p>
+</footer>
+
+<script>
+/* ============================================================
+   SVG TEMPLATE — animación cinematográfica de cadena vocal
+   Se clona idéntico en HOME y en CRÉDITOS.
+   ============================================================ */
+const SVG_MARKUP = `
+<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cadena de procesamiento vocal PSR-SX920">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#070b14">
+        <animate attributeName="stop-color" values="#070b14;#0a1a2e;#070b14;#1a0a2e;#070b14" dur="9s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" stop-color="#0a1a2e">
+        <animate attributeName="stop-color" values="#0a1a2e;#0d2440;#0a1a2e;#241040;#0a1a2e" dur="11s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#070b14">
+        <animate attributeName="stop-color" values="#070b14;#1a0a2e;#070b14;#0a1a2e;#070b14" dur="13s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+
+    <radialGradient id="haloGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.55"/>
+      <stop offset="70%" stop-color="#00d4ff" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloPurple" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.55"/>
+      <stop offset="70%" stop-color="#a855f7" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloGreen" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.55"/>
+      <stop offset="70%" stop-color="#22c55e" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+    </radialGradient>
+
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#00d4ff" stroke-width="0.5" opacity="0.18">
+        <animate attributeName="opacity" values="0.05;0.28;0.05" dur="6s" repeatCount="indefinite"/>
+      </path>
+    </pattern>
+
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="3.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="glowSoft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="1.6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="glowStrong" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="5.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Camino principal de señal (flujo vocal) -->
+    <path id="chainPath" d="M 60 250 C 180 190, 280 320, 400 250 S 620 180, 740 250" fill="none"/>
+
+    <!-- Camino secundario (retorno armónico) -->
+    <path id="harmonyPath" d="M 400 250 C 480 200, 560 320, 680 250 S 760 190, 760 250" fill="none"/>
+
+    <!-- Rejilla luminosa decorativa -->
+    <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00d4ff" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#00d4ff" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- FONDO -->
+  <rect width="800" height="450" fill="url(#bgGrad)"/>
+  <rect width="800" height="450" fill="url(#grid)"/>
+
+  <!-- Rejilla diagonal de fondo -->
+  <g opacity="0.08">
+    <path d="M0 450 L450 0 M100 450 L550 0 M200 450 L650 0 M300 450 L750 0 M400 450 L800 50" stroke="#00d4ff" stroke-width="0.6">
+      <animate attributeName="opacity" values="0.04;0.12;0.04" dur="7s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- Anillos orbitales concéntricos -->
+  <g transform="translate(400 225)" fill="none">
+    <circle r="170" stroke="#00d4ff" stroke-width="0.8" stroke-dasharray="3 9" opacity="0.35">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="42s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="140" stroke="#a855f7" stroke-width="0.9" stroke-dasharray="2 7 6 7" opacity="0.4">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="33s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="110" stroke="#22c55e" stroke-width="0.8" stroke-dasharray="1 5 4 5" opacity="0.32">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="26s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="80" stroke="#f59e0b" stroke-width="0.7" stroke-dasharray="6 10" opacity="0.28">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="20s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Ecos radiales pulsantes -->
+  <g transform="translate(400 225)">
+    <circle r="60" fill="url(#haloGrad)">
+      <animate attributeName="r" values="55;85;55" dur="4.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.85;0.15;0.85" dur="4.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="55" fill="url(#haloPurple)">
+      <animate attributeName="r" values="45;75;45" dur="5.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.6;0.1;0.6" dur="5.5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Líneas guía horizontales sutiles -->
+  <g stroke="url(#lineGrad)" stroke-width="0.7" opacity="0.5">
+    <line x1="0" y1="120" x2="800" y2="120">
+      <animate attributeName="opacity" values="0.15;0.55;0.15" dur="6s" repeatCount="indefinite"/>
+    </line>
+    <line x1="0" y1="360" x2="800" y2="360">
+      <animate attributeName="opacity" values="0.15;0.55;0.15" dur="7.5s" repeatCount="indefinite"/>
+    </line>
+  </g>
+
+  <!-- ============ CADENA DE SEÑAL ============ -->
+  <!-- Trazo base -->
+  <use href="#chainPath" stroke="#1e3a5f" stroke-width="2.2" fill="none" opacity="0.7"/>
+  <!-- Trazo animado (flujo continuo) -->
+  <use href="#chainPath" stroke="#00d4ff" stroke-width="2.2" fill="none"
+       stroke-dasharray="14 20" filter="url(#glowSoft)">
+    <animate attributeName="stroke-dashoffset" from="0" to="-340" dur="5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="3s" repeatCount="indefinite"/>
+  </use>
+  <!-- Camino armónico en púrpura -->
+  <use href="#harmonyPath" stroke="#a855f7" stroke-width="1.6" fill="none"
+       stroke-dasharray="10 16" opacity="0.7" filter="url(#glowSoft)">
+    <animate attributeName="stroke-dashoffset" from="0" to="260" dur="6.5s" repeatCount="indefinite"/>
+  </use>
+
+  <!-- ============ NODOS DEL PROCESO ============ -->
+  <!-- Nodo 1: MIC -->
+  <g transform="translate(60 250)">
+    <circle r="26" fill="#0f172a" stroke="#00d4ff" stroke-width="1.6" filter="url(#glow)">
+      <animate attributeName="r" values="24;29;24" dur="3.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="34" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.5">
+      <animate attributeName="r" values="30;44;30" dur="3.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.55;0;0.55" dur="3.2s" repeatCount="indefinite"/>
+    </circle>
+    <!-- icono micrófono -->
+    <rect x="-4" y="-9" width="8" height="12" rx="4" fill="#00d4ff"/>
+    <path d="M -8 0 A 8 8 0 0 0 8 0" stroke="#00d4ff" stroke-width="1.4" fill="none"/>
+    <line x1="0" y1="8" x2="0" y2="12" stroke="#00d4ff" stroke-width="1.4"/>
+    <text y="46" text-anchor="middle" fill="#00d4ff" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">MIC</text>
+  </g>
+
+  <!-- Nodo 2: GATE -->
+  <g transform="translate(190 234)">
+    <circle r="22" fill="#0f172a" stroke="#22c55e" stroke-width="1.5" filter="url(#glowSoft)">
+      <animate attributeName="r" values="20;24;20" dur="3.7s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="30" fill="none" stroke="#22c55e" stroke-width="0.7" opacity="0.45">
+      <animate attributeName="r" values="26;38;26" dur="3.7s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;0;0.5" dur="3.7s" repeatCount="indefinite"/>
+    </circle>
+    <text y="0" text-anchor="middle" dy="4" fill="#22c55e" font-family="Segoe UI,sans-serif" font-size="10" font-weight="800">NG</text>
+    <text y="42" text-anchor="middle" fill="#22c55e" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" letter-spacing="1.4">GATE</text>
+  </g>
+
+  <!-- Nodo 3: COMP -->
+  <g transform="translate(320 268)">
+    <circle r="22" fill="#0f172a" stroke="#f59e0b" stroke-width="1.5" filter="url(#glowSoft)">
+      <animate attributeName="r" values="20;24;20" dur="4.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="30" fill="none" stroke="#f59e0b" stroke-width="0.7" opacity="0.45">
+      <animate attributeName="r" values="26;38;26" dur="4.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;0;0.5" dur="4.2s" repeatCount="indefinite"/>
+    </circle>
+    <text y="0" text-anchor="middle" dy="4" fill="#f59e0b" font-family="Segoe UI,sans-serif" font-size="10" font-weight="800">CP</text>
+    <text y="42" text-anchor="middle" fill="#f59e0b" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" letter-spacing="1.4">COMP</text>
+  </g>
+
+  <!-- Nodo 4: EQ -->
+  <g transform="translate(470 268)">
+    <circle r="22" fill="#0f172a" stroke="#a855f7" stroke-width="1.5" filter="url(#glowSoft)">
+      <animate attributeName="r" values="20;24;20" dur="3.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="30" fill="none" stroke="#a855f7" stroke-width="0.7" opacity="0.45">
+      <animate attributeName="r" values="26;38;26" dur="3.4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;0;0.5" dur="3.4s" repeatCount="indefinite"/>
+    </circle>
+    <text y="0" text-anchor="middle" dy="4" fill="#a855f7" font-family="Segoe UI,sans-serif" font-size="10" font-weight="800">EQ</text>
+    <text y="42" text-anchor="middle" fill="#a855f7" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" letter-spacing="1.4">3-BAND</text>
+  </g>
+
+  <!-- Nodo 5: HARMONY (destacado, anillos orbitales) -->
+  <g transform="translate(620 234)">
+    <circle r="30" fill="#0f172a" stroke="#ef4444" stroke-width="1.8" filter="url(#glow)">
+      <animate attributeName="r" values="28;33;28" dur="2.8s" repeatCount="indefinite"/>
+      <animate attributeName="stroke" values="#ef4444;#00d4ff;#ef4444" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="40" fill="none" stroke="#00d4ff" stroke-width="0.9" stroke-dasharray="4 6" opacity="0.75">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="7s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="46" fill="none" stroke="#a855f7" stroke-width="0.7" stroke-dasharray="2 5 3 5" opacity="0.7">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="10s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="52" fill="url(#haloPurple)" opacity="0.6">
+      <animate attributeName="r" values="48;64;48" dur="3.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.7;0.1;0.7" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+    <text y="0" text-anchor="middle" dy="4" fill="#00d4ff" font-family="Segoe UI,sans-serif" font-size="10" font-weight="800">VH</text>
+    <text y="60" text-anchor="middle" fill="#00d4ff" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" letter-spacing="1.6">HARMONY</text>
+  </g>
+
+  <!-- Nodo 6: OUT -->
+  <g transform="translate(740 250)">
+    <circle r="24" fill="#0f172a" stroke="#22c55e" stroke-width="1.6" filter="url(#glow)">
+      <animate attributeName="r" values="22;27;22" dur="3.1s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="32" fill="none" stroke="#22c55e" stroke-width="0.8" opacity="0.5">
+      <animate attributeName="r" values="28;42;28" dur="3.1s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.55;0;0.55" dur="3.1s" repeatCount="indefinite"/>
+    </circle>
+    <text y="0" text-anchor="middle" dy="4" fill="#22c55e" font-family="Segoe UI,sans-serif" font-size="10" font-weight="800">OUT</text>
+    <text y="46" text-anchor="middle" fill="#22c55e" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" letter-spacing="1.5">L / R</text>
+  </g>
+
+  <!-- ============ PARTÍCULAS VIAJERAS sobre el camino principal ============ -->
+  <g>
+    <circle r="3.5" fill="#00d4ff" filter="url(#glow)">
+      <animateMotion dur="5s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#chainPath"/>
+      </animateMotion>
+      <animate attributeName="r" values="2.5;5;2.5" dur="1.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="2.8" fill="#22c55e" filter="url(#glow)">
+      <animateMotion dur="5s" begin="1.2s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#chainPath"/>
+      </animateMotion>
+      <animate attributeName="r" values="2;4;2" dur="1.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="3" fill="#f59e0b" filter="url(#glow)">
+      <animateMotion dur="5s" begin="2.4s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#chainPath"/>
+      </animateMotion>
+    </circle>
+    <circle r="2.6" fill="#a855f7" filter="url(#glow)">
+      <animateMotion dur="5s" begin="3.6s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#chainPath"/>
+      </animateMotion>
+    </circle>
+    <circle r="2.4" fill="#ef4444" filter="url(#glow)">
+      <animateMotion dur="6.5s" begin="0.6s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#chainPath"/>
+      </animateMotion>
+    </circle>
+    <circle r="2.2" fill="#00d4ff" filter="url(#glow)">
+      <animateMotion dur="6.5s" begin="3.3s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#chainPath"/>
+      </animateMotion>
+    </circle>
+  </g>
+
+  <!-- Partículas sobre camino armónico -->
+  <g>
+    <circle r="2.6" fill="#a855f7" filter="url(#glow)">
+      <animateMotion dur="7s" repeatCount="indefinite">
+        <mpath href="#harmonyPath"/>
+      </animateMotion>
+    </circle>
+    <circle r="2.2" fill="#00d4ff" filter="url(#glow)">
+      <animateMotion dur="7s" begin="2.3s" repeatCount="indefinite">
+        <mpath href="#harmonyPath"/>
+      </animateMotion>
+    </circle>
+    <circle r="2.4" fill="#22c55e" filter="url(#glow)">
+      <animateMotion dur="7s" begin="4.6s" repeatCount="indefinite">
+        <mpath href="#harmonyPath"/>
+      </animateMotion>
+    </circle>
+  </g>
+
+  <!-- ============ GHOST ELEMENT: micrófono translúcido recorriendo el camino ============ -->
+  <g opacity="0.55">
+    <animateMotion dur="9s" repeatCount="indefinite" rotate="auto">
+      <mpath href="#chainPath"/>
+    </animateMotion>
+    <animate attributeName="opacity" values="0;0.7;0.7;0" dur="9s" repeatCount="indefinite"/>
+    <g transform="translate(-12 -18)">
+      <rect x="0" y="0" width="14" height="20" rx="7" fill="none" stroke="#00d4ff" stroke-width="1.4" filter="url(#glowSoft)"/>
+      <path d="M -4 20 A 11 11 0 0 0 18 20" stroke="#00d4ff" stroke-width="1.2" fill="none"/>
+      <line x1="7" y1="31" x2="7" y2="38" stroke="#00d4ff" stroke-width="1.2"/>
+    </g>
+  </g>
+
+  <!-- Ghost secundario armónico -->
+  <g opacity="0.4">
+    <animateMotion dur="11s" begin="2s" repeatCount="indefinite">
+      <mpath href="#harmonyPath"/>
+    </animateMotion>
+    <animate attributeName="opacity" values="0;0.5;0.5;0" dur="11s" repeatCount="indefinite"/>
+    <text x="-8" y="6" fill="#a855f7" font-family="Segoe UI,sans-serif" font-size="22" font-weight="800">♪</text>
+  </g>
+
+  <!-- ============ NOTAS FLOTANTES ============ -->
+  <g font-family="Segoe UI,sans-serif" font-weight="800">
+    <text x="140" y="120" fill="#00d4ff" font-size="20" opacity="0.85">♪
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -14;0 0" dur="3.4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="3.4s" repeatCount="indefinite"/>
+    </text>
+    <text x="260" y="100" fill="#22c55e" font-size="18" opacity="0.8">♫
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -12;0 0" dur="4.1s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="4.1s" repeatCount="indefinite"/>
+    </text>
+    <text x="500" y="130" fill="#f59e0b" font-size="20" opacity="0.8">♪
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -16;0 0" dur="4.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.35;1;0.35" dur="4.8s" repeatCount="indefinite"/>
+    </text>
+    <text x="640" y="115" fill="#a855f7" font-size="18" opacity="0.8">♬
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -13;0 0" dur="3.9s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="3.9s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- ============ EXPLOSIONES RADIALES de partículas en nodos clave ============ -->
+  <g transform="translate(620 234)" stroke="#00d4ff" stroke-width="1.2" opacity="0.85">
+    <line x1="0" y1="0" x2="0" y2="-30">
+      <animate attributeName="y2" values="0;-46" dur="2.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="2.8s" repeatCount="indefinite"/>
+    </line>
+    <line x1="0" y1="0" x2="30" y2="0">
+      <animate attributeName="x2" values="0;46" dur="2.8s" begin="0.3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="2.8s" begin="0.3s" repeatCount="indefinite"/>
+    </line>
+    <line x1="0" y1="0" x2="0" y2="30">
+      <animate attributeName="y2" values="0;46" dur="2.8s" begin="0.6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="2.8s" begin="0.6s" repeatCount="indefinite"/>
+    </line>
+    <line x1="0" y1="0" x2="-30" y2="0">
+      <animate attributeName="x2" values="0;-46" dur="2.8s" begin="0.9s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="2.8s" begin="0.9s" repeatCount="indefinite"/>
+    </line>
+    <line x1="0" y1="0" x2="21" y2="-21">
+      <animate attributeName="x2" values="0;33" dur="2.8s" begin="1.2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="0;-33" dur="2.8s" begin="1.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="2.8s" begin="1.2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="0" y1="0" x2="-21" y2="-21">
+      <animate attributeName="x2" values="0;-33" dur="2.8s" begin="1.5s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="0;-33" dur="2.8s" begin="1.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="2.8s" begin="1.5s" repeatCount="indefinite"/>
+    </line>
+    <line x1="0" y1="0" x2="21" y2="21">
+      <animate attributeName="x2" values="0;33" dur="2.8s" begin="1.8s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="0;33" dur="2.8s" begin="1.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="2.8s" begin="1.8s" repeatCount="indefinite"/>
+    </line>
+    <line x1="0" y1="0" x2="-21" y2="21">
+      <animate attributeName="x2" values="0;-33" dur="2.8s" begin="2.1s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="0;33" dur="2.8s" begin="2.1s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="2.8s" begin="2.1s" repeatCount="indefinite"/>
+    </line>
+  </g>
+
+  <!-- ============ FLASH + TEXTO GRANDE CULMINANTE ============ -->
+  <g transform="translate(400 225)" pointer-events="none">
+    <circle r="20" fill="#00d4ff" opacity="0">
+      <animate attributeName="r" values="0;220" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.35;0" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <text y="6" text-anchor="middle" fill="#00d4ff" font-family="Segoe UI,sans-serif" font-size="42" font-weight="900" letter-spacing="8" opacity="0" filter="url(#glowStrong)">
+      VOICE
+      <animate attributeName="opacity" values="0;0;0.95;0.95;0" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="letter-spacing" values="4;14;4" dur="6s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- ============ INDICADOR LIVE ============ -->
+  <g transform="translate(720 34)">
+    <rect x="0" y="0" width="66" height="22" rx="11" fill="#0a0e1a" stroke="#ef4444" stroke-width="1.2" filter="url(#glowSoft)"/>
+    <circle cx="14" cy="11" r="4" fill="#ef4444">
+      <animate attributeName="opacity" values="1;0.2;1" dur="1.4s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="4;5.5;4" dur="1.4s" repeatCount="indefinite"/>
+    </circle>
+    <text x="26" y="15" fill="#ef4444" font-family="Segoe UI,sans-serif" font-size="10" font-weight="800" letter-spacing="2">LIVE</text>
+  </g>
+
+  <!-- ============ TÍTULO PRINCIPAL ANIMADO ============ -->
+  <text x="40" y="56" font-family="Segoe UI,sans-serif" font-size="22" font-weight="800" letter-spacing="1.5" filter="url(#glowSoft)">
+    PSR-SX920 · VOCAL CHAIN
+    <animate attributeName="fill" values="#00d4ff;#a855f7;#f59e0b;#22c55e;#00d4ff" dur="9s" repeatCount="indefinite"/>
+  </text>
+
+  <text x="40" y="80" font-family="Segoe UI,sans-serif" font-size="11" font-weight="600" letter-spacing="3" fill="#94a3b8">
+    MIC — GATE — COMP — EQ — HARMONY — OUT
+    <animate attributeName="opacity" values="0.55;1;0.55" dur="4.4s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- Etiquetas de estado alternando -->
+  <text x="40" y="422" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" letter-spacing="2">
+    <animate attributeName="fill" values="#22c55e;#f59e0b;#00d4ff;#22c55e" dur="7s" repeatCount="indefinite"/>
+    <tspan>
+      <animate attributeName="textContent" values="STATUS · READY" dur="7s" repeatCount="indefinite"/>
+    </tspan>
+  </text>
+
+  <!-- Firma del autor oscilante -->
+  <text x="760" y="424" text-anchor="end" font-family="Segoe UI,sans-serif" font-size="12" font-style="italic" fill="#a855f7">
+    Rubén Sbarsky
+    <animate attributeName="opacity" values="0.45;1;0.45" dur="5.2s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- Subtítulo técnico parpadeante suave -->
+  <text x="400" y="404" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="600" letter-spacing="4" fill="#64748b">
+    INTEGRACIÓN VOCAL · ARMONÍA · VOCODER · KARAOKE
+    <animate attributeName="opacity" values="0.35;0.9;0.35" dur="6.5s" repeatCount="indefinite"/>
+  </text>
+</svg>
+`;
+
+/* Inyectar SVG idéntico en HOME y CRÉDITOS */
+const homeSvg = document.getElementById('homeSvgContainer');
+const creditsSvg = document.getElementById('creditsSvgContainer');
+if(homeSvg) homeSvg.innerHTML = SVG_MARKUP;
+if(creditsSvg) creditsSvg.innerHTML = SVG_MARKUP;
+
+/* ============================================================
+   SPA NAVIGATION
+   ============================================================ */
+const navButtons = document.querySelectorAll('.nav-btn');
+const pages = document.querySelectorAll('.page');
+
+function showPage(targetId){
+  pages.forEach(p=>p.classList.toggle('active', p.id === targetId));
+  navButtons.forEach(b=>b.classList.toggle('active', b.dataset.target === targetId));
+  window.scrollTo({top:0, behavior:'instant' in window ? 'auto' : 'auto'});
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+  // Reiniciar animación SVG en créditos para que siga viva
+  if(targetId === 'creditos'){
+    const svgIn = creditsSvg && creditsSvg.querySelector('svg');
+    if(svgIn && typeof svgIn.setCurrentTime === 'function'){
+      try{ svgIn.setCurrentTime(0); }catch(e){}
+    }
+  }
+  // Recalcular progreso
+  requestAnimationFrame(updateProgress);
+}
+
+navButtons.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    showPage(btn.dataset.target);
+    // Centrar botón en scroll horizontal móvil
+    btn.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+  });
+});
+
+/* ============================================================
+   PROGRESS BAR
+   ============================================================ */
+const progressBar = document.getElementById('progressBar');
+function updateProgress(){
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  const sc = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+  const pct = h > 0 ? (sc / h) * 100 : 0;
+  progressBar.style.width = Math.min(100, Math.max(0, pct)) + '%';
+}
+window.addEventListener('scroll', updateProgress, {passive:true});
+window.addEventListener('resize', updateProgress);
+updateProgress();
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+const toTop = document.getElementById('toTop');
+window.addEventListener('scroll', ()=>{
+  if((window.scrollY || window.pageYOffset) > 320) toTop.classList.add('show');
+  else toTop.classList.remove('show');
+}, {passive:true});
+toTop.addEventListener('click', ()=>{
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+/* ============================================================
+   Inicialización
+   ============================================================ */
+showPage('home');
+</script>
+</body>
+</html>
