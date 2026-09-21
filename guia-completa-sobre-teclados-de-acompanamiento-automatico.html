@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teclados Arranger — Guía Técnica Completa</title>
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --card:#0f172a;
+    --border:#1e3a5f;
+    --accent:#00d4ff;
+    --green:#22c55e;
+    --amber:#f59e0b;
+    --red:#ef4444;
+    --purple:#a855f7;
+    --txt:#e2e8f0;
+    --muted:#94a3b8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--txt);
+    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+#progressWrap{
+position:fixed;top:0;left:0;width:100%;height:3px;z-index:1200;
+background:rgba(30,58,95,.45);
+}
+#progressBar{
+height:100%;width:0%;
+background:linear-gradient(90deg,var(--accent),var(--green),var(--purple));
+box-shadow:0 0 12px rgba(0,212,255,.8);
+transition:width .1s linear;
+}
+
+nav#navbar{
+position:fixed;top:3px;left:0;width:100%;z-index:1100;
+background:rgba(10,14,26,.94);
+backdrop-filter:blur(12px);
+border-bottom:1px solid var(--border);
+}
+.nav-scroll{
+display:flex;gap:6px;
+overflow-x:auto;overflow-y:hidden;
+padding:9px 12px;
+scrollbar-width:thin;
+scrollbar-color:var(--border) transparent;
+-webkit-overflow-scrolling:touch;
+}
+.nav-scroll::-webkit-scrollbar{height:5px;}
+.nav-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+.nav-btn{
+flex:0 0 auto;
+background:transparent;
+border:1px solid var(--border);
+color:var(--muted);
+padding:7px 14px;
+border-radius:9px;
+font-size:.82rem;
+font-weight:600;
+cursor:pointer;
+white-space:nowrap;
+transition:all .22s ease;
+font-family:inherit;
+}
+.nav-btn:hover{color:var(--accent);border-color:var(--accent);}
+.nav-btn.active{
+background:linear-gradient(135deg,rgba(0,212,255,.18),rgba(168,85,247,.18));
+color:var(--accent);
+border-color:var(--accent);
+box-shadow:0 0 14px rgba(0,212,255,.35);
+}
+.nav-btn.credits-btn{
+border-color:var(--purple);color:var(--purple);
+}
+.nav-btn.credits-btn.active{
+background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(0,212,255,.15));
+color:#fff;border-color:var(--purple);
+box-shadow:0 0 14px rgba(168,85,247,.5);
+}
+
+main{
+max-width:1080px;
+margin:0 auto;
+padding:78px 16px 40px;
+}
+.section{display:none;animation:fadeIn .45s ease;}
+.section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+.home-badge{
+display:inline-block;
+font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+color:var(--accent);
+border:1px solid var(--border);
+background:rgba(0,212,255,.07);
+padding:5px 14px;border-radius:999px;
+margin-bottom:14px;font-weight:700;
+}
+h1.home-title{
+font-size:clamp(1.7rem,5vw,2.9rem);
+line-height:1.15;
+font-weight:800;
+background:linear-gradient(120deg,#00d4ff,#22c55e 45%,#a855f7);
+-webkit-background-clip:text;background-clip:text;
+-webkit-text-fill-color:transparent;
+margin-bottom:10px;
+}
+.home-sub{
+color:var(--amber);
+font-size:clamp(.95rem,2.4vw,1.15rem);
+font-weight:600;margin-bottom:14px;
+}
+.home-desc{color:var(--muted);font-size:.96rem;max-width:820px;margin-bottom:20px;}
+
+.quote{
+border-left:3px solid var(--accent);
+background:linear-gradient(90deg,rgba(0,212,255,.09),transparent);
+padding:14px 18px;border-radius:0 10px 10px 0;
+font-style:italic;color:#cbd5e1;
+margin:20px 0;font-size:.95rem;
+}
+
+.metrics{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+gap:12px;margin:24px 0;
+}
+.metric{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:11px;
+padding:14px 12px;text-align:center;
+transition:transform .25s ease,border-color .25s ease;
+}
+.metric:hover{transform:translateY(-3px);border-color:var(--accent);}
+.metric .val{
+font-size:1.35rem;font-weight:800;color:var(--accent);
+display:block;line-height:1.2;
+}
+.metric .lbl{
+font-size:.72rem;color:var(--muted);
+text-transform:uppercase;letter-spacing:.08em;margin-top:4px;display:block;
+}
+.metric.g .val{color:var(--green);}
+.metric.a .val{color:var(--amber);}
+.metric.p .val{color:var(--purple);}
+
+.stamp{
+display:flex;flex-wrap:wrap;gap:10px;
+margin-top:18px;font-size:.82rem;color:var(--muted);
+}
+.stamp span{
+background:var(--card);border:1px solid var(--border);
+padding:6px 13px;border-radius:8px;
+}
+
+.hero-shell{
+margin:0 0 22px;
+border:1px solid var(--border);
+border-radius:14px;
+overflow:hidden;
+background:#070b14;
+box-shadow:0 0 40px rgba(0,212,255,.12), 0 12px 40px rgba(0,0,0,.6);
+line-height:0;
+position:relative;
+}
+.hero-shell svg{width:100%;height:auto;display:block;}
+
+.sec-head{
+display:flex;align-items:center;gap:12px;
+margin-bottom:8px;flex-wrap:wrap;
+}
+.sec-icon{
+width:42px;height:42px;flex:0 0 42px;
+display:grid;place-items:center;
+background:linear-gradient(135deg,rgba(0,212,255,.16),rgba(168,85,247,.16));
+border:1px solid var(--border);border-radius:11px;
+font-size:1.25rem;
+}
+h2.sec-title{
+font-size:clamp(1.25rem,3.6vw,1.75rem);
+font-weight:800;color:#fff;line-height:1.25;
+}
+.sec-sub{
+color:var(--muted);font-size:.88rem;
+margin-bottom:20px;padding-left:54px;
+}
+@media(max-width:520px){.sec-sub{padding-left:0;}}
+
+.card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:12px;
+padding:18px;
+margin-bottom:16px;
+transition:border-color .25s ease,box-shadow .25s ease;
+}
+.card:hover{border-color:#2a5480;box-shadow:0 0 22px rgba(0,212,255,.08);}
+.card h3{
+font-size:1.02rem;color:var(--accent);
+margin-bottom:10px;font-weight:700;
+display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.card h3 .num{
+background:rgba(0,212,255,.14);
+border:1px solid var(--border);
+color:var(--accent);
+width:26px;height:26px;flex:0 0 26px;
+display:grid;place-items:center;border-radius:8px;
+font-size:.8rem;font-weight:800;
+}
+.card p{font-size:.93rem;color:#cbd5e1;margin-bottom:9px;}
+.card p:last-child{margin-bottom:0;}
+.card ul{margin:8px 0 8px 20px;font-size:.92rem;color:#cbd5e1;}
+.card ul li{margin-bottom:6px;}
+.card ol{margin:8px 0 8px 20px;font-size:.92rem;color:#cbd5e1;}
+.card ol li{margin-bottom:7px;}
+
+.callout{
+border-radius:10px;
+padding:13px 15px;
+margin:12px 0;
+font-size:.9rem;
+border-left:4px solid;
+background:rgba(255,255,255,.02);
+}
+.callout .tag{
+font-weight:800;font-size:.72rem;
+letter-spacing:.12em;text-transform:uppercase;
+display:block;margin-bottom:5px;
+}
+.callout.info{border-color:var(--accent);}
+.callout.info .tag{color:var(--accent);}
+.callout.example{border-color:var(--green);}
+.callout.example .tag{color:var(--green);}
+.callout.warn{border-color:var(--amber);}
+.callout.warn .tag{color:var(--amber);}
+.callout.error{border-color:var(--red);}
+.callout.error .tag{color:var(--red);}
+
+.tbl-wrap{overflow-x:auto;margin:12px 0;border-radius:10px;border:1px solid var(--border);}
+table{
+width:100%;border-collapse:collapse;
+font-size:.86rem;min-width:480px;
+}
+thead th{
+background:rgba(0,212,255,.09);
+color:var(--accent);
+text-align:left;padding:11px 13px;
+font-weight:700;font-size:.78rem;
+letter-spacing:.05em;text-transform:uppercase;
+border-bottom:1px solid var(--border);
+white-space:nowrap;
+}
+tbody td{
+padding:10px 13px;
+border-bottom:1px solid rgba(30,58,95,.55);
+color:#cbd5e1;vertical-align:top;
+}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:rgba(0,212,255,.045);}
+
+.chip{
+display:inline-block;
+font-size:.71rem;font-weight:700;
+padding:3px 10px;border-radius:999px;
+border:1px solid;letter-spacing:.04em;
+white-space:nowrap;
+}
+.chip.c{color:var(--accent);border-color:var(--accent);background:rgba(0,212,255,.1);}
+.chip.g{color:var(--green);border-color:var(--green);background:rgba(34,197,94,.1);}
+.chip.a{color:var(--amber);border-color:var(--amber);background:rgba(245,158,11,.1);}
+.chip.r{color:var(--red);border-color:var(--red);background:rgba(239,68,68,.1);}
+.chip.p{color:var(--purple);border-color:var(--purple);background:rgba(168,85,247,.1);}
+
+.step{
+display:flex;gap:13px;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:11px;
+padding:14px;margin-bottom:11px;
+}
+.step .snum{
+flex:0 0 34px;height:34px;
+display:grid;place-items:center;
+border-radius:9px;
+background:linear-gradient(135deg,rgba(0,212,255,.2),rgba(168,85,247,.2));
+border:1px solid var(--border);
+font-weight:800;color:var(--accent);font-size:.9rem;
+}
+.step .sbody{flex:1;min-width:0;}
+.step .sbody h4{font-size:.95rem;color:#fff;margin-bottom:5px;font-weight:700;}
+.step .sbody p{font-size:.89rem;color:#cbd5e1;margin:0;}
+
+.acc{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:10px;
+margin-bottom:9px;overflow:hidden;
+}
+.acc-h{
+width:100%;text-align:left;
+background:transparent;border:none;
+color:var(--txt);font-family:inherit;
+padding:13px 15px;font-size:.92rem;font-weight:600;
+cursor:pointer;display:flex;justify-content:space-between;
+align-items:center;gap:10px;transition:background .2s;
+}
+.acc-h:hover{background:rgba(0,212,255,.06);}
+.acc-h .arw{color:var(--accent);transition:transform .3s;font-size:.85rem;}
+.acc.open .acc-h .arw{transform:rotate(90deg);}
+.acc-b{
+max-height:0;overflow:hidden;
+transition:max-height .35s ease;
+padding:0 15px;
+}
+.acc.open .acc-b{max-height:900px;padding:0 15px 15px;}
+.acc-b p{font-size:.88rem;color:#cbd5e1;margin-bottom:8px;}
+.acc-b ul{margin:6px 0 6px 18px;font-size:.87rem;color:#cbd5e1;}
+.acc-b li{margin-bottom:5px;}
+
+.glos{
+background:var(--card);border:1px solid var(--border);
+border-radius:11px;padding:14px;margin-bottom:11px;
+border-left:4px solid var(--purple);
+}
+.glos h4{color:var(--purple);font-size:.95rem;margin-bottom:5px;font-weight:700;}
+.glos p{font-size:.88rem;color:#cbd5e1;margin:0;}
+
+.src{
+background:var(--card);border:1px solid var(--border);
+border-radius:12px;padding:18px;margin-bottom:14px;
+border-left:4px solid var(--red);
+}
+.src h4{color:#fff;font-size:.98rem;margin-bottom:9px;font-weight:700;}
+.src p{font-size:.88rem;color:var(--muted);margin-bottom:6px;}
+.src a{
+color:var(--accent);text-decoration:none;
+word-break:break-all;font-size:.86rem;
+border-bottom:1px dotted var(--accent);
+}
+.src a:hover{color:var(--green);border-color:var(--green);}
+
+.cred-card{
+background:linear-gradient(160deg,rgba(15,23,42,.95),rgba(10,14,26,.95));
+border:1px solid var(--purple);
+border-radius:14px;padding:24px;text-align:center;
+box-shadow:0 0 34px rgba(168,85,247,.15);
+}
+.cred-card h3{
+color:var(--purple);font-size:1.15rem;margin-bottom:6px;font-weight:800;
+}
+.cred-card .who{
+font-size:1.4rem;font-weight:800;color:#fff;margin:12px 0 4px;
+}
+.cred-card .role{color:var(--muted);font-size:.85rem;margin-bottom:16px;}
+.cred-meta{
+display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0;
+}
+.cred-meta span{
+background:rgba(0,212,255,.07);border:1px solid var(--border);
+padding:7px 14px;border-radius:9px;font-size:.82rem;color:var(--txt);
+}
+.fiat{
+margin-top:18px;font-style:italic;color:var(--amber);
+font-size:.95rem;letter-spacing:.03em;
+}
+
+footer{
+border-top:1px solid var(--border);
+background:rgba(15,23,42,.6);
+padding:24px 16px;text-align:center;
+margin-top:40px;
+}
+footer p{font-size:.82rem;color:var(--muted);margin-bottom:6px;}
+footer .fiat-inline{color:var(--amber);font-style:italic;}
+
+#toTop{
+position:fixed;right:16px;bottom:18px;z-index:1150;
+width:46px;height:46px;border-radius:12px;
+background:linear-gradient(135deg,rgba(0,212,255,.22),rgba(168,85,247,.22));
+border:1px solid var(--accent);
+color:var(--accent);font-size:1.15rem;
+cursor:pointer;display:none;place-items:center;
+backdrop-filter:blur(8px);
+transition:transform .22s,box-shadow .22s;
+font-family:inherit;
+}
+#toTop.show{display:grid;}
+#toTop:hover{transform:translateY(-3px);box-shadow:0 0 20px rgba(0,212,255,.5);}
+
+.chord-line{
+display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+margin:10px 0;font-weight:700;
+}
+.chord-line .ch{
+background:rgba(0,212,255,.1);
+border:1px solid var(--accent);
+color:var(--accent);
+padding:5px 12px;border-radius:8px;font-size:.9rem;
+}
+.chord-line .ar{color:var(--muted);font-size:1rem;}
+
+@media(max-width:520px){
+main{padding:70px 11px 30px;}
+.card{padding:15px;}
+.step{padding:12px;gap:10px;}
+.nav-btn{padding:6px 11px;font-size:.76rem;}
+#toTop{width:42px;height:42px;right:12px;bottom:14px;}
+.chord-line .ch{font-size:.8rem;padding:4px 9px;}
+}
+
+@media(prefers-reduced-motion: reduce){
+*{animation-duration:.001s !important;transition-duration:.001s !important;}
+}
+</style>
+
+</head>
+<body>
+
+<div id="progressWrap"><div id="progressBar"></div></div>
+
+<nav id="navbar">
+  <div class="nav-scroll" id="navScroll">
+    <button class="nav-btn active" data-target="home">Inicio</button>
+    <button class="nav-btn" data-target="intro">Introducción</button>
+    <button class="nav-btn" data-target="diferencias">Diferencias Clave</button>
+    <button class="nav-btn" data-target="anatomia">Anatomía</button>
+    <button class="nav-btn" data-target="guia">Guía Paso a Paso</button>
+    <button class="nav-btn" data-target="avanzado">Funciones Pro</button>
+    <button class="nav-btn" data-target="cierre">Cierre y Recursos</button>
+    <button class="nav-btn" data-target="fuentes">Fuentes</button>
+    <button class="nav-btn credits-btn" data-target="creditos">Créditos</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ========== HOME ========== -->
+
+<section class="section active" id="home">
+  <div class="hero-shell" id="hero-home"></div>
+
+<span class="home-badge">Manual Técnico · Instrumentos Musicales</span>
+
+  <h1 class="home-title">Guía Completa sobre Teclados de Acompañamiento Automático</h1>
+  <p class="home-sub">El teclado arranger: una banda completa condensada en un solo instrumento</p>
+  <p class="home-desc">
+    Descubre la herramienta estratégica que transforma al músico solista en director de orquesta tecnológico.
+    Estilos inteligentes, Super Articulation, registrations, armonización vocal y módulo DAW — todo dentro de
+    un solo instrumento capaz de reaccionar en tiempo real a los acordes que interpretas.
+  </p>
+
+  <div class="quote">
+    «Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien.»
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><span class="val">1</span><span class="lbl">Instrumento = Banda</span></div>
+    <div class="metric g"><span class="val">7.000</span><span class="lbl">Muestras por saxofón</span></div>
+    <div class="metric a"><span class="val">150%</span><span class="lbl">Capacidad mental</span></div>
+    <div class="metric p"><span class="val">16</span><span class="lbl">Pistas vía DAW</span></div>
+    <div class="metric"><span class="val">5</span><span class="lbl">Pasos de ejecución</span></div>
+    <div class="metric g"><span class="val">10</span><span class="lbl">Pilares y FAQ</span></div>
+  </div>
+
+  <div class="stamp">
+    <span>📅 Fecha: 21/09/2026</span>
+    <span>🕘 Hora: 09:59:16</span>
+    <span>👨‍💻 Créditos: Rubén Sbarsky</span>
+    <span>🎯 Enfoque: Sistema americano (C, D, E, F, G, A, B)</span>
+  </div>
+
+  <div class="callout info" style="margin-top:22px;">
+    <span class="tag">INFO</span>
+    Este tutorial conserva íntegramente el contenido del documento «Guía Completa sobre Teclados de
+    Acompañamiento Automático y Arreglos» de Rubén Sbarsky. Navega por las pestañas superiores para recorrer
+    cada bloque temático.
+  </div>
+</section>
+
+<!-- ========== INTRODUCCIÓN ========== -->
+
+<section class="section" id="intro">
+  <div class="sec-head">
+    <div class="sec-icon">🎹</div>
+    <h2 class="sec-title">1. Introducción al Mundo del Teclado Arranger</h2>
+  </div>
+  <p class="sec-sub">Descubrir una herramienta estratégica: el poder de una banda completa dentro de un solo instrumento.</p>
+
+  <div class="card">
+    <h3>El director de orquesta tecnológico</h3>
+    <p>
+      Adentrarse en el mundo de los teclados arranger (o de acompañamiento automático) es descubrir una
+      herramienta estratégica diseñada para condensar el poder de una banda completa dentro de un solo
+      instrumento. A diferencia de otros teclados que requieren que el músico ejecute cada nota de cada
+      instrumento, el arranger actúa como un <strong>director de orquesta tecnológico</strong>.
+    </p>
+    <p>
+      Su función es proporcionar <strong>«estilos»</strong> de acompañamiento inteligentes que reaccionan de
+      manera dinámica y en tiempo real a los acordes que el usuario interpreta.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Evolución histórica</h3>
+    <p>
+      Históricamente, estos instrumentos evolucionaron de los grandes y costosos <strong>órganos de hogar de
+      los años 60 y 70</strong>, muy populares en Europa y el Reino Unido para el entretenimiento familiar.
+    </p>
+    <p>
+      Hoy, esa potencia se ha miniaturizado. Es la herramienta predilecta para el <strong>«hombre
+      orquesta»</strong> en eventos, compositores que desean bocetar canciones con instrumentación completa
+      y para el disfrute doméstico.
+    </p>
+    <p>
+      Operar un arranger es equivalente a tener una banda de músicos expertos que no solo conocen cientos de
+      géneros, sino que siguen tus órdenes de ritmo y estructura de forma instantánea.
+    </p>
+  </div>
+
+  <div class="callout warn">
+    <span class="tag">ADVERTENCIA</span>
+    Para entender su valor, debemos diferenciarlo de otros instrumentos similares. Confundir un arranger con
+    un sintetizador o con un piano digital lleva a expectativas equivocadas y a un aprovechamiento deficiente
+    del instrumento.
+  </div>
+</section>
+
+<!-- ========== DIFERENCIAS CLAVE ========== -->
+
+<section class="section" id="diferencias">
+  <div class="sec-head">
+    <div class="sec-icon">⚖️</div>
+    <h2 class="sec-title">2. Diferencias Clave: Arranger vs. Sintetizador vs. Piano Digital</h2>
+  </div>
+  <p class="sec-sub">Elegir el instrumento adecuado es el primer paso para alcanzar el éxito musical. Cada uno tiene una «identidad» técnica y pedagógica específica.</p>
+
+  <div class="card">
+    <h3>Tabla Comparativa de Identidad</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Característica</th>
+            <th>Teclado Arranger</th>
+            <th>Sintetizador</th>
+            <th>Piano Digital</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Enfoque Principal</strong></td>
+            <td><span class="chip c">Acompañamiento en tiempo real y arreglos completos</span></td>
+            <td><span class="chip p">Diseño de sonido profundo y manipulación de ondas</span></td>
+            <td><span class="chip g">Tacto y sonido de piano acústico tradicional</span></td>
+          </tr>
+          <tr>
+            <td><strong>Componente Clave</strong></td>
+            <td>Estilos (Backing tracks) inteligentes</td>
+            <td>Osciladores, filtros y modulación compleja</td>
+            <td>Teclas contrapesadas (weighted action)</td>
+          </tr>
+          <tr>
+            <td><strong>Uso Ideal</strong></td>
+            <td>Solistas, compositores y entretenimiento en casa</td>
+            <td>Productores de música electrónica y diseño sonoro</td>
+            <td>Estudiantes de piano clásico y pianistas de concierto</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>El Tercer Diferenciador: ¿Es una «Groove Box»?</h3>
+    <p>
+      Es vital entender que un arranger <strong>no es una Groove Box</strong> o un secuenciador estilo MPC.
+      Mientras que en una Groove Box construyes patrones desde cero y programas secuencias paso a paso, el
+      arranger está optimizado para la <strong>interpretación en tiempo real</strong>.
+    </p>
+    <p>
+      Está diseñado para que la banda te siga mientras tocas, no para que construyas la base rítmica nota por
+      nota durante la producción.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Evaluación de Diferenciadores <span class="chip a">Capa «So What?»</span></h3>
+    <p>
+      <strong>¿Por qué elegir un arranger sobre un sintetizador para un show en vivo?</strong> Por la
+      eficiencia operativa. En un sintetizador, debes editar parámetros profundos; en un arranger, tienes
+      ritmos profesionales listos.
+    </p>
+    <p>
+      Además, estos teclados poseen una <strong>identidad geográfica fascinante</strong>: son masivamente
+      populares en Europa, el Reino Unido, Medio Oriente, India y Filipinas, aunque curiosamente tienen menos
+      presencia en los Estados Unidos.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Mitos y Realidades</h3>
+    <p>
+      Existe el error común de pensar que estos teclados <em>«se tocan solos»</em>. La realidad es que exigen
+      hasta un <strong>150 % de la capacidad mental</strong> del músico: debes cantar, tocar la melodía,
+      marcar los acordes y gestionar los cambios de la banda (variaciones y fills) simultáneamente.
+    </p>
+    <div class="callout error">
+      <span class="tag">ERROR</span>
+      No es automatización pasiva: es <strong>conducción activa</strong>. Quien espera que el arranger
+      «toque solo» fracasa en la ejecución; quien conduce activamente la banda virtual obtiene resultados
+      profesionales.
+    </div>
+  </div>
+</section>
+
+<!-- ========== ANATOMÍA ========== -->
+
+<section class="section" id="anatomia">
+  <div class="sec-head">
+    <div class="sec-icon">🔧</div>
+    <h2 class="sec-title">3. Anatomía y Funciones Principales del Teclado</h2>
+  </div>
+  <p class="sec-sub">La interfaz de un arranger está diseñada para el control total en tiempo real, donde cada función crítica está a solo un botón de distancia.</p>
+
+  <div class="card">
+    <h3>Los «Styles» (Estilos)</h3>
+    <p>
+      Son el <strong>corazón del instrumento</strong>. Cubren desde Pop y Rock hasta Ballroom de los 60,
+      música del mundo y ritmos latinos.
+    </p>
+    <p>
+      No son grabaciones estáticas, sino <strong>algoritmos que reajustan la instrumentación</strong> (bajo,
+      batería, pianos) según las notas que tocas.
+    </p>
+    <div class="callout example">
+      <span class="tag">EJEMPLO</span>
+      Al cambiar el acorde de <strong>C(I)</strong> a <strong>F(IV)</strong>, el bajo del estilo sigue
+      automáticamente la nueva fundamental y la batería mantiene el groove, sin necesidad de reajustar nada
+      manualmente.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Sonidos y «Super Articulation»</h3>
+    <p>
+      La calidad de muestreo (sampling) en modelos de alta gama es asombrosa. Gracias a la tecnología
+      <strong>Super Articulation</strong>, el teclado añade automáticamente ruidos de trastes en guitarras o
+      slides en vientos según tu forma de tocar.
+    </p>
+    <p>
+      Por ejemplo, en modelos insignia como el <strong>Yamaha Genos 2</strong>, un solo sonido de saxofón
+      puede estar compuesto por <strong>7.000 muestras diferentes</strong>, logrando un realismo que supera
+      a la mayoría de los sintetizadores.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Hardware y Pantalla</h3>
+    <ul>
+      <li>
+        <strong>Altavoces integrados:</strong> Presentes en la mayoría de los modelos para comodidad
+        «todo en uno». <em>Nota:</em> los modelos flagship (como Genos o Korg PA5X) suelen omitirlos
+        asumiendo el uso de monitores de escenario.
+      </li>
+      <li>
+        <strong>Controles Físicos:</strong> La abundancia de botones, deslizadores (faders) y pantallas
+        táctiles no es una complicación, sino una <strong>ventaja estratégica</strong> para «arreglar» la
+        canción sobre la marcha sin navegar por menús profundos.
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ========== GUÍA PASO A PASO ========== -->
+
+<section class="section" id="guia">
+  <div class="sec-head">
+    <div class="sec-icon">🎯</div>
+    <h2 class="sec-title">4. Guía Paso a Paso: Tu Primera Interpretación</h2>
+  </div>
+  <p class="sec-sub">Para ejecutar un arranger, se debe adoptar una metodología de división de tareas.</p>
+
+  <div class="step">
+    <div class="snum">1</div>
+    <div class="sbody">
+      <h4>División del Teclado (Split)</h4>
+      <p>
+        Activa el Split. Normalmente, la mano izquierda controla la «zona de acordes» y la derecha la
+        melodía.
+      </p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="snum">2</div>
+    <div class="sbody">
+      <h4>Selección del Estilo</h4>
+      <p>
+        Elige un género. Por ejemplo, selecciona un estilo de <strong>«60s Ballroom»</strong> para una
+        balada clásica.
+      </p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="snum">3</div>
+    <div class="sbody">
+      <h4>Marcación del Acorde</h4>
+      <p>
+        Al tocar un acorde (generalmente con la izquierda, aunque los modelos avanzados pueden detectar
+        acordes en todo el teclado), la banda virtual comenzará a tocar en esa tonalidad.
+      </p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="snum">4</div>
+    <div class="sbody">
+      <h4>Uso de Variaciones y Fills</h4>
+      <p>
+        Usa los botones de <strong>Fill-in</strong> para crear transiciones naturales entre estrofas y
+        estribillos. Esto rompe la monotonía y da realismo.
+      </p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="snum">5</div>
+    <div class="sbody">
+      <h4>Ajuste de la Mezcla</h4>
+      <p>
+        Usa los controles físicos para silenciar partes de la banda (por ejemplo, dejar solo la batería y el
+        bajo) para crear una sección más íntima.
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Ejemplo Práctico <span class="chip g">60s Ballroom</span></h3>
+    <p>
+      En una canción de los 60, empieza con la <strong>Variación A</strong> (suave). Antes del coro, presiona
+      <strong>Fill-in</strong> y cambia a la <strong>Variación B</strong> para que la banda aumente su
+      intensidad.
+    </p>
+    <p>
+      Progresión de referencia del ejemplo (sistema americano con grados):
+    </p>
+    <div class="chord-line">
+      <span class="ch">C(I)</span>
+      <span class="ar">→</span>
+      <span class="ch">A m(VI)</span>
+      <span class="ar">→</span>
+      <span class="ch">F(IV)</span>
+      <span class="ar">→</span>
+      <span class="ch">G(V)</span>
+      <span class="ar">→</span>
+      <span class="ch">C(I)</span>
+    </div>
+    <p style="color:var(--muted);font-size:.84rem;margin-top:6px;">
+      En notación tradicional esta progresión equivaldría a Do–La menor–Fa–Sol–Do, pero conforme a la
+      nomenclatura técnica del presente manual utilizamos exclusivamente el sistema americano con su grado
+      correspondiente.
+    </p>
+  </div>
+
+  <div class="callout info">
+    <span class="tag">INFO</span>
+    La mano izquierda define la <strong>fundamental del acorde</strong> y la <strong>calidad</strong>
+    (mayor/menor/séptima); el motor de estilos detecta esa información y rearma automáticamente el bajo, la
+    batería y los acompañamientos en la tonalidad correcta.
+  </div>
+</section>
+
+<!-- ========== FUNCIONES PRO ========== -->
+
+<section class="section" id="avanzado">
+  <div class="sec-head">
+    <div class="sec-icon">🚀</div>
+    <h2 class="sec-title">5. Funciones Avanzadas para el Músico Pro</h2>
+  </div>
+  <p class="sec-sub">La tecnología del arranger permite elevar el espectáculo a niveles de estudio de grabación.</p>
+
+  <div class="card">
+    <h3><span class="num">1</span> Memorias de Registro (Registrations)</h3>
+    <p>
+      Guarda configuraciones enteras (sonidos, tempo, efectos) y organízalas en <strong>setlists</strong>.
+    </p>
+    <p>
+      Con un botón, el teclado cambia totalmente para la siguiente canción del concierto.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3><span class="num">2</span> Procesador Vocal y Armonizador</h3>
+    <p>
+      Conecta un micrófono directamente al teclado. Los modelos Pro incluyen armonizadores que añaden
+      <strong>coros automáticos a tu voz</strong> siguiendo los acordes que tocas.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3><span class="num">3</span> Integración con DAW</h3>
+    <p>
+      Si lo conectas a una computadora, el teclado puede actuar como un potente <strong>módulo de sonido
+      de 16 pistas</strong>, ideal para composición y grabación en software como Cubase o Logic.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3><span class="num">4</span> Grabación</h3>
+    <p>
+      Permite capturar <strong>audio y MIDI directamente en un USB</strong>, incluyendo la voz del cantante.
+    </p>
+  </div>
+</section>
+
+<!-- ========== CIERRE ========== -->
+
+<section class="section" id="cierre">
+  <div class="sec-head">
+    <div class="sec-icon">🎓</div>
+    <h2 class="sec-title">6. Conclusión, Ejercicios y Recursos Finales</h2>
+  </div>
+  <p class="sec-sub">
+    El teclado arranger es un instrumento de disfrute inmediato pero con una profundidad profesional vasta
+    que atrae a un perfil de músico experimentado y exigente.
+  </p>
+
+  <div class="card">
+    <h3>Resumen de Aprendizaje</h3>
+    <ol>
+      <li><strong>Banda Virtual:</strong> Es un sistema de acompañamiento inteligente, no una simple pista de audio.</li>
+      <li><strong>Control Total:</strong> La clave está en manejar los Fills y Variaciones en tiempo real.</li>
+      <li><strong>Calidad Superior:</strong> Sonidos con Super Articulation y miles de muestras por instrumento.</li>
+      <li><strong>Versatilidad:</strong> Sirve como instrumento de concierto, herramienta de composición y módulo DAW.</li>
+      <li><strong>Herencia Histórica:</strong> Evolución moderna de los órganos de hogar europeos.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Glosario de Términos</h3>
+    <div class="glos">
+      <h4>Super Articulation</h4>
+      <p>Tecnología que replica matices reales (respiración, slides) de instrumentos acústicos.</p>
+    </div>
+    <div class="glos">
+      <h4>DAW Sound Module</h4>
+      <p>Capacidad de usar los sonidos del teclado para producir música en computadora.</p>
+    </div>
+    <div class="glos">
+      <h4>Style</h4>
+      <p>Algoritmo rítmico y armónico que compone la banda de acompañamiento.</p>
+    </div>
+    <div class="glos">
+      <h4>Registration</h4>
+      <p>«Instantánea» de toda la configuración del teclado lista para ser rellamada.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Preguntas Frecuentes (FAQ)</h3>
+
+  </div>
+
+  <div class="card">
+    <h3>Ejercicios Prácticos</h3>
+    <div class="step">
+      <div class="snum">1</div>
+      <div class="sbody">
+        <h4>Ejercicio de Coordinación Estructural</h4>
+        <p>
+          Selecciona un estilo de <strong>«60s Ballroom»</strong>. Toca una progresión de acordes y practica
+          activar el <strong>Fill-in exactamente en el cuarto tiempo del compás</strong>, justo antes de
+          cambiar de variación.
+        </p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="snum">2</div>
+      <div class="sbody">
+        <h4>Ejercicio de Registro y Setlist</h4>
+        <p>
+          Crea dos configuraciones distintas (ej. una de Rock y otra de Jazz). Guárdalas en los botones de
+          Registro 1 y 2. Practica pasar de una a otra sin que se detenga el ritmo.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout error">
+    <span class="tag">ERROR QUE NUNCA DEBES COMETER</span>
+    No descuides el <strong>timing del acorde</strong>. Si tu mano izquierda se retrasa, la banda entera
+    sonará fuera de tono, rompiendo la ilusión de una banda real.
+  </div>
+</section>
+
+<!-- ========== FUENTES ========== -->
+
+<section class="section" id="fuentes">
+  <div class="sec-head">
+    <div class="sec-icon">🔗</div>
+    <h2 class="sec-title">Fuentes y Referencias</h2>
+  </div>
+  <p class="sec-sub">Metadatos y material documental de origen utilizado para la elaboración de este tutorial.</p>
+
+  <div class="src">
+    <h4>📋 Metadatos</h4>
+    <p>
+      <strong>Prompts utilizados:</strong> Análisis de pedagogía musical, estructuración de guías técnicas y
+      síntesis de contenido audiovisual.
+    </p>
+  </div>
+
+  <div class="src">
+    <h4>🎬 Vídeo de Referencia</h4>
+    <p>
+      <strong>Título:</strong> «What is an ARRANGER KEYBOARD?» por <strong>Woody Piano Shack</strong>.
+    </p>
+    <p>
+      <strong>URL:</strong>
+      <a href="https://youtube.com/watch?v=3EXsOXovEpA" target="_blank" rel="noopener noreferrer">
+        https://youtube.com/watch?v=3EXsOXovEpA
+      </a>
+    </p>
+  </div>
+
+  <div class="src">
+    <h4>📚 Apartado de FUENTES</h4>
+    <p><strong>Canal de YouTube:</strong> Woody Piano Shack.</p>
+    <p><strong>Transcripción de:</strong> «What is an ARRANGER KEYBOARD?»</p>
+    <p>
+      <strong>URL:</strong>
+      <a href="https://youtube.com/watch?v=3EXsOXovEpA&is=zePopulYIFmKw4yF" target="_blank" rel="noopener noreferrer">
+        https://youtube.com/watch?v=3EXsOXovEpA&amp;is=zePopulYIFmKw4yF
+      </a>
+    </p>
+  </div>
+
+  <div class="callout info">
+    <span class="tag">INFO</span>
+    Los enlaces se conservan tal como aparecen en el documento fuente. No se ha añadido ni inventado ninguna
+    referencia externa adicional.
+  </div>
+</section>
+
+<!-- ========== CRÉDITOS ========== -->
+
+<section class="section" id="creditos">
+  <div class="sec-head">
+    <div class="sec-icon">🏅</div>
+    <h2 class="sec-title">Créditos</h2>
+  </div>
+  <p class="sec-sub">Información de autoría y metadatos de esta edición del tutorial.</p>
+
+  <div class="hero-shell" id="hero-credits"></div>
+
+  <div class="cred-card">
+    <h3>Tutorial Técnico · Instrumentos Musicales</h3>
+    <div style="color:#fff;font-size:1.05rem;font-weight:700;">
+      Guía Completa sobre Teclados de Acompañamiento Automático y Arreglos
+    </div>
+    <div class="who">Rubén Sbarsky</div>
+    <div class="role">Autor · Contenido original y método técnico</div>
+
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>📚 Tutorial solo con fines Educativos y Divulgación</p>
+  <p>👨‍💻 Créditos: Rubén Sbarsky</p>
+  <p>📅 FECHA: 21/09/2026</p>
+  <p>Hora: 09:59:16</p>
+  <p class="fiat-inline">Fiat iustitia, ruat caelum.</p>
+</footer>
+
+<button id="toTop" aria-label="Volver arriba">▲</button>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============================================================
+     SVG HERO — definido una sola vez, reutilizado en HOME y CRÉDITOS
+     Tema: teclado arranger — flujo acorde (mano izq.) → motor de estilos
+     → banda virtual (batería + bajo + piano) en tiempo real.
+     ============================================================ */
+  var HERO_HTML = ''
+  + '<svg id="heroSVG" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Animación del flujo de un teclado arranger: acorde del intérprete, motor de estilos y banda virtual en tiempo real">'
+  + '<defs>'
+  /* Fondo animado */
+  +   '<linearGradient id="bgG" x1="0%" y1="0%" x2="100%" y2="100%">'
+  +     '<stop offset="0%" stop-color="#070b14"><animate attributeName="stop-color" values="#070b14;#0d1730;#150a26;#070b14" dur="9s" repeatCount="indefinite"/></stop>'
+  +     '<stop offset="55%" stop-color="#0a0e1a"><animate attributeName="stop-color" values="#0a0e1a;#12203f;#1c0f30;#0a0e1a" dur="7s" repeatCount="indefinite"/></stop>'
+  +     '<stop offset="100%" stop-color="#101a33"><animate attributeName="stop-color" values="#101a33;#1b2f52;#2c1544;#101a33" dur="11s" repeatCount="indefinite"/></stop>'
+  +   '</linearGradient>'
+
+  /* Halos radiales */
+  +   '<radialGradient id="haloCyan"><stop offset="0%" stop-color="#00d4ff" stop-opacity="0.55"/><stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/></radialGradient>'
+  +   '<radialGradient id="haloGreen"><stop offset="0%" stop-color="#22c55e" stop-opacity="0.55"/><stop offset="100%" stop-color="#22c55e" stop-opacity="0"/></radialGradient>'
+  +   '<radialGradient id="haloAmber"><stop offset="0%" stop-color="#f59e0b" stop-opacity="0.6"/><stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/></radialGradient>'
+  +   '<radialGradient id="haloPurple"><stop offset="0%" stop-color="#a855f7" stop-opacity="0.55"/><stop offset="100%" stop-color="#a855f7" stop-opacity="0"/></radialGradient>'
+  +   '<radialGradient id="haloRed"><stop offset="0%" stop-color="#ef4444" stop-opacity="0.6"/><stop offset="100%" stop-color="#ef4444" stop-opacity="0"/></radialGradient>'
+
+  /* Filtros glow */
+  +   '<filter id="glowF" x="-70%" y="-70%" width="240%" height="240%">'
+  +     '<feGaussianBlur stdDeviation="4" result="b"/>'
+  +     '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>'
+  +   '</filter>'
+  +   '<filter id="glowSoft" x="-90%" y="-90%" width="280%" height="280%">'
+  +     '<feGaussianBlur stdDeviation="9" result="b"/>'
+  +     '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>'
+  +   '</filter>'
+
+  /* Patrón de rejilla */
+  +   '<pattern id="gridP" width="25" height="25" patternUnits="userSpaceOnUse">'
+  +     '<path d="M25 0 L0 0 0 25" fill="none" stroke="#1e3a5f" stroke-width="0.6"/>'
+  +   '</pattern>'
+
+  /* Rutas de flujo temáticas */
+  +   '<path id="pChord" d="M110 300 Q 200 210 320 288"/>'
+  +   '<path id="pEngine" d="M400 200 Q 452 130 400 92"/>'
+  +   '<path id="pDrum" d="M690 300 Q 600 210 480 288"/>'
+  +   '<path id="pBass" d="M610 340 Q 520 380 480 320"/>'
+  +   '<path id="pPiano" d="M690 340 Q 590 410 480 330"/>'
+  +   '<path id="pOrbit" d="M400 300 m -195 0 a 195 195 0 1 1 390 0 a 195 195 0 1 1 -390 0"/>'
+  +   '<path id="pOrbit2" d="M400 300 m -140 0 a 140 140 0 1 0 280 0 a 140 140 0 1 0 -280 0"/>'
+  +   '<path id="pOrbit3" d="M400 300 m -80 0 a 80 80 0 1 1 160 0 a 80 80 0 1 1 -160 0"/>'
+  + '</defs>'
+
+  /* ---------- FONDO ---------- */
+  + '<rect x="0" y="0" width="800" height="450" fill="url(#bgG)"/>'
+  + '<rect x="0" y="0" width="800" height="450" fill="url(#gridP)">'
+  +   '<animate attributeName="opacity" values="0.12;0.44;0.16;0.5;0.12" dur="6s" repeatCount="indefinite"/>'
+  + '</rect>'
+
+  /* ---------- ANILLOS ORBITALES CONCÉNTRICOS ---------- */
+  + '<g transform="translate(400,295)">'
+  +   '<ellipse rx="382" ry="210" fill="none" stroke="#00d4ff" stroke-width="1.1" stroke-dasharray="16 24" opacity="0.55">'
+  +     '<animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="44s" repeatCount="indefinite"/>'
+  +     '<animate attributeName="stroke-dasharray" values="16 24;44 16;16 24" dur="9s" repeatCount="indefinite"/>'
+  +   '</ellipse>'
+  +   '<ellipse rx="320" ry="176" fill="none" stroke="#a855f7" stroke-width="1.1" stroke-dasharray="10 18" opacity="0.5">'
+  +     '<animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="31s" repeatCount="indefinite"/>'
+  +     '<animate attributeName="stroke-dasharray" values="10 18;34 12;10 18" dur="7s" repeatCount="indefinite"/>'
+  +   '</ellipse>'
+  +   '<ellipse rx="258" ry="140" fill="none" stroke="#22c55e" stroke-width="1" stroke-dasharray="7 14" opacity="0.45">'
+  +     '<animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="23s" repeatCount="indefinite"/>'
+  +     '<animate attributeName="stroke-dasharray" values="7 14;28 10;7 14" dur="5.5s" repeatCount="indefinite"/>'
+  +   '</ellipse>'
+  + '</g>'
+
+  /* ---------- HALO CENTRAL ---------- */
+  + '<circle cx="400" cy="295" r="150" fill="url(#haloCyan)">'
+  +   '<animate attributeName="r" values="120;180;120" dur="4.5s" repeatCount="indefinite"/>'
+  +   '<animate attributeName="opacity" values="0.35;0.85;0.35" dur="4.5s" repeatCount="indefinite"/>'
+  + '</circle>'
+
+  /* ---------- TECLADO ARRANGER CENTRAL ---------- */
+  + '<g>'
+  /* Cuerpo del teclado */
+  +   '<rect x="290" y="252" width="220" height="86" rx="10" fill="#0f172a" stroke="#00d4ff" stroke-width="2.4" filter="url(#glowF)">'
+  +     '<animate attributeName="stroke-width" values="1.6;3;1.6" dur="3.6s" repeatCount="indefinite"/>'
+  +   '</rect>'
+  /* Panel de control */
+  +   '<rect x="300" y="260" width="200" height="22" rx="4" fill="#131f38" stroke="#1e3a5f" stroke-width="1"/>'
+  /* Mini pantalla */
+  +   '<rect x="320" y="263" width="60" height="16" rx="3" fill="#052038" stroke="#00d4ff" stroke-width="1">'
+  +     '<animate attributeName="fill" values="#052038;#0b3a5c;#052038" dur="2.8s" repeatCount="indefinite"/>'
+  +   '</rect>'
+  /* Texto de pantalla tipo "STYLE" */
+  +   '<text x="350" y="275" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="7" font-weight="800" fill="#00d4ff" letter-spacing="1">'
+  +     'STYLE'
+  +     '<animate attributeName="opacity" values="0.4;1;0.4" dur="1.8s" repeatCount="indefinite"/>'
+  +   '</text>'
+  /* Chips de variación A/B */
+  +   '<rect x="390" y="263" width="22" height="16" rx="3" fill="#0f172a" stroke="#22c55e" stroke-width="1.2">'
+  +     '<animate attributeName="fill" values="#0f172a;#1c3a2b;#0f172a" dur="2.4s" repeatCount="indefinite"/>'
+  +   '</rect>'
+  +   '<rect x="416" y="263" width="22" height="16" rx="3" fill="#0f172a" stroke="#f59e0b" stroke-width="1.2">'
+  +     '<animate attributeName="fill" values="#0f172a;#3a2a12;#0f172a" dur="3.1s" repeatCount="indefinite"/>'
+  +   '</rect>'
+  +   '<rect x="442" y="263" width="22" height="16" rx="3" fill="#0f172a" stroke="#a855f7" stroke-width="1.2">'
+  +     '<animate attributeName="fill" values="#0f172a;#2c1a3a;#0f172a" dur="2.7s" repeatCount="indefinite"/>'
+  +   '</rect>'
+  +   '<rect x="468" y="263" width="22" height="16" rx="3" fill="#0f172a" stroke="#ef4444" stroke-width="1.2">'
+  +     '<animate attributeName="fill" values="#0f172a;#3a1414;#0f172a" dur="2.2s" repeatCount="indefinite"/>'
+  +   '</rect>'
+  /* Zona izquierda (Split) — teclas blancas y negras */
+  +   '<rect x="300" y="288" width="90" height="42" rx="3" fill="#0b1220" stroke="#1e3a5f" stroke-width="0.8"/>'
+  /* Teclas blancas */
+  +   '<g fill="#e2e8f0" stroke="#1e3a5f" stroke-width="0.5">'
+  +     '<rect x="303" y="291" width="10" height="36" rx="1">'
+  +       '<animate attributeName="fill" values="#e2e8f0;#00d4ff;#e2e8f0" dur="1.6s" repeatCount="indefinite"/>'
+  +     '</rect>'
+  +     '<rect x="315" y="291" width="10" height="36" rx="1"/>'
+  +     '<rect x="327" y="291" width="10" height="36" rx="1">'
+  +       '<animate attributeName="fill" values="#e2e8f0;#22c55e;#e2e8f0" dur="2.1s" begin="0.3s" repeatCount="indefinite"/>'
+  +     '</rect>'
+  +     '<rect x="339" y="291" width="10" height="36" rx="1"/>'
+  +     '<rect x="351" y="291" width="10" height="36" rx="1">'
+  +       '<animate attributeName="fill" values="#e2e8f0;#f59e0b;#e2e8f0" dur="2.4s" begin="0.6s" repeatCount="indefinite"/>'
+  +     '</rect>'
+  +     '<rect x="363" y="291" width="10" height="36" rx="1"/>'
+  +     '<rect x="375" y="291" width="10" height="36" rx="1">'
+  +       '<animate attributeName="fill" values="#e2e8f0;#a855f7;#e2e8f0" dur="2.9s" begin="0.9s" repeatCount="indefinite"/>'
+  +     '</rect>'
+  +   '</g>'
+  /* Teclas negras (zona izquierda) */
+  +   '<g fill="#0a0e1a" stroke="#1e3a5f" stroke-width="0.5">'
+  +     '<rect x="310" y="291" width="6" height="20" rx="1"/>'
+  +     '<rect x="322" y="291" width="6" height="20" rx="1"/>'
+  +     '<rect x="346" y="291" width="6" height="20" rx="1"/>'
+  +     '<rect x="358" y="291" width="6" height="20" rx="1"/>'
+  +     '<rect x="370" y="291" width="6" height="20" rx="1"/>'
+  +   '</g>'
+  /* Zona derecha (melodía) — teclas */
+  +   '<rect x="410" y="288" width="90" height="42" rx="3" fill="#0b1220" stroke="#1e3a5f" stroke-width="0.8"/>'
+  +   '<g fill="#e2e8f0" stroke="#1e3a5f" stroke-width="0.5">'
+  +     '<rect x="413" y="291" width="10" height="36" rx="1"/>'
+  +     '<rect x="425" y="291" width="10" height="36" rx="1">'
+  +       '<animate attributeName="fill" values="#e2e8f0;#00d4ff;#e2e8f0" dur="1.8s" repeatCount="indefinite"/>'
+  +     '</rect>'
+  +     '<rect x="437" y="291" width="10" height="36" rx="1"/>'
+  +     '<rect x="449" y="291" width="10" height="36" rx="1">'
+  +       '<animate attributeName="fill" values="#e2e8f0;#f59e0b;#e2e8f0" dur="2.3s" begin="0.4s" repeatCount="indefinite"/>'
+  +     '</rect>'
+  +     '<rect x="461" y="291" width="10" height="36" rx="1"/>'
+  +     '<rect x="473" y="291" width="10" height="36" rx="1">'
+  +       '<animate attributeName="fill" values="#e2e8f0;#22c55e;#e2e8f0" dur="2.6s" begin="0.8s" repeatCount="indefinite"/>'
+  +     '</rect>'
+  +     '<rect x="485" y="291" width="10" height="36" rx="1"/>'
+  +   '</g>'
+  +   '<g fill="#0a0e1a" stroke="#1e3a5f" stroke-width="0.5">'
+  +     '<rect x="420" y="291" width="6" height="20" rx="1"/>'
+  +     '<rect x="432" y="291" width="6" height="20" rx="1"/>'
+  +     '<rect x="456" y="291" width="6" height="20" rx="1"/>'
+  +     '<rect x="468" y="291" width="6" height="20" rx="1"/>'
+  +     '<rect x="480" y="291" width="6" height="20" rx="1"/>'
+  +   '</g>'
+  /* Etiqueta Split */
+  +   '<text x="345" y="345" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="7.5" font-weight="700" fill="#f59e0b" letter-spacing="1">SPLIT</text>'
+  +   '<text x="455" y="345" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="7.5" font-weight="700" fill="#22c55e" letter-spacing="1">MELODÍA</text>'
+  + '</g>'
+
+  /* ---------- MANO IZQUIERDA (bloque acorde C-F-G-Am) ---------- */
+  + '<g transform="translate(90,300)">'
+  +   '<circle r="62" fill="url(#haloAmber)">'
+  +     '<animate attributeName="r" values="52;76;52" dur="4s" repeatCount="indefinite"/>'
+  +     '<animate attributeName="opacity" values="0.5;1;0.5" dur="4s" repeatCount="indefinite"/>'
+  +   '</circle>'
+  +   '<circle r="46" fill="#0f172a" stroke="#f59e0b" stroke-width="2" filter="url(#glowF)">'
+  +     '<animate attributeName="stroke-width" values="1.4;3;1.4" dur="3s" repeatCount="indefinite"/>'
+  +   '</circle>'
+  /* Acordes ciclando C - F - G - Am */
+  +   '<g text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-weight="800">'
+  +     '<text y="6" font-size="19" fill="#f59e0b">C(I)'
+  +       '<animate attributeName="opacity" values="1;0;0;0;1" keyTimes="0;0.24;0.5;0.74;1" dur="6s" repeatCount="indefinite"/>'
+  +     '</text>'
+  +     '<text y="6" font-size="19" fill="#22c55e" opacity="0">F(IV)'
+  +       '<animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.24;0.5;0.74;1" dur="6s" repeatCount="indefinite"/>'
+  +     '</text>'
+  +     '<text y="6" font-size="19" fill="#00d4ff" opacity="0">G(V)'
+  +       '<animate attributeName="opacity" values="0;0;0;1;0" keyTimes="0;0.24;0.5;0.74;1" dur="6s" repeatCount="indefinite"/>'
+  +     '</text>'
+  +     '<text y="6" font-size="19" fill="#a855f7" opacity="0">Am(VI)'
+  +       '<animate attributeName="opacity" values="0;1;0;0;0" keyTimes="0;0.24;0.5;0.74;1" dur="6s" repeatCount="indefinite"/>'
+  +     '</text>'
+  +   '</g>'
+  /* Etiqueta */
+  +   '<text y="28" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="8.5" fill="#94a3b8" letter-spacing="1">ZONA ACORDES</text>'
+  +   '<text y="72" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="11" font-weight="700" fill="#f59e0b" letter-spacing="1.6">MANO IZQ.'
+  +     '<animate attributeName="opacity" values="0.5;1;0.5" dur="2.6s" repeatCount="indefinite"/>'
+  +   '</text>'
+  + '</g>'
+
+  /* ---------- BANDA VIRTUAL (BATERÍA, BAJO, PIANO) ---------- */
+  /* Batería (nodo arriba derecha) */
+  + '<g transform="translate(690,205)">'
+  +   '<circle r="52" fill="url(#haloGreen)">'
+  +     '<animate attributeName="r" values="42;66;42" dur="4.2s" repeatCount="indefinite"/>'
+  +     '<animate attributeName="opacity" values="0.5;1;0.5" dur="4.2s" repeatCount="indefinite"/>'
+  +   '</circle>'
+  +   '<circle r="38" fill="#0f172a" stroke="#22c55e" stroke-width="2" filter="url(#glowF)">'
+  +     '<animate attributeName="stroke-width" values="1.4;3;1.4" dur="2.4s" repeatCount="indefinite"/>'
+  +   '</circle>'
+  /* Caja de batería simplificada */
+  +   '<circle r="15" fill="#22c55e" opacity="0.9">'
+  +     '<animate attributeName="r" values="13;17;13" dur="1.1s" repeatCount="indefinite"/>'
+  +   '</circle>'
+  +   '<circle r="6" fill="#0f172a"/>'
+  +   '<text y="58" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="10" font-weight="800" fill="#22c55e" letter-spacing="1.4">DRUMS</text>'
+  + '</g>'
+
+  /* Bajo (nodo abajo derecha) */
+  + '<g transform="translate(690,300)">'
+  +   '<circle r="46" fill="url(#haloPurple)">'
+  +     '<animate attributeName="r" values="36;58;36" dur="3.6s" repeatCount="indefinite"/>'
+  +     '<animate attributeName="opacity" values="0.45;1;0.45" dur="3.6s" repeatCount="indefinite"/>'
+  +   '</circle>'
+  +   '<circle r="34" fill="#0f172a" stroke="#a855f7" stroke-width="2" filter="url(#glowF)">'
+  +     '<animate attributeName="stroke-width" values="1.4;2.8;1.4" dur="2.7s" repeatCount="indefinite"/>'
+  +   '</circle>'
+  +   '<path d="M -10 -12 L -10 14 L 10 10 L 10 -14 Z" fill="#a855f7" opacity="0.9"/>'
+  +   '<circle cx="10" cy="-2" r="3" fill="#0f172a"/>'
+  +   '<text y="52" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="9.5" font-weight="800" fill="#a855f7" letter-spacing="1.4">BASS</text>'
+  + '</g>'
+
+  /* Piano (nodo abajo, más a la derecha) */
+  + '<g transform="translate(690,380)">'
+  +   '<circle r="40" fill="url(#haloCyan)">'
+  +     '<animate attributeName="r" values="30;50;30" dur="4.4s" repeatCount="indefinite"/>'
+  +     '<animate attributeName="opacity" values="0.45;1;0.45" dur="4.4s" repeatCount="indefinite"/>'
+  +   '</circle>'
+  +   '<circle r="28" fill="#0f172a" stroke="#00d4ff" stroke-width="2" filter="url(#glowF)">'
+  +     '<animate attributeName="stroke-width" values="1.2;2.6;1.2" dur="3.1s" repeatCount="indefinite"/>'
+  +   '</circle>'
+  /* Mini teclas */
+  +   '<g fill="#e2e8f0" stroke="#1e3a5f" stroke-width="0.4">'
+  +     '<rect x="-16" y="-6" width="4" height="14" rx="0.8">'
+  +       '<animate attributeName="fill" values="#e2e8f0;#00d4ff;#e2e8f0" dur="1.4s" repeatCount="indefinite"/>'
+  +     '</rect>'
+  +     '<rect x="-10" y="-6" width="4" height="14" rx="0.8"/>'
+  +     '<rect x="-4" y="-6" width="4" height="14" rx="0.8">'
+  +       '<animate attributeName="fill" values="#e2e8f0;#f59e0b;#e2e8f0" dur="1.9s" begin="0.3s" repeatCount="indefinite"/>'
+  +     '</rect>'
+  +     '<rect x="2" y="-6" width="4" height="14" rx="0.8"/>'
+  +     '<rect x="8" y="-6" width="4" height="14" rx="0.8">'
+  +       '<animate attributeName="fill" values="#e2e8f0;#22c55e;#e2e8f0" dur="2.3s" begin="0.6s" repeatCount="indefinite"/>'
+  +     '</rect>'
+  +     '<rect x="14" y="-6" width="4" height="14" rx="0.8"/>'
+  +   '</g>'
+  +   '<text y="46" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="9" font-weight="800" fill="#00d4ff" letter-spacing="1.2">PIANO</text>'
+  + '</g>'
+
+  /* ---------- RUTAS DE FLUJO ---------- */
+  + '<g fill="none" stroke-width="2.4" stroke-linecap="round">'
+  +   '<path d="M110 300 Q 200 210 320 288" stroke="#f59e0b" stroke-dasharray="9 11" opacity="0.85">'
+  +     '<animate attributeName="stroke-dashoffset" from="0" to="-200" dur="4s" repeatCount="indefinite"/>'
+  +   '</path>'
+  +   '<path d="M400 200 Q 452 130 400 92" stroke="#00d4ff" stroke-dasharray="8 10" opacity="0.9">'
+  +     '<animate attributeName="stroke-dashoffset" from="0" to="-180" dur="3.4s" repeatCount="indefinite"/>'
+  +   '</path>'
+  +   '<path d="M690 205 Q 560 140 490 262" stroke="#22c55e" stroke-dasharray="9 11" opacity="0.75">'
+  +     '<animate attributeName="stroke-dashoffset" from="0" to="-200" dur="4.6s" repeatCount="indefinite"/>'
+  +   '</path>'
+  +   '<path d="M690 300 Q 590 320 490 305" stroke="#a855f7" stroke-dasharray="8 10" opacity="0.75">'
+  +     '<animate attributeName="stroke-dashoffset" from="0" to="-190" dur="5.1s" repeatCount="indefinite"/>'
+  +   '</path>'
+  +   '<path d="M690 380 Q 590 400 490 335" stroke="#00d4ff" stroke-dasharray="9 11" opacity="0.7">'
+  +     '<animate attributeName="stroke-dashoffset" from="0" to="-200" dur="4.9s" repeatCount="indefinite"/>'
+  +   '</path>'
+  + '</g>'
+
+  /* ---------- PARTÍCULAS CIRCULANDO ---------- */
+  + '<circle r="5" fill="#f59e0b" filter="url(#glowF)">'
+  +   '<animateMotion dur="2.6s" repeatCount="indefinite" begin="0s"><mpath xlink:href="#pChord" href="#pChord"/></animateMotion>'
+  +   '<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="2.6s" repeatCount="indefinite"/>'
+  + '</circle>'
+  + '<circle r="4" fill="#fbbf24">'
+  +   '<animateMotion dur="3.1s" repeatCount="indefinite" begin="0.9s"><mpath xlink:href="#pChord" href="#pChord"/></animateMotion>'
+  +   '<animate attributeName="opacity" values="0;0.95;0.95;0" keyTimes="0;0.12;0.82;1" dur="3.1s" repeatCount="indefinite"/>'
+  + '</circle>'
+  + '<circle r="5" fill="#00d4ff" filter="url(#glowF)">'
+  +   '<animateMotion dur="2.4s" repeatCount="indefinite" begin="0.2s"><mpath xlink:href="#pEngine" href="#pEngine"/></animateMotion>'
+  +   '<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.8;1" dur="2.4s" repeatCount="indefinite"/>'
+  + '</circle>'
+  + '<circle r="5" fill="#22c55e" filter="url(#glowF)">'
+  +   '<animateMotion dur="3.3s" repeatCount="indefinite" begin="0.4s"><mpath xlink:href="#pDrum" href="#pDrum"/></animateMotion>'
+  +   '<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="3.3s" repeatCount="indefinite"/>'
+  + '</circle>'
+  + '<circle r="4" fill="#86efac">'
+  +   '<animateMotion dur="2.9s" repeatCount="indefinite" begin="1.5s"><mpath xlink:href="#pDrum" href="#pDrum"/></animateMotion>'
+  +   '<animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.12;0.82;1" dur="2.9s" repeatCount="indefinite"/>'
+  + '</circle>'
+  + '<circle r="5" fill="#a855f7" filter="url(#glowF)">'
+  +   '<animateMotion dur="2.8s" repeatCount="indefinite" begin="0.6s"><mpath xlink:href="#pBass" href="#pBass"/></animateMotion>'
+  +   '<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="2.8s" repeatCount="indefinite"/>'
+  + '</circle>'
+  + '<circle r="4.5" fill="#00d4ff" filter="url(#glowF)">'
+  +   '<animateMotion dur="3s" repeatCount="indefinite" begin="0.8s"><mpath xlink:href="#pPiano" href="#pPiano"/></animateMotion>'
+  +   '<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="3s" repeatCount="indefinite"/>'
+  + '</circle>'
+
+  /* ---------- GHOST NOTES (notas fantasma viajando) ---------- */
+  + '<g>'
+  +   '<animateMotion dur="3.6s" repeatCount="indefinite" begin="0s"><mpath xlink:href="#pChord" href="#pChord"/></animateMotion>'
+  +   '<animate attributeName="opacity" values="0;0.85;0.85;0" keyTimes="0;0.15;0.78;1" dur="3.6s" repeatCount="indefinite"/>'
+  +   '<ellipse rx="11" ry="6" fill="#f59e0b" opacity="0.7"/>'
+  +   '<text x="0" y="3" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="7" font-weight="800" fill="#0f172a">C</text>'
+  + '</g>'
+  + '<g>'
+  +   '<animateMotion dur="4.2s" repeatCount="indefinite" begin="1.2s"><mpath xlink:href="#pChord" href="#pChord"/></animateMotion>'
+  +   '<animate attributeName="opacity" values="0;0.75;0.75;0" keyTimes="0;0.15;0.78;1" dur="4.2s" repeatCount="indefinite"/>'
+  +   '<ellipse rx="11" ry="6" fill="#22c55e" opacity="0.7"/>'
+  +   '<text x="0" y="3" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="7" font-weight="800" fill="#0f172a">F</text>'
+  + '</g>'
+  + '<g>'
+  +   '<animateMotion dur="3.8s" repeatCount="indefinite" begin="0.6s"><mpath xlink:href="#pChord" href="#pChord"/></animateMotion>'
+  +   '<animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.15;0.78;1" dur="3.8s" repeatCount="indefinite"/>'
+  +   '<ellipse rx="11" ry="6" fill="#00d4ff" opacity="0.7"/>'
+  +   '<text x="0" y="3" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="7" font-weight="800" fill="#0f172a">G</text>'
+  + '</g>'
+  /* Ghost de la banda virtual saliendo hacia el teclado */
+  + '<g>'
+  +   '<animateMotion dur="4.4s" repeatCount="indefinite" begin="0s"><mpath xlink:href="#pDrum" href="#pDrum"/></animateMotion>'
+  +   '<animate attributeName="opacity" values="0;0.6;0.6;0" keyTimes="0;0.18;0.75;1" dur="4.4s" repeatCount="indefinite"/>'
+  +   '<circle r="6" fill="#22c55e" opacity="0.75"/>'
+  + '</g>'
+  + '<g>'
+  +   '<animateMotion dur="4.8s" repeatCount="indefinite" begin="1s"><mpath xlink:href="#pBass" href="#pBass"/></animateMotion>'
+  +   '<animate attributeName="opacity" values="0;0.6;0.6;0" keyTimes="0;0.18;0.75;1" dur="4.8s" repeatCount="indefinite"/>'
+  +   '<circle r="6" fill="#a855f7" opacity="0.75"/>'
+  + '</g>'
+
+  /* ---------- ORBITALES ALREDEDOR DEL TECLADO ---------- */
+  + '<circle r="3.5" fill="#00d4ff" filter="url(#glowF)" opacity="0.9">'
+  +   '<animateMotion dur="8s" repeatCount="indefinite"><mpath xlink:href="#pOrbit" href="#pOrbit"/></animateMotion>'
+  + '</circle>'
+  + '<circle r="3" fill="#a855f7" opacity="0.9">'
+  +   '<animateMotion dur="6s" repeatCount="indefinite" begin="1s"><mpath xlink:href="#pOrbit2" href="#pOrbit2"/></animateMotion>'
+  + '</circle>'
+  + '<circle r="2.5" fill="#22c55e" opacity="0.85">'
+  +   '<animateMotion dur="4.5s" repeatCount="indefinite" begin="2.4s"><mpath xlink:href="#pOrbit3" href="#pOrbit3"/></animateMotion>'
+  + '</circle>'
+  + '<circle r="2.5" fill="#f59e0b" opacity="0.85">'
+  +   '<animateMotion dur="9s" repeatCount="indefinite" begin="3.1s"><mpath xlink:href="#pOrbit" href="#pOrbit"/></animateMotion>'
+  + '</circle>'
+
+  /* ---------- EXPLOSIONES RADIALES EN MANO Y BANDA ---------- */
+  + '<g transform="translate(90,300)" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round">'
+  +   '<line x1="0" y1="0" x2="-42" y2="-42"><animate attributeName="opacity" values="1;0" dur="3s" repeatCount="indefinite"/></line>'
+  +   '<line x1="0" y1="0" x2="42" y2="-42"><animate attributeName="opacity" values="1;0" dur="3s" begin="0.4s" repeatCount="indefinite"/></line>'
+  +   '<line x1="0" y1="0" x2="-42" y2="42"><animate attributeName="opacity" values="1;0" dur="3s" begin="0.8s" repeatCount="indefinite"/></line>'
+  +   '<line x1="0" y1="0" x2="42" y2="42"><animate attributeName="opacity" values="1;0" dur="3s" begin="1.2s" repeatCount="indefinite"/></line>'
+  + '</g>'
+  + '<g transform="translate(690,205)" stroke="#22c55e" stroke-width="1.4" stroke-linecap="round">'
+  +   '<line x1="0" y1="0" x2="-34" y2="-34"><animate attributeName="opacity" values="1;0" dur="2.2s" repeatCount="indefinite"/></line>'
+  +   '<line x1="0" y1="0" x2="34" y2="-34"><animate attributeName="opacity" values="1;0" dur="2.2s" begin="0.5s" repeatCount="indefinite"/></line>'
+  +   '<line x1="0" y1="0" x2="-34" y2="34"><animate attributeName="opacity" values="1;0" dur="2.2s" begin="1s" repeatCount="indefinite"/></line>'
+  +   '<line x1="0" y1="0" x2="34" y2="34"><animate attributeName="opacity" values="1;0" dur="2.2s" begin="1.5s" repeatCount="indefinite"/></line>'
+  + '</g>'
+  + '<g transform="translate(690,300)" stroke="#a855f7" stroke-width="1.4" stroke-linecap="round">'
+  +   '<line x1="0" y1="0" x2="-30" y2="-30"><animate attributeName="opacity" values="1;0" dur="2.6s" begin="0.2s" repeatCount="indefinite"/></line>'
+  +   '<line x1="0" y1="0" x2="30" y2="-30"><animate attributeName="opacity" values="1;0" dur="2.6s" begin="0.7s" repeatCount="indefinite"/></line>'
+  +   '<line x1="0" y1="0" x2="-30" y2="30"><animate attributeName="opacity" values="1;0" dur="2.6s" begin="1.2s" repeatCount="indefinite"/></line>'
+  +   '<line x1="0" y1="0" x2="30" y2="30"><animate attributeName="opacity" values="1;0" dur="2.6s" begin="1.7s" repeatCount="indefinite"/></line>'
+  + '</g>'
+
+  /* ---------- NODO SUPERIOR: RESULTADO FINAL / BANDA EN VIVO ---------- */
+  + '<g>'
+  +   '<circle cx="400" cy="92" r="70" fill="url(#haloPurple)">'
+  +     '<animate attributeName="r" values="58;88;58" dur="3.8s" repeatCount="indefinite"/>'
+  +     '<animate attributeName="opacity" values="0.4;1;0.4" dur="3.8s" repeatCount="indefinite"/>'
+  +   '</circle>'
+  +   '<g transform="translate(400,92)">'
+  +     '<animateTransform attributeName="transform" type="translate" values="400,92;400,87;400,92" dur="3.5s" repeatCount="indefinite"/>'
+  +     '<circle r="42" fill="#0f172a" stroke="#a855f7" stroke-width="2.2" filter="url(#glowF)">'
+  +       '<animate attributeName="stroke-width" values="1.4;3.4;1.4" dur="2.8s" repeatCount="indefinite"/>'
+  +     '</circle>'
+  /* Notas musicales dentro */
+  +     '<text x="0" y="6" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="30" font-weight="900" fill="#a855f7" filter="url(#glowF)">♫'
+  +       '<animate attributeName="fill" values="#a855f7;#00d4ff;#22c55e;#f59e0b;#a855f7" dur="5s" repeatCount="indefinite"/>'
+  +     '</text>'
+  +   '</g>'
+  +   '<text x="400" y="146" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="12" font-weight="700" fill="#a855f7" letter-spacing="1.8">BANDA EN VIVO</text>'
+  +   '<text x="400" y="160" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="9" fill="#94a3b8">acompañamiento en tiempo real</text>'
+  + '</g>'
+
+  /* ---------- ETIQUETAS DE PROCESO ---------- */
+  + '<text x="220" y="204" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="10" font-weight="700" fill="#f59e0b" opacity="0.9">'
+  +   'ACORDE EJECUTADO'
+  +   '<animate attributeName="opacity" values="0.4;1;0.4" dur="2.6s" repeatCount="indefinite"/>'
+  + '</text>'
+  + '<text x="580" y="152" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="10" font-weight="700" fill="#22c55e" opacity="0.9">'
+  +   'STYLE ENGINE'
+  +   '<animate attributeName="opacity" values="0.4;1;0.4" dur="3.1s" repeatCount="indefinite"/>'
+  + '</text>'
+  + '<text x="474" y="140" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="9.5" font-weight="700" fill="#00d4ff" opacity="0.9">'
+  +   'SPLIT ACTIVO'
+  +   '<animate attributeName="opacity" values="0.35;1;0.35" dur="2.9s" repeatCount="indefinite"/>'
+  + '</text>'
+
+  /* ---------- TÍTULO PRINCIPAL ---------- */
+  + '<text x="400" y="42" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="21" font-weight="800" letter-spacing="1.6" fill="#00d4ff">'
+  +   'TECLADO ARRANGER · BANDA VIRTUAL'
+  +   '<animate attributeName="fill" values="#00d4ff;#22c55e;#f59e0b;#a855f7;#00d4ff" dur="8s" repeatCount="indefinite"/>'
+  + '</text>'
+
+  /* ---------- SUBTÍTULO ---------- */
+  + '<text x="400" y="426" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="10.5" fill="#94a3b8" letter-spacing="1.2">'
+  +   'ACORDE · ESTILO · VARIACIÓN · FILL-IN · MEZCLA EN TIEMPO REAL'
+  +   '<animate attributeName="opacity" values="0.45;1;0.45" dur="4.2s" repeatCount="indefinite"/>'
+  + '</text>'
+
+  /* ---------- FIRMA ---------- */
+  + '<text x="790" y="442" text-anchor="end" font-family="Segoe UI, system-ui, sans-serif" font-size="9.5" fill="#a855f7" letter-spacing="0.8">'
+  +   'Rubén Sbarsky'
+  +   '<animate attributeName="opacity" values="0.35;0.95;0.35" dur="5s" repeatCount="indefinite"/>'
+  + '</text>'
+
+  /* ---------- INDICADOR LIVE ---------- */
+  + '<g transform="translate(742,26)">'
+  +   '<rect x="-52" y="-14" width="104" height="28" rx="14" fill="#0f172a" stroke="#ef4444" stroke-width="1.4" opacity="0.95"/>'
+  +   '<circle cx="-32" cy="0" r="4.5" fill="#ef4444">'
+  +     '<animate attributeName="r" values="3.2;6.2;3.2" dur="1.6s" repeatCount="indefinite"/>'
+  +     '<animate attributeName="opacity" values="1;0.25;1" dur="1.6s" repeatCount="indefinite"/>'
+  +   '</circle>'
+  +   '<text x="6" y="4" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="10" font-weight="800" fill="#ef4444" letter-spacing="1.4">'
+  +     'LIVE'
+  +     '<animate attributeName="fill" values="#ef4444;#f59e0b;#ef4444" dur="2.4s" repeatCount="indefinite"/>'
+  +   '</text>'
+  + '</g>'
+
+  /* ---------- FLASH CULMINANTE ---------- */
+  + '<g transform="translate(400,240)">'
+  +   '<text x="0" y="0" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-size="34" font-weight="900" letter-spacing="4" fill="#00d4ff" filter="url(#glowSoft)" opacity="0">'
+  +     '¡BANDA EN VIVO!'
+  +     '<animate attributeName="opacity" values="0;0;0.95;0.95;0;0" keyTimes="0;0.62;0.7;0.82;0.9;1" dur="8s" repeatCount="indefinite"/>'
+  +     '<animate attributeName="fill" values="#00d4ff;#22c55e;#f59e0b;#00d4ff" dur="8s" repeatCount="indefinite"/>'
+  +   '</text>'
+  +   '<circle r="90" fill="none" stroke="#00d4ff" stroke-width="2" opacity="0">'
+  +     '<animate attributeName="r" values="40;150;40" keyTimes="0;0.5;1" dur="8s" repeatCount="indefinite"/>'
+  +     '<animate attributeName="opacity" values="0;0;0.8;0;0" keyTimes="0;0.62;0.72;0.86;1" dur="8s" repeatCount="indefinite"/>'
+  +   '</circle>'
+  + '</g>'
+
+  /* ---------- ETIQUETAS DE ESTADO ALTERNAS ---------- */
+  + '<text x="60" y="34" font-family="Segoe UI, system-ui, sans-serif" font-size="10" font-weight="700" fill="#00d4ff" letter-spacing="1.6">'
+  +   '<animate attributeName="opacity" values="0.2;0.9;0.2" dur="3.6s" repeatCount="indefinite"/>'
+  +   'STYLE: 60s BALLROOM'
+  + '</text>'
+  + '<text x="60" y="52" font-family="Segoe UI, system-ui, sans-serif" font-size="9" fill="#22c55e" letter-spacing="1.2" opacity="0.75">'
+  +   'VARIACIÓN A · FILL · VARIACIÓN B'
+  +   '<animate attributeName="opacity" values="0.3;0.9;0.3" dur="4.8s" repeatCount="indefinite"/>'
+  + '</text>'
+
+  /* ---------- MARCADOR DE COMPÁS PULSANTE ---------- */
+  + '<g transform="translate(60,420)">'
+  +   '<circle cx="0" cy="0" r="6" fill="#ef4444" opacity="0.85">'
+  +     '<animate attributeName="r" values="4;7.5;4" dur="0.8s" repeatCount="indefinite"/>'
+  +     '<animate attributeName="opacity" values="1;0.35;1" dur="0.8s" repeatCount="indefinite"/>'
+  +   '</circle>'
+  +   '<text x="14" y="4" font-family="Segoe UI, system-ui, sans-serif" font-size="9" font-weight="800" fill="#ef4444" letter-spacing="1.4">TEMPO · 1-2-3-4</text>'
+  + '</g>'
+  + '</svg>';
+
+  var heroHome = document.getElementById('hero-home');
+  var heroCred = document.getElementById('hero-credits');
+  heroHome.innerHTML = HERO_HTML;
+  var heroEl = document.getElementById('heroSVG');
+
+  /* ============================================================
+     NAVEGACIÓN SPA
+     ============================================================ */
+  var navButtons = document.querySelectorAll('.nav-btn');
+  var sections = document.querySelectorAll('.section');
+
+  function activate(target){
+    var i;
+    for(i = 0; i < sections.length; i++){
+      sections[i].classList.remove('active');
+    }
+    var sec = document.getElementById(target);
+    if(sec){ sec.classList.add('active'); }
+
+    for(i = 0; i < navButtons.length; i++){
+      navButtons[i].classList.remove('active');
+      if(navButtons[i].getAttribute('data-target') === target){
+        navButtons[i].classList.add('active');
+      }
+    }
+
+    /* Reubicar SVG: en CRÉDITOS se reinicia la animación */
+    if(target === 'creditos'){
+      heroCred.appendChild(heroEl);
+      try { heroEl.setCurrentTime(0); } catch(e){}
+    } else {
+      if(heroEl.parentNode !== heroHome){
+        heroHome.appendChild(heroEl);
+        try { heroEl.setCurrentTime(0); } catch(e){}
+      }
+    }
+
+    window.scrollTo({top:0, behavior:'smooth'});
+    updateProgress();
+  }
+
+  for(var n = 0; n < navButtons.length; n++){
+    navButtons[n].addEventListener('click', function(){
+      activate(this.getAttribute('data-target'));
+    });
+  }
+
+  /* ============================================================
+     BARRA DE PROGRESO
+     ============================================================ */
+  var progressBar = document.getElementById('progressBar');
+  var toTop = document.getElementById('toTop');
+
+  function updateProgress(){
+    var doc = document.documentElement;
+    var scrollTop = window.pageYOffset || doc.scrollTop || 0;
+    var height = doc.scrollHeight - doc.clientHeight;
+    var pct = height > 0 ? (scrollTop / height) * 100 : 0;
+    progressBar.style.width = pct + '%';
+    if(scrollTop > 260){
+      toTop.classList.add('show');
+    } else {
+      toTop.classList.remove('show');
+    }
+  }
+
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  window.addEventListener('resize', updateProgress);
+
+  toTop.addEventListener('click', function(){
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  /* ============================================================
+     ACORDEONES
+     ============================================================ */
+  var accBtns = document.querySelectorAll('.acc-h');
+  for(var a = 0; a < accBtns.length; a++){
+    accBtns[a].addEventListener('click', function(){
+      var parent = this.parentNode;
+      var wasOpen = parent.classList.contains('open');
+      var all = document.querySelectorAll('.acc');
+      for(var k = 0; k < all.length; k++){ all[k].classList.remove('open'); }
+      if(!wasOpen){ parent.classList.add('open'); }
+    });
+  }
+
+  updateProgress();
+
+})();
+</script>
+
+</body>
+</html>
