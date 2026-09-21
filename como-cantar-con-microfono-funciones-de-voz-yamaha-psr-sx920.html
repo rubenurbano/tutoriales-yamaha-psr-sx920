@@ -1,0 +1,2180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cantar con Micrófono y Funciones de Voz — Yamaha PSR-SX920</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0e1a; --card:#0f172a; --border:#1e3a5f;
+  --accent:#00d4ff; --green:#22c55e; --amber:#f59e0b;
+  --red:#ef4444; --purple:#a855f7;
+  --text:#e2e8f0; --muted:#94a3b8; --dim:#64748b;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  line-height:1.65; padding-top:64px; overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent);color:#06111f}
+
+/* ── PROGRESS ── */
+.progress-track{
+  position:fixed;top:0;left:0;right:0;height:3px;
+  background:rgba(30,58,95,.5);z-index:1100;
+}
+.progress-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--purple),var(--green));
+  box-shadow:0 0 12px var(--accent);transition:width .1s linear;
+}
+
+/* ── NAVBAR ── */
+.navbar{
+  position:fixed;top:3px;left:0;right:0;height:61px;
+  background:rgba(10,14,26,.94);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);z-index:1000;
+  display:flex;align-items:center;gap:10px;padding:0 10px;
+}
+.nav-brand{
+  font-weight:800;font-size:.82rem;letter-spacing:.6px;
+  color:var(--accent);white-space:nowrap;padding:0 10px;
+  border-right:1px solid var(--border);height:36px;
+  display:flex;align-items:center;text-shadow:0 0 12px rgba(0,212,255,.6);
+  flex-shrink:0;
+}
+.nav-scroll{
+  display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;
+  scrollbar-width:thin;scrollbar-color:var(--border) transparent;
+  flex:1;padding:4px 2px;
+}
+.nav-scroll::-webkit-scrollbar{height:4px}
+.nav-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.nav-scroll::-webkit-scrollbar-track{background:transparent}
+.nav-btn{
+  background:transparent;border:1px solid transparent;color:var(--muted);
+  padding:7px 12px;border-radius:8px;font-size:.76rem;font-weight:600;
+  cursor:pointer;white-space:nowrap;transition:all .2s;font-family:inherit;
+  letter-spacing:.3px;flex-shrink:0;
+}
+.nav-btn:hover{color:var(--text);background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.3)}
+.nav-btn.active{
+  color:#06111f;background:linear-gradient(135deg,var(--accent),#0094cc);
+  border-color:var(--accent);box-shadow:0 0 16px rgba(0,212,255,.5);
+}
+.nav-btn.credits-btn{border-color:rgba(168,85,247,.4);color:#c4b5fd}
+.nav-btn.credits-btn.active{background:linear-gradient(135deg,var(--purple),#7c3aed);color:#fff;box-shadow:0 0 16px rgba(168,85,247,.5)}
+
+/* ── SECTIONS / SPA ── */
+.section{display:none;animation:fadeIn .45s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.wrap{max-width:1180px;margin:0 auto;padding:26px 16px 90px}
+
+/* ── HERO ── */
+.hero-top{padding:0 0 8px}
+.hero-svg-box{
+  width:100%;aspect-ratio:16/9;border-radius:14px;
+  overflow:hidden;border:1px solid var(--border);
+  box-shadow:0 0 44px rgba(0,212,255,.18),0 0 100px rgba(168,85,247,.08);
+  background:#070b14;position:relative;
+}
+.hero-svg{width:100%;height:100%;display:block}
+
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.4);
+  color:var(--accent);padding:6px 15px;border-radius:999px;
+  font-size:.72rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;
+  margin:22px 0 16px;
+}
+.badge::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 10px var(--accent);animation:pulseDot 1.6s ease-in-out infinite}
+@keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.65)}}
+
+h1.title{
+  font-size:clamp(1.6rem,4.6vw,2.85rem);line-height:1.15;
+  font-weight:800;letter-spacing:-.5px;margin-bottom:12px;
+  background:linear-gradient(120deg,#ffffff 10%,var(--accent) 45%,var(--purple) 85%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+p.subtitle{font-size:clamp(.95rem,2.2vw,1.1rem);color:var(--muted);max-width:820px;margin-bottom:22px}
+.quote{
+  border-left:3px solid var(--accent);background:rgba(0,212,255,.05);
+  padding:15px 20px;border-radius:0 10px 10px 0;margin:20px 0;
+  font-style:italic;color:#bae6fd;font-size:.95rem;
+}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:26px 0}
+.metric{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:16px;text-align:center;position:relative;overflow:hidden;
+}
+.metric::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),transparent)}
+.metric .m-val{font-size:1.65rem;font-weight:800;color:var(--accent);line-height:1;text-shadow:0 0 18px rgba(0,212,255,.45)}
+.metric .m-lab{font-size:.7rem;color:var(--dim);text-transform:uppercase;letter-spacing:1.1px;margin-top:7px;font-weight:600}
+.metric.g .m-val{color:var(--green);text-shadow:0 0 18px rgba(34,197,94,.45)}
+.metric.a .m-val{color:var(--amber);text-shadow:0 0 18px rgba(245,158,11,.45)}
+.metric.p .m-val{color:var(--purple);text-shadow:0 0 18px rgba(168,85,247,.45)}
+.metric.r .m-val{color:var(--red);text-shadow:0 0 18px rgba(239,68,68,.45)}
+
+/* ── SECTION HEADER ── */
+.sec-head{
+  display:flex;align-items:center;gap:14px;margin:6px 0 24px;
+  padding-bottom:14px;border-bottom:1px solid var(--border);
+}
+.sec-ico{
+  width:46px;height:46px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(0,212,255,.18),rgba(168,85,247,.14));
+  border:1px solid var(--border);display:flex;align-items:center;
+  justify-content:center;font-size:1.3rem;
+}
+.sec-head h2{font-size:clamp(1.15rem,3vw,1.6rem);font-weight:800;letter-spacing:-.3px}
+.sec-head .eyebrow{font-size:.68rem;letter-spacing:2px;color:var(--accent);
+  text-transform:uppercase;font-weight:700;margin-bottom:2px}
+
+/* ── CARDS ── */
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:20px;margin-bottom:16px;transition:border-color .2s,box-shadow .2s;
+}
+.card:hover{border-color:rgba(0,212,255,.45);box-shadow:0 0 22px rgba(0,212,255,.07)}
+.card h3{
+  font-size:1rem;font-weight:700;margin-bottom:12px;color:var(--accent);
+  display:flex;align-items:center;gap:9px;letter-spacing:.2px;
+}
+.card h3 .num{
+  background:rgba(0,212,255,.14);border:1px solid rgba(0,212,255,.4);
+  color:var(--accent);width:26px;height:26px;border-radius:7px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:.78rem;font-weight:800;flex-shrink:0;
+}
+.card h4{font-size:.88rem;font-weight:700;color:#cbd5e1;margin:14px 0 8px;
+  text-transform:uppercase;letter-spacing:1.1px}
+.card p{margin-bottom:10px;color:#cbd5e1;font-size:.92rem}
+.card ul,.card ol{margin:8px 0 10px 22px;color:#cbd5e1;font-size:.92rem}
+.card li{margin-bottom:6px}
+.card li::marker{color:var(--accent)}
+
+/* ── CALLOUTS ── */
+.callout{
+  border-radius:10px;padding:14px 16px;margin:14px 0;font-size:.9rem;
+  border-left:4px solid;display:flex;gap:11px;align-items:flex-start;
+}
+.callout .ci{font-size:1.1rem;line-height:1.2;flex-shrink:0}
+.callout.info{background:rgba(0,212,255,.07);border-color:var(--accent);color:#bae6fd}
+.callout.ex{background:rgba(34,197,94,.07);border-color:var(--green);color:#bbf7d0}
+.callout.warn{background:rgba(245,158,11,.07);border-color:var(--amber);color:#fde68a}
+.callout.err{background:rgba(239,68,68,.07);border-color:var(--red);color:#fecaca}
+
+/* ── STEPS ── */
+.steps{counter-reset:st;list-style:none;margin:12px 0}
+.steps li{
+  counter-increment:st;position:relative;padding:11px 12px 11px 46px;
+  background:rgba(30,58,95,.15);border:1px solid var(--border);
+  border-radius:9px;margin-bottom:8px;font-size:.9rem;color:#cbd5e1;
+}
+.steps li::before{
+  content:counter(st);position:absolute;left:11px;top:11px;
+  width:24px;height:24px;border-radius:7px;
+  background:linear-gradient(135deg,var(--accent),#0284c7);color:#06111f;
+  font-weight:800;font-size:.75rem;display:flex;align-items:center;justify-content:center;
+}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;border-radius:11px;border:1px solid var(--border);margin:14px 0;
+  -webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;min-width:620px;font-size:.85rem}
+thead th{
+  background:linear-gradient(135deg,rgba(0,212,255,.14),rgba(168,85,247,.1));
+  color:var(--accent);text-align:left;padding:12px 13px;font-weight:700;
+  letter-spacing:.6px;text-transform:uppercase;font-size:.72rem;
+  border-bottom:1px solid var(--border);white-space:nowrap;
+}
+tbody td{padding:11px 13px;border-bottom:1px solid rgba(30,58,95,.55);color:#cbd5e1;vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(0,212,255,.045)}
+td .tag{
+  display:inline-block;background:rgba(0,212,255,.12);border:1px solid rgba(0,212,255,.35);
+  color:var(--accent);padding:2px 9px;border-radius:999px;font-size:.7rem;font-weight:700;white-space:nowrap;
+}
+td code,.inline-code{
+  background:rgba(30,58,95,.6);border:1px solid var(--border);
+  padding:2px 7px;border-radius:6px;font-family:'Consolas','Monaco',monospace;
+  font-size:.8rem;color:#7dd3fc;
+}
+
+/* ── GRID ── */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+
+/* ── PILLS ── */
+.pill{
+  display:inline-block;padding:3px 11px;border-radius:999px;
+  font-size:.68rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+}
+.pill.b{background:rgba(0,212,255,.13);color:var(--accent);border:1px solid rgba(0,212,255,.4)}
+.pill.g{background:rgba(34,197,94,.13);color:var(--green);border:1px solid rgba(34,197,94,.4)}
+.pill.a{background:rgba(245,158,11,.13);color:var(--amber);border:1px solid rgba(245,158,11,.4)}
+.pill.r{background:rgba(239,68,68,.13);color:var(--red);border:1px solid rgba(239,68,68,.4)}
+.pill.p{background:rgba(168,85,247,.13);color:var(--purple);border:1px solid rgba(168,85,247,.4)}
+
+/* ── ACCORDION ── */
+.acc{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;background:var(--card)}
+.acc-head{
+  width:100%;background:transparent;border:none;color:var(--text);
+  padding:14px 16px;text-align:left;font-size:.9rem;font-weight:700;
+  cursor:pointer;font-family:inherit;display:flex;justify-content:space-between;
+  align-items:center;gap:10px;transition:background .2s;letter-spacing:.2px;
+}
+.acc-head:hover{background:rgba(0,212,255,.06)}
+.acc-head .chev{color:var(--accent);transition:transform .3s;font-size:.85rem;flex-shrink:0}
+.acc.open .acc-head .chev{transform:rotate(180deg)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .35s ease;
+  padding:0 16px;color:#cbd5e1;font-size:.9rem}
+.acc.open .acc-body{max-height:2200px;padding:0 16px 16px}
+.acc-body p{margin-bottom:9px}
+.acc-body ul,.acc-body ol{margin:8px 0 10px 20px}
+.acc-body li{margin-bottom:5px}
+
+/* ── PROJECT CARDS ── */
+.proj{
+  background:linear-gradient(140deg,var(--card),rgba(15,23,42,.5));
+  border:1px solid var(--border);border-radius:12px;padding:18px;
+  margin-bottom:14px;position:relative;overflow:hidden;
+}
+.proj::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:linear-gradient(180deg,var(--accent),var(--purple))}
+.proj h3{color:var(--text);font-size:1rem;margin-bottom:8px;padding-left:8px}
+.proj .goal{font-size:.85rem;color:var(--muted);margin-bottom:10px;padding-left:8px}
+.proj ul{padding-left:30px}
+
+/* ── BACK TO TOP ── */
+#backTop{
+  position:fixed;right:16px;bottom:16px;width:46px;height:46px;
+  border-radius:12px;background:linear-gradient(135deg,var(--accent),#0284c7);
+  color:#06111f;border:none;font-size:1.2rem;font-weight:800;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;z-index:900;
+  opacity:0;pointer-events:none;transition:all .3s;
+  box-shadow:0 0 22px rgba(0,212,255,.5);
+}
+#backTop.vis{opacity:1;pointer-events:auto}
+#backTop:hover{transform:translateY(-4px);box-shadow:0 0 32px rgba(0,212,255,.75)}
+
+/* ── CREDITS ── */
+.cred-card{
+  background:linear-gradient(140deg,var(--card),rgba(10,14,26,.7));
+  border:1px solid var(--border);border-radius:14px;padding:26px;
+  text-align:center;margin-bottom:18px;
+}
+.cred-card .who{font-size:1.5rem;font-weight:800;color:var(--accent);
+  text-shadow:0 0 22px rgba(0,212,255,.45);margin:10px 0 4px}
+.cred-card .role{color:var(--muted);font-size:.85rem;letter-spacing:1.4px;text-transform:uppercase}
+.cred-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:18px}
+.cred-meta div{background:rgba(30,58,95,.25);border:1px solid var(--border);
+  border-radius:10px;padding:12px}
+.cred-meta .lbl{font-size:.66rem;color:var(--dim);letter-spacing:1.4px;text-transform:uppercase;font-weight:700}
+.cred-meta .vl{font-size:.95rem;color:#cbd5e1;font-weight:700;margin-top:4px}
+.fiat{font-style:italic;color:var(--purple);margin-top:20px;font-size:.95rem;letter-spacing:.5px}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);background:rgba(10,14,26,.8);
+  padding:26px 16px;text-align:center;font-size:.8rem;color:var(--muted);
+}
+footer div{margin-bottom:6px}
+footer .fiat{color:var(--purple);font-style:italic;margin-top:10px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  body{padding-top:60px}
+  .navbar{height:57px;padding:0 6px;gap:6px}
+  .nav-brand{font-size:.68rem;padding:0 7px}
+  .nav-btn{padding:6px 9px;font-size:.7rem}
+  .wrap{padding:18px 12px 80px}
+  .card{padding:16px}
+  .sec-ico{width:40px;height:40px;font-size:1.1rem}
+  .metric .m-val{font-size:1.35rem}
+  table{min-width:520px;font-size:.78rem}
+  thead th,tbody td{padding:9px 10px}
+  #backTop{right:12px;bottom:12px;width:42px;height:42px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<nav class="navbar">
+  <div class="nav-brand">PSR‑SX920</div>
+  <div class="nav-scroll" id="navScroll">
+    <button class="nav-btn active" data-section="home">Inicio</button>
+    <button class="nav-btn" data-section="mapa">Mapa</button>
+    <button class="nav-btn" data-section="l1">Lección 1</button>
+    <button class="nav-btn" data-section="l2">Lección 2</button>
+    <button class="nav-btn" data-section="l3">Lección 3</button>
+    <button class="nav-btn" data-section="l4">Lección 4</button>
+    <button class="nav-btn" data-section="l5">Lección 5</button>
+    <button class="nav-btn" data-section="l6">Lección 6</button>
+    <button class="nav-btn" data-section="l7">Lección 7</button>
+    <button class="nav-btn" data-section="l8">Lección 8</button>
+    <button class="nav-btn" data-section="l9">Lección 9</button>
+    <button class="nav-btn" data-section="l10">Lección 10</button>
+    <button class="nav-btn" data-section="l11">Lección 11</button>
+    <button class="nav-btn" data-section="proyectos">Proyectos</button>
+    <button class="nav-btn" data-section="pfinal">Proyecto Final</button>
+    <button class="nav-btn" data-section="fuentes">Fuentes</button>
+    <button class="nav-btn credits-btn" data-section="creditos">Créditos</button>
+  </div>
+</nav>
+
+<!-- ══════════ SVG LIBRARY (defs + symbol) ══════════ -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true" focusable="false">
+<defs>
+  <linearGradient id="heroBg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#070b14">
+      <animate attributeName="stop-color" values="#070b14;#0a1830;#0a0e1a;#070b14" dur="9s" repeatCount="indefinite"/>
+    </stop>
+    <stop offset="50%" stop-color="#0a0e1a">
+      <animate attributeName="stop-color" values="#0a0e1a;#150a2e;#0a1a2e;#0a0e1a" dur="13s" repeatCount="indefinite"/>
+    </stop>
+    <stop offset="100%" stop-color="#070b14">
+      <animate attributeName="stop-color" values="#070b14;#0a1428;#06121f;#070b14" dur="11s" repeatCount="indefinite"/>
+    </stop>
+  </linearGradient>
+
+  <pattern id="heroGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#00d4ff" stroke-width="0.6"/>
+  </pattern>
+
+  <radialGradient id="haloCyan">
+    <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.75"/>
+    <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="haloPurple">
+    <stop offset="0%" stop-color="#a855f7" stop-opacity="0.7"/>
+    <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="haloGreen">
+    <stop offset="0%" stop-color="#22c55e" stop-opacity="0.7"/>
+    <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="haloAmber">
+    <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.7"/>
+    <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+  </radialGradient>
+
+  <linearGradient id="boxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#0f172a"/>
+    <stop offset="100%" stop-color="#1e3a5f"/>
+  </linearGradient>
+
+  <filter id="glowSoft" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur stdDeviation="3" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glowHard" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="7" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+
+  <path id="flowMic"  d="M 148 225 C 210 225 270 214 330 214" fill="none"/>
+  <path id="flowH1"   d="M 470 196 C 540 168 606 142 672 130" fill="none"/>
+  <path id="flowH2"   d="M 470 215 C 540 215 606 215 672 215" fill="none"/>
+  <path id="flowH3"   d="M 470 234 C 540 262 606 288 672 300" fill="none"/>
+
+  <!-- ══════════ HERO SYMBOL (16:9) ══════════ -->
+  <symbol id="heroSymbol" viewBox="0 0 800 450">
+    <!-- FONDO -->
+    <rect x="0" y="0" width="800" height="450" fill="url(#heroBg)"/>
+    <rect x="0" y="0" width="800" height="450" fill="url(#heroGrid)">
+      <animate attributeName="opacity" values="0.05;0.2;0.05" dur="6.5s" repeatCount="indefinite"/>
+    </rect>
+
+    <!-- ANILLOS ORBITALES -->
+    <g transform="translate(400,220)" opacity="0.6">
+      <ellipse cx="0" cy="0" rx="230" ry="90" fill="none" stroke="#00d4ff" stroke-width="0.9" stroke-dasharray="10 16">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="26s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.25;0.7;0.25" dur="5s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="0" cy="0" rx="185" ry="185" fill="none" stroke="#a855f7" stroke-width="0.9" stroke-dasharray="6 20">
+        <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="34s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;0.18;0.6" dur="7s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="0" cy="0" rx="140" ry="52" fill="none" stroke="#22c55e" stroke-width="0.9" stroke-dasharray="4 12">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="19s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.2;0.65;0.2" dur="4.5s" repeatCount="indefinite"/>
+      </ellipse>
+    </g>
+
+    <!-- TÍTULO -->
+    <text x="34" y="48" font-family="Segoe UI,system-ui,sans-serif" font-size="21" font-weight="800" letter-spacing="1.2">
+      <tspan fill="#00d4ff">YAMAHA PSR‑SX920</tspan>
+    </text>
+    <text x="34" y="72" font-family="Segoe UI,system-ui,sans-serif" font-size="12" letter-spacing="3.5" fill="#94a3b8" opacity="0.9">
+      MICRÓFONO
+      <animate attributeName="opacity" values="0.9;0.35;0.9" dur="3.2s" repeatCount="indefinite"/>
+    </text>
+    <text x="34" y="98" font-family="Segoe UI,system-ui,sans-serif" font-size="11" letter-spacing="2" fill="#a855f7">
+      <animate attributeName="opacity" values="0.35;1;0.35" dur="4.1s" repeatCount="indefinite"/>
+      ▸ VOCAL HARMONY ENGINE
+    </text>
+
+    <!-- LIVE -->
+    <g transform="translate(722,36)">
+      <circle r="5" fill="#ef4444">
+        <animate attributeName="opacity" values="1;0.15;1" dur="1.4s" repeatCount="indefinite"/>
+        <animate attributeName="r" values="5;6.5;5" dur="1.4s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="11" fill="none" stroke="#ef4444" stroke-width="1" opacity="0.5">
+        <animate attributeName="r" values="9;17;9" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <text x="16" y="4" font-family="Segoe UI,system-ui,sans-serif" font-size="10" font-weight="800" letter-spacing="2" fill="#ef4444">LIVE</text>
+    </g>
+
+    <!-- ══ MICRÓFONO (izquierda) ══ -->
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0; 0 -3; 0 0" dur="3.1s" repeatCount="indefinite"/>
+      <circle cx="110" cy="225" r="52" fill="url(#haloCyan)" opacity="0.55">
+        <animate attributeName="r" values="42;60;42" dur="3.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.35;0.75;0.35" dur="3.4s" repeatCount="indefinite"/>
+      </circle>
+      <rect x="98" y="188" width="24" height="52" rx="12" fill="#1e3a5f" stroke="#00d4ff" stroke-width="1.6" filter="url(#glowSoft)"/>
+      <rect x="104" y="196" width="12" height="34" rx="6" fill="#00d4ff" opacity="0.28">
+        <animate attributeName="opacity" values="0.15;0.6;0.15" dur="2.2s" repeatCount="indefinite"/>
+      </rect>
+      <path d="M 110 240 L 110 258" stroke="#00d4ff" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M 92 262 Q 110 274 128 262" stroke="#00d4ff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <g stroke="#00d4ff" fill="none" stroke-width="1.5" stroke-linecap="round">
+        <path d="M 142 206 Q 150 225 142 244" opacity="0.85">
+          <animate attributeName="opacity" values="0.9;0.1;0.9" dur="1.6s" repeatCount="indefinite"/>
+        </path>
+        <path d="M 152 198 Q 164 225 152 252" opacity="0.5">
+          <animate attributeName="opacity" values="0.55;0.05;0.55" dur="2.1s" repeatCount="indefinite" begin="0.3s"/>
+        </path>
+        <path d="M 162 190 Q 178 225 162 260" opacity="0.28">
+          <animate attributeName="opacity" values="0.3;0;0.3" dur="2.6s" repeatCount="indefinite" begin="0.6s"/>
+        </path>
+      </g>
+      <text x="110" y="298" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="10" letter-spacing="2" fill="#00d4ff" opacity="0.85">MIC</text>
+    </g>
+
+    <!-- ══ PROCESADOR CENTRAL ══ -->
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2; 0 0" dur="4.3s" repeatCount="indefinite"/>
+      <rect x="332" y="168" width="134" height="94" rx="10" fill="url(#boxGrad)" stroke="#a855f7" stroke-width="1.8" filter="url(#glowSoft)"/>
+      <rect x="332" y="168" width="134" height="94" rx="10" fill="none" stroke="#00d4ff" stroke-width="0.9" opacity="0.5">
+        <animate attributeName="opacity" values="0.15;0.75;0.15" dur="2.8s" repeatCount="indefinite"/>
+      </rect>
+      <g stroke="#00d4ff" stroke-width="0.7" opacity="0.55">
+        <path d="M 344 196 L 372 196 L 372 182"/>
+        <path d="M 344 214 L 396 214 L 396 234"/>
+        <path d="M 344 232 L 366 232 L 366 246"/>
+        <path d="M 430 190 L 452 190 L 452 176"/>
+        <path d="M 430 214 L 456 214 L 456 226"/>
+        <path d="M 430 238 L 448 238 L 448 250"/>
+      </g>
+      <circle cx="399" cy="215" r="16" fill="url(#haloPurple)">
+        <animate attributeName="r" values="13;21;13" dur="2.4s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="399" cy="215" r="7" fill="#a855f7" filter="url(#glowHard)">
+        <animate attributeName="opacity" values="1;0.35;1" dur="1.8s" repeatCount="indefinite"/>
+        <animate attributeName="r" values="6;8.5;6" dur="1.8s" repeatCount="indefinite"/>
+      </circle>
+      <ellipse cx="399" cy="215" rx="24" ry="9" fill="none" stroke="#00d4ff" stroke-width="1" stroke-dasharray="3 6">
+        <animateTransform attributeName="transform" type="rotate" from="0 399 215" to="360 399 215" dur="6s" repeatCount="indefinite"/>
+      </ellipse>
+      <text x="399" y="256" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="8.5" letter-spacing="1.6" fill="#a855f7" font-weight="700">PROCESSOR</text>
+    </g>
+
+    <!-- ══ RUTAS DE FLUJO ══ -->
+    <use href="#flowMic" stroke="#00d4ff" stroke-width="1.4" stroke-dasharray="7 9" opacity="0.75">
+      <animate attributeName="stroke-dashoffset" from="0" to="-64" dur="2.4s" repeatCount="indefinite"/>
+    </use>
+    <use href="#flowH1" stroke="#22c55e" stroke-width="1.4" stroke-dasharray="7 9" opacity="0.75">
+      <animate attributeName="stroke-dashoffset" from="0" to="-64" dur="2.9s" repeatCount="indefinite"/>
+    </use>
+    <use href="#flowH2" stroke="#00d4ff" stroke-width="1.4" stroke-dasharray="7 9" opacity="0.75">
+      <animate attributeName="stroke-dashoffset" from="0" to="-64" dur="2.6s" repeatCount="indefinite"/>
+    </use>
+    <use href="#flowH3" stroke="#f59e0b" stroke-width="1.4" stroke-dasharray="7 9" opacity="0.75">
+      <animate attributeName="stroke-dashoffset" from="0" to="-64" dur="3.3s" repeatCount="indefinite"/>
+    </use>
+
+    <!-- PARTÍCULAS VIAJERAS -->
+    <g>
+      <circle r="3" fill="#00d4ff" filter="url(#glowSoft)">
+        <animateMotion dur="2.6s" repeatCount="indefinite"><mpath href="#flowMic"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="2.6s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="2.4" fill="#7dd3fc" filter="url(#glowSoft)">
+        <animateMotion dur="3.1s" begin="1.1s" repeatCount="indefinite"><mpath href="#flowMic"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="3.1s" begin="1.1s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="3" fill="#22c55e" filter="url(#glowSoft)">
+        <animateMotion dur="3.4s" begin="0.2s" repeatCount="indefinite"><mpath href="#flowH1"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="3.4s" begin="0.2s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="3" fill="#00d4ff" filter="url(#glowSoft)">
+        <animateMotion dur="3s" begin="0.7s" repeatCount="indefinite"><mpath href="#flowH2"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="3s" begin="0.7s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="3" fill="#f59e0b" filter="url(#glowSoft)">
+        <animateMotion dur="3.7s" begin="1.4s" repeatCount="indefinite"><mpath href="#flowH3"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="3.7s" begin="1.4s" repeatCount="indefinite"/>
+      </circle>
+      <g opacity="0.35">
+        <circle r="7" fill="none" stroke="#22c55e" stroke-width="1.2">
+          <animateMotion dur="4.6s" begin="0.4s" repeatCount="indefinite"><mpath href="#flowH1"/></animateMotion>
+          <animate attributeName="opacity" values="0;0.55;0.55;0" keyTimes="0;0.15;0.8;1" dur="4.6s" begin="0.4s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="7" fill="none" stroke="#00d4ff" stroke-width="1.2">
+          <animateMotion dur="5.2s" begin="1.2s" repeatCount="indefinite"><mpath href="#flowH2"/></animateMotion>
+          <animate attributeName="opacity" values="0;0.55;0.55;0" keyTimes="0;0.15;0.8;1" dur="5.2s" begin="1.2s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="7" fill="none" stroke="#f59e0b" stroke-width="1.2">
+          <animateMotion dur="5.6s" begin="2s" repeatCount="indefinite"><mpath href="#flowH3"/></animateMotion>
+          <animate attributeName="opacity" values="0;0.55;0.55;0" keyTimes="0;0.15;0.8;1" dur="5.6s" begin="2s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+    </g>
+
+    <!-- ══ VOCES DE ARMONÍA (derecha) ══ -->
+    <g>
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2.5; 0 0" dur="2.7s" repeatCount="indefinite"/>
+        <circle cx="690" cy="130" r="34" fill="url(#haloGreen)">
+          <animate attributeName="r" values="26;40;26" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="690" cy="130" r="15" fill="#0f172a" stroke="#22c55e" stroke-width="1.8" filter="url(#glowSoft)"/>
+        <text x="690" y="135" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="12" font-weight="800" fill="#22c55e">H1</text>
+      </g>
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0; 0 -3; 0 0" dur="3.6s" repeatCount="indefinite"/>
+        <circle cx="690" cy="215" r="34" fill="url(#haloCyan)">
+          <animate attributeName="r" values="26;40;26" dur="3.4s" repeatCount="indefinite" begin="0.5s"/>
+        </circle>
+        <circle cx="690" cy="215" r="15" fill="#0f172a" stroke="#00d4ff" stroke-width="1.8" filter="url(#glowSoft)"/>
+        <text x="690" y="220" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="12" font-weight="800" fill="#00d4ff">H2</text>
+      </g>
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2; 0 0" dur="4.1s" repeatCount="indefinite"/>
+        <circle cx="690" cy="300" r="34" fill="url(#haloAmber)">
+          <animate attributeName="r" values="26;40;26" dur="3.8s" repeatCount="indefinite" begin="1s"/>
+        </circle>
+        <circle cx="690" cy="300" r="15" fill="#0f172a" stroke="#f59e0b" stroke-width="1.8" filter="url(#glowSoft)"/>
+        <text x="690" y="305" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="12" font-weight="800" fill="#f59e0b">H3</text>
+      </g>
+      <text x="690" y="348" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="9" letter-spacing="2.4" fill="#94a3b8">ARMONÍAS</text>
+    </g>
+
+    <!-- ══ TECLADO (abajo) ══ -->
+    <g transform="translate(40,392)">
+      <rect x="0" y="0" width="720" height="34" rx="6" fill="#0f172a" stroke="#1e3a5f" stroke-width="1"/>
+      <g fill="#e2e8f0" stroke="#0a0e1a" stroke-width="1">
+        <rect x="6"  y="3" width="15" height="28" rx="2"/><rect x="26" y="3" width="15" height="28" rx="2"/>
+        <rect x="46" y="3" width="15" height="28" rx="2"/><rect x="66" y="3" width="15" height="28" rx="2"/>
+        <rect x="86" y="3" width="15" height="28" rx="2"/><rect x="106" y="3" width="15" height="28" rx="2"/>
+        <rect x="126" y="3" width="15" height="28" rx="2"/><rect x="146" y="3" width="15" height="28" rx="2"/>
+        <rect x="166" y="3" width="15" height="28" rx="2"/><rect x="186" y="3" width="15" height="28" rx="2"/>
+        <rect x="206" y="3" width="15" height="28" rx="2"/><rect x="226" y="3" width="15" height="28" rx="2"/>
+        <rect x="246" y="3" width="15" height="28" rx="2"/><rect x="266" y="3" width="15" height="28" rx="2"/>
+      </g>
+      <g fill="#0a0e1a">
+        <rect x="18" y="3" width="8" height="17" rx="1.5"/><rect x="38" y="3" width="8" height="17" rx="1.5"/>
+        <rect x="58" y="3" width="8" height="17" rx="1.5"/><rect x="78" y="3" width="8" height="17" rx="1.5"/>
+        <rect x="98" y="3" width="8" height="17" rx="1.5"/><rect x="118" y="3" width="8" height="17" rx="1.5"/>
+        <rect x="138" y="3" width="8" height="17" rx="1.5"/><rect x="158" y="3" width="8" height="17" rx="1.5"/>
+        <rect x="178" y="3" width="8" height="17" rx="1.5"/><rect x="198" y="3" width="8" height="17" rx="1.5"/>
+        <rect x="218" y="3" width="8" height="17" rx="1.5"/><rect x="238" y="3" width="8" height="17" rx="1.5"/>
+      </g>
+      <rect x="60" y="3" width="15" height="28" rx="2" fill="#00d4ff">
+        <animate attributeName="opacity" values="0;0.85;0" dur="1.4s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="150" y="3" width="15" height="28" rx="2" fill="#a855f7">
+        <animate attributeName="opacity" values="0;0.85;0" dur="1.9s" begin="0.7s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="240" y="3" width="15" height="28" rx="2" fill="#22c55e">
+        <animate attributeName="opacity" values="0;0.85;0" dur="2.3s" begin="1.2s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+
+    <!-- ══ FLASH CENTRAL "HARMONY" ══ -->
+    <g transform="translate(400,225)" pointer-events="none">
+      <text text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="34" font-weight="800" letter-spacing="4" fill="#ffffff" filter="url(#glowHard)">
+        HARMONY
+        <animate attributeName="opacity" values="0;0;0;0.95;0.95;0" keyTimes="0;0.3;0.4;0.5;0.62;0.75" dur="7s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="scale" values="0.85;0.85;0.85;1.08;1;1;0.85" keyTimes="0;0.3;0.4;0.5;0.62;0.75;1" dur="7s" repeatCount="indefinite"/>
+      </text>
+    </g>
+
+    <!-- ETIQUETA DE ESTADO -->
+    <g transform="translate(34,430)">
+      <text font-family="Segoe UI,system-ui,sans-serif" font-size="10" letter-spacing="2.4" fill="#22c55e" font-weight="700">
+        <tspan>
+          <animate attributeName="fill" values="#22c55e;#00d4ff;#a855f7;#22c55e" dur="6s" repeatCount="indefinite"/>
+          ● ARMONÍA VOCAL · MODO CHORDAL · ACMP ON
+        </tspan>
+      </text>
+    </g>
+
+    <!-- FIRMA -->
+    <text x="766" y="436" text-anchor="end" font-family="Segoe UI,system-ui,sans-serif" font-size="9.5" letter-spacing="1.6" fill="#64748b">
+      Rubén Sbarsky
+      <animate attributeName="opacity" values="0.35;0.95;0.35" dur="5s" repeatCount="indefinite"/>
+    </text>
+  </symbol>
+</defs>
+</svg>
+
+<!-- ══════════ HOME ══════════ -->
+<section class="section active" id="home">
+  <div class="wrap">
+    <div class="hero-top">
+      <div class="hero-svg-box">
+        <svg class="hero-svg" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Portada animada: micrófono, procesador de armonía vocal y voces resultantes">
+          <use href="#heroSymbol"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="badge">Tutorial Técnico · Edición 2026</div>
+    <h1 class="title">Cómo cantar con micrófono y usar las funciones de voz en el Yamaha PSR‑SX920</h1>
+    <p class="subtitle">
+      Tutorial completo, paso a paso, sobre conexión de micrófono, ajuste de ganancia, EQ, Noise Gate,
+      Compressor, función Talk, mezclador, Armonía Vocal, sintetizador Vocoder, memoria de registros,
+      grabación de audio y botones asignables — basado exclusivamente en el manual de instrucciones
+      Yamaha PSR‑SX920 / SX720.
+    </p>
+
+    <div class="quote">
+      «Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien.»
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="m-val">11</div><div class="m-lab">Lecciones</div></div>
+      <div class="metric g"><div class="m-val">6</div><div class="m-lab">Proyectos</div></div>
+      <div class="metric a"><div class="m-val">12</div><div class="m-lab">Funciones de voz</div></div>
+      <div class="metric p"><div class="m-val">60</div><div class="m-lab">Pasos guiados</div></div>
+      <div class="metric r"><div class="m-val">114</div><div class="m-lab">Tipos de armonía</div></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">i</span>Nota importante sobre la fuente</h3>
+      <p>
+        Todo lo que se explica en este tutorial está basado exclusivamente en la información contenida
+        en el manual de instrucciones del Yamaha PSR‑SX920/SX720. Cuando el manual no proporciona
+        suficiente detalle para realizar una acción, se indica explícitamente. No se utiliza conocimiento
+        previo ni información externa.
+      </p>
+      <div class="callout info">
+        <span class="ci">ℹ️</span>
+        <div><strong>Fuente única de verdad:</strong> Manual de instrucciones Yamaha PSR‑SX920/SX720. Las referencias a páginas concretas del manual se mantienen a lo largo de todo el tutorial.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">§</span>Cómo usar este tutorial</h3>
+      <p>
+        Este tutorial está organizado como una aplicación de una sola página (SPA). Utiliza la barra de
+        navegación superior para moverte entre las secciones: el <strong>Mapa de funciones</strong>, las
+        <strong>11 lecciones</strong>, los <strong>proyectos prácticos</strong>, el <strong>proyecto final</strong>,
+        las <strong>fuentes</strong> y los <strong>créditos</strong>.
+      </p>
+      <p>
+        Cada lección conserva la estructura original del documento: qué vamos a aprender, qué significa,
+        antes de empezar, pasos exactos, qué deberías ver, qué deberías oír, ejercicio práctico,
+        comprobación, mini reto y qué hacer si no funciona.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ MAPA ══════════ -->
+<section class="section" id="mapa">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">🗺️</div>
+      <div>
+        <div class="eyebrow">Visión general</div>
+        <h2>Mapa de las funciones de voz</h2>
+      </div>
+    </div>
+
+    <p style="color:#cbd5e1;margin-bottom:16px">
+      Antes de empezar, aquí tienes una visión general de todas las funciones relacionadas con el
+      micrófono y la voz que aparecen en el manual. Esto te permitirá saber qué vas a aprender y
+      dónde encontrarlo.
+    </p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre exacto (según Yamaha)</th>
+            <th>Qué hace</th>
+            <th>Dónde se encuentra</th>
+            <th>Lección</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Toma [MIC/GUITAR INPUT]</strong></td>
+            <td>Conecta un micrófono o una guitarra al instrumento.</td>
+            <td>Panel posterior.</td>
+            <td><span class="tag">Lección 1</span></td>
+          </tr>
+          <tr>
+            <td><strong>Interruptor [MIC GUITAR]</strong></td>
+            <td>Alterna entre modo micrófono («MIC») y modo guitarra («GUITAR»).</td>
+            <td>Panel posterior, junto a la toma.</td>
+            <td><span class="tag">Lección 1</span></td>
+          </tr>
+          <tr>
+            <td><strong>Mando [GAIN]</strong></td>
+            <td>Ajusta el nivel de entrada de la señal del micrófono o guitarra.</td>
+            <td>Panel posterior.</td>
+            <td><span class="tag">Lección 1 y 2</span></td>
+          </tr>
+          <tr>
+            <td><strong>Indicador del nivel de entrada MIC/GUITAR</strong></td>
+            <td>Muestra visualmente el nivel de la señal de entrada.</td>
+            <td>Pantalla de inicio (área de otra información).</td>
+            <td><span class="tag">Lección 2</span></td>
+          </tr>
+          <tr>
+            <td><strong>Pantalla [Mic Setting]</strong></td>
+            <td>Accede a los ajustes del micrófono: EQ de 3 bandas, puerta de ruido, compresor, detección de tono.</td>
+            <td>[MENU] → [Mic Setting] o botón [MIC SETTING/VOCAL HARMONY] (PSR‑SX920) / [MIC SETTING] (PSR‑SX720).</td>
+            <td><span class="tag">Lección 2, 3</span></td>
+          </tr>
+          <tr>
+            <td><strong>Función Talk</strong></td>
+            <td>Cambia instantáneamente los ajustes del micrófono para hablar al público sin efectos.</td>
+            <td>[MENU] → [Mic Setting] → [Talk].</td>
+            <td><span class="tag">Lección 4</span></td>
+          </tr>
+          <tr>
+            <td><strong>Mezclador (Mixer)</strong></td>
+            <td>Ajusta el balance de volumen y otros parámetros entre las partes, incluida la del micrófono.</td>
+            <td>Botón [MIXER/EQ] → ficha «Panel».</td>
+            <td><span class="tag">Lección 5</span></td>
+          </tr>
+          <tr>
+            <td><strong>Armonía Vocal (Vocal Harmony)</strong></td>
+            <td>Añade automáticamente armonías vocales a tu voz. Solo en PSR‑SX920.</td>
+            <td>[MENU] → [Vocal Harmony] o botón [MIC SETTING/VOCAL HARMONY].</td>
+            <td><span class="tag">Lecciones 6, 7, 8</span></td>
+          </tr>
+          <tr>
+            <td><strong>Sintetizador Vocoder</strong></td>
+            <td>Introduce las características de tu voz en el sintetizador para crear efectos robóticos o corales. Solo en PSR‑SX920.</td>
+            <td>Dentro de [Vocal Harmony], categoría «SynthVocoder».</td>
+            <td><span class="tag">Lección 8</span></td>
+          </tr>
+          <tr>
+            <td><strong>Memoria de Registros (Registration Memory)</strong></td>
+            <td>Guarda y recupera configuraciones completas del panel, incluyendo ajustes de micrófono y armonía vocal.</td>
+            <td>Botones REGISTRATION MEMORY [1]–[8] y botón [MEMORY].</td>
+            <td><span class="tag">Lección 9</span></td>
+          </tr>
+          <tr>
+            <td><strong>Grabación de audio</strong></td>
+            <td>Graba tu interpretación vocal y/o instrumental como archivo de audio.</td>
+            <td>Botón [RECORDING] → Audio [Quick Recording].</td>
+            <td><span class="tag">Lección 10</span></td>
+          </tr>
+          <tr>
+            <td><strong>Botones ASSIGNABLE</strong></td>
+            <td>Permiten asignar funciones como «VH Harmony On/Off» o «Talk» para activarlas con un botón.</td>
+            <td>Botones [A]–[F] y [1]–[2] en el panel.</td>
+            <td><span class="tag">Lección 11</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LECCIÓN 1 ══════════ -->
+<section class="section" id="l1">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">🔌</div>
+      <div>
+        <div class="eyebrow">Lección 1</div>
+        <h2>Conocer las conexiones y controles del micrófono</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">1</span>Qué vamos a aprender</h3>
+      <p>A identificar físicamente la toma de micrófono, el interruptor de selección y el mando de ganancia en el PSR‑SX920.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">2</span>Qué significa</h3>
+      <ul>
+        <li><strong>Toma [MIC/GUITAR INPUT]:</strong> es el conector donde se enchufa el micrófono. El manual indica que es un «conector de clavija de auriculares estándar de 1/4”».</li>
+        <li><strong>Interruptor [MIC GUITAR]:</strong> selecciona si lo que conectas es un micrófono («MIC») o una guitarra («GUITAR»).</li>
+        <li><strong>Mando [GAIN]:</strong> controla la sensibilidad de entrada. Si está muy alto, la señal se distorsiona; si está muy bajo, no se oye.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">3</span>Antes de empezar</h3>
+      <ul>
+        <li>Localiza el panel posterior del teclado.</li>
+        <li>No conectes nada todavía.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">4</span>Pasos exactos</h3>
+      <ol class="steps">
+        <li>Busca en el panel posterior la toma circular etiquetada como [MIC/GUITAR INPUT].</li>
+        <li>Justo al lado, localiza el interruptor deslizante [MIC GUITAR].</li>
+        <li>Localiza el mando giratorio [GAIN] (está cerca de la toma).</li>
+        <li>Gira el mando [GAIN] completamente hacia la izquierda, a la posición mínima.</li>
+      </ol>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="num">5</span>Qué deberías ver</h3>
+        <p>La toma, el interruptor y el mando están físicamente en el panel posterior, tal como se muestra en las ilustraciones de las páginas 18 y 19 del manual.</p>
+      </div>
+      <div class="card">
+        <h3><span class="num">6</span>Qué deberías oír</h3>
+        <p>No hay sonido porque aún no has conectado nada.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">7</span>Ejercicio práctico</h3>
+      <p>Sin conectar nada, mueve el interruptor [MIC GUITAR] de una posición a otra. Observa que es un interruptor físico de dos posiciones.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">8</span>Comprobación</h3>
+      <p>El mando [GAIN] está en el mínimo. El interruptor está en una de sus dos posiciones.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">9</span>Mini reto</h3>
+      <p>Intenta identificar estos mismos controles sin mirar el manual.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">10</span>Si no funciona</h3>
+      <div class="callout warn">
+        <span class="ci">⚠️</span>
+        <div>Si no encuentras los controles, revisa las páginas 18 y 19 del manual, donde se muestra el panel posterior con números que identifican cada parte.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LECCIÓN 2 ══════════ -->
+<section class="section" id="l2">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">🎤</div>
+      <div>
+        <div class="eyebrow">Lección 2</div>
+        <h2>Conectar el micrófono y ajustar la ganancia</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">1</span>Qué vamos a aprender</h3>
+      <p>A conectar un micrófono correctamente y a ajustar el nivel de entrada para que la voz se escuche con claridad.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">2</span>Qué significa</h3>
+      <ul>
+        <li><strong>Nivel de entrada:</strong> es la intensidad de la señal que llega desde el micrófono. Se ajusta con el mando [GAIN].</li>
+        <li><strong>Medidor de nivel:</strong> es una representación visual en la pantalla que indica si la señal es demasiado baja (verde/amarillo) o demasiado alta (naranja/rojo).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">3</span>Antes de empezar</h3>
+      <ul>
+        <li>El teclado debe estar apagado.</li>
+        <li>El mando [GAIN] debe estar en el mínimo.</li>
+        <li>Ten a mano un micrófono dinámico convencional (el manual recomienda «un micrófono dinámico convencional»).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">4</span>Pasos exactos</h3>
+      <ol class="steps">
+        <li>Asegúrate de que el mando [GAIN] está en la posición mínima.</li>
+        <li>Establece el interruptor [MIC GUITAR] en la posición «MIC».</li>
+        <li>Conecta el micrófono a la toma [MIC/GUITAR INPUT].</li>
+        <li>Enciende el instrumento pulsando el interruptor [ ] (en espera/encendido).</li>
+        <li>Accede a la pantalla de ajuste de micrófono mediante [MENU] → [Mic Setting]. También puedes pulsar el botón [MIC SETTING/VOCAL HARMONY] (PSR‑SX920) o [MIC SETTING] (PSR‑SX720).</li>
+        <li>Mientras cantas o hablas por el micrófono, gira lentamente el mando [GAIN] hacia la derecha.</li>
+        <li>Observa el medidor del nivel de entrada en la pantalla. Ajusta el mando hasta que el medidor se ilumine en verde o amarillo.</li>
+        <li>Asegúrate de que el medidor no se ilumine en naranja o rojo.</li>
+      </ol>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="num">5</span>Qué deberías ver</h3>
+        <ul>
+          <li>En la pantalla de inicio o en la pantalla de ajuste de micrófono, el medidor de nivel se mueve al hablar o cantar.</li>
+          <li>El indicador luminoso del botón [MIC SETTING/VOCAL HARMONY] o [MIC SETTING] también puede reflejar el nivel de entrada (según el manual en la página 103).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="num">6</span>Qué deberías oír</h3>
+        <p>Tu voz amplificada a través de los altavoces del instrumento.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">7</span>Ejercicio práctico</h3>
+      <p>Canta una frase corta. Ajusta la ganancia para que el medidor llegue a verde o amarillo en los pasajes fuertes, pero nunca a rojo.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">8</span>Comprobación</h3>
+      <p>Si al cantar fuerte el medidor se pone rojo, baja la ganancia. Si casi no se mueve, súbela.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">9</span>Mini reto</h3>
+      <p>Sin mirar el manual, desconecta el micrófono, baja la ganancia al mínimo y vuelve a conectarlo y ajustarlo.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">10</span>Si no funciona</h3>
+      <div class="callout err">
+        <span class="ci">❌</span>
+        <div><strong>No se oye nada:</strong> comprueba que el interruptor está en «MIC», que el cable está bien conectado y que la ganancia no está en el mínimo absoluto.</div>
+      </div>
+      <div class="callout warn">
+        <span class="ci">⚠️</span>
+        <div><strong>Se oye distorsionado:</strong> baja la ganancia.</div>
+      </div>
+      <div class="callout info">
+        <span class="ci">ℹ️</span>
+        <div><strong>El manual no especifica más:</strong> el manual no detalla cómo solucionar problemas de compatibilidad de micrófonos específicos. Solo recomienda usar un micrófono dinámico convencional.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LECCIÓN 3 ══════════ -->
+<section class="section" id="l3">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">🎛️</div>
+      <div>
+        <div class="eyebrow">Lección 3</div>
+        <h2>Ajustes básicos del micrófono (EQ, Noise Gate, Compressor)</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">1</span>Qué vamos a aprender</h3>
+      <p>A acceder a la pantalla de ajustes del micrófono y conocer los parámetros disponibles.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">2</span>Qué significa</h3>
+      <ul>
+        <li><strong>3 Band EQ:</strong> ecualizador de tres bandas. Permite ajustar los graves, medios y agudos de tu voz.</li>
+        <li><strong>Noise Gate:</strong> puerta de ruido. Silencia la entrada cuando no cantas para evitar ruidos de fondo.</li>
+        <li><strong>Compressor:</strong> compresor. Controla la dinámica de la voz para que no haya grandes saltos de volumen.</li>
+        <li><strong>Pitch Detect:</strong> detección de tono. Relevante para la armonía vocal (se verá en lecciones posteriores).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">3</span>Antes de empezar</h3>
+      <ul>
+        <li>Micrófono conectado y ganancia ajustada (Lección 2).</li>
+        <li>Estar en la pantalla de inicio.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">4</span>Pasos exactos</h3>
+      <ol class="steps">
+        <li>Accede a la pantalla de ajuste de micrófono mediante [MENU] → [Mic Setting].</li>
+        <li>Observa que hay varias secciones: 3 Band EQ, Noise Gate, Compressor, Pitch Detect.</li>
+        <li>Toca los controles deslizantes o giratorios para modificar los valores.</li>
+        <li>Para restablecer un valor a su estado predeterminado, toca el valor numérico o el ajuste y manténlo pulsado (según la página 30 del manual).</li>
+      </ol>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="num">5</span>Qué deberías ver</h3>
+        <p>La pantalla «Mic Setting» con los parámetros descritos.</p>
+      </div>
+      <div class="card">
+        <h3><span class="num">6</span>Qué deberías oír</h3>
+        <ul>
+          <li>Al modificar el EQ, notarás cambios en el timbre de tu voz (más brillante, más apagada, etc.).</li>
+          <li>Al ajustar el Noise Gate, el ruido de fondo desaparecerá cuando dejes de cantar.</li>
+          <li>Al ajustar el Compressor, el volumen de tu voz será más uniforme.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">7</span>Ejercicio práctico</h3>
+      <ul>
+        <li>Baja los graves (Low) del EQ y observa cómo cambia tu voz. Luego vuelve a subirlos.</li>
+        <li>Activa el Noise Gate y habla en voz baja; observa si el ruido de fondo se silencia.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">8</span>Comprobación</h3>
+      <p>Los cambios en los parámetros se reflejan en el sonido de tu voz.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">9</span>Mini reto</h3>
+      <p>Intenta dejar tu voz con un sonido equilibrado usando el EQ de 3 bandas.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">10</span>Si no funciona</h3>
+      <div class="callout info">
+        <span class="ci">ℹ️</span>
+        <div>
+          El manual no proporciona instrucciones detalladas sobre cómo ajustar cada parámetro del EQ,
+          Noise Gate o Compressor. Solo menciona su existencia y que se pueden ajustar en esta pantalla.
+          Para obtener información detallada, el manual remite al Reference Manual (Manual de referencia)
+          en el sitio web (página 8). Por tanto, no se puede inventar un procedimiento paso a paso más
+          allá de lo aquí indicado.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LECCIÓN 4 ══════════ -->
+<section class="section" id="l4">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">💬</div>
+      <div>
+        <div class="eyebrow">Lección 4</div>
+        <h2>Función Talk (conversación)</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">1</span>Qué vamos a aprender</h3>
+      <p>A activar y desactivar la función Talk para hablar al público sin efectos de reverberación.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">2</span>Qué significa</h3>
+      <ul>
+        <li><strong>Talk:</strong> modo de conversación. Cambia instantáneamente los ajustes del micrófono para que suene seco, sin reverberación ni efectos, ideal para anuncios entre canciones.</li>
+        <li><strong>Vocal:</strong> modo normal de canto, con los efectos que hayas configurado.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">3</span>Antes de empezar</h3>
+      <ul>
+        <li>Micrófono conectado y ajustado.</li>
+        <li>Estar en la pantalla de inicio.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">4</span>Pasos exactos</h3>
+      <ol class="steps">
+        <li>Accede a la pantalla de ajuste de micrófono mediante [MENU] → [Mic Setting].</li>
+        <li>En la pantalla, toca [Talk] para activar la función de conversación.</li>
+        <li>Para desactivarla y volver al modo de canto, toca [Vocal].</li>
+      </ol>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="num">5</span>Qué deberías ver</h3>
+        <p>El botón o indicador cambia entre «Talk» y «Vocal».</p>
+      </div>
+      <div class="card">
+        <h3><span class="num">6</span>Qué deberías oír</h3>
+        <ul>
+          <li>En modo Talk, tu voz suena sin reverberación (seca).</li>
+          <li>En modo Vocal, tu voz suena con los efectos que tengas configurados.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">7</span>Ejercicio práctico</h3>
+      <p>Activa Talk, di «Hola, buenas noches». Luego cambia a Vocal y canta una frase. Observa la diferencia.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">8</span>Comprobación</h3>
+      <p>La diferencia entre ambos modos es claramente audible.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">9</span>Mini reto</h3>
+      <p>
+        El manual menciona que esta función se puede asignar a un pedal o a un botón ASSIGNABLE
+        para activarla o desactivarla durante una interpretación (página 81). Si quieres, puedes
+        intentar asignarla más adelante (Lección 11), pero eso requiere otro procedimiento.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">10</span>Si no funciona</h3>
+      <div class="callout info">
+        <span class="ci">ℹ️</span>
+        <div>
+          El manual no especifica qué efectos exactos se desactivan en modo Talk, solo dice que permite
+          «hablar al público» sin efectos que distraigan. Si no notas diferencia, puede que no tengas
+          efectos activados en ese momento.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LECCIÓN 5 ══════════ -->
+<section class="section" id="l5">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">🎚️</div>
+      <div>
+        <div class="eyebrow">Lección 5</div>
+        <h2>Mezclar la voz con el teclado</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">1</span>Qué vamos a aprender</h3>
+      <p>A ajustar el balance de volumen entre el micrófono y el sonido del teclado utilizando el mezclador.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">2</span>Qué significa</h3>
+      <ul>
+        <li><strong>Mezclador (Mixer):</strong> herramienta que permite ajustar el volumen, la panorámica y otros parámetros de cada parte del instrumento, incluida la parte de micrófono.</li>
+        <li><strong>Parte de micrófono:</strong> es el canal por donde sale tu voz.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">3</span>Antes de empezar</h3>
+      <ul>
+        <li>Micrófono conectado y funcionando.</li>
+        <li>Un estilo o canción reproduciéndose, o simplemente tocando el teclado.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">4</span>Pasos exactos</h3>
+      <ol class="steps">
+        <li>Pulsa el botón [MIXER/EQ] para acceder a la pantalla Mixer.</li>
+        <li>Asegúrate de que estás en la ficha «Panel» (la primera ficha).</li>
+        <li>En la pantalla verás varias partes: Style, M.Pad, Left, Right 1, Right 2, Right 3, MIDI, Audio, y Mic (micrófono).</li>
+        <li>Localiza la parte «Mic».</li>
+        <li>Ajusta el volumen de la parte «Mic» deslizando el control correspondiente.</li>
+        <li>Ajusta también el volumen de las otras partes (por ejemplo, Style) para conseguir el equilibrio deseado.</li>
+        <li>Para guardar estos ajustes, regístralos en la memoria de registros (ver Lección 9).</li>
+      </ol>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="num">5</span>Qué deberías ver</h3>
+        <p>La pantalla Mixer con los controles de volumen de cada parte.</p>
+      </div>
+      <div class="card">
+        <h3><span class="num">6</span>Qué deberías oír</h3>
+        <ul>
+          <li>Al subir el volumen de «Mic», tu voz suena más fuerte.</li>
+          <li>Al subir el volumen de «Style», el acompañamiento suena más fuerte.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">7</span>Ejercicio práctico</h3>
+      <p>Reproduce un estilo. Canta encima. Ajusta el volumen del micrófono y del estilo hasta que tu voz se escuche claramente sin tapar la música.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">8</span>Comprobación</h3>
+      <p>El balance entre voz y música es agradable y no hay distorsión.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">9</span>Mini reto</h3>
+      <p>Sin mirar el manual, accede al mezclador y baja el volumen del estilo para que tu voz destaque.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">10</span>Si no funciona</h3>
+      <div class="callout info">
+        <span class="ci">ℹ️</span>
+        <div>
+          El manual no especifica el rango exacto de valores de volumen ni la ubicación exacta del
+          control de «Mic» en la pantalla (aunque sí menciona que está en la ficha «Panel»). Si no
+          encuentras la parte «Mic», revisa la pantalla con atención. Para más detalles, el manual
+          remite al Reference Manual en el sitio web.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LECCIÓN 6 ══════════ -->
+<section class="section" id="l6">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">🎼</div>
+      <div>
+        <div class="eyebrow">Lección 6</div>
+        <h2>Armonía Vocal – Modo Chordal</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">1</span>Qué vamos a aprender</h3>
+      <p>A activar la armonía vocal en modo Chordal, que añade armonías automáticas basadas en los acordes que tocas.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">2</span>Qué significa</h3>
+      <ul>
+        <li><strong>Armonía Vocal:</strong> función que añade voces armónicas a tu voz. Solo disponible en PSR‑SX920.</li>
+        <li><strong>Modo Chordal:</strong> las notas de la armonía se determinan por los acordes que tocas en la sección de acordes del teclado (con [ACMP] activado) o en la sección de la mano izquierda.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">3</span>Antes de empezar</h3>
+      <ul>
+        <li>Micrófono conectado y ajustado.</li>
+        <li>Estar en la pantalla de inicio.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">4</span>Pasos exactos</h3>
+      <ol class="steps">
+        <li>Accede a la pantalla de armonía vocal mediante [MENU] → [Vocal Harmony]. También puedes pulsar el botón [MIC SETTING/VOCAL HARMONY] varias veces.</li>
+        <li>Asegúrate de que la función de armonía esté activada en «On».</li>
+        <li>Toca el nombre del tipo de armonía vocal para acceder a la pantalla de selección de tipo.</li>
+        <li>Selecciona un tipo de armonía vocal que corresponda al modo Chordal (el manual indica que los tipos con icono azul son de modo Chordal, según la página 72).</li>
+        <li>Asegúrate de que el botón [ACMP] está activado.</li>
+        <li>Reproduce un estilo mientras tocas acordes en la sección de acordes, o reproduce una canción que contenga acordes.</li>
+        <li>Canta por el micrófono.</li>
+      </ol>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="num">5</span>Qué deberías ver</h3>
+        <ul>
+          <li>La pantalla de armonía vocal con el tipo seleccionado.</li>
+          <li>El botón [ACMP] iluminado.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="num">6</span>Qué deberías oír</h3>
+        <p>Tu voz con una o más voces armónicas añadidas, que cambian según los acordes que tocas.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">7</span>Ejercicio práctico</h3>
+      <p>
+        Toca un acorde de C (I) en la sección de acordes y canta una nota. Luego toca un acorde de G (V)
+        y canta la misma nota. Observa cómo la armonía cambia.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">8</span>Comprobación</h3>
+      <p>La armonía sigue los acordes que tocas.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">9</span>Mini reto</h3>
+      <p>
+        Sin cambiar el tipo de armonía, toca una progresión de acordes
+        (por ejemplo, C(I) – F(IV) – G(V)) y canta una melodía sencilla.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">10</span>Si no funciona</h3>
+      <div class="callout err">
+        <span class="ci">❌</span>
+        <div>
+          <strong>No se oye la armonía:</strong> asegúrate de que [ACMP] está activado y de que tocas
+          acordes en la sección correcta (páginas 45 y 47 del manual). También comprueba que el tipo
+          seleccionado no es de modo Vocoder (icono marrón o verde).
+        </div>
+      </div>
+      <div class="callout info">
+        <span class="ci">ℹ️</span>
+        <div>
+          El manual no especifica todos los tipos de armonía vocal disponibles ni sus nombres exactos.
+          Solo menciona que hay 54 predefinidos + 60 de usuario en el PSR‑SX920 (página 120).
+          Para una lista completa, consulta la Data List en el sitio web.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LECCIÓN 7 ══════════ -->
+<section class="section" id="l7">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">🤖</div>
+      <div>
+        <div class="eyebrow">Lección 7</div>
+        <h2>Armonía Vocal – Modo Vocoder y Vocoder‑Mono</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">1</span>Qué vamos a aprender</h3>
+      <p>A utilizar los modos Vocoder y Vocoder‑Mono, que aplican las características de tu voz a las notas que tocas.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">2</span>Qué significa</h3>
+      <ul>
+        <li><strong>Vocoder:</strong> la salida del micrófono se procesa a través de las notas que tocas en el teclado o de las notas de reproducción de la canción. El efecto es robótico o coral.</li>
+        <li><strong>Vocoder‑Mono:</strong> igual que Vocoder, pero solo reproduce melodías o líneas de una sola nota (con prioridad de la última nota).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">3</span>Antes de empezar</h3>
+      <ul>
+        <li>Micrófono conectado.</li>
+        <li>Estar en la pantalla de armonía vocal.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">4</span>Pasos exactos</h3>
+      <ol class="steps">
+        <li>Accede a [MENU] → [Vocal Harmony].</li>
+        <li>Activa la armonía en «On».</li>
+        <li>Toca el nombre del tipo de armonía vocal.</li>
+        <li>Selecciona un tipo que corresponda al modo Vocoder o Vocoder‑Mono (el manual indica que los iconos marrón y verde corresponden a estos modos, según la página 72).</li>
+        <li>Según corresponda, cambia el ajuste de «Keyboard» a «Off», «Upper» o «Lower»:
+          <ul>
+            <li><strong>«Upper»:</strong> la sección de la mano derecha controla el efecto.</li>
+            <li><strong>«Lower»:</strong> la sección de la mano izquierda controla el efecto.</li>
+            <li><strong>«Off»:</strong> el teclado no controla el efecto.</li>
+          </ul>
+        </li>
+        <li>Toque melodías con el teclado o reproduce una canción.</li>
+        <li>Canta o habla por el micrófono.</li>
+      </ol>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="num">5</span>Qué deberías ver</h3>
+        <ul>
+          <li>La pantalla de armonía vocal con el tipo Vocoder seleccionado.</li>
+          <li>El ajuste «Keyboard» en la posición elegida.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="num">6</span>Qué deberías oír</h3>
+        <p>Tu voz transformada por el efecto Vocoder, siguiendo las notas que tocas.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">7</span>Ejercicio práctico</h3>
+      <p>Mantén pulsada una nota de C en el teclado y di «uno, dos, tres». Luego cambia a otra nota y repite. Observa cómo el tono de tu voz sigue la nota.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">8</span>Comprobación</h3>
+      <p>El efecto Vocoder responde a las notas que tocas.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">9</span>Mini reto</h3>
+      <p>Prueba a tocar una melodía sencilla (por ejemplo, C–D–E) mientras cantas una sola sílaba sostenida.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">10</span>Si no funciona</h3>
+      <div class="callout err">
+        <span class="ci">❌</span>
+        <div>
+          <strong>No se oye el efecto:</strong> asegúrate de que el ajuste «Keyboard» no está en «Off».
+          Si está en «Upper», toca en la sección de la mano derecha. Si está en «Lower», toca en la
+          sección de la mano izquierda.
+        </div>
+      </div>
+      <div class="callout info">
+        <span class="ci">ℹ️</span>
+        <div>
+          El manual no especifica cómo ajustar parámetros internos del Vocoder (como la mezcla entre
+          voz y efecto). Para ello, remite al Reference Manual en el sitio web.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LECCIÓN 8 ══════════ -->
+<section class="section" id="l8">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">⚡</div>
+      <div>
+        <div class="eyebrow">Lección 8</div>
+        <h2>Sintetizador Vocoder</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">1</span>Qué vamos a aprender</h3>
+      <p>A utilizar el sintetizador Vocoder, que introduce las características de tu voz en el sintetizador para crear efectos inusuales.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">2</span>Qué significa</h3>
+      <p><strong>Sintetizador Vocoder:</strong> es una variante del Vocoder que genera efectos robóticos o mecánicos, así como sonidos corales, controlables mientras cantas.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">3</span>Antes de empezar</h3>
+      <ul>
+        <li>Micrófono conectado.</li>
+        <li>Estar en la pantalla de armonía vocal.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">4</span>Pasos exactos</h3>
+      <ol class="steps">
+        <li>Ejecuta los pasos 1 a 3 de la Lección 6 («Uso de la armonía vocal» en la página 72).</li>
+        <li>En la pantalla de selección de tipos de armonía vocal, selecciona la categoría «SynthVocoder» en las subcategorías.</li>
+        <li>Toca el tipo de sintetizador Vocoder que desees.</li>
+        <li>Mantén pulsada una nota del teclado y habla o canta por el micrófono.</li>
+        <li>Prueba a cambiar las notas mientras cantas o pronuncias distintas palabras, tocando una nota separada para cada palabra.</li>
+      </ol>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="num">5</span>Qué deberías ver</h3>
+        <p>La pantalla de selección de tipos con la categoría «SynthVocoder» seleccionada.</p>
+      </div>
+      <div class="card">
+        <h3><span class="num">6</span>Qué deberías oír</h3>
+        <p>Tu voz transformada en un sonido sintetizado, con características robóticas o corales.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">7</span>Ejercicio práctico</h3>
+      <p>Mantén una nota de A (VI) y di «hola». Luego cambia a la nota de B (VII) y di «mundo». Observa cómo el sintetizador reproduce las palabras con el tono de las notas.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">8</span>Comprobación</h3>
+      <p>El efecto se aplica y responde a tus palabras y a las notas del teclado.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">9</span>Mini reto</h3>
+      <p>Intenta crear una frase rítmica hablada mientras tocas una secuencia de notas.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">10</span>Si no funciona</h3>
+      <div class="callout info">
+        <span class="ci">ℹ️</span>
+        <div>
+          El manual no especifica cómo ajustar el balance entre la voz hablada y el sonido sintetizado.
+          Para ello, remite al Reference Manual en el sitio web.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LECCIÓN 9 ══════════ -->
+<section class="section" id="l9">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">💾</div>
+      <div>
+        <div class="eyebrow">Lección 9</div>
+        <h2>Guardar la configuración en la memoria de registros</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">1</span>Qué vamos a aprender</h3>
+      <p>A guardar todos los ajustes que has hecho (micrófono, armonía vocal, estilo, voz, mezclador) en un botón de memoria de registros para recuperarlos al instante.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">2</span>Qué significa</h3>
+      <ul>
+        <li><strong>Memoria de Registros (Registration Memory):</strong> función que guarda prácticamente cualquier ajuste del panel en un botón. Puedes guardar hasta 8 configuraciones en un banco.</li>
+        <li><strong>Banco de Registros:</strong> archivo que contiene las 8 memorias.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">3</span>Antes de empezar</h3>
+      <p>Tener configurado todo lo que quieras guardar: voz, estilo, ajustes de micrófono, armonía vocal, mezclador, etc.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">4</span>Pasos exactos</h3>
+      <ol class="steps">
+        <li>Realiza todos los ajustes del panel que desees (voz, estilo, efectos, ajustes de micrófono, armonía vocal, mezclador).</li>
+        <li>Pulsa el botón [MEMORY] en la sección REGISTRATION MEMORY.</li>
+        <li>Aparecerá una ventana con una lista de elementos que se pueden registrar. Asegúrate de que están marcados los que quieres guardar (por ejemplo, Voice, Style, Mic Setting, Vocal Harmony, etc.).</li>
+        <li>Pulsa el botón REGISTRATION MEMORY [1]–[8] donde quieras memorizar la configuración.</li>
+        <li>El botón se ilumina en naranja, indicando que contiene datos.</li>
+        <li>Para guardar varios ajustes, repite los pasos 1 a 4 en otros botones.</li>
+        <li>Para guardar el banco completo en una unidad flash USB o en la unidad de usuario:
+          <ul>
+            <li>Pulsa simultáneamente los botones REGIST BANK [–] y [+] para abrir la pantalla de selección de banco.</li>
+            <li>Toca File Edit y luego Save.</li>
+            <li>Selecciona la ubicación y guarda el archivo (página 33 del manual).</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="num">5</span>Qué deberías ver</h3>
+        <ul>
+          <li>El botón de memoria se ilumina en naranja.</li>
+          <li>La pantalla de selección de banco al guardar.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="num">6</span>Qué deberías oír</h3>
+        <p>No hay sonido asociado a esta operación.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">7</span>Ejercicio práctico</h3>
+      <p>Configura un sonido de voz, un estilo y activa la armonía vocal. Guárdalo en el botón 1. Luego cambia todo y guárdalo en el botón 2. Recupera el botón 1 y comprueba que todo vuelve a como estaba.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">8</span>Comprobación</h3>
+      <p>Al pulsar el botón [1], se recuperan exactamente los ajustes que guardaste.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">9</span>Mini reto</h3>
+      <p>Guarda un banco completo en una unidad flash USB y luego recupéralo.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">10</span>Si no funciona</h3>
+      <div class="callout warn">
+        <span class="ci">⚠️</span>
+        <div><strong>No se guarda algún ajuste:</strong> revisa en la ventana de [MEMORY] que el elemento correspondiente está marcado con una marca de verificación.</div>
+      </div>
+      <div class="callout info">
+        <span class="ci">ℹ️</span>
+        <div>
+          El manual no especifica todos los elementos que se pueden registrar. La lista completa está
+          en la sección «Parameter Chart» de la Data List en el sitio web (página 8).
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LECCIÓN 10 ══════════ -->
+<section class="section" id="l10">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">🎙️</div>
+      <div>
+        <div class="eyebrow">Lección 10</div>
+        <h2>Grabar una interpretación vocal</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">1</span>Qué vamos a aprender</h3>
+      <p>A grabar tu voz junto con el teclado como archivo de audio.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">2</span>Qué significa</h3>
+      <ul>
+        <li><strong>Grabación de audio:</strong> graba el sonido real, no datos MIDI. Se guarda como archivo WAV o MP3.</li>
+        <li><strong>Grabación rápida de audio:</strong> método más sencillo. No especifica partes, graba todo lo que suena.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">3</span>Antes de empezar</h3>
+      <ul>
+        <li>Micrófono conectado y ajustado.</li>
+        <li>Tener seleccionado el estilo, la voz y los efectos que quieras.</li>
+        <li>Si vas a grabar en una unidad flash USB, conéctala al terminal [USB TO DEVICE].</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">4</span>Pasos exactos</h3>
+      <ol class="steps">
+        <li>Accede a la pantalla de grabación rápida de audio mediante [RECORDING] → Audio [Quick Recording].</li>
+        <li>Aparece la pantalla y se crea automáticamente un nuevo archivo de audio en blanco, con el estado de espera de grabación activado.</li>
+        <li>Toque [Play/Pause] para iniciar la grabación.</li>
+        <li>Justo después, comienza a cantar y tocar.</li>
+        <li>Cuando termines, toca [Stop] para detener la grabación.</li>
+        <li>Los datos grabados se guardan automáticamente en el destino (unidad de usuario o unidad flash USB) con un nombre creado automáticamente.</li>
+      </ol>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="num">5</span>Qué deberías ver</h3>
+        <ul>
+          <li>La pantalla de grabación con el contador de tiempo avanzando.</li>
+          <li>El mensaje de que la grabación se ha guardado.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="num">6</span>Qué deberías oír</h3>
+        <ul>
+          <li>Durante la grabación, escucharás tu voz y el teclado.</li>
+          <li>Al finalizar, podrás reproducir el archivo de audio desde la pantalla de selección de canciones.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">7</span>Ejercicio práctico</h3>
+      <p>Graba una interpretación corta: un estilo, tu voz cantando una melodía sencilla y la armonía vocal activada.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">8</span>Comprobación</h3>
+      <p>Reproduce el archivo grabado y comprueba que se oye todo.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">9</span>Mini reto</h3>
+      <p>Graba una segunda versión cambiando el estilo o la voz, y compara.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">10</span>Si no funciona</h3>
+      <div class="callout err">
+        <span class="ci">❌</span>
+        <div>
+          <strong>No se puede grabar:</strong> asegúrate de que la unidad flash USB tiene espacio suficiente
+          y está formateada correctamente (página 110 del manual).
+        </div>
+      </div>
+      <div class="callout info">
+        <span class="ci">ℹ️</span>
+        <div>
+          El manual no especifica cómo solucionar todos los errores de grabación. La sección de solución
+          de problemas (página 119) menciona que si hay fragmentación en la unidad de usuario, puede ser
+          necesario formatear y restaurar una copia de seguridad.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LECCIÓN 11 ══════════ -->
+<section class="section" id="l11">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">🎹</div>
+      <div>
+        <div class="eyebrow">Lección 11</div>
+        <h2>Asignar funciones a botones o pedales</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">1</span>Qué vamos a aprender</h3>
+      <p>A asignar funciones como «VH Harmony On/Off» o «Talk» a un botón ASSIGNABLE o a un pedal para controlarlas durante la interpretación.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">2</span>Qué significa</h3>
+      <ul>
+        <li><strong>Botones ASSIGNABLE:</strong> botones [A]–[F] y [1]–[2] que se pueden personalizar para ejecutar funciones.</li>
+        <li><strong>Pedales:</strong> se pueden conectar pedales interruptores o de expresión a las tomas FOOT PEDAL.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">3</span>Antes de empezar</h3>
+      <p>Estar en la pantalla de inicio.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">4</span>Pasos exactos</h3>
+      <ol class="steps">
+        <li>Accede a la pantalla de asignación mediante [MENU] → [Assignable].</li>
+        <li>En el área «Assignable Buttons», pulsa dos veces el elemento que quieras configurar (por ejemplo, «A»).</li>
+        <li>Aparece la ventana emergente de selección de función.</li>
+        <li>Toca la función deseada. Por ejemplo, para la armonía vocal, busca «VH Harmony On/Off». Para la función Talk, busca «Talk» (si está disponible).</li>
+        <li>Repite para otros botones o para los pedales en el área «Foot Pedals».</li>
+      </ol>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="num">5</span>Qué deberías ver</h3>
+        <p>La función seleccionada aparece asignada al botón o pedal.</p>
+      </div>
+      <div class="card">
+        <h3><span class="num">6</span>Qué deberías oír</h3>
+        <p>Al pulsar el botón asignado, la función se activa o desactiva (por ejemplo, la armonía vocal se enciende o apaga).</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">7</span>Ejercicio práctico</h3>
+      <p>Asigna «VH Harmony On/Off» al botón [A]. Durante una interpretación, pulsa [A] para activar y desactivar la armonía.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">8</span>Comprobación</h3>
+      <p>El botón [A] enciende y apaga la armonía vocal.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">9</span>Mini reto</h3>
+      <p>Asigna la función «Talk» a un pedal y úsalo para hablar entre canciones.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">10</span>Si no funciona</h3>
+      <div class="callout info">
+        <span class="ci">ℹ️</span>
+        <div>
+          El manual no especifica la lista completa de funciones asignables. Para verla, consulta el
+          Reference Manual en el sitio web (página 8). Tampoco detalla cómo conectar pedales, pero en
+          la página 108 se explica que se conectan a las tomas FOOT PEDAL.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PROYECTOS ══════════ -->
+<section class="section" id="proyectos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">🧪</div>
+      <div>
+        <div class="eyebrow">Práctica guiada</div>
+        <h2>Proyectos prácticos</h2>
+      </div>
+    </div>
+
+    <div class="proj">
+      <h3>Proyecto 1 — Mi primera voz</h3>
+      <p class="goal">Objetivo: conectar el micrófono y conseguir que la voz se escuche correctamente.</p>
+      <ul>
+        <li>Sigue las Lecciones 1 y 2.</li>
+        <li>Ajusta la ganancia hasta que el medidor esté en verde/amarillo.</li>
+        <li>Canta una canción sencilla sin acompañamiento.</li>
+      </ul>
+    </div>
+
+    <div class="proj">
+      <h3>Proyecto 2 — Cantar con acompañamiento</h3>
+      <p class="goal">Objetivo: cantar mientras el teclado reproduce un Style.</p>
+      <ul>
+        <li>Selecciona un Style (página 40).</li>
+        <li>Activa [ACMP] y [SYNC START].</li>
+        <li>Toca un acorde para iniciar el estilo.</li>
+        <li>Canta encima.</li>
+        <li>Ajusta el balance con el mezclador (Lección 5).</li>
+      </ul>
+    </div>
+
+    <div class="proj">
+      <h3>Proyecto 3 — Mejorar la voz</h3>
+      <p class="goal">Objetivo: aplicar los ajustes de micrófono documentados.</p>
+      <ul>
+        <li>Accede a [Mic Setting].</li>
+        <li>Ajusta el EQ de 3 bandas para dar claridad a tu voz.</li>
+        <li>Activa el Noise Gate para eliminar ruido de fondo.</li>
+        <li>Ajusta el Compressor para uniformizar el volumen.</li>
+      </ul>
+    </div>
+
+    <div class="proj">
+      <h3>Proyecto 4 — Voz + armonía</h3>
+      <p class="goal">Objetivo: crear una configuración sencilla con armonía vocal.</p>
+      <ul>
+        <li>Activa la armonía vocal en modo Chordal (Lección 6).</li>
+        <li>Toca acordes con la mano izquierda mientras cantas.</li>
+        <li>Observa cómo la armonía sigue los acordes.</li>
+      </ul>
+    </div>
+
+    <div class="proj">
+      <h3>Proyecto 5 — Mi primera actuación</h3>
+      <p class="goal">Objetivo: combinar las funciones de voz y teclado.</p>
+      <ul>
+        <li>Selecciona un Style y una voz para la mano derecha.</li>
+        <li>Configura el micrófono y la armonía vocal.</li>
+        <li>Guarda todo en la memoria de registros (Lección 9).</li>
+        <li>Interpreta una canción completa cantando y tocando.</li>
+        <li>Utiliza el botón asignable para activar/desactivar la armonía durante la actuación.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PROYECTO FINAL ══════════ -->
+<section class="section" id="pfinal">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">🏆</div>
+      <div>
+        <div class="eyebrow">Culminación</div>
+        <h2>Proyecto final: mi primera actuación con voz y PSR‑SX920</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">★</span>Objetivo</h3>
+      <p>Preparar una interpretación completa utilizando el máximo de funciones vocales aprendidas.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">1</span>Preparar el teclado</h3>
+      <ul>
+        <li>Selecciona un Style adecuado para la canción (página 40).</li>
+        <li>Selecciona una voz para la mano derecha (página 48).</li>
+        <li>Ajusta el tempo con los botones TEMPO [–]/[+] (página 42).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">2</span>Conectar el micrófono</h3>
+      <ul>
+        <li>Mando [GAIN] al mínimo.</li>
+        <li>Interruptor [MIC GUITAR] en «MIC».</li>
+        <li>Conecta el micrófono.</li>
+        <li>Enciende el instrumento.</li>
+        <li>Ajusta la ganancia (Lección 2).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">3</span>Configurar la voz</h3>
+      <ul>
+        <li>Accede a [Mic Setting] y ajusta EQ, Noise Gate y Compressor (Lección 3).</li>
+        <li>Ajusta el balance con el mezclador (Lección 5).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">4</span>Activar la armonía vocal (si procede)</h3>
+      <ul>
+        <li>Accede a [Vocal Harmony] y selecciona un tipo adecuado (Lección 6, 7 u 8).</li>
+        <li>Asegúrate de que [ACMP] está activado si usas modo Chordal.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">5</span>Preparar la actuación</h3>
+      <ul>
+        <li>Activa [SYNC START] para que el estilo comience al tocar un acorde.</li>
+        <li>Practica la canción cantando y tocando.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">6</span>Guardar la configuración</h3>
+      <ul>
+        <li>Pulsa [MEMORY] y selecciona los elementos a guardar (incluyendo Mic Setting y Vocal Harmony).</li>
+        <li>Pulsa REGISTRATION MEMORY [1] para guardar.</li>
+        <li>Guarda el banco en una unidad flash USB si lo deseas (Lección 9).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">7</span>Interpretar</h3>
+      <ul>
+        <li>Recupera la configuración con el botón [1].</li>
+        <li>Toca un acorde para iniciar el estilo.</li>
+        <li>Canta la canción.</li>
+        <li>Utiliza el botón asignable para activar/desactivar la armonía si lo has configurado (Lección 11).</li>
+        <li>Al final, pulsa [ENDING] para terminar.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">8</span>Grabar la actuación (opcional)</h3>
+      <ul>
+        <li>Antes de empezar, activa la grabación de audio (Lección 10).</li>
+        <li>Graba tu interpretación.</li>
+        <li>Detén la grabación y reproduce el archivo para comprobar el resultado.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">9</span>Recuperar la configuración posteriormente</h3>
+      <ul>
+        <li>Enciende el teclado, conecta la unidad flash USB si guardaste allí el banco.</li>
+        <li>Pulsa los botones REGIST BANK [–]/[+] para seleccionar el banco.</li>
+        <li>Pulsa el botón [1] para recuperar la configuración.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">✓</span>Comprobación final</h3>
+      <ul>
+        <li>La actuación se desarrolla sin problemas.</li>
+        <li>La voz se escucha claramente.</li>
+        <li>La armonía funciona cuando está activada.</li>
+        <li>El estilo y la voz están equilibrados.</li>
+        <li>La configuración se recupera correctamente.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FUENTES ══════════ -->
+<section class="section" id="fuentes">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">📚</div>
+      <div>
+        <div class="eyebrow">Documentación</div>
+        <h2>Fuentes y referencias al manual</h2>
+      </div>
+    </div>
+
+    <p style="color:#cbd5e1;margin-bottom:16px">
+      A lo largo de este tutorial se han indicado las páginas del manual donde se encuentra la
+      información. Las referencias más relevantes son:
+    </p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Tema</th>
+            <th>Páginas del manual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Conexión de micrófono/guitarra</td><td>páginas 14, 18, 19, 102, 103</td></tr>
+          <tr><td>Ajustes de micrófono</td><td>páginas 103, 72</td></tr>
+          <tr><td>Armonía vocal</td><td>páginas 72, 73</td></tr>
+          <tr><td>Sintetizador Vocoder</td><td>página 73</td></tr>
+          <tr><td>Función Talk</td><td>página 81</td></tr>
+          <tr><td>Mezclador</td><td>páginas 82, 83</td></tr>
+          <tr><td>Memoria de registros</td><td>páginas 88–91</td></tr>
+          <tr><td>Grabación de audio</td><td>páginas 86, 87</td></tr>
+          <tr><td>Botones asignables</td><td>páginas 96, 58</td></tr>
+          <tr><td>Solución de problemas</td><td>página 117</td></tr>
+          <tr><td>Especificaciones</td><td>páginas 120, 121</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">1</span>Fuente principal</h3>
+      <p>
+        <strong>Manual de instrucciones Yamaha PSR‑SX920 / SX720</strong> — PDF proporcionado.
+        Es la única fuente de verdad utilizada para elaborar este tutorial.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">2</span>Referencias adicionales citadas por el manual</h3>
+      <ul>
+        <li><strong>Reference Manual (Manual de referencia)</strong> — disponible en el sitio web oficial de Yamaha. Citado en la página 8 del manual.</li>
+        <li><strong>Data List</strong> — disponible en el sitio web oficial de Yamaha. Citado en la página 8 del manual.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">3</span>Nota final</h3>
+      <p>
+        Todo el contenido de este tutorial está basado exclusivamente en el manual proporcionado.
+        Cuando el manual no ofrece suficiente información para un procedimiento detallado, se ha
+        indicado explícitamente, remitiendo al Reference Manual o a la Data List en el sitio web
+        de Yamaha. No se ha añadido información externa ni suposiciones.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CRÉDITOS ══════════ -->
+<section class="section" id="creditos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-ico">✨</div>
+      <div>
+        <div class="eyebrow">Reconocimientos</div>
+        <h2>Créditos</h2>
+      </div>
+    </div>
+
+    <div class="hero-svg-box" style="margin-bottom:22px">
+      <svg class="hero-svg" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Portada animada reutilizada en créditos">
+        <use href="#heroSymbol"/>
+      </svg>
+    </div>
+
+    <div class="cred-card">
+      <div class="role">Tutorial elaborado por</div>
+      <div class="who">Rubén Sbarsky</div>
+      <div class="role">Docencia · Divulgación técnica</div>
+      <div class="cred-meta">
+        <div><div class="lbl">Fecha</div><div class="vl">20/09/2026</div></div>
+        <div><div class="lbl">Hora</div><div class="vl">03:59:16</div></div>
+        <div><div class="lbl">Tema</div><div class="vl">Micrófono y voz</div></div>
+        <div><div class="lbl">Equipo</div><div class="vl">Yamaha PSR‑SX920</div></div>
+      </div>
+      <p style="margin-top:20px;color:#cbd5e1;font-size:.9rem">
+        Este tutorial tiene una finalidad exclusivamente <strong>educativa y de divulgación</strong>.
+        Todo el contenido técnico proviene del manual de instrucciones Yamaha PSR‑SX920/SX720.
+      </p>
+      <div class="fiat">Fiat iustitia, ruat caelum.</div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">§</span>Cita inspiradora</h3>
+      <div class="quote" style="margin:0">
+        «Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien.»
+      </div>
+    </div>
+  </div>
+</section>
+
+<button id="backTop" aria-label="Volver arriba">↑</button>
+
+<footer>
+  <div>📚 Tutorial solo con fines Educativos y Divulgación</div>
+  <div>👨‍💻 Créditos: Rubén Sbarsky</div>
+  <div>📅 FECHA: 20/09/2026</div>
+  <div>Hora: 03:59:16</div>
+  <div class="fiat">Fiat iustitia, ruat caelum.</div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  const sections = document.querySelectorAll('.section');
+  const navBtns  = document.querySelectorAll('.nav-btn');
+  const progressFill = document.getElementById('progressFill');
+  const backTop = document.getElementById('backTop');
+  const navScroll = document.getElementById('navScroll');
+
+  function showSection(id){
+    sections.forEach(s => s.classList.toggle('active', s.id === id));
+    navBtns.forEach(b => {
+      const on = b.dataset.section === id;
+      b.classList.toggle('active', on);
+      if(on && navScroll) {
+        const left = b.offsetLeft - navScroll.clientWidth/2 + b.clientWidth/2;
+        navScroll.scrollTo({left: Math.max(0,left), behavior:'smooth'});
+      }
+    });
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(id === 'home' || id === 'creditos'){
+      restartHeroAnimations();
+    }
+    try{ history.replaceState(null,'','#'+id); }catch(e){}
+  }
+
+  navBtns.forEach(b => b.addEventListener('click', () => showSection(b.dataset.section)));
+
+  function restartHeroAnimations(){
+    document.querySelectorAll('.hero-svg').forEach(svg => {
+      try{
+        if(typeof svg.setCurrentTime === 'function'){
+          svg.setCurrentTime(0);
+        }
+      }catch(e){}
+    });
+  }
+
+  let ticking = false;
+  function onScroll(){
+    if(ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(() => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      const pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+      progressFill.style.width = pct.toFixed(2) + '%';
+      backTop.classList.toggle('vis', h.scrollTop > 380);
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  onScroll();
+
+  backTop.addEventListener('click', () => {
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.querySelectorAll('.hero-svg').forEach(svg => {
+      try{ if(typeof svg.pauseAnimations === 'function') svg.pauseAnimations(); }catch(e){}
+    });
+  }
+
+  document.querySelectorAll('.acc-head').forEach(h => {
+    h.addEventListener('click', () => h.parentElement.classList.toggle('open'));
+  });
+
+  if(location.hash){
+    const id = location.hash.slice(1);
+    if(document.getElementById(id)) showSection(id);
+  }
+})();
+</script>
+</body>
+</html>
