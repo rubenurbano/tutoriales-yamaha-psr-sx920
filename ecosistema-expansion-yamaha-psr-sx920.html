@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía Maestra del Ecosistema de Expansión Yamaha PSR-SX920</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0a0e1a;--card:#0f172a;--border:#1e3a5f;
+    --accent:#00d4ff;--green:#22c55e;--amber:#f59e0b;
+    --red:#ef4444;--purple:#a855f7;--text:#e2e8f0;--muted:#94a3b8;
+  }
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.6;
+    overflow-x:hidden;padding-top:60px;
+  }
+  /* Progress Bar */
+  .progress-bar{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(30,58,95,.5);z-index:1000}
+  #progressFill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--purple));transition:width .15s ease;box-shadow:0 0 10px var(--accent)}
+  /* Navbar */
+  .navbar{
+    position:fixed;top:3px;left:0;right:0;background:rgba(10,14,26,.96);
+    border-bottom:1px solid var(--border);z-index:999;
+    backdrop-filter:blur(10px);display:flex;align-items:center;gap:8px;padding:8px 10px;
+  }
+  .nav-brand{
+    font-size:.85rem;font-weight:800;color:var(--accent);letter-spacing:1px;
+    white-space:nowrap;padding-right:8px;border-right:1px solid var(--border);
+    text-shadow:0 0 10px rgba(0,212,255,.5);
+  }
+  .nav-scroll{
+    display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;
+    scrollbar-color:var(--border) transparent;flex:1;padding-bottom:2px;
+  }
+  .nav-scroll::-webkit-scrollbar{height:4px}
+  .nav-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+  .nav-btn{
+    background:transparent;border:1px solid var(--border);color:var(--muted);
+    padding:6px 12px;border-radius:8px;font-size:.72rem;font-weight:600;
+    cursor:pointer;white-space:nowrap;transition:all .25s;font-family:inherit;
+  }
+  .nav-btn:hover{color:var(--accent);border-color:var(--accent)}
+  .nav-btn.active{background:rgba(0,212,255,.12);color:var(--accent);border-color:var(--accent);box-shadow:0 0 12px rgba(0,212,255,.35)}
+  /* Sections */
+  .section{display:none;padding:20px 16px 80px;max-width:1100px;margin:0 auto;animation:fadeIn .4s ease}
+  .section.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  /* Hero SVG */
+  .hero-svg-container{
+    width:100%;border-radius:12px;overflow:hidden;
+    border:1px solid var(--border);margin-bottom:22px;
+    box-shadow:0 8px 40px rgba(0,212,255,.15),0 0 0 1px rgba(0,212,255,.1);
+    background:#070b14;
+  }
+  .hero-svg-container svg{display:block;width:100%;height:auto}
+  /* HOME */
+  .badge{
+    display:inline-block;background:rgba(0,212,255,.12);color:var(--accent);
+    border:1px solid rgba(0,212,255,.4);padding:5px 14px;border-radius:20px;
+    font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;
+  }
+  h1.main-title{
+    font-size:clamp(1.5rem,4.5vw,2.5rem);font-weight:900;line-height:1.15;margin-bottom:12px;
+    background:linear-gradient(135deg,#fff,#00d4ff 50%,#a855f7);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .subtitle{font-size:clamp(.9rem,2.2vw,1.1rem);color:var(--accent);font-weight:600;margin-bottom:16px}
+  .description{color:var(--muted);font-size:.95rem;margin-bottom:22px;max-width:800px}
+  .quote{
+    border-left:4px solid var(--purple);background:rgba(168,85,247,.08);
+    padding:14px 18px;border-radius:0 10px 10px 0;margin:20px 0;
+    font-style:italic;color:#d8b4fe;font-size:.95rem;
+  }
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:24px 0}
+  .metric{
+    background:var(--card);border:1px solid var(--border);border-radius:10px;
+    padding:14px;text-align:center;transition:all .3s;
+  }
+  .metric:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,212,255,.2)}
+  .metric .num{font-size:1.5rem;font-weight:900;color:var(--accent);display:block}
+  .metric .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+  .datetime-bar{
+    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:18px 0;
+    font-family:monospace;font-size:.78rem;color:var(--muted);
+  }
+  .datetime-bar span{background:var(--card);border:1px solid var(--border);padding:6px 14px;border-radius:8px}
+  .datetime-bar span b{color:var(--accent)}
+  /* Cards */
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:20px;margin-bottom:16px;transition:border-color .3s;
+  }
+  .card:hover{border-color:rgba(0,212,255,.4)}
+  .card-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .card-icon{
+    width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    font-size:1.2rem;flex-shrink:0;
+    background:rgba(0,212,255,.12);border:1px solid rgba(0,212,255,.3);
+  }
+  .card-title{font-size:1.05rem;font-weight:700;color:#fff;line-height:1.3}
+  h2.section-title{
+    font-size:clamp(1.3rem,3.5vw,1.9rem);font-weight:800;color:#fff;
+    margin-bottom:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  }
+  h3.sub-title{font-size:1.05rem;font-weight:700;color:var(--accent);margin:20px 0 10px}
+  /* Lists */
+  ul.tech-list{list-style:none;padding:0}
+  ul.tech-list li{
+    padding:8px 0 8px 26px;position:relative;color:#cbd5e1;font-size:.92rem;
+  }
+  ul.tech-list li::before{
+    content:"▸";position:absolute;left:6px;top:8px;color:var(--accent);font-weight:700;
+  }
+  ol.steps{list-style:none;counter-reset:step;padding:0}
+  ol.steps li{
+    counter-increment:step;position:relative;padding:10px 0 10px 44px;
+    font-size:.92rem;color:#cbd5e1;border-bottom:1px dashed rgba(30,58,95,.5);
+  }
+  ol.steps li:last-child{border-bottom:none}
+  ol.steps li::before{
+    content:counter(step);position:absolute;left:0;top:8px;
+    width:28px;height:28px;border-radius:50%;
+    background:rgba(0,212,255,.15);border:1px solid var(--accent);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;
+  }
+  /* Callouts */
+  .callout{border-radius:10px;padding:14px 16px;margin:16px 0;border-left:4px solid;font-size:.9rem}
+  .callout.info{background:rgba(0,212,255,.08);border-color:var(--accent);color:#bae6fd}
+  .callout.example{background:rgba(34,197,94,.08);border-color:var(--green);color:#bbf7d0}
+  .callout.warn{background:rgba(245,158,11,.08);border-color:var(--amber);color:#fde68a}
+  .callout.error{background:rgba(239,68,68,.08);border-color:var(--red);color:#fecaca}
+  .callout-title{font-weight:800;text-transform:uppercase;font-size:.72rem;letter-spacing:1.2px;margin-bottom:6px;display:block}
+  /* Table */
+  .table-wrap{overflow-x:auto;margin:14px 0;border-radius:10px;border:1px solid var(--border)}
+  table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:400px}
+  th{background:rgba(0,212,255,.1);color:var(--accent);text-align:left;padding:10px 12px;font-weight:700;font-size:.75rem;text-transform:uppercase;letter-spacing:1px}
+  td{padding:10px 12px;border-top:1px solid var(--border);color:#cbd5e1}
+  tr:hover td{background:rgba(0,212,255,.04)}
+  /* Practice block */
+  .practice{
+    background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(0,212,255,.05));
+    border:1px solid rgba(168,85,247,.35);border-radius:12px;padding:18px;margin:16px 0;
+  }
+  .practice-header{
+    display:flex;align-items:center;gap:10px;margin-bottom:14px;
+    padding-bottom:10px;border-bottom:1px solid rgba(168,85,247,.25);flex-wrap:wrap;
+  }
+  .practice-num{
+    background:var(--purple);color:#fff;font-weight:900;font-size:.7rem;
+    padding:4px 10px;border-radius:6px;letter-spacing:1px;
+  }
+  .practice-title{font-size:.95rem;font-weight:700;color:#e9d5ff}
+  .practice-step{margin:10px 0}
+  .practice-step .label{
+    display:inline-block;font-size:.68rem;font-weight:800;text-transform:uppercase;
+    letter-spacing:1px;padding:2px 8px;border-radius:4px;margin-bottom:4px;
+  }
+  .practice-step .label.goal{background:rgba(34,197,94,.2);color:#86efac}
+  .practice-step .label.how{background:rgba(0,212,255,.2);color:#7dd3fc}
+  .practice-step .label.expect{background:rgba(245,158,11,.2);color:#fcd34d}
+  .practice-step .label.check{background:rgba(168,85,247,.2);color:#d8b4fe}
+  /* Pills */
+  .pills{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .pill{
+    display:inline-block;background:rgba(30,58,95,.6);border:1px solid var(--border);
+    color:#cbd5e1;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:600;
+  }
+  .pill.blue{border-color:rgba(0,212,255,.5);color:var(--accent);background:rgba(0,212,255,.08)}
+  .pill.green{border-color:rgba(34,197,94,.5);color:var(--green);background:rgba(34,197,94,.08)}
+  .pill.amber{border-color:rgba(245,158,11,.5);color:var(--amber);background:rgba(245,158,11,.08)}
+  .pill.purple{border-color:rgba(168,85,247,.5);color:var(--purple);background:rgba(168,85,247,.08)}
+  /* Grid */
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+  .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  /* Accordion */
+  .acc{border:1px solid var(--border);border-radius:10px;margin:10px 0;overflow:hidden;background:var(--card)}
+  .acc-head{
+    padding:12px 16px;cursor:pointer;font-weight:700;font-size:.9rem;color:var(--accent);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .acc-head:hover{background:rgba(0,212,255,.05)}
+  .acc-head::after{content:"+";font-size:1.2rem;transition:transform .3s}
+  .acc.open .acc-head::after{transform:rotate(45deg)}
+  .acc-body{max-height:0;overflow:hidden;transition:max-height .35s ease;padding:0 16px}
+  .acc.open .acc-body{max-height:800px;padding:0 16px 16px}
+  /* Credits */
+  .credits-box{
+    background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:24px;text-align:center;margin-bottom:16px;
+  }
+  .credits-name{
+    font-size:1.4rem;font-weight:900;color:var(--accent);
+    letter-spacing:2px;margin:12px 0;text-shadow:0 0 20px rgba(0,212,255,.5);
+  }
+  .credits-line{color:var(--muted);font-size:.85rem;margin:6px 0;font-family:monospace}
+  .latin{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);color:var(--purple);font-style:italic;font-size:.9rem}
+  /* Footer */
+  footer{
+    background:#070b14;border-top:1px solid var(--border);
+    padding:24px 16px;text-align:center;color:var(--muted);font-size:.78rem;
+  }
+  footer p{margin:4px 0}
+  /* Back to top */
+  #backTop{
+    position:fixed;bottom:20px;right:20px;width:44px;height:44px;border-radius:50%;
+    background:var(--card);border:1px solid var(--accent);color:var(--accent);
+    font-size:1.2rem;cursor:pointer;display:none;z-index:900;
+    box-shadow:0 0 20px rgba(0,212,255,.4);transition:all .3s;
+  }
+  #backTop:hover{background:var(--accent);color:var(--bg)}
+  #backTop.show{display:flex;align-items:center;justify-content:center}
+  /* Mobile */
+  @media(max-width:640px){
+    body{padding-top:56px}
+    .nav-brand{font-size:.72rem;padding-right:6px}
+    .nav-btn{padding:5px 9px;font-size:.65rem}
+    .section{padding:14px 10px 70px}
+    .card{padding:14px}
+    h1.main-title{font-size:1.35rem}
+    .metric .num{font-size:1.2rem}
+    .card-icon{width:34px;height:34px;font-size:1rem}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div id="progressFill"></div></div>
+
+<nav class="navbar">
+  <div class="nav-brand">🎹 PSR-SX920</div>
+  <div class="nav-scroll" id="navScroll">
+    <button class="nav-btn active" data-section="home">🏠 HOME</button>
+    <button class="nav-btn" data-section="pilares">🗺️ PILARES</button>
+    <button class="nav-btn" data-section="identidad">🆔 PRÁCTICA 1</button>
+    <button class="nav-btn" data-section="yem">🧠 YEM</button>
+    <button class="nav-btn" data-section="explorer">📱 EXPLORER</button>
+    <button class="nav-btn" data-section="lab">🎛️ LABORATORIO</button>
+    <button class="nav-btn" data-section="catalogo">📦 CATÁLOGO</button>
+    <button class="nav-btn" data-section="mantenimiento">🧹 MANTENIMIENTO</button>
+    <button class="nav-btn" data-section="fuentes">🔗 FUENTES</button>
+    <button class="nav-btn" data-section="creditos">🏆 CRÉDITOS</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HOME ============ -->
+<section id="home" class="section active">
+  <div class="hero-svg-container" id="heroHome"></div>
+
+  <span class="badge">◆ Guía Maestra Profesional ◆</span>
+  <h1 class="main-title">Ecosistema de Expansión Yamaha PSR-SX920</h1>
+  <p class="subtitle">De 768 MB a un universo infinito de posibilidades sonoras</p>
+
+  <p class="description">
+    El PSR-SX920 no es un instrumento estático: es un ecosistema vivo diseñado para evolucionar
+    con tu creatividad. Esta guía te enseña a dominar las herramientas que convierten su memoria
+    de expansión en una puerta hacia identidades sonoras de cualquier rincón del mundo — o incluso
+    hacia tus propias grabaciones.
+  </p>
+
+  <div class="quote">
+    "Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien."
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><span class="num">768 MB</span><span class="lbl">Memoria Expansión</span></div>
+    <div class="metric"><span class="num">3</span><span class="lbl">Pilares Estratégicos</span></div>
+    <div class="metric"><span class="num">5</span><span class="lbl">Prácticas Guiadas</span></div>
+    <div class="metric"><span class="num">6</span><span class="lbl">Regiones Globales</span></div>
+  </div>
+
+  <div class="datetime-bar">
+    <span>📅 Fecha: <b>20/09/2026</b></span>
+    <span>🕒 Hora: <b>03:59:16</b></span>
+    <span>👨‍💻 Créditos: <b>Rubén Sbarsky</b></span>
+  </div>
+
+  <div class="callout info">
+    <span class="callout-title">◆ Resumen del Ciclo Creativo</span>
+    El éxito en tu PSR-SX920 se resume en un flujo constante: <b>Busca inspiración</b> en el
+    Explorador, <b>Crea y combina</b> tus paquetes en el YEM, <b>Instala con precisión</b> y
+    <b>Disfruta</b> de un instrumento que nunca deja de sorprenderte.
+  </div>
+</section>
+
+<!-- ============ PILARES ============ -->
+<section id="pilares" class="section">
+  <h2 class="section-title">🗺️ El Mapa del Tesoro</h2>
+  <p style="color:var(--muted);margin-bottom:16px">
+    El ecosistema de expansión se apoya en <b>tres pilares estratégicos</b> que debes conocer
+    para gestionar tu contenido de forma profesional.
+  </p>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(0,212,255,.12);border-color:rgba(0,212,255,.3)">🎼</div>
+        <div class="card-title">El Contenido</div>
+      </div>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:10px"><b style="color:var(--accent)">Expansion Content</b></p>
+      <ul class="tech-list" style="font-size:.85rem">
+        <li><b>Voices</b> — voces nuevas</li>
+        <li><b>Styles</b> — estilos de acompañamiento</li>
+        <li><b>Multi Pads</b> — frases rítmicas/melódicas</li>
+        <li><b>Registrations</b> — configuraciones completas del sistema</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.3)">🧠</div>
+        <div class="card-title">La Gestión</div>
+      </div>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:10px"><b style="color:var(--purple)">Yamaha Expansion Manager (YEM)</b></p>
+      <ul class="tech-list" style="font-size:.85rem">
+        <li>El cerebro de ingeniería para PC o Mac</li>
+        <li>Versión <b>2.5.3</b> o posterior obligatoria</li>
+        <li>Organiza y optimiza tus 768 MB</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.3)">📱</div>
+        <div class="card-title">La Exploración</div>
+      </div>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:10px"><b style="color:var(--green)">EXPANSION EXPLORER</b></p>
+      <ul class="tech-list" style="font-size:.85rem">
+        <li>Acceso inmediato desde móvil o PC</li>
+        <li>Buscar, preescuchar y descargar</li>
+        <li>Descarga inteligente de contenido</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout warn" style="margin-top:20px">
+    <span class="callout-title">⚠ Advertencia Crítica</span>
+    La memoria de expansión del PSR-SX920 se gestiona como un <b>bloque único de datos</b>.
+    Instalar nuevo contenido directamente desde la App EXPANSION EXPLORER <b>sobrescribirá y
+    eliminará</b> cualquier contenido instalado previamente mediante el Yamaha Expansion Manager
+    (YEM). Para mantener un control total y evitar pérdidas, la <b>gestión centralizada a través
+    de YEM</b> es el método profesional recomendado.
+  </div>
+</section>
+
+<!-- ============ IDENTIDAD (Práctica 1) ============ -->
+<section id="identidad" class="section">
+  <h2 class="section-title">🆔 Práctica 1 — El "DNI" de tu Teclado</h2>
+  <p style="color:var(--muted);margin-bottom:16px">
+    Antes de que el software YEM pueda trabajar, necesita conocer las <b>"huellas dactilares"</b>
+    de tu teclado mediante el archivo <b>.n27</b>.
+  </p>
+
+  <div class="practice">
+    <div class="practice-header">
+      <span class="practice-num">PRÁCTICA 1</span>
+      <span class="practice-title">Exportar Instrument Info</span>
+    </div>
+
+    <div class="practice-step">
+      <span class="label goal">🎯 Qué vamos a conseguir</span>
+      <p>Obtener el archivo de identificación indispensable que vincula tu PSR-SX920 con el software de gestión en tu ordenador.</p>
+    </div>
+
+    <div class="practice-step">
+      <span class="label how">⚙️ Qué tengo que hacer</span>
+      <ol class="steps" style="margin-top:8px">
+        <li>Conecta un pendrive USB al puerto <b>[USB TO DEVICE]</b> de tu teclado.</li>
+        <li>Pulsa el botón <b>[MENU]</b> y toca en la pantalla el icono de <b>[Expansion]</b>.</li>
+        <li>Selecciona la opción <b>[Export Instrument Info]</b>.</li>
+        <li>Confirma la operación siguiendo las instrucciones en pantalla.</li>
+      </ol>
+    </div>
+
+    <div class="practice-step">
+      <span class="label expect">✨ Qué debería aparecer o suceder</span>
+      <p>El teclado mostrará un mensaje confirmando que el archivo se ha creado correctamente en la unidad USB.</p>
+    </div>
+
+    <div class="practice-step">
+      <span class="label check">✅ Cómo comprobar que funcionó</span>
+      <p>Conecta el pendrive a tu PC/Mac y verifica que aparezca el archivo llamado <b style="color:var(--accent)">PSR-SX920_InstrumentInfo.n27</b>.</p>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <span class="callout-title">◆ INFO</span>
+    El archivo <b>.n27</b> es único para tu unidad y actúa como vínculo de identificación con el software YEM.
+  </div>
+</section>
+
+<!-- ============ YEM ============ -->
+<section id="yem" class="section">
+  <h2 class="section-title">🧠 El Cerebro — Yamaha Expansion Manager (YEM)</h2>
+  <p style="color:var(--muted);margin-bottom:16px">
+    El YEM es donde ocurre la magia técnica. Te permite importar proyectos de paquetes
+    (formatos <b>.ppf</b> y <b>.pfp</b>) para combinarlos.
+  </p>
+
+  <div class="pills">
+    <span class="pill purple">YEM v2.5.3+</span>
+    <span class="pill blue">.ppf</span>
+    <span class="pill blue">.pfp</span>
+    <span class="pill green">.ppi (abierto)</span>
+    <span class="pill amber">.cpi (protegido)</span>
+  </div>
+
+  <div class="practice">
+    <div class="practice-header">
+      <span class="practice-num">PRÁCTICA 2</span>
+      <span class="practice-title">Tu Primer Paquete Personalizado</span>
+    </div>
+
+    <div class="practice-step">
+      <span class="label goal">🎯 Qué vamos a conseguir</span>
+      <p>Crear un archivo de instalación único que combine sonidos y ritmos de diferentes fuentes, optimizando el espacio disponible.</p>
+    </div>
+
+    <div class="practice-step">
+      <span class="label how">⚙️ Qué tengo que hacer</span>
+      <ol class="steps" style="margin-top:8px">
+        <li>Abre YEM (v2.5.3+) en tu ordenador e importa tu archivo <b>.n27</b> en la sección <b>"Install Target"</b>.</li>
+        <li>Haz clic en <b>"Import Pack"</b> y selecciona archivos <b>.ppf</b> o <b>.pfp</b> que hayas descargado.</li>
+        <li>Haz clic en el icono de tu PSR-SX920 y selecciona los elementos específicos (Voices/Styles) que quieras llevar al teclado.</li>
+        <li>Haz clic en <b>[Save as Pack Install File]</b> para generar un instalador en formato <b>.ppi</b> (contenido abierto) o <b>.cpi</b> (contenido protegido).</li>
+      </ol>
+    </div>
+
+    <div class="practice-step">
+      <span class="label expect">✨ Qué debería aparecer o suceder</span>
+      <p>El software procesará la compilación y guardará el archivo en tu pendrive.</p>
+    </div>
+
+    <div class="practice-step">
+      <span class="label check">✅ Cómo comprobar que funcionó</span>
+      <p>Revisa la barra de capacidad en la parte superior de YEM; esta debe mostrar que el contenido seleccionado <b>no supera los 768 MB</b> de límite físico.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPLORER ============ -->
+<section id="explorer" class="section">
+  <h2 class="section-title">📱 El Explorador — App EXPANSION EXPLORER</h2>
+  <p style="color:var(--muted);margin-bottom:16px">
+    Esta herramienta destaca por su <b>movilidad</b> y capacidad de <b>análisis inteligente</b>,
+    permitiendo conexiones tanto por Wi-Fi como mediante un cable USB directo.
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Función</th><th>Descripción Experta</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><b style="color:var(--accent)">Búsqueda Avanzada</b></td><td>Filtros inteligentes por país, tempo, ritmo o género musical.</td></tr>
+        <tr><td><b style="color:var(--green)">Instalación Flexible</b></td><td>Envío de contenido vía red inalámbrica o cable USB al instrumento.</td></tr>
+        <tr><td><b style="color:var(--purple)">Audición Inmediata</b></td><td>Preescucha del contenido en el dispositivo sin necesidad de conexión.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="practice">
+    <div class="practice-header">
+      <span class="practice-num">PRÁCTICA 3</span>
+      <span class="practice-title">El Análisis Inteligente de Canciones</span>
+    </div>
+
+    <div class="practice-step">
+      <span class="label goal">🎯 Qué vamos a conseguir</span>
+      <p>Que la App nos recomiende automáticamente un <b>Style de expansión</b> basado en una canción de audio que ya tengamos.</p>
+    </div>
+
+    <div class="practice-step">
+      <span class="label how">⚙️ Qué tengo que hacer</span>
+      <ol class="steps" style="margin-top:8px">
+        <li>Abre EXPANSION EXPLORER y selecciona la función <b>"Style Recommendation"</b>.</li>
+        <li>Carga un archivo de audio (<b>MP3</b> o <b>WAV</b>) desde tu dispositivo.</li>
+        <li>Deja que la App analice el ritmo y el tempo de la pista.</li>
+      </ol>
+    </div>
+
+    <div class="practice-step">
+      <span class="label expect">✨ Qué debería aparecer o suceder</span>
+      <p>Verás una lista de <b>Styles sugeridos</b> que tienen una afinidad rítmica con tu canción.</p>
+    </div>
+
+    <div class="practice-step">
+      <span class="label check">✅ Cómo comprobar que funcionó</span>
+      <p>Pulsa el botón de reproducción en la App para escuchar la audición previa del Style sugerido y verificar su compatibilidad musical.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LABORATORIO ============ -->
+<section id="lab" class="section">
+  <h2 class="section-title">🎛️ Laboratorio de Sonido</h2>
+  <p style="color:var(--muted);margin-bottom:16px">
+    Crear tus propias voces te permite tener una <b>firma sonora irrepetible</b>. Puedes importar
+    muestras en formato <b>WAV</b> o <b>AIFF</b> (16-bit, 44.1kHz) o archivos <b>SoundFont (.sf2)</b>.
+  </p>
+
+  <div class="pills">
+    <span class="pill blue">WAV</span>
+    <span class="pill blue">AIFF</span>
+    <span class="pill green">16-bit / 44.1kHz</span>
+    <span class="pill purple">SoundFont .sf2</span>
+  </div>
+
+  <div class="practice">
+    <div class="practice-header">
+      <span class="practice-num">PRÁCTICA 4</span>
+      <span class="practice-title">De un Audio a una Voice</span>
+    </div>
+
+    <div class="practice-step">
+      <span class="label goal">🎯 Qué vamos a conseguir</span>
+      <p>Transformar una grabación externa en un instrumento ejecutable desde las teclas de tu PSR-SX920.</p>
+    </div>
+
+    <div class="practice-step">
+      <span class="label how">⚙️ Qué tengo que hacer</span>
+      <ol class="steps" style="margin-top:8px">
+        <li>En YEM, ve a <b>"My Packs"</b> y selecciona <b>"Create Custom Voice"</b>.</li>
+        <li>Importa tu archivo <b>WAV/AIFF</b>.</li>
+        <li>Usa el editor para asignar la muestra a una nota y ajusta parámetros como el <b>punto de inicio de la muestra</b> o el <b>bucle (loop)</b>.</li>
+      </ol>
+    </div>
+
+    <div class="practice-step">
+      <span class="label expect">✨ Qué debería aparecer o suceder</span>
+      <p>Se generará una nueva entrada en tu paquete personalizado dentro de YEM.</p>
+    </div>
+
+    <div class="practice-step">
+      <span class="label check">✅ Cómo comprobar que funcionó</span>
+      <p>Instala el paquete en tu teclado; al seleccionar la voz en la sección <b>[Expansion]</b>, deberías escuchar tu grabación al tocar la tecla configurada.</p>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <span class="callout-title">⚠ Nota Técnica de Limitación</span>
+    No es posible editar las muestras de las <b>voces de fábrica</b> del SX920 ni mezclarlas con
+    tus muestras externas dentro del mismo parche de expansión en YEM.
+  </div>
+</section>
+
+<!-- ============ CATÁLOGO ============ -->
+<section id="catalogo" class="section">
+  <h2 class="section-title">📦 El Catálogo — Contenido Gratuito y Recuperación</h2>
+  <p style="color:var(--muted);margin-bottom:16px">
+    Yamaha proporciona una base profesional gratuita que puedes recuperar en cualquier momento.
+  </p>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.3)">🌍</div>
+        <div class="card-title">Africa</div>
+      </div>
+      <p style="font-size:.85rem;color:#cbd5e1">3 drumkits (incluyendo el <b>"talking drum"</b>) y 18 estilos.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3)">🇨🇳</div>
+        <div class="card-title">C-POP HIT</div>
+      </div>
+      <p style="font-size:.85rem;color:#cbd5e1">Instrumentos tradicionales (<b>Erhu</b>, <b>Dizi</b>, <b>Pipa</b>) para pop chino.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(0,212,255,.12);border-color:rgba(0,212,255,.3)">🇪🇺</div>
+        <div class="card-title">Europe</div>
+      </div>
+      <p style="font-size:.85rem;color:#cbd5e1">Selección de folclore (<b>Eastern</b>, <b>Western</b>, <b>Balkan</b>, <b>Iberia</b>).</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.3)">🇮🇩</div>
+        <div class="card-title">Kolaborasi Nusantara</div>
+      </div>
+      <p style="font-size:.85rem;color:#cbd5e1">Estilos modernos de <b>Dangdut</b> y percusiones de Indonesia.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.3)">🇧🇷</div>
+        <div class="card-title">Latin America</div>
+      </div>
+      <p style="font-size:.85rem;color:#cbd5e1">Percusión cubana, acordeones y sintetizadores.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.3)">🕌</div>
+        <div class="card-title">Middle East</div>
+      </div>
+      <p style="font-size:.85rem;color:#cbd5e1">Instrumentos auténticos como <b>Oud</b>, <b>Quanoon</b> y <b>Nay</b>.</p>
+    </div>
+  </div>
+
+  <div class="callout example">
+    <span class="callout-title">◆ Recuperación de Packs</span>
+    Para recuperar estos packs: navega en tu teclado a
+    <b style="color:var(--accent)">[MENU] → [Expansion] → [Restore Pre-installed Expansion Contents]</b>.
+  </div>
+</section>
+
+<!-- ============ MANTENIMIENTO ============ -->
+<section id="mantenimiento" class="section">
+  <h2 class="section-title">🧹 Mantenimiento y Gestión de Memoria</h2>
+  <p style="color:var(--muted);margin-bottom:16px">
+    Dado que la memoria de expansión se gestiona como un <b>bloque único</b>, la limpieza es
+    fundamental para no agotar los 768 MB.
+  </p>
+
+  <div class="practice">
+    <div class="practice-header">
+      <span class="practice-num">PRÁCTICA 5</span>
+      <span class="practice-title">Limpieza de la Memoria de Expansión</span>
+    </div>
+
+    <div class="practice-step">
+      <span class="label goal">🎯 Qué vamos a conseguir</span>
+      <p>Liberar el bloque de memoria de expansión para instalar contenido totalmente nuevo.</p>
+    </div>
+
+    <div class="practice-step">
+      <span class="label how">⚙️ Qué tengo que hacer</span>
+      <div style="margin-top:8px">
+        <p style="font-size:.88rem;color:#cbd5e1;margin-bottom:8px"><b style="color:var(--red)">▶ Limpieza total del teclado:</b></p>
+        <p style="font-size:.85rem;color:var(--accent);font-family:monospace;background:rgba(0,212,255,.05);padding:8px 12px;border-radius:6px;margin-bottom:12px">
+          [MENU] → [Utility] → [Factory Reset/System] → [User Drive Formatting]
+        </p>
+        <p style="font-size:.88rem;color:#cbd5e1;margin-bottom:8px"><b style="color:var(--amber)">▶ Limpieza selectiva:</b></p>
+        <p style="font-size:.88rem;color:#cbd5e1">
+          En YEM, desmarca los paquetes que no desees, compila un nuevo archivo <b>.ppi</b> e instálalo.
+        </p>
+      </div>
+    </div>
+
+    <div class="practice-step">
+      <span class="label expect">✨ Qué debería aparecer o suceder</span>
+      <p>Al instalar un nuevo archivo de YEM, el teclado informará que el contenido anterior será <b>sobrescrito por completo</b>.</p>
+    </div>
+
+    <div class="practice-step">
+      <span class="label check">✅ Cómo comprobar que funcionó</span>
+      <p>Tras el reinicio, pulsa el botón de selección de <b>[Voice]</b> o <b>[Style]</b>, entra en la pestaña <b>[Expansion]</b> y verifica que solo existan los nuevos paquetes instalados.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FUENTES ============ -->
+<section id="fuentes" class="section">
+  <h2 class="section-title">🔗 Fuentes y Recursos</h2>
+  <p style="color:var(--muted);margin-bottom:16px">
+    Referencias técnicas, formatos y recursos mencionados en esta guía.
+  </p>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:rgba(0,212,255,.12);border-color:rgba(0,212,255,.3)">🏭</div>
+      <div class="card-title">Fabricante y Plataformas</div>
+    </div>
+    <ul class="tech-list">
+      <li><b>Yamaha Music</b> — Fabricante del PSR-SX920</li>
+      <li><b>Yamaha Expansion Manager (YEM)</b> v2.5.3 o posterior — Software de gestión para PC/Mac</li>
+      <li><b>EXPANSION EXPLORER</b> — Aplicación móvil / PC de exploración de contenido</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.3)">📁</div>
+      <div class="card-title">Formatos de Archivo Mencionados</div>
+    </div>
+    <div class="pills">
+      <span class="pill blue">.n27 — Instrument Info</span>
+      <span class="pill blue">.ppf — Pack Project File</span>
+      <span class="pill blue">.pfp — Pack File Project</span>
+      <span class="pill green">.ppi — Pack Install (abierto)</span>
+      <span class="pill amber">.cpi — Pack Install (protegido)</span>
+      <span class="pill purple">.wav / .aiff — Audio 16-bit 44.1kHz</span>
+      <span class="pill purple">.sf2 — SoundFont</span>
+      <span class="pill blue">.mp3 / .wav — Audio de referencia</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.3)">📦</div>
+      <div class="card-title">Packs de Expansión Preinstalados</div>
+    </div>
+    <ul class="tech-list">
+      <li><b>Africa</b> — 3 drumkits + 18 estilos</li>
+      <li><b>C-POP HIT</b> — Instrumentos tradicionales chinos</li>
+      <li><b>Europe</b> — Folclore Eastern, Western, Balkan, Iberia</li>
+      <li><b>Kolaborasi Nusantara</b> — Dangdut y percusión indonesia</li>
+      <li><b>Latin America</b> — Percusión cubana, acordeones, sintetizadores</li>
+      <li><b>Middle East</b> — Oud, Quanoon, Nay</li>
+    </ul>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:10px;font-style:italic">
+      Disponibles para recuperación desde <b>[MENU] → [Expansion] → [Restore Pre-installed Expansion Contents]</b>.
+    </p>
+  </div>
+</section>
+
+<!-- ============ CRÉDITOS ============ -->
+<section id="creditos" class="section">
+  <h2 class="section-title">🏆 Créditos</h2>
+
+  <div class="hero-svg-container" id="heroCreditos"></div>
+
+  <div class="credits-box">
+    <p style="color:var(--muted);font-size:.8rem;letter-spacing:2px;text-transform:uppercase">Tutorial elaborado por</p>
+    <div class="credits-name">Rubén Sbarsky</div>
+    <p class="credits-line">📅 Fecha: 20/09/2026</p>
+    <p class="credits-line">🕒 Hora: 03:59:16</p>
+    <p class="credits-line" style="margin-top:14px">
+      <b style="color:var(--accent)">Guía Maestra del Ecosistema de Expansión</b><br>
+      Yamaha PSR-SX920
+    </p>
+    <p style="color:var(--muted);font-size:.8rem;margin-top:14px">
+      📚 Tutorial solo con fines Educativos y Divulgación
+    </p>
+    <p class="latin">Fiat iustitia, ruat caelum.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>📚 Tutorial solo con fines Educativos y Divulgación</p>
+  <p>👨‍💻 Créditos: <b style="color:var(--accent)">Rubén Sbarsky</b></p>
+  <p>📅 FECHA: 20/09/2026 · Hora: 03:59:16</p>
+  <p style="color:var(--purple);font-style:italic;margin-top:8px">Fiat iustitia, ruat caelum.</p>
+</footer>
+
+<button id="backTop" title="Volver arriba">↑</button>
+
+<!-- ============ SVG TEMPLATE (reutilizado en HOME y CRÉDITOS) ============ -->
+<template id="heroSVGTemplate">
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="display:block;width:100%;height:auto">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="45%" r="80%">
+      <stop offset="0%" stop-color="#0f172a">
+        <animate attributeName="stop-color" values="#0f172a;#0a1a2e;#131e38;#0f172a" dur="9s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="60%" stop-color="#0a0e1a">
+        <animate attributeName="stop-color" values="#0a0e1a;#0d1424;#0a0e1a" dur="7s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#070b14">
+        <animate attributeName="stop-color" values="#070b14;#050810;#070b14" dur="6s" repeatCount="indefinite"/>
+      </stop>
+    </radialGradient>
+
+    <linearGradient id="barGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00d4ff"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#22c55e"/>
+      <animate attributeName="x1" values="0%;100%;0%" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="100%;0%;100%" dur="8s" repeatCount="indefinite"/>
+    </linearGradient>
+
+    <pattern id="gridPat" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0 L0 0 0 40" fill="none" stroke="#1e3a5f" stroke-width="0.5"/>
+    </pattern>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="glowStrong" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <path id="pathPCtoKB" d="M 165 195 Q 280 140 350 205"/>
+    <path id="pathMobileToKB" d="M 635 195 Q 520 140 450 205"/>
+    <path id="pathKBtoMem" d="M 400 265 L 400 385"/>
+    <path id="pathOrbit" d="M 400 220 m -110 0 a 110 110 0 1 1 220 0 a 110 110 0 1 1 -220 0"/>
+    <path id="pathOrbit2" d="M 400 220 m -70 0 a 70 70 0 1 0 140 0 a 70 70 0 1 0 -140 0"/>
+    <path id="pathGhost" d="M 120 180 Q 260 100 400 220 Q 540 340 680 180"/>
+  </defs>
+
+  <!-- FONDO -->
+  <rect width="800" height="450" fill="url(#bgGrad)"/>
+  <rect width="800" height="450" fill="url(#gridPat)" opacity="0.55">
+    <animate attributeName="opacity" values="0.3;0.75;0.3" dur="5s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- ANILLOS ORBITALES -->
+  <g transform="translate(400 220)">
+    <ellipse rx="260" ry="90" fill="none" stroke="#00d4ff" stroke-width="1" stroke-dasharray="6 10" opacity="0.35">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="22s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="6 10;14 6;6 10" dur="11s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse rx="200" ry="70" fill="none" stroke="#a855f7" stroke-width="1" stroke-dasharray="4 8" opacity="0.4">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="17s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse rx="150" ry="50" fill="none" stroke="#22c55e" stroke-width="0.9" stroke-dasharray="2 6" opacity="0.45">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="13s" repeatCount="indefinite"/>
+    </ellipse>
+  </g>
+
+  <!-- ANILLOS CIRCULARES CONCÉNTRICOS -->
+  <g transform="translate(400 220)">
+    <circle r="140" fill="none" stroke="#00d4ff" stroke-width="0.8" stroke-dasharray="3 9" opacity="0.3">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="14s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="185" fill="none" stroke="#a855f7" stroke-width="0.8" stroke-dasharray="5 12" opacity="0.25">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="19s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- TÍTULO PRINCIPAL -->
+  <text x="400" y="42" text-anchor="middle" font-size="20" font-family="'Segoe UI',sans-serif" font-weight="900" letter-spacing="3.5">
+    EXPANSION ECOSYSTEM
+    <animate attributeName="fill" values="#00d4ff;#22c55e;#f59e0b;#a855f7;#ef4444;#00d4ff" dur="9s" repeatCount="indefinite"/>
+  </text>
+  <text x="400" y="62" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="'Segoe UI',sans-serif" letter-spacing="3">
+    YAMAHA PSR-SX920
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- ETIQUETAS DE ESTADO -->
+  <text x="400" y="88" text-anchor="middle" font-size="8.5" font-family="monospace" fill="#22c55e" letter-spacing="1">
+    [IMPORT · OPTIMIZE · INSTALL · PLAY]
+    <animate attributeName="opacity" values="1;0;0;1" dur="8s" repeatCount="indefinite"/>
+  </text>
+  <text x="400" y="88" text-anchor="middle" font-size="8.5" font-family="monospace" fill="#00d4ff" letter-spacing="1">
+    [SEARCH · CREATE · COMBINE · EXPAND]
+    <animate attributeName="opacity" values="0;1;1;0" dur="8s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- COMPUTADORA / YEM (izquierda) -->
+  <g transform="translate(120 195)">
+    <animateTransform attributeName="transform" type="translate" values="120 195;120 192;120 195" dur="4s" repeatCount="indefinite"/>
+    <circle r="48" fill="none" stroke="#00d4ff" stroke-width="1" opacity="0.5">
+      <animate attributeName="r" values="44;54;44" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.2;0.7;0.2" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="30" fill="none" stroke="#00d4ff" opacity="0.35">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="2 4;6 3;2 4" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <rect x="-42" y="-32" width="84" height="58" rx="5" fill="#0f172a" stroke="#00d4ff" stroke-width="1.8" filter="url(#glow)"/>
+    <rect x="-34" y="-24" width="68" height="42" rx="3" fill="#070b14"/>
+    <line x1="-28" y1="-16" x2="8" y2="-16" stroke="#00d4ff" stroke-width="1.6">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="-28" y1="-8" x2="22" y2="-8" stroke="#22c55e" stroke-width="1.6">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/>
+    </line>
+    <line x1="-28" y1="0" x2="0" y2="0" stroke="#f59e0b" stroke-width="1.6">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="3s" repeatCount="indefinite"/>
+    </line>
+    <line x1="-28" y1="8" x2="16" y2="8" stroke="#a855f7" stroke-width="1.6">
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="3.5s" repeatCount="indefinite"/>
+    </line>
+    <rect x="-22" y="26" width="44" height="4" rx="1" fill="#1e3a5f"/>
+    <text y="52" text-anchor="middle" fill="#00d4ff" font-size="12" font-family="'Segoe UI',sans-serif" font-weight="800" letter-spacing="1">YEM</text>
+    <text y="66" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'Segoe UI',sans-serif">PC / MAC · v2.5.3+</text>
+  </g>
+
+  <!-- MOBILE / EXPLORER (derecha) -->
+  <g transform="translate(680 195)">
+    <animateTransform attributeName="transform" type="translate" values="680 195;680 191;680 195" dur="4.5s" repeatCount="indefinite"/>
+    <circle r="48" fill="none" stroke="#22c55e" stroke-width="1" opacity="0.5">
+      <animate attributeName="r" values="44;54;44" dur="3.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.2;0.7;0.2" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="30" fill="none" stroke="#22c55e" opacity="0.35">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="9s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="3 5;7 4;3 5" dur="7s" repeatCount="indefinite"/>
+    </circle>
+    <rect x="-22" y="-40" width="44" height="80" rx="7" fill="#0f172a" stroke="#22c55e" stroke-width="1.8" filter="url(#glow)"/>
+    <rect x="-17" y="-32" width="34" height="64" rx="3" fill="#070b14"/>
+    <circle cx="0" cy="-14" r="6" fill="none" stroke="#22c55e" stroke-width="1.2">
+      <animate attributeName="r" values="5;8;5" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="0" y="8" text-anchor="middle" fill="#22c55e" font-size="5" font-family="monospace" letter-spacing="0.5">SEARCH</text>
+    <line x1="-13" y1="14" x2="13" y2="14" stroke="#22c55e" stroke-width="0.9" opacity="0.7"/>
+    <text x="0" y="23" text-anchor="middle" fill="#94a3b8" font-size="4.5" font-family="monospace">STYLE REC</text>
+    <text y="56" text-anchor="middle" fill="#22c55e" font-size="12" font-family="'Segoe UI',sans-serif" font-weight="800" letter-spacing="1">EXPLORER</text>
+    <text y="70" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'Segoe UI',sans-serif">APP</text>
+  </g>
+
+  <!-- TECLADO CENTRAL -->
+  <g transform="translate(400 220)">
+    <animateTransform attributeName="transform" type="translate" values="400 220;400 217;400 220" dur="3.2s" repeatCount="indefinite"/>
+    <circle r="88" fill="none" stroke="#a855f7" opacity="0.5">
+      <animate attributeName="r" values="80;96;80" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.15;0.7;0.15" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="62" fill="none" stroke="#a855f7" stroke-width="1" opacity="0.4">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="4 8;12 6;4 8" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <rect x="-62" y="-42" width="124" height="82" rx="8" fill="#0f172a" stroke="#a855f7" stroke-width="2.2" filter="url(#glowStrong)"/>
+    <rect x="-55" y="-35" width="110" height="42" rx="4" fill="#070b14"/>
+    <text x="0" y="-18" text-anchor="middle" fill="#00d4ff" font-size="8" font-family="monospace" font-weight="700">
+      PSR-SX920
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="2.5s" repeatCount="indefinite"/>
+    </text>
+    <text x="0" y="-6" text-anchor="middle" fill="#22c55e" font-size="7" font-family="monospace">EXPANSION HUB</text>
+    <text x="0" y="0" text-anchor="middle" fill="#f59e0b" font-size="6" font-family="monospace">768 MB</text>
+    <!-- TECLAS -->
+    <g transform="translate(-55 12)">
+      <rect x="0" y="0" width="11" height="20" rx="1.5" fill="#e2e8f0"/>
+      <rect x="13" y="0" width="11" height="20" rx="1.5" fill="#e2e8f0"/>
+      <rect x="26" y="0" width="11" height="20" rx="1.5" fill="#e2e8f0"/>
+      <rect x="39" y="0" width="11" height="20" rx="1.5" fill="#e2e8f0"/>
+      <rect x="52" y="0" width="11" height="20" rx="1.5" fill="#e2e8f0"/>
+      <rect x="65" y="0" width="11" height="20" rx="1.5" fill="#e2e8f0"/>
+      <rect x="78" y="0" width="11" height="20" rx="1.5" fill="#e2e8f0"/>
+      <rect x="91" y="0" width="11" height="20" rx="1.5" fill="#e2e8f0"/>
+      <rect x="9" y="0" width="6.5" height="12" rx="1" fill="#0a0e1a"/>
+      <rect x="22" y="0" width="6.5" height="12" rx="1" fill="#0a0e1a"/>
+      <rect x="48" y="0" width="6.5" height="12" rx="1" fill="#0a0e1a"/>
+      <rect x="61" y="0" width="6.5" height="12" rx="1" fill="#0a0e1a"/>
+      <rect x="74" y="0" width="6.5" height="12" rx="1" fill="#0a0e1a"/>
+    </g>
+    <!-- tecla pulsada -->
+    <rect x="-55" y="12" width="11" height="20" rx="1.5" fill="#00d4ff" opacity="0.85" filter="url(#glow)">
+      <animate attributeName="opacity" values="0;0.9;0" dur="1.5s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="26" y="12" width="11" height="20" rx="1.5" fill="#22c55e" opacity="0.85" filter="url(#glow)">
+      <animate attributeName="opacity" values="0;0.9;0" dur="1.8s" begin="0.4s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="65" y="12" width="11" height="20" rx="1.5" fill="#a855f7" opacity="0.85" filter="url(#glow)">
+      <animate attributeName="opacity" values="0;0.9;0" dur="2.1s" begin="0.9s" repeatCount="indefinite"/>
+    </rect>
+    <text y="72" text-anchor="middle" fill="#a855f7" font-size="12" font-family="'Segoe UI',sans-serif" font-weight="800" letter-spacing="1.5">PSR-SX920</text>
+    <text y="86" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-family="'Segoe UI',sans-serif" letter-spacing="1.5">EXPANSION HUB</text>
+  </g>
+
+  <!-- PATHS DE CONEXIÓN CON FLUJO -->
+  <path d="M 168 195 Q 285 130 345 205" fill="none" stroke="#00d4ff" stroke-width="1.6" stroke-dasharray="5 5" opacity="0.65" filter="url(#glow)">
+    <animate attributeName="stroke-dashoffset" from="0" to="-20" dur="1.2s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 632 195 Q 515 130 455 205" fill="none" stroke="#22c55e" stroke-width="1.6" stroke-dasharray="5 5" opacity="0.65" filter="url(#glow)">
+    <animate attributeName="stroke-dashoffset" from="0" to="-20" dur="1.4s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 400 265 L 400 380" fill="none" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="5 5" opacity="0.6" filter="url(#glow)">
+    <animate attributeName="stroke-dashoffset" from="0" to="-20" dur="1.1s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- PARTÍCULAS YEM -> KB -->
+  <circle r="3" fill="#00d4ff" filter="url(#glow)">
+    <animateMotion dur="2.5s" repeatCount="indefinite"><mpath href="#pathPCtoKB"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle r="3" fill="#00d4ff" filter="url(#glow)">
+    <animateMotion dur="2.5s" begin="0.9s" repeatCount="indefinite"><mpath href="#pathPCtoKB"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.5s" begin="0.9s" repeatCount="indefinite"/>
+  </circle>
+  <circle r="2.5" fill="#a855f7" filter="url(#glow)">
+    <animateMotion dur="2.5s" begin="1.7s" repeatCount="indefinite"><mpath href="#pathPCtoKB"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.5s" begin="1.7s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- PARTÍCULAS EXPLORER -> KB -->
+  <circle r="3" fill="#22c55e" filter="url(#glow)">
+    <animateMotion dur="2.8s" begin="0.3s" repeatCount="indefinite"><mpath href="#pathMobileToKB"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.8s" begin="0.3s" repeatCount="indefinite"/>
+  </circle>
+  <circle r="3" fill="#22c55e" filter="url(#glow)">
+    <animateMotion dur="2.8s" begin="1.4s" repeatCount="indefinite"><mpath href="#pathMobileToKB"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.8s" begin="1.4s" repeatCount="indefinite"/>
+  </circle>
+  <circle r="2.5" fill="#a855f7" filter="url(#glow)">
+    <animateMotion dur="2.8s" begin="2.2s" repeatCount="indefinite"><mpath href="#pathMobileToKB"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.8s" begin="2.2s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- PARTÍCULA KB -> MEMORIA -->
+  <circle r="3.5" fill="#f59e0b" filter="url(#glow)">
+    <animateMotion dur="2s" repeatCount="indefinite"><mpath href="#pathKBtoMem"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle r="2.5" fill="#ef4444" filter="url(#glow)">
+    <animateMotion dur="2s" begin="1s" repeatCount="indefinite"><mpath href="#pathKBtoMem"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2s" begin="1s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- GHOST ELEMENT (pieza fantasma recorriendo el path completo) -->
+  <g opacity="0">
+    <circle r="8" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+    <animateMotion dur="9s" repeatCount="indefinite"><mpath href="#pathGhost"/></animateMotion>
+    <animate attributeName="opacity" values="0;0.7;0.7;0;0" dur="9s" repeatCount="indefinite"/>
+  </g>
+  <g opacity="0">
+    <circle r="6" fill="none" stroke="#a855f7" stroke-width="1.5"/>
+    <animateMotion dur="9s" begin="3s" repeatCount="indefinite"><mpath href="#pathGhost"/></animateMotion>
+    <animate attributeName="opacity" values="0;0.7;0.7;0;0" dur="9s" begin="3s" repeatCount="indefinite"/>
+  </g>
+  <g opacity="0">
+    <circle r="5" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+    <animateMotion dur="9s" begin="6s" repeatCount="indefinite"><mpath href="#pathGhost"/></animateMotion>
+    <animate attributeName="opacity" values="0;0.7;0.7;0;0" dur="9s" begin="6s" repeatCount="indefinite"/>
+  </g>
+
+  <!-- BARRA DE MEMORIA 768 MB -->
+  <g transform="translate(400 400)">
+    <rect x="-160" y="-14" width="320" height="28" rx="6" fill="#0f172a" stroke="#1e3a5f" stroke-width="1.2"/>
+    <rect x="-156" y="-10" width="312" height="20" rx="3" fill="#0a0e1a"/>
+    <rect x="-156" y="-10" width="0" height="20" rx="3" fill="url(#barGrad)" opacity="0.9">
+      <animate attributeName="width" values="0;312;312;0" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.9;0.9;0.4;0.9" dur="10s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="-156" y="-10" width="312" height="20" rx="3" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.4">
+      <animate attributeName="opacity" values="0.2;0.8;0.2" dur="3s" repeatCount="indefinite"/>
+    </rect>
+    <text x="0" y="4" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace" font-weight="700" letter-spacing="1.5">
+      768 MB EXPANSION MEMORY
+      <animate attributeName="fill" values="#fff;#00d4ff;#fff" dur="4s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- INDICADOR LIVE (esquina sup. derecha) -->
+  <g transform="translate(755 28)">
+    <circle r="5" fill="#ef4444">
+      <animate attributeName="opacity" values="1;0.3;1" dur="1.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="10" fill="none" stroke="#ef4444" opacity="0.6">
+      <animate attributeName="r" values="6;16;6" dur="1.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0;0.8" dur="1.2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="-15" y="4" text-anchor="end" fill="#ef4444" font-size="10" font-family="monospace" font-weight="800" letter-spacing="1">LIVE</text>
+  </g>
+
+  <!-- INDICADOR SECUNDARIO (esquina sup. izquierda) -->
+  <g transform="translate(45 28)">
+    <text x="0" y="4" fill="#22c55e" font-size="9" font-family="monospace" font-weight="700" letter-spacing="1">
+      ● SYSTEM ONLINE
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="2.5s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- EXPLOSIONES RADIALES DE PARTÍCULAS (puntos clave) -->
+  <g transform="translate(400 220)">
+    <g opacity="0">
+      <line x1="0" y1="0" x2="40" y2="0" stroke="#00d4ff" stroke-width="1.5"/>
+      <line x1="0" y1="0" x2="28" y2="28" stroke="#00d4ff" stroke-width="1.5"/>
+      <line x1="0" y1="0" x2="0" y2="40" stroke="#00d4ff" stroke-width="1.5"/>
+      <line x1="0" y1="0" x2="-28" y2="28" stroke="#00d4ff" stroke-width="1.5"/>
+      <line x1="0" y1="0" x2="-40" y2="0" stroke="#00d4ff" stroke-width="1.5"/>
+      <line x1="0" y1="0" x2="-28" y2="-28" stroke="#00d4ff" stroke-width="1.5"/>
+      <line x1="0" y1="0" x2="0" y2="-40" stroke="#00d4ff" stroke-width="1.5"/>
+      <line x1="0" y1="0" x2="28" y2="-28" stroke="#00d4ff" stroke-width="1.5"/>
+      <animateTransform attributeName="transform" type="scale" values="0.3;2.2;0.3" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.9;0" dur="4s" repeatCount="indefinite"/>
+    </g>
+  </g>
+  <g transform="translate(120 195)">
+    <g opacity="0">
+      <line x1="0" y1="0" x2="24" y2="0" stroke="#00d4ff" stroke-width="1.2"/>
+      <line x1="0" y1="0" x2="0" y2="-24" stroke="#00d4ff" stroke-width="1.2"/>
+      <line x1="0" y1="0" x2="-24" y2="0" stroke="#00d4ff" stroke-width="1.2"/>
+      <line x1="0" y1="0" x2="0" y2="24" stroke="#00d4ff" stroke-width="1.2"/>
+      <animateTransform attributeName="transform" type="scale" values="0.3;1.8;0.3" dur="5s" begin="1s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.8;0" dur="5s" begin="1s" repeatCount="indefinite"/>
+    </g>
+  </g>
+  <g transform="translate(680 195)">
+    <g opacity="0">
+      <line x1="0" y1="0" x2="24" y2="0" stroke="#22c55e" stroke-width="1.2"/>
+      <line x1="0" y1="0" x2="0" y2="-24" stroke="#22c55e" stroke-width="1.2"/>
+      <line x1="0" y1="0" x2="-24" y2="0" stroke="#22c55e" stroke-width="1.2"/>
+      <line x1="0" y1="0" x2="0" y2="24" stroke="#22c55e" stroke-width="1.2"/>
+      <animateTransform attributeName="transform" type="scale" values="0.3;1.8;0.3" dur="5s" begin="2.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.8;0" dur="5s" begin="2.5s" repeatCount="indefinite"/>
+    </g>
+  </g>
+
+  <!-- NODO CENTRAL PARPADEANTE -->
+  <circle cx="400" cy="220" r="4" fill="#00d4ff" filter="url(#glow)">
+    <animate attributeName="r" values="3;6;3" dur="1.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- FLASH + TEXTO GRANDE ANIMADO -->
+  <rect width="800" height="450" fill="#00d4ff" opacity="0">
+    <animate attributeName="opacity" values="0;0;0;0.15;0;0" dur="10s" repeatCount="indefinite"/>
+  </rect>
+  <text x="400" y="130" text-anchor="middle" font-size="26" font-family="'Segoe UI',sans-serif" font-weight="900" letter-spacing="5" fill="#f59e0b" opacity="0" filter="url(#glowStrong)">
+    ¡EXPANSIÓN TOTAL!
+    <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" dur="10s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- FIRMA DEL AUTOR -->
+  <text x="400" y="443" text-anchor="middle" fill="#a855f7" font-size="9" font-family="'Segoe UI',sans-serif" letter-spacing="2" font-weight="600">
+    Rubén Sbarsky
+    <animate attributeName="opacity" values="0.3;1;0.3" dur="5s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- BORDE MARCO -->
+  <rect x="1" y="1" width="798" height="448" fill="none" stroke="#1e3a5f" stroke-width="2" rx="4" opacity="0.6">
+    <animate attributeName="stroke" values="#1e3a5f;#00d4ff;#1e3a5f" dur="6s" repeatCount="indefinite"/>
+  </rect>
+</svg>
+</template>
+
+<script>
+(function(){
+  'use strict';
+
+  // ====== SPA Navigation ======
+  const navBtns = document.querySelectorAll('.nav-btn');
+  const sections = document.querySelectorAll('.section');
+  const navScroll = document.getElementById('navScroll');
+
+  function injectHero(containerId){
+    const container = document.getElementById(containerId);
+    if(!container) return;
+    // evitar duplicados: limpiar
+    container.innerHTML = '';
+    const tpl = document.getElementById('heroSVGTemplate');
+    const clone = tpl.content.cloneNode(true);
+    container.appendChild(clone);
+    // Reiniciar animaciones SVG
+    const svg = container.querySelector('svg');
+    if(svg && typeof svg.setCurrentTime === 'function'){
+      try { svg.setCurrentTime(0); } catch(e){}
+    }
+    // También reiniciar SMIL declarativas
+    if(svg){
+      svg.querySelectorAll('animate, animateTransform, animateMotion').forEach(function(el){
+        try {
+          if(el.beginElement) el.beginElement();
+        } catch(e){}
+      });
+    }
+  }
+
+  function showSection(id){
+    sections.forEach(function(s){
+      s.classList.toggle('active', s.id === id);
+    });
+    navBtns.forEach(function(b){
+      b.classList.toggle('active', b.dataset.section === id);
+    });
+    // Inyectar SVG según sección
+    if(id === 'home'){
+      injectHero('heroHome');
+    } else if(id === 'creditos'){
+      injectHero('heroCreditos');
+    }
+    // Scroll arriba
+    window.scrollTo({top:0, behavior:'smooth'});
+    // Progress reset visual
+    updateProgress();
+  }
+
+  navBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      showSection(btn.dataset.section);
+    });
+  });
+
+  // ====== Progress Bar ======
+  const progressFill = document.getElementById('progressFill');
+  function updateProgress(){
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop || document.body.scrollTop);
+    const total = (h.scrollHeight || document.body.scrollHeight) - h.clientHeight;
+    const pct = total > 0 ? (scrolled / total) * 100 : 0;
+    progressFill.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+
+  // ====== Back to top ======
+  const backTop = document.getElementById('backTop');
+  window.addEventListener('scroll', function(){
+    if(window.scrollY > 300){
+      backTop.classList.add('show');
+    } else {
+      backTop.classList.remove('show');
+    }
+  }, {passive:true});
+  backTop.addEventListener('click', function(){
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  // ====== Inicializar ======
+  injectHero('heroHome');
+  updateProgress();
+})();
+</script>
+</body>
+</html>
