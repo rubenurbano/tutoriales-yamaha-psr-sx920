@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crear y Editar Estilos · Yamaha PSR-SX920 · Tutorial Profesional</title>
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --card:#0f172a;
+    --border:#1e3a5f;
+    --accent:#00d4ff;
+    --green:#22c55e;
+    --amber:#f59e0b;
+    --red:#ef4444;
+    --purple:#a855f7;
+    --text:#e2e8f0;
+    --muted:#94a3b8;
+    --dim:#64748b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.6;}
+  body{overflow-x:hidden;padding-top:112px;}
+  img,svg{max-width:100%;display:block;}
+  button{font-family:inherit;cursor:pointer;}
+
+  /* PROGRESS BAR */
+  .progress-bar{position:fixed;top:0;left:0;width:100%;height:4px;background:#0f172a;z-index:1001;}
+  .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#00d4ff,#22c55e,#f59e0b,#a855f7);transition:width .15s ease;box-shadow:0 0 12px rgba(0,212,255,.5);}
+
+  /* NAVBAR */
+  .navbar{position:fixed;top:4px;left:0;width:100%;background:rgba(10,14,26,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:1000;}
+  .nav-inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:10px 14px;}
+  .nav-brand{font-weight:700;color:var(--accent);letter-spacing:1px;font-size:14px;white-space:nowrap;display:flex;align-items:center;gap:8px;}
+  .nav-brand .dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.25);}}
+  .nav-links{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;padding-bottom:4px;flex:1;}
+  .nav-links::-webkit-scrollbar{height:5px;}
+  .nav-links::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+  .nav-btn{background:transparent;border:1px solid transparent;color:var(--muted);padding:8px 13px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap;transition:all .2s;}
+  .nav-btn:hover{color:var(--accent);border-color:var(--border);background:rgba(0,212,255,.05);}
+  .nav-btn.active{color:#0a0e1a;background:linear-gradient(135deg,var(--accent),#0ea5e9);border-color:var(--accent);box-shadow:0 0 14px rgba(0,212,255,.4);}
+
+  /* SECTIONS */
+  main{max-width:1240px;margin:0 auto;padding:22px 14px 80px;}
+  .section{display:none;animation:fadeUp .45s ease;}
+  .section.active{display:block;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+  /* HOME */
+  .home-badge{display:inline-block;background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(168,85,247,.15));border:1px solid var(--accent);color:var(--accent);font-size:11px;letter-spacing:3px;font-weight:700;padding:6px 14px;border-radius:20px;margin-bottom:14px;text-transform:uppercase;}
+  .hero-svg-wrap{width:100%;border-radius:14px;overflow:hidden;border:1px solid var(--border);box-shadow:0 0 40px rgba(0,212,255,.18),inset 0 0 0 1px rgba(0,212,255,.06);margin-bottom:26px;background:#070b14;aspect-ratio:16/9;}
+  .hero-svg-wrap svg{width:100%;height:100%;display:block;}
+  .home-title{font-size:clamp(1.6rem,4.6vw,2.9rem);font-weight:800;background:linear-gradient(120deg,#00d4ff,#22c55e,#f59e0b,#a855f7);background-size:300% 300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:gshift 10s ease infinite;line-height:1.15;margin-bottom:10px;}
+  @keyframes gshift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+  .home-sub{font-size:clamp(1rem,2.4vw,1.22rem);color:var(--muted);margin-bottom:16px;font-weight:500;}
+  .home-desc{color:var(--text);opacity:.9;max-width:860px;margin-bottom:22px;font-size:1rem;}
+  .quote{border-left:4px solid var(--accent);background:linear-gradient(90deg,rgba(0,212,255,.08),transparent);padding:14px 18px;border-radius:0 10px 10px 0;font-style:italic;color:#cbd5e1;margin-bottom:26px;font-size:1rem;}
+  .quote::before{content:"❝";color:var(--accent);font-size:1.4rem;margin-right:8px;font-style:normal;}
+
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px;}
+  .metric{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;transition:transform .2s,border-color .2s;}
+  .metric:hover{transform:translateY(-3px);border-color:var(--accent);}
+  .metric .val{font-size:1.5rem;font-weight:800;color:var(--accent);}
+  .metric .lbl{font-size:11px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-top:4px;}
+  .metric.g .val{color:var(--green);}
+  .metric.a .val{color:var(--amber);}
+  .metric.p .val{color:var(--purple);}
+
+  .datetime{display:flex;flex-wrap:wrap;gap:10px;font-size:13px;color:var(--muted);}
+  .datetime span{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 12px;}
+
+  /* CONTENT BLOCKS */
+  .section-head{margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+  .section-head .kicker{font-size:11px;letter-spacing:3px;color:var(--accent);font-weight:700;text-transform:uppercase;}
+  .section-head h2{font-size:clamp(1.4rem,3.6vw,2rem);color:#fff;margin-top:6px;font-weight:800;}
+  .section-head p{color:var(--muted);margin-top:8px;font-size:.96rem;max-width:900px;}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;}
+  .card h3{color:var(--accent);font-size:1.1rem;margin-bottom:10px;display:flex;align-items:center;gap:9px;}
+  .card h3 .ico{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--accent),#0ea5e9);display:inline-flex;align-items:center;justify-content:center;font-size:14px;color:#0a0e1a;font-weight:800;}
+  .card h4{color:var(--green);font-size:.98rem;margin:12px 0 6px;}
+  .card p{color:var(--text);opacity:.92;margin-bottom:8px;}
+  .card ul,.card ol{margin-left:20px;margin-bottom:10px;}
+  .card li{margin-bottom:6px;color:#cbd5e1;}
+  .card strong{color:#fff;}
+  .card em{color:var(--amber);font-style:normal;font-weight:600;}
+
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+
+  /* CALLOUTS */
+  .callout{border-radius:10px;padding:14px 16px;margin:14px 0;border-left:4px solid;font-size:.94rem;position:relative;}
+  .callout .tag{font-size:10px;font-weight:800;letter-spacing:2px;padding:3px 8px;border-radius:5px;margin-right:8px;text-transform:uppercase;}
+  .callout.info{background:rgba(0,212,255,.07);border-color:var(--accent);color:#bae6fd;}
+  .callout.info .tag{background:var(--accent);color:#0a0e1a;}
+  .callout.example{background:rgba(34,197,94,.07);border-color:var(--green);color:#bbf7d0;}
+  .callout.example .tag{background:var(--green);color:#0a0e1a;}
+  .callout.warn{background:rgba(245,158,11,.08);border-color:var(--amber);color:#fde68a;}
+  .callout.warn .tag{background:var(--amber);color:#0a0e1a;}
+  .callout.error{background:rgba(239,68,68,.08);border-color:var(--red);color:#fecaca;}
+  .callout.error .tag{background:var(--red);color:#0a0e1a;}
+
+  /* BADGES */
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:1px;}
+  .badge.blue{background:rgba(0,212,255,.15);color:var(--accent);border:1px solid rgba(0,212,255,.4);}
+  .badge.green{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.4);}
+  .badge.amber{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.4);}
+  .badge.purple{background:rgba(168,85,247,.15);color:var(--purple);border:1px solid rgba(168,85,247,.4);}
+  .badge.red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.4);}
+
+  /* TABLES */
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9rem;background:var(--card);border-radius:10px;overflow:hidden;border:1px solid var(--border);}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);}
+  th{background:rgba(0,212,255,.08);color:var(--accent);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(0,212,255,.04);}
+  .table-scroll{overflow-x:auto;border-radius:10px;}
+
+  /* STEPS */
+  .steps{counter-reset:st;list-style:none;margin-left:0 !important;}
+  .steps li{counter-increment:st;position:relative;padding:12px 14px 12px 52px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;margin-bottom:10px !important;color:#cbd5e1;}
+  .steps li::before{content:counter(st);position:absolute;left:12px;top:12px;width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#0ea5e9);color:#0a0e1a;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 0 10px rgba(0,212,255,.4);}
+  .steps li strong{color:#fff;}
+
+  /* KEY CAPS */
+  .kbd{display:inline-block;background:#0b1224;border:1px solid var(--border);border-bottom:3px solid var(--border);border-radius:6px;padding:2px 8px;font-family:'Consolas',monospace;font-size:.82rem;color:var(--accent);margin:0 2px;font-weight:600;}
+
+  /* CHIPS */
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0;}
+  .chip{background:#0b1224;border:1px solid var(--border);color:var(--muted);font-size:12px;padding:5px 11px;border-radius:16px;font-weight:600;}
+  .chip.on{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.08);}
+
+  /* ACCORDION */
+  .acc{border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;background:var(--card);}
+  .acc-btn{width:100%;text-align:left;background:transparent;border:none;color:var(--text);padding:14px 16px;font-size:.96rem;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:10px;transition:background .2s;}
+  .acc-btn:hover{background:rgba(0,212,255,.05);}
+  .acc-btn .arrow{color:var(--accent);transition:transform .3s;font-size:1.1rem;}
+  .acc.open .acc-btn .arrow{transform:rotate(90deg);}
+  .acc-body{max-height:0;overflow:hidden;transition:max-height .35s ease;padding:0 16px;}
+  .acc.open .acc-body{max-height:1200px;padding:0 16px 16px;}
+
+  /* TABS */
+  .tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+  .tab-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:9px 14px;border-radius:8px;font-size:13px;font-weight:600;transition:all .2s;}
+  .tab-btn.active{background:linear-gradient(135deg,var(--accent),#0ea5e9);color:#0a0e1a;border-color:var(--accent);}
+  .tab-pane{display:none;}
+  .tab-pane.active{display:block;animation:fadeUp .35s ease;}
+
+  /* FLOW DIAGRAM */
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0;}
+  .flow .node{background:var(--card);border:1px solid var(--accent);color:var(--accent);padding:9px 14px;border-radius:9px;font-size:13px;font-weight:700;}
+  .flow .arrow{color:var(--dim);font-size:18px;}
+
+  /* BACK TO TOP */
+  #backTop{position:fixed;right:16px;bottom:16px;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#0ea5e9);color:#0a0e1a;border:none;font-size:20px;font-weight:800;box-shadow:0 6px 20px rgba(0,212,255,.4);z-index:999;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;}
+  #backTop.show{opacity:1;pointer-events:auto;}
+  #backTop:hover{transform:translateY(-4px);}
+
+  /* FOOTER */
+  footer{background:#070b14;border-top:1px solid var(--border);padding:26px 14px;text-align:center;color:var(--muted);font-size:13px;}
+  footer p{margin:5px 0;}
+  footer .latin{color:var(--accent);font-style:italic;margin-top:12px;letter-spacing:1px;}
+
+  /* CREDITS */
+  .credits-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;text-align:center;margin-bottom:18px;}
+  .credits-box h3{color:var(--accent);font-size:1.3rem;margin-bottom:8px;}
+  .credits-box .author{font-size:1.1rem;color:#fff;font-weight:700;margin:10px 0;letter-spacing:1px;}
+  .credits-box .meta{color:var(--muted);font-size:13px;margin:5px 0;}
+  .credits-box .latin{margin-top:16px;color:var(--purple);font-style:italic;letter-spacing:1px;}
+
+  /* FUENTES */
+  .src-item{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:10px;}
+  .src-item .name{color:#fff;font-weight:700;font-size:.96rem;}
+  .src-item .desc{color:var(--muted);font-size:.86rem;margin-top:4px;}
+
+  /* RESPONSIVE */
+  @media (max-width:640px){
+    body{padding-top:104px;}
+    .nav-inner{padding:8px 10px;gap:8px;}
+    .nav-brand{font-size:12px;}
+    .nav-btn{padding:7px 10px;font-size:12px;}
+    main{padding:16px 10px 80px;}
+    .card{padding:14px;}
+    .steps li{padding:11px 12px 11px 46px;}
+    .steps li::before{width:24px;height:24px;font-size:12px;left:10px;top:11px;}
+    th,td{padding:8px 9px;font-size:.82rem;}
+    .metric .val{font-size:1.25rem;}
+    .quote{font-size:.92rem;padding:12px 14px;}
+  }
+  @media (max-width:400px){
+    .home-title{font-size:1.4rem;}
+    .nav-btn{padding:6px 9px;font-size:11px;}
+  }
+
+  /* REDUCED MOTION */
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+    svg animate,svg animateTransform,svg animateMotion{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="nav-brand"><span class="dot"></span>PSR-SX920</div>
+    <div class="nav-links" id="navLinks">
+      <button class="nav-btn active" data-target="home">🏠 Inicio</button>
+      <button class="nav-btn" data-target="apps">🧩 Aplicaciones</button>
+      <button class="nav-btn" data-target="edit">🎛️ Editar Estilo</button>
+      <button class="nav-btn" data-target="create">🎼 Crear Desde Cero</button>
+      <button class="nav-btn" data-target="midi">🎹 MIDI a Estilo</button>
+      <button class="nav-btn" data-target="fuentes">📚 Fuentes</button>
+      <button class="nav-btn" data-target="creditos">⭐ Créditos</button>
+    </div>
+  </div>
+</nav>
+
+<!-- SVG SYMBOL (shared by HOME and CRÉDITOS) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="heroSVG" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <radialGradient id="bgG" cx="50%" cy="45%" r="75%">
+        <stop offset="0%" stop-color="#132a4a">
+          <animate attributeName="stop-color" values="#132a4a;#1a1030;#0f2a3a;#132a4a" dur="9s" repeatCount="indefinite"/>
+        </stop>
+        <stop offset="60%" stop-color="#0a0e1a">
+          <animate attributeName="stop-color" values="#0a0e1a;#0f172a;#0a0e1a" dur="9s" repeatCount="indefinite"/>
+        </stop>
+        <stop offset="100%" stop-color="#070b14"/>
+      </radialGradient>
+
+      <linearGradient id="keyG" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#e2e8f0"/>
+        <stop offset="100%" stop-color="#64748b"/>
+      </linearGradient>
+
+      <filter id="gl" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+
+      <filter id="glS" x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur stdDeviation="7" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+
+      <pattern id="gridP" width="30" height="30" patternUnits="userSpaceOnUse">
+        <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#1e3a5f" stroke-width="0.8">
+          <animate attributeName="opacity" values="0.12;0.5;0.12" dur="5s" repeatCount="indefinite"/>
+        </path>
+      </pattern>
+
+      <radialGradient id="haloCyan">
+        <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.75"/>
+        <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="haloGreen">
+        <stop offset="0%" stop-color="#22c55e" stop-opacity="0.75"/>
+        <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="haloAmber">
+        <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.75"/>
+        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="haloPurple">
+        <stop offset="0%" stop-color="#a855f7" stop-opacity="0.75"/>
+        <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+      </radialGradient>
+
+      <!-- Paths for narrative motion -->
+      <path id="cFlow" d="M 130 250 Q 230 160 340 240"/>
+      <path id="fFlow" d="M 340 240 Q 430 160 520 240"/>
+      <path id="gFlow" d="M 520 240 Q 610 160 690 250"/>
+      <path id="topArc1" d="M 40 110 C 220 10 580 10 760 110"/>
+      <path id="topArc2" d="M 40 130 C 220 40 580 40 760 130"/>
+      <path id="bottomArc" d="M 60 380 C 240 440 560 440 740 380"/>
+      <path id="midArc" d="M 60 230 C 240 330 560 330 740 230"/>
+    </defs>
+
+    <!-- BACKGROUND -->
+    <rect width="800" height="450" fill="url(#bgG)"/>
+    <rect width="800" height="450" fill="url(#gridP)"/>
+
+    <!-- ORBITAL RINGS -->
+    <g transform="translate(400,225)" opacity="0.9">
+      <ellipse rx="370" ry="165" fill="none" stroke="#00d4ff" stroke-width="1" stroke-dasharray="6 18" opacity="0.35">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="40s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse rx="310" ry="135" fill="none" stroke="#a855f7" stroke-width="1" stroke-dasharray="3 15" opacity="0.32">
+        <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="28s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse rx="250" ry="105" fill="none" stroke="#22c55e" stroke-width="1" stroke-dasharray="10 20" opacity="0.28">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="20s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse rx="190" ry="80" fill="none" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4 12" opacity="0.22">
+        <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="32s" repeatCount="indefinite"/>
+      </ellipse>
+    </g>
+
+    <!-- TITLE -->
+    <text x="400" y="58" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="28" font-weight="800" letter-spacing="4" filter="url(#gl)">
+      <animate attributeName="fill" values="#00d4ff;#22c55e;#f59e0b;#a855f7;#00d4ff" dur="12s" repeatCount="indefinite"/>
+      STYLE CREATOR
+    </text>
+    <text x="400" y="86" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="12" fill="#94a3b8" letter-spacing="6">
+      YAMAHA PSR-SX920
+      <animate attributeName="opacity" values="0.45;1;0.45" dur="3.5s" repeatCount="indefinite"/>
+    </text>
+
+    <!-- LIVE INDICATOR -->
+    <g transform="translate(725,34)">
+      <circle r="5" fill="#ef4444" filter="url(#gl)">
+        <animate attributeName="r" values="4;7;4" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="12" fill="none" stroke="#ef4444" stroke-width="1">
+        <animate attributeName="r" values="8;20;8" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.7;0;0.7" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <text x="16" y="4" font-family="'Segoe UI',sans-serif" font-size="11" font-weight="800" fill="#ef4444" letter-spacing="2">LIVE</text>
+    </g>
+
+    <!-- FLOATING NOTES ACROSS TOP -->
+    <g filter="url(#gl)">
+      <g>
+        <text font-size="22" fill="#00d4ff">♪</text>
+        <animateMotion dur="6s" repeatCount="indefinite" rotate="auto">
+          <mpath href="#topArc1"/>
+        </animateMotion>
+        <animateTransform attributeName="transform" type="translate" values="0 -2;0 2;0 -2" dur="2.2s" repeatCount="indefinite" additive="sum"/>
+      </g>
+      <g>
+        <text font-size="18" fill="#22c55e">♫</text>
+        <animateMotion dur="7.5s" begin="-2s" repeatCount="indefinite" rotate="auto">
+          <mpath href="#topArc2"/>
+        </animateMotion>
+      </g>
+      <g>
+        <text font-size="16" fill="#f59e0b">♩</text>
+        <animateMotion dur="8.5s" begin="-4s" repeatCount="indefinite" rotate="auto">
+          <mpath href="#midArc"/>
+        </animateMotion>
+      </g>
+      <g>
+        <text font-size="20" fill="#a855f7">♬</text>
+        <animateMotion dur="9s" begin="-1s" repeatCount="indefinite" rotate="auto">
+          <mpath href="#bottomArc"/>
+        </animateMotion>
+      </g>
+      <g>
+        <text font-size="15" fill="#00d4ff">♪</text>
+        <animateMotion dur="6.5s" begin="-3s" repeatCount="indefinite" rotate="auto">
+          <mpath href="#topArc1"/>
+        </animateMotion>
+      </g>
+      <g>
+        <text font-size="17" fill="#22c55e">♫</text>
+        <animateMotion dur="7s" begin="-5s" repeatCount="indefinite" rotate="auto">
+          <mpath href="#bottomArc"/>
+        </animateMotion>
+      </g>
+    </g>
+
+    <!-- CHORD PROGRESSION NODES -->
+    <!-- C(I) -->
+    <g transform="translate(130,250)">
+      <circle r="30" fill="url(#haloCyan)">
+        <animate attributeName="r" values="22;34;22" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="20" fill="#0f172a" stroke="#00d4ff" stroke-width="2" filter="url(#gl)">
+        <animate attributeName="stroke-width" values="1.5;3;1.5" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <text y="7" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="18" font-weight="800" fill="#00d4ff">C</text>
+      <text y="48" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="11" fill="#64748b" letter-spacing="2">I</text>
+      <animateTransform attributeName="transform" type="translate" values="130 250;130 246;130 250" dur="3.3s" repeatCount="indefinite" additive="replace"/>
+    </g>
+
+    <!-- F(IV) -->
+    <g transform="translate(340,240)">
+      <circle r="30" fill="url(#haloGreen)">
+        <animate attributeName="r" values="22;34;22" dur="3.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="3.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="20" fill="#0f172a" stroke="#22c55e" stroke-width="2" filter="url(#gl)">
+        <animate attributeName="stroke-width" values="1.5;3;1.5" dur="2.7s" repeatCount="indefinite"/>
+      </circle>
+      <text y="7" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="18" font-weight="800" fill="#22c55e">F</text>
+      <text y="48" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="11" fill="#64748b" letter-spacing="2">IV</text>
+      <animateTransform attributeName="transform" type="translate" values="340 240;340 236;340 240" dur="2.6s" repeatCount="indefinite" additive="replace"/>
+    </g>
+
+    <!-- G(V) -->
+    <g transform="translate(520,240)">
+      <circle r="30" fill="url(#haloAmber)">
+        <animate attributeName="r" values="22;34;22" dur="4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="4s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="20" fill="#0f172a" stroke="#f59e0b" stroke-width="2" filter="url(#gl)">
+        <animate attributeName="stroke-width" values="1.5;3;1.5" dur="3.1s" repeatCount="indefinite"/>
+      </circle>
+      <text y="7" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="18" font-weight="800" fill="#f59e0b">G</text>
+      <text y="48" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="11" fill="#64748b" letter-spacing="2">V</text>
+      <animateTransform attributeName="transform" type="translate" values="520 240;520 236;520 240" dur="3.7s" repeatCount="indefinite" additive="replace"/>
+    </g>
+
+    <!-- C(I) RETURN -->
+    <g transform="translate(690,250)">
+      <circle r="30" fill="url(#haloPurple)">
+        <animate attributeName="r" values="22;34;22" dur="2.8s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="2.8s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="20" fill="#0f172a" stroke="#a855f7" stroke-width="2" filter="url(#gl)">
+        <animate attributeName="stroke-width" values="1.5;3;1.5" dur="2.3s" repeatCount="indefinite"/>
+      </circle>
+      <text y="7" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="18" font-weight="800" fill="#a855f7">C</text>
+      <text y="48" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="11" fill="#64748b" letter-spacing="2">I</text>
+      <animateTransform attributeName="transform" type="translate" values="690 250;690 245;690 250" dur="4.2s" repeatCount="indefinite" additive="replace"/>
+    </g>
+
+    <!-- FLOW PATHS WITH ANIMATED DASH -->
+    <path d="M 130 250 Q 230 160 340 240" fill="none" stroke="#00d4ff" stroke-width="2" opacity="0.7" filter="url(#gl)">
+      <animate attributeName="stroke-dasharray" values="0 220;220 0" dur="3s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 340 240 Q 430 160 520 240" fill="none" stroke="#22c55e" stroke-width="2" opacity="0.7" filter="url(#gl)">
+      <animate attributeName="stroke-dasharray" values="0 220;220 0" dur="3s" begin="-1s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 520 240 Q 610 160 690 250" fill="none" stroke="#f59e0b" stroke-width="2" opacity="0.7" filter="url(#gl)">
+      <animate attributeName="stroke-dasharray" values="0 220;220 0" dur="3s" begin="-2s" repeatCount="indefinite"/>
+    </path>
+
+    <!-- PARTICLES ALONG FLOW PATHS -->
+    <circle r="4" fill="#00d4ff" filter="url(#glS)">
+      <animateMotion dur="3s" repeatCount="indefinite"><mpath href="#cFlow"/></animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="3" fill="#00d4ff" filter="url(#glS)">
+      <animateMotion dur="3s" begin="-1.5s" repeatCount="indefinite"><mpath href="#cFlow"/></animateMotion>
+    </circle>
+    <circle r="4" fill="#22c55e" filter="url(#glS)">
+      <animateMotion dur="3s" begin="-1s" repeatCount="indefinite"><mpath href="#fFlow"/></animateMotion>
+    </circle>
+    <circle r="3" fill="#22c55e" filter="url(#glS)">
+      <animateMotion dur="3s" begin="-2.5s" repeatCount="indefinite"><mpath href="#fFlow"/></animateMotion>
+    </circle>
+    <circle r="4" fill="#f59e0b" filter="url(#glS)">
+      <animateMotion dur="3s" begin="-2s" repeatCount="indefinite"><mpath href="#gFlow"/></animateMotion>
+    </circle>
+    <circle r="3" fill="#f59e0b" filter="url(#glS)">
+      <animateMotion dur="3s" begin="-0.5s" repeatCount="indefinite"><mpath href="#gFlow"/></animateMotion>
+    </circle>
+
+    <!-- GHOST PIECE (note) traveling the full path C->F->G->C -->
+    <g opacity="0.55" filter="url(#gl)">
+      <text font-size="22" fill="#00d4ff">♩</text>
+      <animateMotion dur="9s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#midArc"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;0.7;0.7;0" dur="9s" repeatCount="indefinite"/>
+    </g>
+    <g opacity="0.5" filter="url(#gl)">
+      <text font-size="20" fill="#a855f7">♪</text>
+      <animateMotion dur="11s" begin="-4s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#topArc1"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;0.6;0.6;0" dur="11s" repeatCount="indefinite"/>
+    </g>
+
+    <!-- RADIAL PARTICLE BURSTS AT IMPACT POINTS -->
+    <g transform="translate(340,240)" stroke="#22c55e" stroke-width="1.5" filter="url(#gl)">
+      <line x1="0" y1="0" x2="0" y2="0">
+        <animate attributeName="x2" values="0;26;0" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="0;-18;0" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0;1" dur="3s" repeatCount="indefinite"/>
+      </line>
+      <line x1="0" y1="0" x2="0" y2="0">
+        <animate attributeName="x2" values="0;-24;0" dur="3s" begin="-0.7s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="0;-20;0" dur="3s" begin="-0.7s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0;1" dur="3s" begin="-0.7s" repeatCount="indefinite"/>
+      </line>
+      <line x1="0" y1="0" x2="0" y2="0">
+        <animate attributeName="x2" values="0;20;0" dur="3s" begin="-1.4s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="0;22;0" dur="3s" begin="-1.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0;1" dur="3s" begin="-1.4s" repeatCount="indefinite"/>
+      </line>
+    </g>
+    <g transform="translate(520,240)" stroke="#f59e0b" stroke-width="1.5" filter="url(#gl)">
+      <line x1="0" y1="0" x2="0" y2="0">
+        <animate attributeName="x2" values="0;24;0" dur="3.5s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="0;-22;0" dur="3.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0;1" dur="3.5s" repeatCount="indefinite"/>
+      </line>
+      <line x1="0" y1="0" x2="0" y2="0">
+        <animate attributeName="x2" values="0;-22;0" dur="3.5s" begin="-1s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="0;20;0" dur="3.5s" begin="-1s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0;1" dur="3.5s" begin="-1s" repeatCount="indefinite"/>
+      </line>
+      <line x1="0" y1="0" x2="0" y2="0">
+        <animate attributeName="x2" values="0;18;0" dur="3.5s" begin="-2s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="0;-20;0" dur="3.5s" begin="-2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0;1" dur="3.5s" begin="-2s" repeatCount="indefinite"/>
+      </line>
+    </g>
+
+    <!-- PIANO KEYBOARD AT BOTTOM -->
+    <g transform="translate(148,368)">
+      <!-- White keys -->
+      <g>
+        <rect x="0" y="0" width="36" height="62" fill="url(#keyG)" stroke="#1e3a5f" stroke-width="0.6"/>
+        <rect x="36" y="0" width="36" height="62" fill="url(#keyG)" stroke="#1e3a5f" stroke-width="0.6"/>
+        <rect x="72" y="0" width="36" height="62" fill="url(#keyG)" stroke="#1e3a5f" stroke-width="0.6"/>
+        <rect x="108" y="0" width="36" height="62" fill="url(#keyG)" stroke="#1e3a5f" stroke-width="0.6"/>
+        <rect x="144" y="0" width="36" height="62" fill="url(#keyG)" stroke="#1e3a5f" stroke-width="0.6"/>
+        <rect x="180" y="0" width="36" height="62" fill="url(#keyG)" stroke="#1e3a5f" stroke-width="0.6"/>
+        <rect x="216" y="0" width="36" height="62" fill="url(#keyG)" stroke="#1e3a5f" stroke-width="0.6"/>
+        <rect x="252" y="0" width="36" height="62" fill="url(#keyG)" stroke="#1e3a5f" stroke-width="0.6"/>
+        <rect x="288" y="0" width="36" height="62" fill="url(#keyG)" stroke="#1e3a5f" stroke-width="0.6"/>
+        <rect x="324" y="0" width="36" height="62" fill="url(#keyG)" stroke="#1e3a5f" stroke-width="0.6"/>
+        <rect x="360" y="0" width="36" height="62" fill="url(#keyG)" stroke="#1e3a5f" stroke-width="0.6"/>
+        <rect x="396" y="0" width="36" height="62" fill="url(#keyG)" stroke="#1e3a5f" stroke-width="0.6"/>
+        <rect x="432" y="0" width="36" height="62" fill="url(#keyG)" stroke="#1e3a5f" stroke-width="0.6"/>
+        <rect x="468" y="0" width="36" height="62" fill="url(#keyG)" stroke="#1e3a5f" stroke-width="0.6"/>
+      </g>
+      <!-- Black keys -->
+      <g fill="#0b1224" stroke="#1e3a5f" stroke-width="0.5">
+        <rect x="25" y="0" width="22" height="38" rx="2" fill="#0b1224">
+          <animate attributeName="fill" values="#0b1224;#00d4ff;#0b1224" dur="6s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="61" y="0" width="22" height="38" rx="2">
+          <animate attributeName="fill" values="#0b1224;#0b1224;#22c55e;#0b1224" dur="6s" begin="-1s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="133" y="0" width="22" height="38" rx="2">
+          <animate attributeName="fill" values="#0b1224;#f59e0b;#0b1224" dur="6s" begin="-2s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="169" y="0" width="22" height="38" rx="2">
+          <animate attributeName="fill" values="#0b1224;#0b1224;#a855f7;#0b1224" dur="6s" begin="-3s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="205" y="0" width="22" height="38" rx="2">
+          <animate attributeName="fill" values="#0b1224;#00d4ff;#0b1224" dur="6s" begin="-4s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="277" y="0" width="22" height="38" rx="2">
+          <animate attributeName="fill" values="#0b1224;#22c55e;#0b1224" dur="6s" begin="-5s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="313" y="0" width="22" height="38" rx="2"/>
+        <rect x="385" y="0" width="22" height="38" rx="2">
+          <animate attributeName="fill" values="#0b1224;#f59e0b;#0b1224" dur="6s" begin="-1.5s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="421" y="0" width="22" height="38" rx="2"/>
+        <rect x="457" y="0" width="22" height="38" rx="2">
+          <animate attributeName="fill" values="#0b1224;#a855f7;#0b1224" dur="6s" begin="-3.5s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+      <!-- Chord labels under keys -->
+      <text x="18" y="80" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="10" fill="#00d4ff" font-weight="700">C</text>
+      <text x="90" y="80" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="10" fill="#22c55e" font-weight="700">D</text>
+      <text x="162" y="80" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="10" fill="#f59e0b" font-weight="700">E</text>
+      <text x="234" y="80" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="10" fill="#a855f7" font-weight="700">F</text>
+      <text x="306" y="80" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="10" fill="#00d4ff" font-weight="700">G</text>
+      <text x="378" y="80" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="10" fill="#22c55e" font-weight="700">A</text>
+      <text x="450" y="80" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="10" fill="#f59e0b" font-weight="700">B</text>
+    </g>
+
+    <!-- BIG FLASH TEXT -->
+    <g transform="translate(400,200)">
+      <text text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="34" font-weight="800" letter-spacing="6" fill="#ffffff" filter="url(#glS)" opacity="0">
+        STYLE READY
+        <animate attributeName="opacity" values="0;0;1;1;0" dur="9s" repeatCount="indefinite"/>
+      </text>
+    </g>
+
+    <!-- STATUS LABELS -->
+    <text x="40" y="425" font-family="'Segoe UI',sans-serif" font-size="11" fill="#64748b" letter-spacing="2">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="4s" repeatCount="indefinite"/>
+      ◉ MIDI ENGINE ACTIVE
+    </text>
+    <text x="640" y="425" font-family="'Segoe UI',sans-serif" font-size="11" fill="#64748b" letter-spacing="2">
+      <animate attributeName="opacity" values="1;0.3;1" dur="4s" repeatCount="indefinite"/>
+      ◉ SFF · NTR/NTT
+    </text>
+
+    <!-- SIGNATURE -->
+    <text x="400" y="443" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="11" fill="#475569" letter-spacing="3">
+      RUBÉN SBARSKY
+      <animate attributeName="opacity" values="0.4;0.9;0.4" dur="5s" repeatCount="indefinite"/>
+    </text>
+  </symbol>
+</svg>
+
+<main>
+
+  <!-- ================= HOME ================= -->
+  <section id="home" class="section active">
+    <span class="home-badge">TUTORIAL PROFESIONAL · NIVEL BÁSICO A AVANZADO</span>
+
+    <!-- SVG at the very top, visible immediately -->
+    <div class="hero-svg-wrap">
+      <svg viewBox="0 0 800 450" class="hero-svg-instance" preserveAspectRatio="xMidYMid meet" aria-label="Portada animada: Style Creator PSR-SX920"><use href="#heroSVG"/></svg>
+    </div>
+
+    <h1 class="home-title">Crear y Editar Estilos en el Yamaha PSR-SX920</h1>
+    <p class="home-sub">De la idea musical al estilo de acompañamiento profesional</p>
+
+    <p class="home-desc">Crear y personalizar tus propios estilos de acompañamiento es el verdadero secreto para convertir tu teclado en una <strong>estación de producción musical (Workstation)</strong> capaz de sonar exactamente como tú deseas. En este tutorial aprenderás qué aplicaciones existen fuera y dentro del teclado y realizarás dos proyectos paso a paso: <em>cómo editar un estilo existente</em> y <em>cómo crear un estilo completamente nuevo desde cero</em>.</p>
+
+    <div class="quote">
+      Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien.
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="val">8</div><div class="lbl">Canales MIDI</div></div>
+      <div class="metric g"><div class="val">2</div><div class="lbl">Proyectos paso a paso</div></div>
+      <div class="metric a"><div class="val">6</div><div class="lbl">Pasos creación</div></div>
+      <div class="metric p"><div class="val">2</div><div class="lbl">Modos MIDI→STY</div></div>
+    </div>
+
+    <div class="datetime">
+      <span>📅 Fecha: <strong>21/09/2026</strong></span>
+      <span>⏱️ Hora: <strong>09:59:16</strong></span>
+      <span>👨‍💻 Autor: <strong>Rubén Sbarsky</strong></span>
+    </div>
+  </section>
+
+  <!-- ================= APLICACIONES ================= -->
+  <section id="apps" class="section">
+    <div class="section-head">
+      <div class="kicker">Part 1</div>
+      <h2>¿Qué aplicaciones existen para crear y editar estilos?</h2>
+      <p>Para trabajar con estilos de acompañamiento (<em>Styles</em>) en el PSR-SX920 disponemos tanto de aplicaciones externas para ordenador como del potente motor interno del propio instrumento.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">1</span>Software oficial de Yamaha para ordenador (PC / Mac)</h3>
+
+      <h4>MIDI Song to Style</h4>
+      <p>Es la aplicación oficial de Yamaha que permite convertir una canción en archivo MIDI (<span class="kbd">.mid</span>) en un estilo de acompañamiento (<span class="kbd">.sty</span>). Identifica las pistas de batería, bajo y acordes de tu secuencia MIDI y te ayuda a distribuirlas en las diferentes secciones (<em>Intros</em>, <em>Mains</em>, <em>Fills</em> y <em>Endings</em>).</p>
+
+      <h4>Audio Phraser</h4>
+      <p>Esta herramienta oficial está diseñada exclusivamente para crear <strong>Audio Styles</strong> a partir de grabaciones de audio real en formato WAV (grabadas a 44.1 kHz y 16 bits). Te permite recortar y sincronizar bucles (<em>loops</em>) de batería real para que se adapten al tempo del teclado.</p>
+
+      <h4>Yamaha Expansion Manager (YEM)</h4>
+      <p>Permite gestionar y combinar paquetes de expansión de estilos y voces. Con YEM puedes empaquetar estilos de distintas regiones del mundo y enviarlos a la memoria interna del PSR-SX920 a través de un pendrive USB.</p>
+
+      <h4>EXPANSION EXPLORER</h4>
+      <p>Aplicación de escritorio para previsualizar, explorar y organizar de forma cómoda los contenidos de los paquetes de expansión y estilos antes de cargarlos al teclado.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">2</span>Programas de terceros para PC</h3>
+      <p>Existen programas desarrollados por la comunidad de usuarios (como <em>Style Magic YA</em> o <em>EMC Style Works</em>) que abren los archivos de estilo en el ordenador para editar notas MIDI, corregir volúmenes y cambiar instrumentos desde una pantalla grande.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">3</span>La "App Interna": el motor <strong>Style Creator</strong></h3>
+      <p>El PSR-SX920 cuenta con su propia aplicación integrada a la que se accede directamente pulsando <span class="kbd">[MENU]</span> → <span class="kbd">[Style Creator]</span> en la pantalla táctil. Desde aquí puedes hacer absolutamente todo sin necesidad de una computadora.</p>
+
+      <div class="callout info"><span class="tag">INFO</span>El Style Creator permite crear un estilo completo desde el propio teclado, sin depender de software externo.</div>
+    </div>
+  </section>
+
+  <!-- ================= EDITAR ESTILO ================= -->
+  <section id="edit" class="section">
+    <div class="section-head">
+      <div class="kicker">Part 2 · Tutorial Paso a Paso 1</div>
+      <h2>Editar un estilo existente</h2>
+      <p>Editar un estilo que ya existe es la forma más rápida de obtener un ritmo personalizado. Trabajaremos en dos niveles: ajustes de mezcla y ensamblaje de patrones.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">🎚️</span>Nivel 1 — Ajustes de mezcla e instrumentos (Pantalla Mixer)</h3>
+      <p>Cada estilo de acompañamiento se compone de <strong>8 pistas o canales MIDI</strong>:</p>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Canal</th><th>Función</th><th>Ejemplos</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Rhythm 1</strong></td><td>Batería</td><td>Kits de batería</td></tr>
+            <tr><td><strong>Rhythm 2</strong></td><td>Percusiones</td><td>Percusión latina</td></tr>
+            <tr><td><strong>Bass</strong></td><td>Línea de bajo</td><td>Acoustic Bass, Synth Bass</td></tr>
+            <tr><td><strong>Chord 1</strong></td><td>Acordes de acompañamiento</td><td>Pianos, guitarras</td></tr>
+            <tr><td><strong>Chord 2</strong></td><td>Acordes de acompañamiento</td><td>Pianos, guitarras</td></tr>
+            <tr><td><strong>Pad</strong></td><td>Sonidos mantenidos</td><td>Cuerdas, sintetizadores</td></tr>
+            <tr><td><strong>Phrase 1</strong></td><td>Adornos, metales o arpegios</td><td>Frases melódicas</td></tr>
+            <tr><td><strong>Phrase 2</strong></td><td>Adornos, metales o arpegios</td><td>Frases melódicas</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:6px;font-size:.88rem;color:var(--muted);">En modelos PSR-SX920 existe además la pista <strong>Audio</strong> para estilos con baterías de audio real.</p>
+
+      <h4>Pasos</h4>
+      <ol class="steps">
+        <li><strong>Selecciona el estilo</strong> que deseas modificar desde la pantalla principal.</li>
+        <li>Pulsa el botón <span class="kbd">[MIXER/EQ]</span> del panel y ve a la pestaña <strong>Style</strong>.</li>
+        <li><strong>Silenciar o aislar pistas:</strong> toca el icono de cada canal para encenderlo o apagarlo (<strong>Mute/Solo</strong>) si quieres quitar, por ejemplo, una guitarra que recarga mucho el ritmo.</li>
+        <li><strong>Cambiar sonidos:</strong> toca el icono del instrumento debajo de una pista (por ejemplo, el canal de <strong>Bass</strong>) y selecciona una nueva voz de la biblioteca.</li>
+        <li><strong>Ajustar mezcla y efectos:</strong> modifica el volumen, la panorámica (estéreo), la ecualización individual (<strong>Part EQ</strong>) o asigna efectos de inserción (<strong>Insertion Effects 10-13</strong>) para añadir distorsión o eco a una guitarra.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">🧩</span>Nivel 2 — Ensamblar patrones de diferentes estilos (Assembly)</h3>
+      <p>Si te gusta la batería de un estilo Pop, pero prefieres el bajo de una balada y el piano de un ritmo latino, puedes combinarlos gracias a la función <strong>Assembly</strong>.</p>
+
+      <h4>Pasos</h4>
+      <ol class="steps">
+        <li>Accede al menú principal pulsando <span class="kbd">[MENU]</span> → <span class="kbd">[Style Creator]</span>.</li>
+        <li>Toca la pestaña <strong>Assembly</strong> en el margen izquierdo de la pantalla.</li>
+        <li>Verás una lista con los 8 canales del estilo actual y la fuente de donde proviene cada uno.</li>
+        <li>Toca el nombre del canal que quieras reemplazar (por ejemplo, <strong>Chd 1</strong>).</li>
+        <li>Se abrirá la pantalla de selección de estilos. Busca el estilo del que quieras tomar prestada la guitarra o el piano y selecciónalo.</li>
+        <li>¡Listo! El canal <strong>Chd 1</strong> ahora reproducirá la frase musical del estilo recién elegido manteniendo el tempo y compás de tu proyecto.</li>
+      </ol>
+
+      <div class="callout example"><span class="tag">EJEMPLO</span>Podrías combinar: batería de un estilo Pop + bajo de una balada + piano de un ritmo latino en un único estilo personalizado.</div>
+    </div>
+  </section>
+
+  <!-- ================= CREAR DESDE CERO ================= -->
+  <section id="create" class="section">
+    <div class="section-head">
+      <div class="kicker">Part 3 · Tutorial Paso a Paso 2</div>
+      <h2>Crear un estilo desde cero con Style Creator</h2>
+      <p>En este proyecto crearemos un ritmo propio desde una plantilla totalmente limpia.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">1</span>Inicializar la estructura base</h3>
+      <ol class="steps">
+        <li>Presiona <span class="kbd">[MENU]</span> → <span class="kbd">[Style Creator]</span>.</li>
+        <li>En la pestaña <strong>Basic</strong>, pulsa el botón <strong>[Initialize Style]</strong>. Esto dejará la memoria de trabajo completamente en blanco.</li>
+        <li>Selecciona la <strong>Sección</strong> que vas a programar primero (por ejemplo, <strong>Main A</strong>).</li>
+        <li>Configura el tipo de compás en <strong>Basic Time Signature</strong> (ejemplo: <strong>4/4</strong>) y la longitud del patrón en <strong>Pattern Length</strong> (ejemplo: <strong>4 compases</strong>).</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">2</span>Grabar la pista rítmica (Batería)</h3>
+      <ol class="steps">
+        <li>Toca la pestaña <strong>Rec Channel</strong> en el menú izquierdo.</li>
+        <li>Mantén presionada la casilla del canal <strong>Rhy 2</strong> hasta que cambie a <strong>color rojo</strong> (indicando que está listo para grabar).</li>
+        <li>Toca la casilla <strong>Voice</strong> para elegir el Kit de Batería que prefieras (por ejemplo, <em>Real Drums</em> o <em>PopKit</em>).</li>
+        <li>Presiona el botón <span class="kbd">STYLE CONTROL [START/STOP]</span> para iniciar el metrónomo y la grabación en bucle (<em>Overdubbing</em>).</li>
+        <li><strong>Graba por capas en cada vuelta del bucle:</strong>
+          <ul>
+            <li>En la <strong>1ª vuelta</strong>, toca el bombo en la tecla <strong>C(I)1</strong> en los tiempos 1, 2, 3 y 4.</li>
+            <li>En la <strong>2ª vuelta</strong>, añade la caja (<em>snare</em>) en la tecla <strong>D(II)1</strong> en los tiempos 2 y 4.</li>
+            <li>En la <strong>3ª vuelta</strong>, graba el plato de hi-hat cerrado en la tecla <strong>F#(IV)1</strong> marcando corcheas.</li>
+          </ul>
+        </li>
+        <li>Si cometes un error en una nota, toca el botón <strong>[Clear Drum Inst]</strong> y presiona la tecla de la nota que quieras borrar.</li>
+        <li>Pulsa <span class="kbd">[START/STOP]</span> para pausar la grabación.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">3</span>Entender la Regla de Oro SFF y grabar Bajo y Acordes</h3>
+
+      <div class="callout warn"><span class="tag">REGLA DE ORO SFF</span><strong>Style File Format:</strong> todas las pistas musicales (Bass, Chord 1, Chord 2, Pad, Phrase 1, Phrase 2) <strong>DEBEN grabarse siempre utilizando la nota tónica C(I) y la estructura de acorde C(I)M7 (Do Mayor Séptima)</strong>.</div>
+
+      <p>¿Por qué se hace así? Porque el motor inteligente <strong>NTR/NTT</strong> del teclado utiliza la tónica <strong>C(I)</strong> como punto de referencia neutral. Cuando ejecutes el estilo en vivo y toques un acorde de <strong>G(V)</strong> o de <strong>F(IV)</strong> con tu mano izquierda, el teclado transportará automáticamente todas las notas respetando los intervalos correctos.</p>
+
+      <h4>Grabar la línea de bajo (Bass)</h4>
+      <ol class="steps">
+        <li>En la pestaña <strong>Rec Channel</strong>, mantén presionada la casilla <strong>Bass</strong> hasta que se ponga de <strong>color rojo</strong>.</li>
+        <li>Toca el icono de voz y selecciona un sonido de bajo (ej. <em>Acoustic Bass</em>).</li>
+        <li>Pulsa <span class="kbd">STYLE CONTROL [START/STOP]</span> para iniciar la grabación.</li>
+        <li>Toca una línea de bajo basada estrictamente en la escala de <strong>C(I)</strong>:
+          <ul>
+            <li>Tiempo 1 → nota fundamental <strong>C(I)</strong></li>
+            <li>Tiempo 2 → quinta nota <strong>G(V)</strong></li>
+            <li>Tiempo 3 → tercera nota <strong>E(III)</strong></li>
+            <li>Tiempo 4 → vuelve a la tónica <strong>C(I)</strong></li>
+          </ul>
+        </li>
+        <li>Pulsa <span class="kbd">[START/STOP]</span> al terminar.</li>
+      </ol>
+
+      <h4>Grabar acordes de piano o guitarra (Chord 1 / Chord 2)</h4>
+      <ol class="steps">
+        <li>Selecciona el canal <strong>Chd 1</strong> poniéndolo en rojo.</li>
+        <li>Elige un sonido de Piano Eléctrico o Guitarra Acústica.</li>
+        <li>Inicia la grabación y toca el acorde <strong>C(I)M7</strong> formando las notas <strong>C(I)</strong> - <strong>E(III)</strong> - <strong>G(V)</strong> - <strong>B(VII)</strong> en el ritmo o arpegio que desees.</li>
+      </ol>
+
+      <div class="chips">
+        <span class="chip on">C(I)</span>
+        <span class="chip on">E(III)</span>
+        <span class="chip on">G(V)</span>
+        <span class="chip on">B(VII)</span>
+        <span class="chip">C(I)M7</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">4</span>Cuantizar y corregir el tiempo (Channel Edit)</h3>
+      <p>Si el ritmo grabado a tiempo real no quedó perfectamente a tiempo, el PSR-SX920 lo corrige automáticamente:</p>
+      <ol class="steps">
+        <li>Ve a la pestaña <strong>Channel Edit</strong>.</li>
+        <li>Toca el botón <strong>Quantize</strong>.</li>
+        <li>Selecciona el canal que deseas corregir (ej. <strong>Bass</strong> o <strong>Rhythm 2</strong>).</li>
+        <li>Elige el valor de subdivisión musical (por ejemplo, <strong>1/16</strong> para semicorcheas o <strong>1/8</strong> para corcheas) y toca <strong>[Execute]</strong>.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">5</span>Programar los ajustes de un solo toque (OTS)</h3>
+      <p>Para que tu nuevo estilo cargue automáticamente los mejores sonidos para tu mano derecha al seleccionarlo:</p>
+      <ol class="steps">
+        <li>Configura en el panel principal las voces para <strong>RIGHT 1</strong>, <strong>RIGHT 2</strong> y <strong>RIGHT 3</strong>.</li>
+        <li>Mantén presionado el botón <span class="kbd">[MEMORY]</span> del panel de registros y pulsa uno de los botones <span class="kbd">[ONE TOUCH SETTING]</span> (1, 2, 3 o 4).</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">6</span>Guardar el estilo (Save)</h3>
+      <div class="callout error"><span class="tag">CRUCIAL</span>Si cambias de pantalla o apagas el teclado sin guardar, <strong>perderás todo tu trabajo</strong>.</div>
+      <ol class="steps">
+        <li>En la pantalla del Style Creator, toca el icono <strong>Save</strong> (representado con un disquete/flecha hacia abajo).</li>
+        <li>Elige la pestaña <strong>User</strong> (memoria interna) o la pestaña <strong>USB</strong>.</li>
+        <li>Pulsa <strong>[Save Here]</strong>, escribe el nombre para tu ritmo (ejemplo: <em>MiRitmoPop</em>) y confirma con <strong>[OK]</strong>.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================= MIDI A ESTILO ================= -->
+  <section id="midi" class="section">
+    <div class="section-head">
+      <div class="kicker">Yamaha PSR-SX920 · MIDI Song to Style</div>
+      <h2>Convertir un archivo MIDI en un estilo de acompañamiento automático</h2>
+      <p>Convertir un archivo MIDI (<span class="kbd">.mid</span>) a un estilo (<span class="kbd">.sty</span>) te permite tomar cualquier secuencia o canción que te guste y transformar sus patrones de batería, bajo y acordes en un ritmo interactivo listo para tocar en vivo con la mano izquierda.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">✔</span>¿Qué necesitas antes de empezar?</h3>
+      <ol class="steps">
+        <li><strong>Un archivo MIDI estándar (<span class="kbd">.mid</span>)</strong> de la canción que deseas convertir.</li>
+        <li><strong>El programa oficial Yamaha "MIDI Song to Style"</strong> instalado en tu ordenador (Windows o Mac), el cual se descarga gratuitamente desde la sección de descargas del PSR-SX920.</li>
+        <li><strong>Una unidad flash USB</strong> para transferir el estilo generado a tu teclado.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">⚙️</span>Paso a paso: convertir un MIDI a Estilo</h3>
+      <p>Yamaha ofrece dos métodos dentro del programa: el <strong>Modo Fácil</strong> (rápido y automático) y el <strong>Modo Edición</strong> (para personalizar cada detalle).</p>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="metodo1">Método 1 · Modo Fácil</button>
+        <button class="tab-btn" data-tab="metodo2">Método 2 · Modo Edición</button>
+      </div>
+
+      <div class="tab-pane active" id="metodo1">
+        <h4>Modo Fácil (Conversión en 3 clics)</h4>
+        <p>Este método es ideal si buscas un resultado rápido sin complicarte editando canales.</p>
+        <ol class="steps">
+          <li><strong>Abre la aplicación "MIDI Song to Style"</strong> en tu ordenador.</li>
+          <li><strong>Arrastra y suelta</strong> tu archivo <span class="kbd">.mid</span> directamente dentro de la pantalla del programa.</li>
+          <li><strong>Conversión automática:</strong> el software analiza la estructura armónica y rítmica del MIDI y genera de forma automática:
+            <ul>
+              <li>Las variaciones principales (<strong>Main A, B, C, D</strong>).</li>
+              <li>Las introducciones (<strong>Intro</strong>) y finales (<strong>Ending</strong>).</li>
+              <li>Los remates o adornos (<strong>Fill-in</strong>).</li>
+            </ul>
+          </li>
+          <li><strong>Guarda el archivo:</strong> haz clic en guardar y exporta el archivo de estilo (<span class="kbd">.sty</span>) directamente a tu memoria USB.</li>
+        </ol>
+      </div>
+
+      <div class="tab-pane" id="metodo2">
+        <h4>Modo Edición (Control y Personalización Avanzada)</h4>
+        <p>Si quieres decidir exactamente qué compases del MIDI van a cada sección del estilo, este es el camino profesional.</p>
+        <ol class="steps">
+          <li><strong>Carga el archivo MIDI</strong> en el modo de edición de la aplicación.</li>
+          <li><strong>Selecciona las pistas (Canales):</strong>
+            <ul>
+              <li>Elige qué pistas del MIDI se asignarán a cada uno de los <strong>8 canales del estilo</strong> del PSR-SX920: <strong>Rhythm 1</strong>, <strong>Rhythm 2</strong>, <strong>Bass</strong>, <strong>Chord 1</strong>, <strong>Chord 2</strong>, <strong>Pad</strong>, <strong>Phrase 1</strong> y <strong>Phrase 2</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Define las regiones del MIDI para cada Sección:</strong>
+            <ul>
+              <li><strong>Main A / B / C / D:</strong> asigna los compases del MIDI que tienen la base rítmica principal (por ejemplo, del compás 9 al 16).</li>
+              <li><strong>Intro / Ending:</strong> especifica los compases de inicio y cierre de la canción.</li>
+              <li><strong>Fill-in:</strong> selecciona compases breves con adornos de batería o frases.</li>
+            </ul>
+          </li>
+          <li><strong>Revocaliza y Remezcla (Re-voicing &amp; Mixing):</strong>
+            <ul>
+              <li>Cambia las voces o instrumentos asignados si deseas que el bajo use un tono más moderno o los pianos suenen más brillantes.</li>
+              <li>Ajusta los niveles de volumen y panorámica de cada canal.</li>
+            </ul>
+          </li>
+          <li><strong>Exporta el Estilo:</strong> guarda el resultado final como archivo <span class="kbd">.sty</span> en tu pendrive USB.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">🎹</span>Ejemplo práctico de interpretación al piano</h3>
+      <p>Imagina que has convertido una canción en la tonalidad de <strong>C mayor</strong>. Una vez que cargas el estilo en tu teclado:</p>
+      <ol class="steps">
+        <li><strong>Activa el acompañamiento automático <span class="kbd">[ACMP]</span></strong> en el panel frontal del PSR-SX920.</li>
+        <li><strong>En la sección de acordes (mano izquierda),</strong> al tocar la nota fundamental <strong>C(I)</strong>, el estilo generado tocará el patrón rítmico en el acorde de <strong>C mayor</strong>.</li>
+        <li>Si cambias la mano izquierda a la nota <strong>F(IV)</strong>, el acompañamiento responderá cambiando armónicamente a <strong>F mayor</strong>.</li>
+        <li>Finalmente, si te desplazas a la nota <strong>G(V)</strong>, el estilo resolverá en la dominante <strong>G mayor</strong>, permitiéndote improvisar la melodía con la mano derecha mientras el estilo recién creado te acompaña perfectamente.</li>
+      </ol>
+
+      <div class="flow">
+        <span class="node">C(I)</span><span class="arrow">→</span>
+        <span class="node">F(IV)</span><span class="arrow">→</span>
+        <span class="node">G(V)</span><span class="arrow">→</span>
+        <span class="node">C(I)</span>
+      </div>
+
+      <div class="callout example"><span class="tag">EJEMPLO</span>Progresión típica de acompañamiento: <strong>C(I) → F(IV) → G(V) → C(I)</strong>. El estilo transporta automáticamente los intervalos grabados desde C(I) a cada nuevo acorde.</div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">💾</span>Cargar el estilo en tu Yamaha PSR-SX920</h3>
+      <ol class="steps">
+        <li>Conecta la memoria USB a la toma <span class="kbd">[USB TO DEVICE]</span> de tu teclado.</li>
+        <li>Presiona uno de los botones de <strong>STYLE</strong> o toca el área de estilo en la pantalla táctil para abrir la pantalla de selección.</li>
+        <li>Dirígete a la pestaña <strong>User</strong> y selecciona tu unidad <strong>USB</strong>.</li>
+        <li>Selecciona tu nuevo estilo creado desde el MIDI y presiona <span class="kbd">[SYNC START]</span>.</li>
+        <li>¡Toca un acorde con la mano izquierda y disfruta de tu propio estilo personalizado!</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================= FUENTES ================= -->
+  <section id="fuentes" class="section">
+    <div class="section-head">
+      <div class="kicker">Referencias del contenido</div>
+      <h2>Fuentes y herramientas mencionadas</h2>
+      <p>Relación de aplicaciones, programas y documentos oficiales citados en el tutorial. No se han añadido enlaces que no aparecieran explícitamente en el contenido original.</p>
+    </div>
+
+    <div class="src-item">
+      <div class="name">Yamaha · MIDI Song to Style</div>
+      <div class="desc">Aplicación oficial de Yamaha para convertir archivos MIDI (.mid) en estilos de acompañamiento (.sty). Disponible para Windows y Mac en la sección de descargas del PSR-SX920.</div>
+    </div>
+    <div class="src-item">
+      <div class="name">Yamaha · Audio Phraser</div>
+      <div class="desc">Herramienta oficial de Yamaha para crear Audio Styles a partir de grabaciones WAV (44.1 kHz, 16 bits).</div>
+    </div>
+    <div class="src-item">
+      <div class="name">Yamaha · Expansion Manager (YEM)</div>
+      <div class="desc">Aplicación oficial para gestionar y combinar paquetes de expansión de estilos y voces.</div>
+    </div>
+    <div class="src-item">
+      <div class="name">Yamaha · Expansion Explorer</div>
+      <div class="desc">Aplicación de escritorio para previsualizar, explorar y organizar paquetes de expansión y estilos.</div>
+    </div>
+    <div class="src-item">
+      <div class="name">Style Magic YA</div>
+      <div class="desc">Programa de terceros desarrollado por la comunidad de usuarios para editar archivos de estilo en ordenador.</div>
+    </div>
+    <div class="src-item">
+      <div class="name">EMC Style Works</div>
+      <div class="desc">Programa de terceros para editar notas MIDI, volúmenes e instrumentos de archivos de estilo desde ordenador.</div>
+    </div>
+    <div class="src-item">
+      <div class="name">Yamaha · Style Creator (App interna)</div>
+      <div class="desc">Motor interno del PSR-SX920 al que se accede desde [MENU] → [Style Creator]. Permite crear y editar estilos directamente en el teclado.</div>
+    </div>
+    <div class="src-item">
+      <div class="name">Formato SFF (Style File Format) · Motor NTR/NTT</div>
+      <div class="desc">Especificación armónica de Yamaha que rige la grabación de pistas musicales sobre la tónica C(I) y la estructura C(I)M7.</div>
+    </div>
+  </section>
+
+  <!-- ================= CRÉDITOS ================= -->
+  <section id="creditos" class="section">
+    <div class="section-head">
+      <div class="kicker">Créditos del tutorial</div>
+      <h2>Créditos</h2>
+    </div>
+
+    <div class="hero-svg-wrap">
+      <svg viewBox="0 0 800 450" class="hero-svg-instance" preserveAspectRatio="xMidYMid meet" aria-label="Portada animada reutilizada en créditos"><use href="#heroSVG"/></svg>
+    </div>
+
+    <div class="credits-box">
+      <h3>Crear y Editar Estilos · Yamaha PSR-SX920</h3>
+      <p class="author">Rubén Sbarsky</p>
+      <p class="meta">📅 Fecha: 21/09/2026</p>
+      <p class="meta">⏱️ Hora: 09:59:16</p>
+      <p class="meta" style="margin-top:14px;">📚 Tutorial con fines educativos y de divulgación.</p>
+      <p class="latin">Fiat iustitia, ruat caelum.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- BACK TO TOP -->
+<button id="backTop" aria-label="Volver arriba">↑</button>
+
+<!-- FOOTER -->
+<footer>
+  <p>📚 Tutorial solo con fines Educativos y Divulgación</p>
+  <p>👨‍💻 Créditos: Rubén Sbarsky</p>
+  <p>📅 FECHA: 21/09/2026</p>
+  <p>Hora: 09:59:16</p>
+  <p class="latin">Fiat iustitia, ruat caelum.</p>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============== SPA NAVIGATION ============== */
+  const navBtns = document.querySelectorAll('.nav-btn');
+  const sections = document.querySelectorAll('.section');
+
+  function showSection(id){
+    sections.forEach(s => s.classList.toggle('active', s.id === id));
+    navBtns.forEach(b => b.classList.toggle('active', b.dataset.target === id));
+    window.scrollTo({top:0, behavior:'smooth'});
+    // restart SVG animation on section change
+    document.querySelectorAll('.hero-svg-instance').forEach(svg => {
+      try { svg.setCurrentTime(0); } catch(e){}
+    });
+    updateProgress();
+  }
+
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', () => showSection(btn.dataset.target));
+  });
+
+  /* ============== PROGRESS BAR ============== */
+  const progressFill = document.getElementById('progressFill');
+  const backTop = document.getElementById('backTop');
+
+  function updateProgress(){
+    const h = document.documentElement;
+    const scrollTop = h.scrollTop || document.body.scrollTop;
+    const scrollHeight = h.scrollHeight - h.clientHeight;
+    const pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+    progressFill.style.width = pct + '%';
+    backTop.classList.toggle('show', scrollTop > 300);
+  }
+
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+
+  /* ============== BACK TO TOP ============== */
+  backTop.addEventListener('click', () => {
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  /* ============== TABS (MIDI section) ============== */
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const parent = btn.closest('.card');
+      parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      parent.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const pane = parent.querySelector('#' + btn.dataset.tab);
+      if (pane) pane.classList.add('active');
+    });
+  });
+
+  /* ============== ACCORDION ============== */
+  document.querySelectorAll('.acc-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const acc = btn.closest('.acc');
+      acc.classList.toggle('open');
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
