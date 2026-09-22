@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0e1a">
+<title>Yamaha PSR-SX920 · Registration Memory &amp; Super Articulation</title>
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --card:#0f172a;
+    --border:#1e3a5f;
+    --accent:#00d4ff;
+    --green:#22c55e;
+    --amber:#f59e0b;
+    --red:#ef4444;
+    --purple:#a855f7;
+    --text:#e2e8f0;
+    --muted:#94a3b8;
+    --dim:#64748b;
+    --radius:12px;
+    --radius-sm:8px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.6;scroll-behavior:smooth}
+  body{padding-top:64px;padding-bottom:40px;overflow-x:hidden}
+
+  /* ---------- PROGRESS BAR ---------- */
+  .progress-bar{
+    position:fixed;top:0;left:0;right:0;height:3px;
+    background:rgba(30,58,95,.4);z-index:1100;
+  }
+  .progress-bar > div{
+    height:100%;width:0%;
+    background:linear-gradient(90deg,var(--accent),var(--purple),var(--green));
+    transition:width .15s linear;
+    box-shadow:0 0 10px rgba(0,212,255,.6);
+  }
+
+  /* ---------- NAVBAR ---------- */
+  .navbar{
+    position:fixed;top:3px;left:0;right:0;height:61px;
+    background:rgba(10,14,26,.92);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+    z-index:1000;
+    display:flex;align-items:center;gap:10px;
+    padding:0 14px;
+  }
+  .nav-brand{
+    font-weight:700;font-size:14px;letter-spacing:.5px;
+    color:var(--accent);
+    white-space:nowrap;
+    padding:6px 12px;
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    background:rgba(0,212,255,.06);
+    flex-shrink:0;
+  }
+  .nav-brand span{color:var(--muted);font-weight:400;font-size:11px;display:block;line-height:1}
+  .nav-scroll{
+    display:flex;gap:6px;overflow-x:auto;
+    scrollbar-width:none;-ms-overflow-style:none;
+    flex:1;
+    padding:4px 0;
+  }
+  .nav-scroll::-webkit-scrollbar{display:none}
+  .nav-btn{
+    background:transparent;
+    color:var(--muted);
+    border:1px solid transparent;
+    padding:8px 14px;
+    border-radius:var(--radius-sm);
+    font-size:13px;font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:all .2s ease;
+    font-family:inherit;
+  }
+  .nav-btn:hover{color:var(--text);background:rgba(30,58,95,.4)}
+  .nav-btn.active{
+    color:var(--accent);
+    background:rgba(0,212,255,.1);
+    border-color:rgba(0,212,255,.4);
+    box-shadow:0 0 12px rgba(0,212,255,.15);
+  }
+  .nav-btn.credits{color:var(--amber);border-color:rgba(245,158,11,.3)}
+  .nav-btn.credits.active{color:var(--amber);background:rgba(245,158,11,.12);border-color:var(--amber)}
+
+  /* ---------- SECTIONS ---------- */
+  .section{
+    display:none;
+    max-width:1100px;
+    margin:0 auto;
+    padding:26px 16px 60px;
+    animation:fadeIn .45s ease;
+  }
+  .section.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* ---------- HOME ---------- */
+  .home-hero{
+    display:flex;flex-direction:column;gap:18px;
+  }
+  .badge-top{
+    display:inline-flex;align-items:center;gap:8px;
+    align-self:flex-start;
+    background:rgba(0,212,255,.08);
+    border:1px solid rgba(0,212,255,.35);
+    color:var(--accent);
+    font-size:12px;font-weight:700;letter-spacing:1px;
+    padding:6px 14px;border-radius:99px;
+    text-transform:uppercase;
+  }
+  .badge-top::before{
+    content:"";width:8px;height:8px;border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 10px var(--accent);
+    animation:pulseDot 1.6s infinite;
+  }
+  @keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.35}}
+  .home-title{
+    font-size:clamp(26px,5vw,44px);
+    line-height:1.15;
+    font-weight:800;
+    letter-spacing:-.5px;
+    background:linear-gradient(120deg,#ffffff 0%,#00d4ff 45%,#a855f7 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .home-sub{
+    font-size:clamp(14px,2.4vw,18px);
+    color:var(--muted);
+    font-weight:400;
+  }
+  .home-desc{
+    font-size:15px;color:#cbd5e1;
+    max-width:820px;
+  }
+  .quote-box{
+    background:linear-gradient(135deg,rgba(0,212,255,.08),rgba(168,85,247,.06));
+    border-left:3px solid var(--accent);
+    border-radius:var(--radius-sm);
+    padding:14px 18px;
+    font-style:italic;
+    color:#e2e8f0;
+    font-size:15px;
+  }
+  .quote-box::before{content:"“";color:var(--accent);font-size:26px;line-height:0;position:relative;top:8px;margin-right:4px}
+  .quote-box::after{content:"”";color:var(--accent);font-size:26px;line-height:0;position:relative;top:12px;margin-left:4px}
+
+  .metrics{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:10px;
+    margin-top:6px;
+  }
+  .metric{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:12px 14px;
+    text-align:center;
+  }
+  .metric b{display:block;font-size:22px;color:var(--accent);font-weight:800;line-height:1.1}
+  .metric span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+
+  .home-meta{
+    display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;
+  }
+  .chip{
+    display:inline-flex;align-items:center;gap:6px;
+    background:rgba(30,58,95,.5);
+    border:1px solid var(--border);
+    color:#cbd5e1;
+    font-size:12px;font-weight:600;
+    padding:5px 12px;border-radius:99px;
+  }
+  .chip.cyan{color:var(--accent);border-color:rgba(0,212,255,.4)}
+  .chip.amber{color:var(--amber);border-color:rgba(245,158,11,.4)}
+  .chip.green{color:var(--green);border-color:rgba(34,197,94,.4)}
+  .chip.purple{color:var(--purple);border-color:rgba(168,85,247,.4)}
+
+  /* SVG holder */
+  .svg-holder{
+    width:100%;
+    border-radius:var(--radius);
+    overflow:hidden;
+    border:1px solid var(--border);
+    background:#070b14;
+    box-shadow:0 0 40px rgba(0,212,255,.08), inset 0 0 30px rgba(0,0,0,.6);
+    margin-bottom:6px;
+  }
+  .svg-holder svg{display:block;width:100%;height:auto;aspect-ratio:16/9}
+
+  /* ---------- SECTION HEADERS ---------- */
+  .sec-head{
+    display:flex;align-items:center;gap:14px;
+    padding:18px 0 12px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:20px;
+  }
+  .sec-icon{
+    width:48px;height:48px;
+    border-radius:var(--radius-sm);
+    background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(168,85,247,.1));
+    border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;
+    font-size:24px;flex-shrink:0;
+  }
+  .sec-head h2{
+    font-size:clamp(20px,3.4vw,28px);
+    font-weight:800;letter-spacing:-.3px;
+  }
+  .sec-head p{font-size:13px;color:var(--muted);margin-top:2px}
+
+  /* ---------- CARDS ---------- */
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px 18px;
+    margin-bottom:16px;
+  }
+  .card h3{
+    font-size:17px;font-weight:700;
+    color:#fff;margin-bottom:8px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .card h3 .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--accent);box-shadow:0 0 8px var(--accent);
+    flex-shrink:0;
+  }
+  .card p{margin:8px 0;color:#cbd5e1;font-size:15px}
+  .card ul,.card ol{margin:8px 0 8px 20px;color:#cbd5e1}
+  .card li{margin:5px 0;font-size:15px}
+  .card strong{color:#fff}
+
+  .grid-2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  @media(max-width:680px){.grid-2{grid-template-columns:1fr}}
+
+  /* Callouts */
+  .callout{
+    display:flex;gap:12px;
+    padding:12px 14px;
+    border-radius:var(--radius-sm);
+    border-left:3px solid;
+    margin:12px 0;
+    font-size:14px;
+    align-items:flex-start;
+  }
+  .callout .co-icon{font-size:18px;line-height:1;flex-shrink:0;margin-top:1px}
+  .callout.info{background:rgba(0,212,255,.07);border-color:var(--accent);color:#bae6fd}
+  .callout.example{background:rgba(34,197,94,.07);border-color:var(--green);color:#bbf7d0}
+  .callout.warn{background:rgba(245,158,11,.08);border-color:var(--amber);color:#fde68a}
+  .callout.error{background:rgba(239,68,68,.08);border-color:var(--red);color:#fecaca}
+
+  /* Steps */
+  .steps{list-style:none;counter-reset:st;margin:10px 0 !important;padding:0 !important}
+  .steps > li{
+    counter-increment:st;
+    position:relative;
+    padding:12px 14px 12px 52px;
+    background:rgba(15,23,42,.7);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    margin-bottom:10px;
+    font-size:14.5px;
+  }
+  .steps > li::before{
+    content:counter(st);
+    position:absolute;left:12px;top:12px;
+    width:28px;height:28px;border-radius:8px;
+    background:linear-gradient(135deg,var(--accent),#0284c7);
+    color:#001018;font-weight:800;font-size:13px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 12px rgba(0,212,255,.35);
+  }
+  .steps > li b{color:#fff}
+
+  /* LED sim */
+  .leds{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+  .led{
+    display:flex;align-items:center;gap:8px;
+    padding:8px 12px;border-radius:8px;
+    background:rgba(15,23,42,.8);border:1px solid var(--border);
+    font-size:13px;color:#cbd5e1;
+  }
+  .led .b{
+    width:14px;height:14px;border-radius:50%;
+    box-shadow:0 0 10px currentColor;
+  }
+  .led.orange{color:#f59e0b}.led.orange .b{background:#f59e0b}
+  .led.blue{color:#00d4ff}.led.blue .b{background:#00d4ff}
+  .led.off{color:#475569}.led.off .b{background:#1e293b;box-shadow:none}
+
+  /* Buttons row */
+  .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+  .kbtn{
+    display:inline-flex;align-items:center;gap:6px;
+    background:linear-gradient(180deg,#16233d,#0f172a);
+    border:1px solid var(--border);
+    color:var(--text);
+    font-family:inherit;font-size:13px;font-weight:700;
+    padding:8px 12px;border-radius:8px;
+    cursor:default;
+  }
+  .kbtn .num{
+    width:22px;height:22px;border-radius:6px;
+    background:rgba(0,212,255,.15);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;font-size:12px;
+  }
+
+  /* Tables */
+  table{
+    width:100%;border-collapse:collapse;margin:12px 0;
+    font-size:14px;border-radius:var(--radius-sm);overflow:hidden;
+  }
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+  th{background:rgba(0,212,255,.08);color:var(--accent);font-size:12px;text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+  td{color:#cbd5e1;background:rgba(15,23,42,.5)}
+  tr:last-child td{border-bottom:none}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:var(--radius-sm);margin:12px 0}
+  .table-wrap table{margin:0}
+
+  /* Keyboard visual (HTML) */
+  .mini-kb{
+    display:flex;justify-content:center;position:relative;
+    margin:16px auto;user-select:none;padding:8px;
+    background:linear-gradient(180deg,#0a1220,#05080f);
+    border:1px solid var(--border);border-radius:8px;max-width:100%;overflow-x:auto;
+  }
+  .mini-kb-inner{display:flex;position:relative;height:80px;min-width:420px}
+  .wk{
+    width:28px;height:80px;background:linear-gradient(180deg,#f1f5f9,#cbd5e1);
+    border:1px solid #64748b;border-right:none;border-radius:0 0 4px 4px;
+    display:flex;align-items:flex-end;justify-content:center;
+    color:#334155;font-size:9px;font-weight:700;padding-bottom:4px;
+  }
+  .wk:last-child{border-right:1px solid #64748b}
+  .bk{
+    position:absolute;top:0;width:18px;height:48px;
+    background:linear-gradient(180deg,#1e293b,#020617);
+    border:1px solid #020617;border-radius:0 0 3px 3px;
+    z-index:2;
+  }
+  @media(max-width:520px){
+    .mini-kb-inner{min-width:340px}
+    .wk{width:22px;height:70px}
+    .bk{width:14px;height:42px}
+  }
+
+  /* Notes nomenclatura */
+  .note-chip{
+    display:inline-flex;align-items:center;gap:6px;
+    background:rgba(168,85,247,.12);
+    border:1px solid rgba(168,85,247,.4);
+    color:#e9d5ff;
+    padding:3px 10px;border-radius:99px;
+    font-size:13px;font-weight:700;
+    font-family:'Consolas',monospace;
+  }
+
+  /* Accordion */
+  .acc{border:1px solid var(--border);border-radius:var(--radius-sm);margin:10px 0;overflow:hidden;background:var(--card)}
+  .acc-head{
+    background:rgba(30,58,95,.35);
+    padding:12px 14px;font-weight:700;font-size:14px;color:#fff;
+    cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+    user-select:none;transition:background .2s;
+  }
+  .acc-head:hover{background:rgba(0,212,255,.12)}
+  .acc-head .arrow{color:var(--accent);transition:transform .25s}
+  .acc.open .acc-head .arrow{transform:rotate(90deg)}
+  .acc-body{
+    max-height:0;overflow:hidden;
+    transition:max-height .35s ease;
+    padding:0 14px;
+    color:#cbd5e1;font-size:14.5px;
+  }
+  .acc.open .acc-body{max-height:1200px;padding:12px 14px 16px}
+
+  /* Tabs */
+  .tabs{display:flex;gap:6px;border-bottom:1px solid var(--border);margin:12px 0;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab-btn{
+    background:transparent;border:none;color:var(--muted);
+    font-family:inherit;font-size:13px;font-weight:700;
+    padding:10px 14px;cursor:pointer;
+    border-bottom:2px solid transparent;white-space:nowrap;
+  }
+  .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .tab-panel{display:none;padding:8px 0}
+  .tab-panel.active{display:block;animation:fadeIn .3s ease}
+
+  /* Back to top */
+  #backTop{
+    position:fixed;right:16px;bottom:16px;
+    width:44px;height:44px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),#0284c7);
+    color:#001018;font-weight:900;font-size:20px;
+    border:none;cursor:pointer;
+    box-shadow:0 6px 18px rgba(0,212,255,.35);
+    display:none;align-items:center;justify-content:center;
+    z-index:900;transition:transform .2s;
+  }
+  #backTop:hover{transform:translateY(-3px)}
+  #backTop.show{display:flex}
+
+  /* Footer */
+  footer{
+    max-width:1100px;margin:30px auto 0;padding:22px 16px;
+    border-top:1px solid var(--border);
+    text-align:center;font-size:13px;color:var(--muted);
+  }
+  footer div{margin:4px 0}
+  footer .fiat{color:var(--amber);font-style:italic;margin-top:10px;font-size:14px}
+
+  /* Credits box */
+  .credit-box{
+    background:linear-gradient(135deg,rgba(0,212,255,.08),rgba(168,85,247,.08));
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:24px 18px;text-align:center;
+    margin:16px 0;
+  }
+  .credit-box h3{font-size:24px;font-weight:800;color:#fff;margin-bottom:14px}
+  .credit-row{
+    display:flex;flex-wrap:wrap;justify-content:center;gap:10px;
+    margin:10px 0;
+  }
+  .credit-row .chip{font-size:13px}
+
+  /* Fuentes */
+  .src-list{list-style:none;padding:0;margin:0}
+  .src-list li{
+    display:flex;gap:12px;align-items:flex-start;
+    padding:12px 14px;
+    background:rgba(15,23,42,.7);
+    border:1px solid var(--border);
+    border-left:3px solid var(--accent);
+    border-radius:var(--radius-sm);
+    margin-bottom:10px;font-size:14px;
+  }
+  .src-list li .src-num{
+    flex-shrink:0;width:26px;height:26px;border-radius:6px;
+    background:rgba(0,212,255,.15);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:12px;
+  }
+
+  /* Small screens */
+  @media(max-width:520px){
+    body{padding-top:60px}
+    .navbar{height:57px;top:3px;padding:0 8px}
+    .nav-brand{font-size:12px;padding:5px 8px}
+    .nav-btn{padding:7px 10px;font-size:12px}
+    .section{padding:18px 12px 50px}
+    .sec-head{padding:14px 0 10px;gap:10px}
+    .sec-icon{width:40px;height:40px;font-size:20px}
+    .card{padding:14px}
+    table{font-size:13px}
+    th,td{padding:8px 9px}
+    .credit-box h3{font-size:19px}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+    svg *{animation-play-state:paused !important}
+  }
+</style>
+</head>
+<body>
+
+<!-- Progress -->
+<div class="progress-bar" aria-hidden="true"><div id="progressFill"></div></div>
+
+<!-- Navbar -->
+<nav class="navbar" aria-label="Navegación principal">
+  <div class="nav-brand">PSR-SX920<span>Yamaha</span></div>
+  <div class="nav-scroll" id="navScroll">
+    <button class="nav-btn active" data-target="home">Inicio</button>
+    <button class="nav-btn" data-target="intro">Regist Memory</button>
+    <button class="nav-btn" data-target="prog">Programación</button>
+    <button class="nav-btn" data-target="save">Guardar *.rgt</button>
+    <button class="nav-btn" data-target="adv">Avanzado</button>
+    <button class="nav-btn" data-target="sart">S.Art</button>
+    <button class="nav-btn" data-target="sartprog">S.Art en Regist</button>
+    <button class="nav-btn" data-target="tips">Consejos</button>
+    <button class="nav-btn" data-target="fuentes">Fuentes</button>
+    <button class="nav-btn credits" data-target="creditos">Créditos</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ======================= HOME ======================= -->
+<section id="home" class="section active">
+  <div class="home-hero">
+
+    <!-- SVG ANIMADO (inyectado por JS) -->
+    <div id="svgHome" class="svg-holder" aria-label="Portada animada del tutorial"></div>
+
+    <span class="badge-top">Tutorial Profesional · Nivel Escenario</span>
+
+    <h1 class="home-title">Registration Memory &amp; Super Articulation en el Yamaha PSR-SX920</h1>
+
+    <p class="home-sub">De aficionado a controlar tu teclado como un verdadero profesional en el escenario o en el estudio.</p>
+
+    <p class="home-desc">
+      Este tutorial reúne, paso a paso y sin perder ningún detalle del material original, las dos funciones más poderosas y fundamentales del Yamaha PSR-SX920: la <strong style="color:var(--accent)">Programación de Memorias de Registro (Registration Memory)</strong> y las voces <strong style="color:var(--amber)">Super Articulation (S.Art, S.Art+ y S.Art2)</strong>. Aprenderás a congelar cualquier ajuste del panel, cambiar de timbres, ritmos, volúmenes y efectos al instante, y a expresar tus interpretaciones con el nivel más alto de realismo sonoro del teclado.
+    </p>
+
+    <div class="quote-box">Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien.</div>
+
+    <div class="metrics">
+      <div class="metric"><b>8</b><span>Botones de registro</span></div>
+      <div class="metric"><b>∞</b><span>Bancos *.rgt</span></div>
+      <div class="metric"><b>3</b><span>Niveles S.Art</span></div>
+      <div class="metric"><b>2.500</b><span>Canciones en Playlist</span></div>
+    </div>
+
+    <div class="home-meta">
+      <span class="chip cyan">📅 21/09/2026</span>
+      <span class="chip amber">🕐 09:59:16</span>
+      <span class="chip green">👨‍💻 Rubén Sbarsky</span>
+      <span class="chip purple">🎹 PSR-SX920</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======================= INTRO ======================= -->
+<section id="intro" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">🎛️</div>
+    <div>
+      <h2>La Memoria de Registros</h2>
+      <p>Qué es, cómo se organiza y el código de colores de los LEDs</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot"></span>¿Qué es la Memoria de Registros?</h3>
+    <p>La <strong>Registration Memory</strong> te permite congelar o "fotografiar" prácticamente cualquier ajuste que tengas en el panel de tu <strong>Yamaha PSR-SX920</strong> —voces activas, estilo de acompañamiento, tempo, transposición, efectos, asignación de pedales, etc.— y guardarlo en uno de los <strong>8 botones numerados</strong> del panel.</p>
+    <p>Si quieres pasar de tocar como un aficionado a controlar tu teclado como un verdadero profesional en el escenario o en el estudio, este concepto es tu mejor aliado. Te permitirá cambiar de timbres, ritmos, volúmenes y efectos al instante, sin pausas incómodas entre estrofas o canciones.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="dot"></span>Botón de Registro</h3>
+      <p>Guarda una configuración específica del panel para un momento determinado de tu interpretación. Cada uno de los <strong>8 botones numerados</strong> puede almacenar una "fotografía" del estado del instrumento.</p>
+    </div>
+    <div class="card">
+      <h3><span class="dot"></span>Banco de Registros (Regist Bank)</h3>
+      <p>Es el archivo general que reúne y guarda el conjunto de los 8 botones. Puedes crear <strong>ilimitados bancos</strong> de registros (por ejemplo, un archivo llamado <em>"Boleros_Medley"</em> o el nombre de una canción específica).</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot"></span>El código de colores de los botones</h3>
+    <p>Fíjate siempre en las luces LED de los botones físicos:</p>
+    <div class="leds">
+      <div class="led orange"><span class="b"></span> Naranja → guardado y <strong>seleccionado / activo</strong></div>
+      <div class="led blue"><span class="b"></span> Azul → guardado pero <strong>no seleccionado</strong></div>
+      <div class="led off"><span class="b"></span> Apagado → botón <strong>vacío</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PROGRAMACIÓN ======================= -->
+<section id="prog" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">🧩</div>
+    <div>
+      <h2>Programación de un Banco de Memoria</h2>
+      <p>Tutorial paso a paso — del ajuste inicial hasta los botones siguientes</p>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <span class="co-icon">🎯</span>
+    <div><strong>Escenario del ejercicio:</strong> vamos a preparar una canción en la tonalidad de <strong>C (I) Mayor</strong>, cuya secuencia tónica–dominante utiliza los acordes <span class="note-chip">C(I)</span> y <span class="note-chip">G(V)</span>. Queremos que el primer botón active una introducción suave con piano y otro botón active una sección con metales y ritmo potente.</div>
+  </div>
+
+  <ol class="steps">
+    <li>
+      <b>Paso 1 — Configura el panel para tu primer sonido</b><br>
+      Ajusta manualmente en la pantalla táctil y botones del teclado todo lo que deseas para la primera parte:
+      <ul style="margin-top:6px">
+        <li>Selecciona la voz principal, por ejemplo en <strong>RIGHT 1</strong>, un sonido de Piano.</li>
+        <li>Elige el estilo de acompañamiento y el tempo inicial.</li>
+        <li>Configura la transposición o el volumen de las partes en el <em>Mixer</em> si lo deseas.</li>
+      </ul>
+    </li>
+    <li>
+      <b>Paso 2 — Presiona la tecla [MEMORY]</b><br>
+      En la sección <strong>REGISTRATION MEMORY</strong> del panel, presiona <strong>una sola vez</strong> el botón <strong>[MEMORY]</strong>. En la pantalla táctil se abrirá inmediatamente la ventana emergente <strong>Registration Memory</strong>.
+    </li>
+    <li>
+      <b>Paso 3 — Selecciona qué elementos deseas memorizar (Checkboxes)</b><br>
+      En la pantalla verás una lista de casillas de verificación:
+      <ul style="margin-top:6px">
+        <li><strong>Voice, Style, Tempo, Transpose, Multi Pad, Chord Looper, Live Control, Assignable Buttons, Foot Pedals, etc.</strong></li>
+      </ul>
+      Marca únicamente los elementos que quieras que se guarden en ese botón. Por norma general, mantén marcados <strong>Voice</strong>, <strong>Style</strong>, <strong>Tempo</strong> y <strong>Transpose</strong>.
+    </li>
+    <li>
+      <b>Paso 4 — Asigna el botón deseado</b><br>
+      Mientras la ventana de memoria está abierta, presiona el botón físico deseado en la sección <strong>REGISTRATION MEMORY</strong>. El botón se iluminará en color <strong style="color:var(--amber)">naranja</strong>, confirmando que los ajustes del panel han quedado guardados ahí.
+    </li>
+    <li>
+      <b>Paso 5 — Programa los siguientes botones</b><br>
+      Ahora cambia los ajustes del panel para la siguiente sección de la canción (por ejemplo, activa <strong>RIGHT 2</strong> con cuerdas, cambia la variación del estilo de <em>Intro A</em> a <em>Main C</em>, etc.). Vuelve a presionar <strong>[MEMORY]</strong>, presiona el siguiente botón. Ahora ese botón pasará a <strong style="color:var(--accent)">azul</strong> y el anterior permanecerá en <strong style="color:var(--amber)">naranja</strong>. Repite el proceso con los botones que necesites.
+    </li>
+  </ol>
+
+  <div class="callout example">
+    <span class="co-icon">💡</span>
+    <div><strong>Ejemplo:</strong> una balada en <span class="note-chip">C(I)</span> Mayor puede tener el <strong>botón 1</strong> con Piano solo, el <strong>botón 2</strong> con Piano + Cuerdas, el <strong>botón 3</strong> con Metales + estilo Main C y el <strong>botón 4</strong> con órgano de cierre. Todo cambia al instante con un solo toque.</div>
+  </div>
+
+  <div class="callout warn">
+    <span class="co-icon">⚠️</span>
+    <div><strong>Recuerda:</strong> la memoria del panel es <em>temporal</em>. Si apagas el teclado o cambias de banco sin guardar el archivo, perderás toda la programación.</div>
+  </div>
+</section>
+
+<!-- ======================= GUARDAR ======================= -->
+<section id="save" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">💾</div>
+    <div>
+      <h2>¡Paso Fundamental! Guardar el Banco en Archivo (*.rgt)</h2>
+      <p>Sin este paso, todo se pierde al apagar el teclado</p>
+    </div>
+  </div>
+
+  <div class="callout error">
+    <span class="co-icon">🚨</span>
+    <div><strong>Atención:</strong> si apagas el teclado o cambias de banco sin realizar este paso, <strong>perderás la programación</strong> que acabas de hacer.</div>
+  </div>
+
+  <ol class="steps">
+    <li>
+      <b>Paso 1</b> — Presiona simultáneamente los botones <strong>REGIST BANK [−] y [+]</strong> del panel para abrir la pantalla de selección de banco de registros (<strong>Regist Bank</strong>).
+    </li>
+    <li>
+      <b>Paso 2</b> — Toca el icono <strong>File Edit</strong> (o el botón de guardar) en la pantalla táctil.
+    </li>
+    <li>
+      <b>Paso 3</b> — Presiona <strong>[Save]</strong> (Guardar).
+    </li>
+    <li>
+      <b>Paso 4</b> — Selecciona el destino donde deseas almacenarlo:
+      <ul style="margin-top:6px">
+        <li>la memoria interna del teclado (<strong>User</strong>), o</li>
+        <li>tu memoria <strong>USB1</strong>.</li>
+      </ul>
+    </li>
+    <li>
+      <b>Paso 5</b> — Toca <strong>[Save here]</strong>, asigna un nombre claro a tu archivo (ejemplo: <em>"Cancion_C_Mayor"</em>) y confirma tocando <strong>[OK]</strong>.
+    </li>
+  </ol>
+
+  <div class="callout example">
+    <span class="co-icon">✅</span>
+    <div><strong>Buenas prácticas de nombre:</strong> usa el nombre de la canción o del repertorio (<em>"Boleros_Medley"</em>, <em>"Cancion_C_Mayor"</em>, <em>"Solo_Saxo_SArt2"</em>). Así podrás recuperarlo en segundos desde la pantalla de <em>Regist Bank</em>.</div>
+  </div>
+</section>
+
+<!-- ======================= AVANZADO ======================= -->
+<section id="adv" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">⚙️</div>
+    <div>
+      <h2>Funciones Avanzadas de Nivel Profesional</h2>
+      <p>Freeze, Sequence, Bank Info / Edit y Playlist</p>
+    </div>
+  </div>
+
+  <div class="acc open">
+    <div class="acc-head">❄️ 1. Registration Freeze (Bloqueo de Registro)<span class="arrow">▶</span></div>
+    <div class="acc-body">
+      <p>¿Qué ocurre si estás tocando en vivo con un ritmo en marcha y quieres cambiar la voz de la mano derecha presionando la memoria, pero <strong>NO</strong> quieres que cambie el estilo ni el tempo que está sonando?</p>
+      <ul>
+        <li>Accede al menú <strong>[MENU] → [Regist Freeze]</strong> o pulsa el botón físico <strong>[FREEZE]</strong>.</li>
+        <li>Marca con un cheque la casilla <strong>Style</strong> y/o <strong>Tempo</strong> y activa la función en <strong>On</strong>.</li>
+        <li>A partir de ese momento, al presionar cualquier botón de registro, el teclado cambiará las voces pero mantendrá "congelado" el ritmo y el tempo actual.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="acc">
+    <div class="acc-head">🔁 2. Registration Sequence (Secuencia de Registros)<span class="arrow">▶</span></div>
+    <div class="acc-body">
+      <p>Si estás interpretando una pieza compleja y no puedes despegar la mano derecha para presionar los botones, puedes programar una secuencia para cambiar de memoria usando un <strong>pedal de pie</strong> o un botón asignable.</p>
+      <ol>
+        <li>Dirígete a <strong>[MENU] → [Regist Sequence]</strong>.</li>
+        <li>Establece el orden en el que quieres que se ejecuten las memorias (por ejemplo: <code>1 → 2 → 3 → 4</code>) usando el botón <strong>[Insert]</strong>.</li>
+        <li>En <strong>Pedal Control</strong>, asigna tu pedal conectado a <strong>Regist +</strong> para avanzar en la secuencia paso a paso mientras ejecutas tus notas en el teclado.</li>
+        <li>Activa la secuencia poniendo <strong>Sequence</strong> en <strong>On</strong> y guarda el archivo de banco.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="acc">
+    <div class="acc-head">📋 3. Regist Bank Info y Regist Bank Edit<span class="arrow">▶</span></div>
+    <div class="acc-body">
+      <ul>
+        <li><strong>Regist Bank Info:</strong> si deseas consultar qué voces de la escala (por ejemplo, si usas la nota guía <span class="note-chip">E(III)</span> o <span class="note-chip">G(V)</span>) o qué estilos hay programados en cada botón antes de tocar, entra a <strong>[MENU] → [Regist Bank Info]</strong>.</li>
+        <li><strong>Regist Bank Edit:</strong> te permite renombrar individualmente cada botón (ejemplo: cambiar <em>"New Regist 1"</em> por <em>"Intro Piano"</em>) o borrar memorias específicas dentro del banco.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="acc">
+    <div class="acc-head">🎼 4. Integración con Playlist (Lista de Reproducción)<span class="arrow">▶</span></div>
+    <div class="acc-body">
+      <p>Puedes vincular tus archivos de banco de registro directamente a la <strong>Playlist</strong> de tu PSR-SX920. Esto te permite organizar un repertorio de directo de hasta <strong>2.500 canciones</strong> en el orden de tu actuación.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= S.ART ======================= -->
+<section id="sart" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">🎷</div>
+    <div>
+      <h2>Voces Super Articulation</h2>
+      <p>S.Art · S.Art+ · S.Art2 (exclusiva del PSR-SX920)</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot"></span>El nivel más alto de expresividad</h3>
+    <p>Las voces <strong>Super Articulation</strong> (<strong>S.Art</strong>, <strong>S.Art+</strong> y la exclusiva del PSR-SX920, <strong>S.Art2</strong>) representan el nivel más alto de expresividad en este teclado. Te permiten lograr que una guitarra acústica reproduzca el ruido del traste al deslizar los dedos, que un saxofón escuche el aire o el sonido físico de las llaves, o que una sección de cuerdas cambie en tiempo real a técnicas de <em>pizzicato</em> o <em>spiccato</em>.</p>
+    <p>Para aprovechar al máximo estas voces dentro de tus <strong>Memorias de Registro</strong> y tener todo listo al presionar un solo botón durante una actuación, es vital entender cómo funcionan y cómo guardar sus controladores asignados.</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot"></span>1. Entendiendo los tipos de voces Super Articulation</h3>
+    <p>El PSR-SX920 reacciona a tu manera de tocar de dos formas: <strong>automática</strong> (según la pulsación y la ligadura) y <strong>manual</strong> (mediante botones, joystick o pedales):</p>
+
+    <div class="acc open">
+      <div class="acc-head">🎸 Voces S.Art (Super Articulation)<span class="arrow">▶</span></div>
+      <div class="acc-body">
+        <p>Reaccionan automáticamente según si tocas de forma <em>staccato</em> o <em>legato</em>. Por ejemplo, en una voz de saxofón, si tocas dos notas en legato pasando de la nota <span class="note-chip">C(I)</span> a la nota <span class="note-chip">D(II)</span>, escucharás una transición limpia y continua como si el músico lo tocara de un solo aliento. En la voz <em>Concert Guitar</em>, si ligas la nota <span class="note-chip">C(I)</span> con la nota <span class="note-chip">E(III)</span> superior, el teclado generará un deslizamiento (<em>slide</em>) realista entre ambas notas.</p>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">🎻 Voces S.Art+ (Super Articulation Plus)<span class="arrow">▶</span></div>
+      <div class="acc-body">
+        <p>Te permiten ejecutar múltiples articulaciones dentro de una misma voz sin necesidad de cambiar de sonido. Por ejemplo, en una voz de cuerdas (<em>Strings</em>), el legato cambia el movimiento del arco, mover el joystick hacia arriba activa el <em>trémolo</em>, y presionar los botones de articulación cambia el sonido a <em>spiccato</em> o <em>pizzicato</em>.</p>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head">🎺 Voces S.Art2 (Super Articulation 2)<span class="arrow">▶</span></div>
+      <div class="acc-body">
+        <p>Utilizan la tecnología de modelado <strong>AEM</strong> (<em>Articulation Element Modeling</em>). Permiten recrear matices complejos como <em>glissandos</em> naturales al realizar saltos de intervalo (por ejemplo, de la nota <span class="note-chip">C(I)</span> a la nota <span class="note-chip">B♭(VII♭)</span> en un clarinete) o efectos automáticos al soltar la tecla (<em>note off</em>).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot"></span>2. Controladores para activar los efectos manuales</h3>
+    <p>Cuando eliges una voz Super Articulation, puedes disparar o alterar los matices expresivos con los siguientes elementos del panel:</p>
+    <ol>
+      <li><strong>Botones ASSIGNABLE:</strong> puedes configurar los botones físicos <strong>ASSIGNABLE</strong> o <strong>[A]–[F]</strong> para que ejecuten las funciones <strong>Articulation 1</strong>, <strong>Articulation 2</strong> o <strong>Articulation 3</strong>. Si presionas o mantienes presionado el botón mientras tocas, escucharás ruidos de caja de guitarra, armónicos o caídas de metal (<em>falls</em>).</li>
+      <li><strong>Foot Pedal 2:</strong> la toma <strong>FOOT PEDAL</strong> de la parte trasera del teclado viene asignada por defecto para controlar la función <strong>Articulation 1</strong>. Esto te permite activar los efectos de articulación con el pie sin despegar las manos del teclado.</li>
+      <li><strong>Joystick:</strong> al desplazar el joystick en el eje Y (hacia arriba), puedes controlar el nivel de vibrato o modulación en las voces S.Art+ y S.Art2.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ======================= S.ART PROG ======================= -->
+<section id="sartprog" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">🧠</div>
+    <div>
+      <h2>Programación e Integración de S.Art en la Memoria de Registro</h2>
+      <p>Guardar la voz junto con todas sus asignaciones de control (botones 1 al 8)</p>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <span class="co-icon">🎯</span>
+    <div>Para guardar una voz Super Articulation junto con todas sus asignaciones de control en un botón de memoria de registro del <strong>1 al 8</strong>, sigue este procedimiento paso a paso.</div>
+  </div>
+
+  <ol class="steps">
+    <li>
+      <b>Paso 1 — Selecciona la voz Super Articulation</b>
+      <ol style="margin-top:6px">
+        <li>Presiona el botón de parte deseado (<strong>PART SELECT [RIGHT 1]</strong>, <strong>[RIGHT 2]</strong> o <strong>[RIGHT 3]</strong>).</li>
+        <li>Entra en la categoría de voz deseada (por ejemplo, <em>SAXOPHONE</em> o <em>GUITAR</em>) y selecciona tu voz <strong>S.Art</strong>, <strong>S.Art+</strong> o <strong>S.Art2</strong> (lo sabrás porque el tipo de voz aparece indicado justo encima del nombre en la pantalla).</li>
+      </ol>
+    </li>
+    <li>
+      <b>Paso 2 — Verifica y asigna los botones o pedales de articulación</b>
+      <ol style="margin-top:6px">
+        <li>Dirígete en la pantalla táctil a <strong>[MENU] → [Assignable]</strong>.</li>
+        <li>Toca el botón físico que prefieras usar en el escenario (por ejemplo, <strong>ASSIGNABLE 1</strong>) o la casilla <strong>Foot Pedal 2</strong>.</li>
+        <li>Asigna la función <strong>Articulation 1</strong>, <strong>Articulation 2</strong> o <strong>Articulation 3</strong> de la lista de funciones. Esto asegurará que el botón esté listo para disparar los efectos cuando recuperes la memoria.</li>
+      </ol>
+    </li>
+    <li>
+      <b>Paso 3 — Abre la ventana de Registros</b>
+      <ol style="margin-top:6px">
+        <li>Ajusta los demás parámetros del panel como desees (estilo, tempo, volumen en el Mixer, etc.).</li>
+        <li>Presiona el botón físico <strong>[MEMORY]</strong> en la sección <strong>REGISTRATION MEMORY</strong> del panel.</li>
+      </ol>
+    </li>
+    <li>
+      <b>Paso 4 — ¡Punto Crítico! Marca las casillas de verificación (Checkboxes)</b><br>
+      Para que no solo se guarde el sonido, sino también el comportamiento de los pedales y botones asignados, en la ventana emergente <strong>Registration Memory</strong> asegúrate de marcar con un gancho verde:
+      <ul style="margin-top:6px">
+        <li><strong>Voice:</strong> guarda la selección de voces, volúmenes y octavas de la mano derecha e izquierda.</li>
+        <li><strong>Assignable Buttons:</strong> garantiza que los botones físicos recuerden que están configurados como <em>Articulation 1/2/3</em>.</li>
+        <li><strong>Foot Pedals:</strong> garantiza que el pedal recuerde su función asignada para la articulación.</li>
+        <li><em>(Opcional)</em> <strong>Style</strong>, <strong>Tempo</strong>, <strong>Transpose</strong> y <strong>Live Control</strong> según el tema.</li>
+      </ul>
+    </li>
+    <li>
+      <b>Paso 5 — Memoriza en el botón numerado</b><br>
+      Mientras la ventana emergente sigue visible en pantalla, presiona el botón numerado deseado (del <strong>1 al 8</strong>) en el panel. El botón quedará iluminado en <strong style="color:var(--amber)">naranja</strong>.
+    </li>
+    <li>
+      <b>Paso 6 — Guarda el Banco de Registros en la memoria (*.rgt)</b>
+      <ol style="margin-top:6px">
+        <li>Presiona simultáneamente los botones <strong>REGIST BANK [−] y [+]</strong> para abrir la pantalla de gestión de bancos.</li>
+        <li>Toca <strong>[Save]</strong> (Guardar).</li>
+        <li>Elige la ubicación (<strong>User</strong> o tu pendrive <strong>USB</strong>) y asigna un nombre al archivo (ejemplo: <em>"Solo_Saxo_SArt2"</em>).</li>
+      </ol>
+    </li>
+  </ol>
+
+  <div class="callout example">
+    <span class="co-icon">🎯</span>
+    <div><strong>Resultado:</strong> al recuperar ese banco, con un solo toque tendrás la voz S.Art2 de clarinete, su pedal asignado a <em>Articulation 1</em>, el botón físico A como <em>Articulation 2</em>, y el resto del escenario sonoro intacto.</div>
+  </div>
+</section>
+
+<!-- ======================= CONSEJOS ======================= -->
+<section id="tips" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">🚀</div>
+    <div>
+      <h2>Consejos Avanzados y Limitaciones</h2>
+      <p>Layering, Multi Pad, Harmony/Arpeggio y restauración</p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="dot"></span>Efecto en capas (Layering)</h3>
+      <p>Si combinas varias voces Super Articulation al mismo tiempo (por ejemplo, una guitarra S.Art en <strong>RIGHT 1</strong> y cuerdas S.Art+ en <strong>RIGHT 2</strong>), presionar un botón asignado a <strong>Articulation 1</strong> aplicará el efecto de articulación simultáneamente a todas las partes activas que contengan voces S.Art/S.Art2.</p>
+    </div>
+    <div class="card">
+      <h3><span class="dot"></span>Limitación en los Multi Pad</h3>
+      <p>No es posible realizar grabaciones en tiempo real en los <strong>Multi Pad</strong> utilizando voces Super Articulation ni <em>Organ Flutes</em>. Si intentas grabar un Multi Pad con la parte <strong>RIGHT 1</strong> configurada con una voz S.Art, el teclado la reemplazará automáticamente por la voz <em>Grand Piano</em> durante la grabación.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot"></span>Uso con Harmony/Arpeggio y Transposición</h3>
+    <p>Dado que las muestras de articulación reaccionan a rangos de teclado y velocidades de pulsación muy específicas, al activar la función <strong>[HARMONY/ARPEGGIO]</strong> o al transponer el teclado, pueden producirse sonidos o ruidos expresivos no deseados si no se mide bien la intensidad de la ejecución.</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot"></span>Resumen de consulta rápida y restauración</h3>
+    <ul>
+      <li><strong>Recuperación rápida:</strong> presiona <strong>REGIST BANK [−]/[+]</strong> juntos → selecciona tu archivo → pulsa el botón numerado deseado.</li>
+      <li><strong>Reseteo de fábrica de memorias:</strong> si deseas limpiar los 8 botones de la memoria temporal del panel, apaga el teclado y vuelve a encenderlo manteniendo presionada la última tecla <span class="note-chip">B(VII)5</span> de la derecha del teclado.</li>
+    </ul>
+  </div>
+
+  <div class="callout warn">
+    <span class="co-icon">⚠️</span>
+    <div>Recuerda guardar siempre el banco en <strong>User</strong> o <strong>USB</strong> antes de apagar el instrumento. El reseteo de fábrica borra únicamente las memorias temporales del panel, no los archivos <em>*.rgt</em> previamente guardados.</div>
+  </div>
+</section>
+
+<!-- ======================= FUENTES ======================= -->
+<section id="fuentes" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">📚</div>
+    <div>
+      <h2>Fuentes</h2>
+      <p>Referencias y material utilizado para la elaboración de este tutorial</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot"></span>Material documental de referencia</h3>
+    <p>El contenido de este tutorial se ha elaborado exclusivamente a partir del material aportado por el usuario. No se han utilizado fuentes externas ni se han inventado enlaces. A continuación se citan los temas y bloques documentales que constituyen la base del tutorial:</p>
+    <ul class="src-list" style="margin-top:14px">
+      <li>
+        <span class="src-num">1</span>
+        <div>
+          <strong>Yamaha PSR-SX920 — Registration Memory (Programación de Memorias de Registro)</strong><br>
+          <span style="color:var(--muted);font-size:13px">Concepto, organización, botones numerados, bancos de registro y código de colores LED.</span>
+        </div>
+      </li>
+      <li>
+        <span class="src-num">2</span>
+        <div>
+          <strong>Yamaha PSR-SX920 — Tutorial paso a paso de programación de un banco</strong><br>
+          <span style="color:var(--muted);font-size:13px">Configuración del panel, tecla [MEMORY], checkboxes y asignación de botones 1–8.</span>
+        </div>
+      </li>
+      <li>
+        <span class="src-num">3</span>
+        <div>
+          <strong>Yamaha PSR-SX920 — Guardar banco en archivo (*.rgt)</strong><br>
+          <span style="color:var(--muted);font-size:13px">Procedimiento de guardado en memoria interna (User) o USB.</span>
+        </div>
+      </li>
+      <li>
+        <span class="src-num">4</span>
+        <div>
+          <strong>Yamaha PSR-SX920 — Funciones avanzadas</strong><br>
+          <span style="color:var(--muted);font-size:13px">Registration Freeze, Registration Sequence, Regist Bank Info, Regist Bank Edit y Playlist (2.500 canciones).</span>
+        </div>
+      </li>
+      <li>
+        <span class="src-num">5</span>
+        <div>
+          <strong>Yamaha PSR-SX920 — Voces Super Articulation</strong><br>
+          <span style="color:var(--muted);font-size:13px">S.Art, S.Art+, S.Art2 (AEM), controladores (Assignable, Foot Pedal 2, Joystick) y limitaciones (Multi Pad, Harmony/Arpeggio, Transposición).</span>
+        </div>
+      </li>
+      <li>
+        <span class="src-num">6</span>
+        <div>
+          <strong>Documentación oficial del fabricante</strong><br>
+          <span style="color:var(--muted);font-size:13px">Manual del propietario del Yamaha PSR-SX920 (referencia general del instrumento). Los enlaces no se incluyen porque no fueron proporcionados en el material original.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="callout info">
+    <span class="co-icon">ℹ️</span>
+    <div>Este tutorial conserva íntegramente la información del documento original. La estructura, el diseño y la presentación visual se han adaptado al formato HTML interactivo, pero <strong>no se ha añadido información externa</strong>.</div>
+  </div>
+</section>
+
+<!-- ======================= CRÉDITOS ======================= -->
+<section id="creditos" class="section">
+  <div class="sec-head">
+    <div class="sec-icon">🏆</div>
+    <div>
+      <h2>Créditos</h2>
+      <p>Autor, fecha y nota educativa</p>
+    </div>
+  </div>
+
+  <!-- SVG ANIMADO (inyectado por JS, idéntico al de HOME) -->
+  <div id="svgCreditos" class="svg-holder" aria-label="Portada animada del tutorial (créditos)"></div>
+
+  <div class="credit-box">
+    <h3>Yamaha PSR-SX920 · Registration Memory &amp; Super Articulation</h3>
+    <div class="credit-row">
+      <span class="chip green">👨‍💻 Rubén Sbarsky</span>
+      <span class="chip cyan">📅 21/09/2026</span>
+      <span class="chip amber">🕐 09:59:16</span>
+      <span class="chip purple">📚 Solo con fines educativos y de divulgación</span>
+    </div>
+    <p style="color:var(--muted);font-size:13px;margin-top:14px;max-width:700px;margin-left:auto;margin-right:auto">
+      Este material ha sido elaborado como recurso educativo y de divulgación. Su objetivo es ayudar a estudiantes y músicos a comprender y aprovechar al máximo las funciones del Yamaha PSR-SX920 en el escenario y en el estudio.
+    </p>
+    <p class="fiat" style="color:var(--amber);font-style:italic;font-size:16px;margin-top:18px">Fiat iustitia, ruat caelum.</p>
+  </div>
+</section>
+
+</main>
+
+<!-- Back to top -->
+<button id="backTop" aria-label="Volver arriba">↑</button>
+
+<!-- Footer -->
+<footer>
+  <div>📚 Tutorial solo con fines Educativos y Divulgación</div>
+  <div>👨‍💻 Créditos: Rubén Sbarsky</div>
+  <div>📅 FECHA: 21/09/2026 &nbsp;·&nbsp; Hora: 09:59:16</div>
+  <div class="fiat">Fiat iustitia, ruat caelum.</div>
+</footer>
+
+<script>
+/* =========================================================
+   SVG ANIMADO — mismo marcado para HOME y CRÉDITOS
+   ========================================================= */
+function getAnimatedSVG(){
+  return `
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Portada animada PSR-SX920">
+  <defs>
+    <!-- Gradientes de fondo animados -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#070b14">
+        <animate attributeName="stop-color" values="#070b14;#0a1a2f;#12071e;#070b14" dur="9s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" stop-color="#0a0e1a">
+        <animate attributeName="stop-color" values="#0a0e1a;#0d1428;#0a0e1a" dur="7s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#0a0e1a">
+        <animate attributeName="stop-color" values="#0a0e1a;#150a2a;#0a0e1a" dur="8s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+
+    <linearGradient id="chipGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#050810"/>
+    </linearGradient>
+
+    <radialGradient id="haloCyan">
+      <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloPurple">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloAmber">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloGreen">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+    </radialGradient>
+
+    <pattern id="gridPat" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e3a5f" stroke-width="0.6"/>
+    </pattern>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3.2" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="glowStrong" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Rutas para el movimiento narrativo -->
+    <path id="flowPath1" d="M 260 250 Q 400 180 540 250" fill="none"/>
+    <path id="flowPath2" d="M 180 320 Q 400 260 620 320" fill="none"/>
+    <path id="flowPath3" d="M 400 130 Q 320 200 400 300 Q 480 380 400 420" fill="none"/>
+    <path id="flowPath4" d="M 120 200 Q 400 60 680 200" fill="none"/>
+    <path id="flowPath5" d="M 200 380 Q 400 320 600 380" fill="none"/>
+  </defs>
+
+  <!-- FONDO -->
+  <rect width="800" height="450" fill="url(#bgGrad)"/>
+  <rect width="800" height="450" fill="url(#gridPat)" opacity="0.35">
+    <animate attributeName="opacity" values="0.18;0.5;0.18" dur="6s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- Anillos orbitales concéntricos -->
+  <g transform="translate(400,190)">
+    <ellipse rx="90" ry="88" fill="none" stroke="#00d4ff" stroke-width="1.2"
+             stroke-dasharray="20 14" opacity="0.75" filter="url(#glow)">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="22s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="20 14;36 8;20 14" dur="7s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;0.95;0.5" dur="4s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse rx="140" ry="136" fill="none" stroke="#a855f7" stroke-width="1"
+             stroke-dasharray="44 32" opacity="0.6" filter="url(#glow)">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="30s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="44 32;10 22;44 32" dur="9s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse rx="190" ry="184" fill="none" stroke="#f59e0b" stroke-width="0.8"
+             stroke-dasharray="8 22" opacity="0.5" filter="url(#glow)">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="40s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="8 22;2 10;8 22" dur="5s" repeatCount="indefinite"/>
+    </ellipse>
+  </g>
+
+  <!-- TÍTULO -->
+  <text x="400" y="42" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-weight="800" font-size="22" letter-spacing="2" filter="url(#glow)">
+    REGISTRATION MEMORY
+    <animate attributeName="fill" values="#00d4ff;#a855f7;#f59e0b;#22c55e;#00d4ff" dur="10s" repeatCount="indefinite"/>
+  </text>
+  <text x="400" y="64" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif" font-weight="500" font-size="11" letter-spacing="4" fill="#94a3b8">
+    YAMAHA PSR-SX920
+    <animate attributeName="opacity" values="0.55;1;0.55" dur="3.5s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- Indicador LIVE -->
+  <g transform="translate(720,26)">
+    <circle r="6" fill="#ef4444">
+      <animate attributeName="opacity" values="1;0.2;1" dur="1.4s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="6;7.5;6" dur="1.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="12" fill="none" stroke="#ef4444" stroke-width="1" opacity="0.5">
+      <animate attributeName="r" values="8;18;8" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.6;0;0.6" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <text x="14" y="4" font-family="Segoe UI, sans-serif" font-size="9" font-weight="800" fill="#ef4444" letter-spacing="1">LIVE</text>
+  </g>
+
+  <!-- Chip central (memoria) -->
+  <g transform="translate(400,190)">
+    <circle r="60" fill="url(#haloCyan)" opacity="0.7">
+      <animate attributeName="r" values="50;70;50" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.35;0.85;0.35" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <rect x="-70" y="-45" width="140" height="90" rx="10" fill="url(#chipGrad)" stroke="#00d4ff" stroke-width="1.6" filter="url(#glow)">
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -2;0 0;0 -1.5;0 0" dur="4.5s" repeatCount="indefinite"/>
+    </rect>
+    <text x="0" y="-10" text-anchor="middle" font-family="Segoe UI, sans-serif" font-weight="800" font-size="14" fill="#00d4ff" letter-spacing="1">REGIST</text>
+    <text x="0" y="8" text-anchor="middle" font-family="Segoe UI, sans-serif" font-weight="800" font-size="14" fill="#a855f7" letter-spacing="1">MEMORY</text>
+    <text x="0" y="28" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#64748b">*.rgt</text>
+  </g>
+
+  <!-- 8 botones de registro -->
+  <g transform="translate(400,265)">
+    ${Array.from({length:8}).map((_,i)=>{
+      const x = -126 + i*36;
+      const dur = (2 + i*0.35).toFixed(2);
+      const color = i===0 ? '#f59e0b' : (i===1 ? '#00d4ff' : '#475569');
+      return `
+        <g transform="translate(${x},0)">
+          <circle r="10" fill="url(#halo${i===0?'Amber':'Cyan'})" opacity="${i<2?'0.8':'0'}">
+            <animate attributeName="r" values="8;14;8" dur="${dur}s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="${i<2?'0.9;0.3;0.9':'0;0;0'}" dur="${dur}s" repeatCount="indefinite"/>
+          </circle>
+          <rect x="-11" y="-11" width="22" height="22" rx="5" fill="#0f172a" stroke="${color}" stroke-width="1.4" filter="url(#glow)"/>
+          <text x="0" y="4" text-anchor="middle" font-family="Segoe UI, sans-serif" font-weight="800" font-size="10" fill="${color}">${i+1}</text>
+        </g>`;
+    }).join('')}
+  </g>
+
+  <!-- Teclado mini -->
+  <g transform="translate(400,395)">
+    ${Array.from({length:14}).map((_,i)=>{
+      const x = -196 + i*28;
+      const names = ['C','D','E','F','G','A','B','C','D','E','F','G','A','B'];
+      return `
+        <rect x="${x}" y="-22" width="27" height="44" rx="2" fill="#e2e8f0" stroke="#475569" stroke-width="0.6"/>
+        <text x="${x+13.5}" y="16" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="7" font-weight="700" fill="#475569">${names[i]}</text>`;
+    }).join('')}
+    ${[0,1,3,4,5,7,8,10,11,12].map((i)=>{
+      const x = -196 + i*28 + 19;
+      return `<rect x="${x}" y="-22" width="17" height="28" rx="2" fill="#020617" stroke="#1e293b" stroke-width="0.6"/>`;
+    }).join('')}
+  </g>
+
+  <!-- Partículas viajando por paths (notas musicales) -->
+  <g filter="url(#glow)">
+    <circle r="4" fill="#00d4ff">
+      <animateMotion dur="4.5s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#flowPath1"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="4.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="3.5" fill="#a855f7">
+      <animateMotion dur="5.5s" begin="1.2s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#flowPath1"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="5.5s" begin="1.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="4" fill="#22c55e">
+      <animateMotion dur="6s" begin="0.6s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#flowPath2"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="6s" begin="0.6s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="3" fill="#f59e0b">
+      <animateMotion dur="7s" begin="2.1s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#flowPath2"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="7s" begin="2.1s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="3.5" fill="#00d4ff">
+      <animateMotion dur="5s" begin="0.3s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#flowPath3"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="5s" begin="0.3s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="3" fill="#a855f7">
+      <animateMotion dur="8s" begin="1.4s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#flowPath4"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="8s" begin="1.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="2.5" fill="#22c55e">
+      <animateMotion dur="6.5s" begin="2.6s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#flowPath5"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="6.5s" begin="2.6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Ghost notes (movimiento de origen a destino) -->
+  <g font-family="Segoe UI Symbol, sans-serif" font-size="26" fill="#00d4ff" opacity="0.65" filter="url(#glow)">
+    <text>♪
+      <animateMotion dur="5.5s" repeatCount="indefinite">
+        <mpath href="#flowPath4"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;0.85;0.85;0" dur="5.5s" repeatCount="indefinite"/>
+    </text>
+    <text fill="#a855f7" font-size="22">♫
+      <animateMotion dur="6.8s" begin="1.5s" repeatCount="indefinite">
+        <mpath href="#flowPath1"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;0.8;0.8;0" dur="6.8s" begin="1.5s" repeatCount="indefinite"/>
+    </text>
+    <text fill="#f59e0b" font-size="24">♩
+      <animateMotion dur="7.2s" begin="0.9s" repeatCount="indefinite">
+        <mpath href="#flowPath2"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;0.8;0.8;0" dur="7.2s" begin="0.9s" repeatCount="indefinite"/>
+    </text>
+    <text fill="#22c55e" font-size="20">♬
+      <animateMotion dur="5.9s" begin="2.3s" repeatCount="indefinite">
+        <mpath href="#flowPath3"/>
+      </animateMotion>
+      <animate attributeName="opacity" values="0;0.9;0.9;0" dur="5.9s" begin="2.3s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- Explosión radial de partículas (impacto) -->
+  <g transform="translate(400,190)">
+    ${Array.from({length:16}).map((_,i)=>{
+      const angle = (i*Math.PI*2/16).toFixed(3);
+      const x2 = (Math.cos(i*Math.PI*2/16)*90).toFixed(1);
+      const y2 = (Math.sin(i*Math.PI*2/16)*90).toFixed(1);
+      const c = ['#00d4ff','#a855f7','#f59e0b','#22c55e'][i%4];
+      const dur = (2.4 + (i%5)*0.3).toFixed(2);
+      return `
+        <line x1="0" y1="0" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="1.6" stroke-linecap="round" opacity="0">
+          <animate attributeName="x2" values="0;${x2}" dur="${dur}s" repeatCount="indefinite"/>
+          <animate attributeName="y2" values="0;${y2}" dur="${dur}s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.95;0" dur="${dur}s" repeatCount="indefinite"/>
+        </line>`;
+    }).join('')}
+  </g>
+
+  <!-- Halos pulsantes en elementos clave -->
+  <circle cx="260" cy="250" r="40" fill="url(#haloCyan)">
+    <animate attributeName="r" values="20;50;20" dur="3.2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.4;0.05;0.4" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="540" cy="250" r="40" fill="url(#haloAmber)">
+    <animate attributeName="r" values="18;46;18" dur="3.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;0.05;0.5" dur="3.8s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="400" cy="395" r="60" fill="url(#haloGreen)">
+    <animate attributeName="r" values="30;70;30" dur="4.2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0.05;0.3" dur="4.2s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Anillo giratorio alrededor de un elemento destacado (botón 1) -->
+  <g transform="translate(274,265)">
+    <circle r="20" fill="none" stroke="#f59e0b" stroke-width="1.2" stroke-dasharray="4 6" filter="url(#glow)">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="5s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="4 6;14 4;4 6" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Flash central + texto grande animado -->
+  <g transform="translate(400,190)">
+    <text x="0" y="0" text-anchor="middle" font-family="Segoe UI, sans-serif" font-weight="900" font-size="46" letter-spacing="6" filter="url(#glowStrong)" opacity="0">
+      S.ART2
+      <animate attributeName="opacity" values="0;0;0.95;0;0" keyTimes="0;0.6;0.72;0.84;1" dur="9s" repeatCount="indefinite"/>
+      <animate attributeName="fill" values="#22c55e;#00d4ff;#22c55e" dur="9s" repeatCount="indefinite"/>
+    </text>
+    <text x="0" y="0" text-anchor="middle" font-family="Segoe UI, sans-serif" font-weight="900" font-size="42" letter-spacing="6" filter="url(#glowStrong)" opacity="0">
+      REGIST
+      <animate attributeName="opacity" values="0;0;0.95;0;0" keyTimes="0;0.1;0.22;0.34;1" dur="9s" repeatCount="indefinite"/>
+      <animate attributeName="fill" values="#00d4ff;#a855f7;#00d4ff" dur="9s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- Etiquetas de estado alternando -->
+  <g transform="translate(70,410)" font-family="Segoe UI, sans-serif" font-size="10" font-weight="700" letter-spacing="1">
+    <text fill="#22c55e">
+      VOICE · STYLE · TEMPO
+      <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.4;0.5;0.9;1" dur="6s" repeatCount="indefinite"/>
+    </text>
+    <text y="14" fill="#00d4ff">
+      ARPEGGIO · JOIN · FREEZE
+      <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.4;0.5;0.9;1" dur="6s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- Etiquetas estado lado derecho -->
+  <g transform="translate(700,410)" text-anchor="end" font-family="Segoe UI, sans-serif" font-size="10" font-weight="700" letter-spacing="1">
+    <text fill="#f59e0b">
+      S.ART · S.ART+
+      <animate attributeName="opacity" values="1;0.3;1;0.3;1" dur="3s" repeatCount="indefinite"/>
+    </text>
+    <text y="14" fill="#a855f7">
+      AEM MODELING
+      <animate attributeName="opacity" values="0.3;1;0.3;1;0.3" dur="3.4s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- Firma oscilante -->
+  <text x="400" y="445" text-anchor="middle" font-family="Segoe UI, sans-serif" font-style="italic" font-size="11" fill="#64748b">
+    Rubén Sbarsky · PSR-SX920
+    <animate attributeName="opacity" values="0.3;1;0.3" dur="4.7s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- Marco con pulso -->
+  <rect x="6" y="6" width="788" height="438" rx="12" fill="none" stroke="#1e3a5f" stroke-width="1.5">
+    <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="5s" repeatCount="indefinite"/>
+  </rect>
+</svg>`;
+}
+
+/* =========================================================
+   INYECCIÓN DEL SVG EN HOME Y CRÉDITOS
+   ========================================================= */
+function injectSVG(){
+  document.getElementById('svgHome').innerHTML = getAnimatedSVG();
+  document.getElementById('svgCreditos').innerHTML = getAnimatedSVG();
+}
+injectSVG();
+
+/* Reinicia animaciones SVG al mostrar créditos */
+function restartSVGIn(container){
+  const svg = container.querySelector('svg');
+  if(!svg || typeof svg.setCurrentTime !== 'function') return;
+  try{
+    svg.pauseAnimations();
+    svg.setCurrentTime(0);
+    svg.unpauseAnimations();
+  }catch(e){ /* silencioso */ }
+}
+
+/* =========================================================
+   SPA — Navegación
+   ========================================================= */
+const navButtons = document.querySelectorAll('.nav-btn');
+const sections = document.querySelectorAll('.section');
+const navScroll = document.getElementById('navScroll');
+
+function activateSection(target){
+  sections.forEach(s => s.classList.toggle('active', s.id === target));
+  navButtons.forEach(b => b.classList.toggle('active', b.dataset.target === target));
+
+  // Scroll activo en navbar
+  const activeBtn = document.querySelector('.nav-btn.active');
+  if(activeBtn){
+    const bRect = activeBtn.getBoundingClientRect();
+    const sRect = navScroll.getBoundingClientRect();
+    if(bRect.left < sRect.left || bRect.right > sRect.right){
+      navScroll.scrollTo({left: activeBtn.offsetLeft - 40, behavior:'smooth'});
+    }
+  }
+
+  // Reinicia animación del SVG al entrar en créditos
+  if(target === 'creditos'){
+    setTimeout(()=>restartSVGIn(document.getElementById('svgCreditos')), 60);
+  }
+
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+navButtons.forEach(btn=>{
+  btn.addEventListener('click', ()=>activateSection(btn.dataset.target));
+});
+
+/* =========================================================
+   Barra de progreso + botón volver arriba
+   ========================================================= */
+const progressFill = document.getElementById('progressFill');
+const backTop = document.getElementById('backTop');
+
+function updateScrollUI(){
+  const h = document.documentElement;
+  const scrolled = h.scrollTop;
+  const max = h.scrollHeight - h.clientHeight;
+  const pct = max > 0 ? (scrolled / max) * 100 : 0;
+  progressFill.style.width = pct + '%';
+  backTop.classList.toggle('show', scrolled > 320);
+}
+
+window.addEventListener('scroll', updateScrollUI, {passive:true});
+window.addEventListener('resize', updateScrollUI);
+updateScrollUI();
+
+backTop.addEventListener('click', ()=>window.scrollTo({top:0, behavior:'smooth'}));
+
+/* =========================================================
+   Acordeones
+   ========================================================= */
+document.querySelectorAll('.acc-head').forEach(head=>{
+  head.addEventListener('click', ()=>{
+    const acc = head.parentElement;
+    acc.classList.toggle('open');
+  });
+});
+
+/* =========================================================
+   Tabs (por si se añaden dinámicamente)
+   ========================================================= */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const wrap = btn.closest('.tabs-wrap') || btn.parentElement.parentElement;
+    wrap.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    wrap.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    const target = wrap.querySelector('#'+btn.dataset.tab);
+    if(target) target.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>
