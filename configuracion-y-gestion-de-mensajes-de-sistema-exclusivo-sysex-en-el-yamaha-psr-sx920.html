@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mensajes SysEx en el Yamaha PSR-SX920 — Tutorial Técnico</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0e1a;
+  --card:#0f172a;
+  --border:#1e3a5f;
+  --accent:#00d4ff;
+  --green:#22c55e;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --purple:#a855f7;
+  --text:#e2e8f0;
+  --muted:#94a3b8;
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(0,212,255,.07), transparent 42%),
+    radial-gradient(circle at 88% 92%, rgba(168,85,247,.07), transparent 45%);
+  background-attachment:fixed;
+  color:var(--text);
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  line-height:1.65;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+/* ===== PROGRESO ===== */
+.progress-track{position:fixed;top:0;left:0;right:0;height:3px;background:#0b1324;z-index:200}
+#progressFill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--purple),var(--green));box-shadow:0 0 10px rgba(0,212,255,.7);transition:width .12s linear}
+/* ===== NAVBAR ===== */
+.navbar{
+  position:fixed;top:3px;left:0;right:0;z-index:150;
+  background:rgba(10,14,26,.94);
+  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+  padding:6px 8px;
+}
+.nav-brand{
+  font-size:.72rem;font-weight:800;color:var(--accent);
+  letter-spacing:.6px;white-space:nowrap;
+  padding:0 10px 0 6px;border-right:1px solid var(--border);
+  line-height:1.2;
+}
+.nav-scroll{
+  display:flex;gap:6px;overflow-x:auto;flex:1;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;scrollbar-color:var(--border) transparent;
+  padding-bottom:2px;
+}
+.nav-scroll::-webkit-scrollbar{height:4px}
+.nav-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.nav-btn{
+  flex:0 0 auto;background:transparent;border:1px solid transparent;
+  color:var(--muted);padding:7px 12px;border-radius:8px;
+  font-size:.78rem;font-family:inherit;font-weight:600;
+  cursor:pointer;white-space:nowrap;transition:all .2s;
+}
+.nav-btn:hover{color:var(--text);border-color:var(--border);background:rgba(30,58,95,.25)}
+.nav-btn.active{color:#04131c;background:var(--accent);border-color:var(--accent);font-weight:800;box-shadow:0 0 14px rgba(0,212,255,.4)}
+/* ===== MAIN ===== */
+main{padding:64px 12px 30px;max-width:1080px;margin:0 auto}
+.section{display:none}
+.section.active{display:block;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* ===== HERO ===== */
+.hero-wrap{
+  width:100%;border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;background:#070b14;margin:0 0 20px;
+  box-shadow:0 0 46px rgba(0,212,255,.10), inset 0 0 60px rgba(0,0,0,.5);
+  line-height:0;
+}
+.hero-wrap svg{display:block;width:100%;height:auto}
+/* ===== HOME ===== */
+.badge-top{
+  display:inline-block;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.45);
+  color:var(--accent);font-size:.7rem;font-weight:800;letter-spacing:1.6px;
+  padding:6px 14px;border-radius:20px;margin-bottom:14px;text-transform:uppercase;
+}
+h1{
+  font-size:clamp(1.5rem,5vw,2.5rem);line-height:1.18;font-weight:800;
+  background:linear-gradient(100deg,#ffffff 10%,#00d4ff 45%,#a855f7 80%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  margin-bottom:12px;letter-spacing:-.5px;
+}
+.subtitle{font-size:clamp(.92rem,2.6vw,1.1rem);color:var(--accent);font-weight:600;margin-bottom:14px}
+.description{color:var(--muted);font-size:.95rem;margin-bottom:20px;max-width:820px}
+.quote{
+  border-left:4px solid var(--purple);background:rgba(168,85,247,.08);
+  border-radius:0 12px 12px 0;padding:16px 18px;margin:20px 0;
+  font-style:italic;color:#d8c8f5;font-size:.95rem;
+}
+.quote::before{content:'"';font-size:2rem;color:var(--purple);line-height:0;vertical-align:-.35em;margin-right:6px}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:12px;margin:22px 0}
+.metric{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:16px 12px;text-align:center;transition:.25s;
+}
+.metric:hover{border-color:var(--accent);box-shadow:0 0 20px rgba(0,212,255,.16);transform:translateY(-2px)}
+.m-val{font-size:1.55rem;font-weight:800;color:var(--accent);line-height:1.1}
+.m-lab{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;margin-top:6px;font-weight:700}
+.stamp{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.chip{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:6px 14px;font-size:.76rem;color:var(--muted);font-weight:600;
+}
+.chip b{color:var(--accent)}
+/* ===== TÍTULOS DE SECCIÓN ===== */
+.sec-head{
+  display:flex;align-items:center;gap:14px;
+  border-bottom:2px solid var(--border);padding-bottom:12px;margin:6px 0 20px;
+  flex-wrap:wrap;
+}
+.sec-ico{
+  flex:0 0 46px;height:46px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(0,212,255,.16),rgba(168,85,247,.12));
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:1.35rem;
+}
+.sec-head h2{font-size:clamp(1.15rem,3.6vw,1.6rem);font-weight:800;color:#fff;letter-spacing:-.3px}
+.sec-head .sec-sub{font-size:.78rem;color:var(--muted);font-weight:600;letter-spacing:.4px}
+/* ===== CARDS ===== */
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:18px;margin-bottom:16px;position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;width:3px;height:100%;
+  background:linear-gradient(180deg,var(--accent),transparent);
+}
+.card h3{font-size:1rem;color:var(--accent);margin-bottom:10px;font-weight:800;letter-spacing:.2px}
+.card p{font-size:.92rem;color:var(--text);margin-bottom:8px}
+.card p:last-child{margin-bottom:0}
+/* ===== PASOS ===== */
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start}
+.step-num{
+  flex:0 0 40px;height:40px;border-radius:11px;
+  background:linear-gradient(135deg,#10243a,#0f172a);
+  border:1px solid var(--border);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:1rem;box-shadow:0 0 14px rgba(0,212,255,.12);
+}
+.step-body{flex:1;min-width:0}
+.step-title{font-weight:800;color:#fff;font-size:.96rem;margin-bottom:6px}
+.step-body p,.step-body li{font-size:.9rem;color:var(--text)}
+.step-body ul{list-style:none;padding-left:0}
+.step-body ul li{position:relative;padding-left:20px;margin-bottom:7px}
+.step-body ul li::before{
+  content:'▸';position:absolute;left:0;top:0;color:var(--accent);font-weight:900;
+}
+.kbd{
+  display:inline-block;background:#0b1324;border:1px solid var(--border);
+  border-radius:6px;padding:1px 8px;font-family:'Consolas','Monaco',monospace;
+  font-size:.83rem;color:var(--accent);font-weight:700;
+}
+.code{
+  font-family:'Consolas','Monaco',monospace;background:#0b1324;
+  border:1px solid var(--border);border-radius:6px;padding:2px 8px;
+  color:var(--green);font-size:.84rem;
+}
+/* ===== CALLOUTS ===== */
+.callout{
+  border-radius:10px;padding:14px 16px;margin:14px 0;
+  border-left:4px solid;display:flex;gap:12px;align-items:flex-start;font-size:.9rem;
+}
+.callout .co-ico{flex:0 0 auto;font-size:1.05rem;line-height:1.4}
+.callout .co-title{font-weight:800;display:block;margin-bottom:4px;font-size:.8rem;letter-spacing:.7px;text-transform:uppercase}
+.info{background:rgba(0,212,255,.07);border-color:var(--accent)}
+.info .co-title{color:var(--accent)}
+.ejemplo{background:rgba(34,197,94,.07);border-color:var(--green)}
+.ejemplo .co-title{color:var(--green)}
+.warn{background:rgba(245,158,11,.08);border-color:var(--amber)}
+.warn .co-title{color:var(--amber)}
+.error{background:rgba(239,68,68,.08);border-color:var(--red)}
+.error .co-title{color:var(--red)}
+/* ===== TABLAS ===== */
+.table-wrap{
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  border:1px solid var(--border);border-radius:10px;margin:14px 0;
+}
+table{width:100%;border-collapse:collapse;min-width:440px;font-size:.86rem}
+th{
+  background:#0b1324;color:var(--accent);text-align:left;
+  padding:11px 12px;font-size:.72rem;text-transform:uppercase;
+  letter-spacing:.8px;border-bottom:1px solid var(--border);font-weight:800;
+  white-space:nowrap;
+}
+td{padding:11px 12px;border-bottom:1px solid rgba(30,58,95,.5);vertical-align:top;color:var(--text)}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(0,212,255,.04)}
+td.mono{font-family:'Consolas','Monaco',monospace;color:var(--accent);font-weight:700;white-space:nowrap}
+/* ===== TOGGLES ===== */
+.toggle-panel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px 16px;margin:16px 0}
+.toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;padding:13px 0;border-bottom:1px solid rgba(30,58,95,.45);
+}
+.toggle-row:last-child{border-bottom:none}
+.tg-name{font-size:.87rem;font-weight:700;color:#fff}
+.tg-desc{font-size:.76rem;color:var(--muted);margin-top:2px}
+.switch{
+  flex:0 0 auto;min-width:66px;padding:8px 12px;border-radius:20px;
+  border:1px solid var(--border);background:#0b1324;color:var(--muted);
+  font-family:inherit;font-size:.75rem;font-weight:800;cursor:pointer;
+  transition:all .2s;letter-spacing:.5px;
+}
+.switch.on{background:rgba(34,197,94,.16);border-color:var(--green);color:var(--green);box-shadow:0 0 14px rgba(34,197,94,.22)}
+.switch.off{background:rgba(239,68,68,.13);border-color:var(--red);color:var(--red)}
+/* ===== ACORDES ===== */
+.chord-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:16px 0}
+.chord-card{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:16px;text-align:center;transition:.25s;
+}
+.chord-card:hover{transform:translateY(-3px);box-shadow:0 0 22px rgba(0,212,255,.14)}
+.chord-card .cc-name{font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:8px}
+.chord-card .cc-notes{font-size:.95rem;font-weight:800;letter-spacing:.6px;margin-bottom:8px}
+.chord-card .cc-desc{font-size:.8rem;color:var(--muted)}
+.c1 .cc-notes{color:var(--accent)}
+.c2 .cc-notes{color:var(--green)}
+.c3 .cc-notes{color:var(--amber)}
+/* ===== FUENTES ===== */
+.src-item{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:16px;margin-bottom:12px;
+}
+.src-item h4{font-size:.95rem;color:var(--accent);margin-bottom:6px;font-weight:800}
+.src-item p{font-size:.86rem;color:var(--muted)}
+/* ===== CRÉDITOS ===== */
+.credit-card{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:22px;text-align:center;margin-bottom:16px;
+}
+.credit-card .cc-big{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:6px}
+.credit-card .cc-role{font-size:.82rem;color:var(--accent);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.credit-meta{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;margin:16px 0;
+}
+.meta-box{background:#0b1324;border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.meta-box .mb-k{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:800}
+.meta-box .mb-v{font-size:1rem;color:var(--accent);font-weight:800;margin-top:5px}
+.fiat{
+  text-align:center;font-style:italic;color:var(--purple);
+  font-size:1rem;margin-top:18px;letter-spacing:.5px;
+}
+/* ===== FOOTER ===== */
+.site-footer{
+  border-top:1px solid var(--border);margin-top:40px;padding:26px 16px 40px;
+  text-align:center;background:rgba(11,19,36,.6);
+}
+.site-footer p{font-size:.82rem;color:var(--muted);margin-bottom:6px}
+.site-footer .fiat-foot{color:var(--purple);font-style:italic;margin-top:10px;font-size:.86rem}
+/* ===== VOLVER ARRIBA ===== */
+#toTop{
+  position:fixed;right:14px;bottom:18px;z-index:160;
+  width:46px;height:46px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#0891b2);
+  border:none;color:#04131c;font-size:1.25rem;font-weight:900;
+  cursor:pointer;display:none;align-items:center;justify-content:center;
+  box-shadow:0 6px 22px rgba(0,212,255,.4);transition:.25s;
+}
+#toTop.show{display:flex}
+#toTop:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,212,255,.55)}
+/* ===== RESPONSIVE ===== */
+@media(max-width:640px){
+  .nav-brand{font-size:.62rem;padding:0 8px 0 4px}
+  .nav-btn{padding:7px 10px;font-size:.73rem}
+  main{padding:60px 9px 24px}
+  .card{padding:15px}
+  .step{gap:10px}
+  .step-num{flex:0 0 34px;height:34px;font-size:.9rem;border-radius:9px}
+  .sec-ico{flex:0 0 40px;height:40px;font-size:1.1rem}
+  .toggle-row{flex-direction:column;align-items:flex-start;gap:8px}
+  .switch{align-self:flex-end}
+  .callout{padding:12px 13px;font-size:.86rem}
+  #toTop{width:42px;height:42px;right:10px;bottom:12px}
+}
+@media(max-width:380px){
+  .metric{padding:12px 8px}
+  .m-val{font-size:1.3rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .section.active{animation:none}
+  *{transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-track"><div id="progressFill"></div></div>
+
+<nav class="navbar">
+  <div class="nav-brand">SysEx<br>PSR-SX920</div>
+  <div class="nav-scroll" id="navScroll">
+    <button class="nav-btn active" data-target="home">Inicio</button>
+    <button class="nav-btn" data-target="fase1">Fase 1 · Configuración</button>
+    <button class="nav-btn" data-target="fase2">Fase 2 · Step Edit</button>
+    <button class="nav-btn" data-target="fase3">Fase 3 · Práctica</button>
+    <button class="nav-btn" data-target="consejos">Consejos</button>
+    <button class="nav-btn" data-target="fuentes">Fuentes</button>
+    <button class="nav-btn" data-target="creditos">Créditos</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============================ HOME ============================ -->
+<section id="home" class="section active">
+
+  <div class="hero-wrap" id="svgHomeSlot">
+    <svg id="heroSvg" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="heroTitle heroDesc" preserveAspectRatio="xMidYMid meet">
+      <title id="heroTitle">Flujo de mensajes System Exclusive entre un dispositivo MIDI externo y el Yamaha PSR-SX920</title>
+      <desc id="heroDesc">Animación técnica que representa la transmisión y recepción de mensajes SysEx, los eventos XG y la detección de acordes hacia el teclado Yamaha PSR-SX920.</desc>
+
+      <defs>
+        <linearGradient id="sxBg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#070b14">
+            <animate attributeName="stop-color" values="#070b14;#0b1730;#150f2e;#070b14" dur="9s" repeatCount="indefinite"/>
+          </stop>
+          <stop offset="50%" stop-color="#0a0e1a">
+            <animate attributeName="stop-color" values="#0a0e1a;#122040;#1a1038;#0a0e1a" dur="7s" repeatCount="indefinite"/>
+          </stop>
+          <stop offset="100%" stop-color="#0f172a">
+            <animate attributeName="stop-color" values="#0f172a;#1a1233;#0c1c33;#0f172a" dur="11s" repeatCount="indefinite"/>
+          </stop>
+        </linearGradient>
+
+        <radialGradient id="sxHaloCyan" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="sxHaloGreen" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#22c55e" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="sxHaloPurple" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#a855f7" stop-opacity="0.45"/>
+          <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+        </radialGradient>
+
+        <pattern id="sxGrid" width="26" height="26" patternUnits="userSpaceOnUse">
+          <path d="M 26 0 L 0 0 0 26" fill="none" stroke="#00d4ff" stroke-width="0.6" opacity="0.45"/>
+        </pattern>
+        <pattern id="sxGrid2" width="104" height="104" patternUnits="userSpaceOnUse">
+          <path d="M 104 0 L 0 0 0 104" fill="none" stroke="#a855f7" stroke-width="0.9" opacity="0.4"/>
+        </pattern>
+
+        <filter id="sxGlow" x="-70%" y="-70%" width="240%" height="240%">
+          <feGaussianBlur stdDeviation="3.4" result="b"/>
+          <feMerge>
+            <feMergeNode in="b"/>
+            <feMergeNode in="b"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <filter id="sxGlowSoft" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="8" result="b2"/>
+          <feMerge>
+            <feMergeNode in="b2"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+
+        <path id="sxPathRx" d="M 186 222 C 300 112, 500 112, 614 222"/>
+        <path id="sxPathTx" d="M 614 238 C 500 348, 300 348, 186 238"/>
+
+        <clipPath id="sxClip"><rect x="0" y="0" width="800" height="450" rx="14"/></clipPath>
+      </defs>
+
+      <g clip-path="url(#sxClip)">
+
+        <!-- FONDO VIVO -->
+        <rect x="0" y="0" width="800" height="450" fill="url(#sxBg)"/>
+        <rect x="0" y="0" width="800" height="450" fill="url(#sxGrid)">
+          <animate attributeName="opacity" values="0.07;0.24;0.07" dur="6s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="0" y="0" width="800" height="450" fill="url(#sxGrid2)">
+          <animate attributeName="opacity" values="0.24;0.04;0.24" dur="9s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- ANILLOS ORBITALES -->
+        <ellipse cx="400" cy="240" rx="310" ry="135" fill="none" stroke="#00d4ff" stroke-width="1" stroke-dasharray="5 20" opacity="0.45">
+          <animateTransform attributeName="transform" type="rotate" from="0 400 240" to="360 400 240" dur="26s" repeatCount="indefinite"/>
+          <animate attributeName="stroke-dasharray" values="3 22;18 10;3 22" dur="8s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="400" cy="240" rx="250" ry="112" fill="none" stroke="#a855f7" stroke-width="1" stroke-dasharray="4 16" opacity="0.42">
+          <animateTransform attributeName="transform" type="rotate" from="360 400 240" to="0 400 240" dur="18s" repeatCount="indefinite"/>
+          <animate attributeName="stroke-dasharray" values="16 8;3 20;16 8" dur="6s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="400" cy="240" rx="190" ry="88" fill="none" stroke="#22c55e" stroke-width="0.9" stroke-dasharray="2 12" opacity="0.35">
+          <animateTransform attributeName="transform" type="rotate" from="0 400 240" to="-360 400 240" dur="13s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.35;0.12;0.35" dur="5s" repeatCount="indefinite"/>
+        </ellipse>
+
+        <!-- TÍTULOS SVG -->
+        <text x="400" y="46" text-anchor="middle" font-family="'Segoe UI',system-ui,sans-serif" font-size="21" font-weight="800" letter-spacing="4">
+          SYSTEM EXCLUSIVE MESSAGE
+          <animate attributeName="fill" values="#00d4ff;#a855f7;#22c55e;#f59e0b;#00d4ff" dur="12s" repeatCount="indefinite"/>
+        </text>
+        <text x="400" y="68" text-anchor="middle" font-family="'Segoe UI',system-ui,sans-serif" font-size="10.5" font-weight="700" letter-spacing="3.4" fill="#94a3b8">
+          YAMAHA PSR-SX920 · MIDI DATA FLOW
+          <animate attributeName="opacity" values="1;0.32;1" dur="3.5s" repeatCount="indefinite"/>
+        </text>
+
+        <!-- ETIQUETA DE ESTADO ALTERNANTE -->
+        <g text-anchor="middle" font-family="'Consolas','Monaco',monospace" font-size="11.5" font-weight="700" letter-spacing="2.5">
+          <text x="400" y="92" fill="#00d4ff">TX / RX · SYSTEM EXCLUSIVE : ON
+            <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.42;0.48;0.96;1" dur="6s" repeatCount="indefinite"/>
+          </text>
+          <text x="400" y="92" fill="#22c55e">CHORD DETECTION · ROOT + TYPE : ON
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.42;0.48;0.96;1" dur="6s" repeatCount="indefinite"/>
+          </text>
+        </g>
+
+        <!-- RUTAS DE FLUJO -->
+        <use href="#sxPathRx" fill="none" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" opacity="0.5"/>
+        <use href="#sxPathRx" fill="none" stroke="#00d4ff" stroke-width="2.3" stroke-linecap="round" stroke-dasharray="16 18" filter="url(#sxGlow)">
+          <animate attributeName="stroke-dashoffset" from="0" to="-340" dur="3.6s" repeatCount="indefinite"/>
+        </use>
+        <use href="#sxPathTx" fill="none" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" opacity="0.5"/>
+        <use href="#sxPathTx" fill="none" stroke="#a855f7" stroke-width="2.3" stroke-linecap="round" stroke-dasharray="16 18" filter="url(#sxGlow)">
+          <animate attributeName="stroke-dashoffset" from="0" to="-340" dur="4.4s" repeatCount="indefinite"/>
+        </use>
+
+        <!-- NODOS DE ALERTA SOBRE LAS RUTAS -->
+        <g fill="none" stroke-width="1.6">
+          <rect x="281" y="156" width="9" height="9" rx="2" stroke="#00d4ff">
+            <animate attributeName="opacity" values="1;0.15;1" dur="2.2s" repeatCount="indefinite"/>
+            <animate attributeName="stroke-width" values="1;3;1" dur="2.2s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="511" y="156" width="9" height="9" rx="2" stroke="#00d4ff">
+            <animate attributeName="opacity" values="1;0.15;1" dur="2.8s" begin="0.5s" repeatCount="indefinite"/>
+            <animate attributeName="stroke-width" values="1;3;1" dur="2.8s" begin="0.5s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="281" y="296" width="9" height="9" rx="2" stroke="#a855f7">
+            <animate attributeName="opacity" values="1;0.15;1" dur="2.5s" begin="0.9s" repeatCount="indefinite"/>
+            <animate attributeName="stroke-width" values="1;3;1" dur="2.5s" begin="0.9s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="511" y="296" width="9" height="9" rx="2" stroke="#a855f7">
+            <animate attributeName="opacity" values="1;0.15;1" dur="3.1s" begin="1.3s" repeatCount="indefinite"/>
+            <animate attributeName="stroke-width" values="1;3;1" dur="3.1s" begin="1.3s" repeatCount="indefinite"/>
+          </rect>
+        </g>
+
+        <!-- PARTÍCULAS RX -->
+        <circle r="4.5" fill="#00d4ff" filter="url(#sxGlow)">
+          <animateMotion dur="4s" begin="0s" repeatCount="indefinite"><mpath href="#sxPathRx"/></animateMotion>
+          <animate attributeName="opacity" values="0;1;1;0.2;0" dur="4s" begin="0s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="3.2" fill="#22c55e" filter="url(#sxGlow)">
+          <animateMotion dur="4s" begin="1.4s" repeatCount="indefinite"><mpath href="#sxPathRx"/></animateMotion>
+          <animate attributeName="opacity" values="0;1;1;0.2;0" dur="4s" begin="1.4s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="2.6" fill="#00d4ff" filter="url(#sxGlow)">
+          <animateMotion dur="4s" begin="2.6s" repeatCount="indefinite"><mpath href="#sxPathRx"/></animateMotion>
+          <animate attributeName="opacity" values="0;1;1;0.2;0" dur="4s" begin="2.6s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- PARTÍCULAS TX -->
+        <circle r="4.2" fill="#a855f7" filter="url(#sxGlow)">
+          <animateMotion dur="4.6s" begin="0.4s" repeatCount="indefinite"><mpath href="#sxPathTx"/></animateMotion>
+          <animate attributeName="opacity" values="0;1;1;0.2;0" dur="4.6s" begin="0.4s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="3" fill="#f59e0b" filter="url(#sxGlow)">
+          <animateMotion dur="4.6s" begin="1.8s" repeatCount="indefinite"><mpath href="#sxPathTx"/></animateMotion>
+          <animate attributeName="opacity" values="0;1;1;0.2;0" dur="4.6s" begin="1.8s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="2.6" fill="#a855f7" filter="url(#sxGlow)">
+          <animateMotion dur="4.6s" begin="3.1s" repeatCount="indefinite"><mpath href="#sxPathTx"/></animateMotion>
+          <animate attributeName="opacity" values="0;1;1;0.2;0" dur="4.6s" begin="3.1s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- GHOST BLOCK RX -->
+        <g>
+          <animateMotion dur="6s" begin="0s" repeatCount="indefinite"><mpath href="#sxPathRx"/></animateMotion>
+          <animate attributeName="opacity" values="0;0.95;0.95;0;0" keyTimes="0;0.12;0.82;0.97;1" dur="6s" begin="0s" repeatCount="indefinite"/>
+          <rect x="-31" y="-11" width="62" height="22" rx="5" fill="#0b1324" stroke="#00d4ff" stroke-width="1.2" opacity="0.95"/>
+          <text x="0" y="4" text-anchor="middle" font-family="'Consolas','Monaco',monospace" font-size="9.5" fill="#00d4ff">F0 43 10 4C</text>
+        </g>
+
+        <!-- GHOST BLOCK TX -->
+        <g>
+          <animateMotion dur="6.8s" begin="1.6s" repeatCount="indefinite"><mpath href="#sxPathTx"/></animateMotion>
+          <animate attributeName="opacity" values="0;0.95;0.95;0;0" keyTimes="0;0.12;0.82;0.97;1" dur="6.8s" begin="1.6s" repeatCount="indefinite"/>
+          <rect x="-33" y="-11" width="66" height="22" rx="5" fill="#0b1324" stroke="#a855f7" stroke-width="1.2" opacity="0.95"/>
+          <text x="0" y="4" text-anchor="middle" font-family="'Consolas','Monaco',monospace" font-size="9.5" fill="#a855f7">F0 43 7E ... F7</text>
+        </g>
+
+        <!-- NODO IZQUIERDO -->
+        <g>
+          <circle cx="140" cy="230" r="70" fill="url(#sxHaloCyan)">
+            <animate attributeName="r" values="58;88;58" dur="4.5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.85;0.2;0.85" dur="4.5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="140" cy="230" r="46" fill="#0f172a" stroke="#00d4ff" stroke-width="2" filter="url(#sxGlow)"/>
+          <circle cx="140" cy="230" r="46" fill="none" stroke="#00d4ff" stroke-width="1" stroke-dasharray="4 8" opacity="0.85">
+            <animateTransform attributeName="transform" type="rotate" from="0 140 230" to="360 140 230" dur="9s" repeatCount="indefinite"/>
+          </circle>
+          <text x="140" y="235" text-anchor="middle" font-family="'Consolas','Monaco',monospace" font-size="13" font-weight="800" fill="#00d4ff">MIDI</text>
+          <text x="140" y="298" text-anchor="middle" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" font-weight="700" letter-spacing="1.2" fill="#94a3b8">
+            DISPOSITIVO EXTERNO
+            <animate attributeName="opacity" values="1;0.4;1" dur="3.2s" repeatCount="indefinite"/>
+          </text>
+        </g>
+
+        <!-- NODO DERECHO -->
+        <g>
+          <circle cx="660" cy="230" r="70" fill="url(#sxHaloGreen)">
+            <animate attributeName="r" values="58;90;58" dur="5.5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.8;0.18;0.8" dur="5.5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="660" cy="230" r="46" fill="#0f172a" stroke="#22c55e" stroke-width="2" filter="url(#sxGlow)"/>
+          <circle cx="660" cy="230" r="46" fill="none" stroke="#22c55e" stroke-width="1" stroke-dasharray="4 8" opacity="0.85">
+            <animateTransform attributeName="transform" type="rotate" from="360 660 230" to="0 660 230" dur="7s" repeatCount="indefinite"/>
+          </circle>
+          <text x="660" y="235" text-anchor="middle" font-family="'Consolas','Monaco',monospace" font-size="12" font-weight="800" fill="#22c55e">SX920</text>
+          <text x="660" y="298" text-anchor="middle" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" font-weight="700" letter-spacing="1.2" fill="#94a3b8">
+            YAMAHA PSR-SX920
+            <animate attributeName="opacity" values="1;0.4;1" dur="3.8s" repeatCount="indefinite"/>
+          </text>
+        </g>
+
+        <!-- EXPLOSIONES RADIALES -->
+        <g transform="translate(660,230)">
+          <g>
+            <animateTransform attributeName="transform" type="scale" values="0.35;1.9" dur="3.2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.95;0" dur="3.2s" repeatCount="indefinite"/>
+            <g stroke="#22c55e" stroke-width="2" stroke-linecap="round">
+              <line x1="54" y1="0" x2="88" y2="0"/>
+              <line x1="-54" y1="0" x2="-88" y2="0"/>
+              <line x1="0" y1="54" x2="0" y2="88"/>
+              <line x1="0" y1="-54" x2="0" y2="-88"/>
+              <line x1="38" y1="38" x2="62" y2="62"/>
+              <line x1="-38" y1="-38" x2="-62" y2="-62"/>
+              <line x1="38" y1="-38" x2="62" y2="-62"/>
+              <line x1="-38" y1="38" x2="-62" y2="62"/>
+            </g>
+          </g>
+        </g>
+        <g transform="translate(140,230)">
+          <g>
+            <animateTransform attributeName="transform" type="scale" values="0.35;1.9" dur="4.1s" begin="1.2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.95;0" dur="4.1s" begin="1.2s" repeatCount="indefinite"/>
+            <g stroke="#00d4ff" stroke-width="2" stroke-linecap="round">
+              <line x1="54" y1="0" x2="88" y2="0"/>
+              <line x1="-54" y1="0" x2="-88" y2="0"/>
+              <line x1="0" y1="54" x2="0" y2="88"/>
+              <line x1="0" y1="-54" x2="0" y2="-88"/>
+              <line x1="38" y1="38" x2="62" y2="62"/>
+              <line x1="-38" y1="-38" x2="-62" y2="-62"/>
+              <line x1="38" y1="-38" x2="62" y2="-62"/>
+              <line x1="-38" y1="38" x2="-62" y2="62"/>
+            </g>
+          </g>
+        </g>
+
+        <!-- TECLADO -->
+        <g>
+          <rect x="246" y="378" width="310" height="44" rx="7" fill="#0b1324" stroke="#1e3a5f" stroke-width="1.5"/>
+          <g fill="#e2e8f0" stroke="#0b1324" stroke-width="1.2">
+            <rect x="252" y="384" width="29" height="32" rx="2"/>
+            <rect x="282" y="384" width="29" height="32" rx="2"/>
+            <rect x="312" y="384" width="29" height="32" rx="2"/>
+            <rect x="342" y="384" width="29" height="32" rx="2"/>
+            <rect x="372" y="384" width="29" height="32" rx="2"/>
+            <rect x="402" y="384" width="29" height="32" rx="2"/>
+            <rect x="432" y="384" width="29" height="32" rx="2"/>
+            <rect x="462" y="384" width="29" height="32" rx="2"/>
+            <rect x="492" y="384" width="29" height="32" rx="2"/>
+            <rect x="522" y="384" width="29" height="32" rx="2"/>
+          </g>
+          <g fill="#0a0e1a" stroke="#0b1324" stroke-width="1">
+            <rect x="274" y="384" width="15" height="21" rx="2"/>
+            <rect x="304" y="384" width="15" height="21" rx="2"/>
+            <rect x="364" y="384" width="15" height="21" rx="2"/>
+            <rect x="394" y="384" width="15" height="21" rx="2"/>
+            <rect x="424" y="384" width="15" height="21" rx="2"/>
+            <rect x="484" y="384" width="15" height="21" rx="2"/>
+            <rect x="514" y="384" width="15" height="21" rx="2"/>
+          </g>
+          <!-- Teclas activadas por SysEx: C(I) · E(III) · G(V) -->
+          <rect x="252" y="384" width="29" height="32" rx="2" fill="#00d4ff" opacity="0">
+            <animate attributeName="opacity" values="0;0.78;0" dur="2.5s" begin="0s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="312" y="384" width="29" height="32" rx="2" fill="#22c55e" opacity="0">
+            <animate attributeName="opacity" values="0;0.78;0" dur="2.5s" begin="0.4s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="372" y="384" width="29" height="32" rx="2" fill="#f59e0b" opacity="0">
+            <animate attributeName="opacity" values="0;0.78;0" dur="2.5s" begin="0.8s" repeatCount="indefinite"/>
+          </rect>
+        </g>
+
+        <!-- ETIQUETA DE ACORDE -->
+        <text x="400" y="440" text-anchor="middle" font-family="'Consolas','Monaco',monospace" font-size="10.5" font-weight="700" fill="#22c55e" letter-spacing="1.4">
+          C(I) · E(III) · G(V)
+          <animate attributeName="opacity" values="1;0.3;1" dur="2.5s" repeatCount="indefinite"/>
+        </text>
+
+        <!-- FLUJO HEXADECIMAL -->
+        <text x="26" y="440" font-family="'Consolas','Monaco',monospace" font-size="10" fill="#a855f7" letter-spacing="1">
+          F0 43 10 4C ... F7
+          <animate attributeName="opacity" values="0.9;0.25;0.9" dur="4s" repeatCount="indefinite"/>
+        </text>
+
+        <!-- FIRMA -->
+        <text x="774" y="440" text-anchor="end" font-family="'Segoe UI',system-ui,sans-serif" font-size="10.5" font-weight="700" fill="#64748b" letter-spacing="0.8">
+          Rubén Sbarsky
+          <animate attributeName="opacity" values="0.35;0.95;0.35" dur="5.5s" repeatCount="indefinite"/>
+        </text>
+
+        <!-- INDICADOR LIVE -->
+        <g transform="translate(690,36)">
+          <circle cx="0" cy="0" r="5" fill="#ef4444" filter="url(#sxGlow)">
+            <animate attributeName="opacity" values="1;0.15;1" dur="1.6s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="4;7;4" dur="1.6s" repeatCount="indefinite"/>
+          </circle>
+          <text x="13" y="4.5" font-family="'Segoe UI',system-ui,sans-serif" font-size="12" font-weight="800" fill="#ef4444" letter-spacing="2.5">LIVE</text>
+        </g>
+
+        <!-- CLÍMAX -->
+        <g>
+          <animate attributeName="opacity" values="0;0;0.5;0;0" keyTimes="0;0.6;0.66;0.75;1" dur="8s" repeatCount="indefinite"/>
+          <rect x="0" y="0" width="800" height="450" fill="#00d4ff" opacity="0.10"/>
+          <text x="400" y="252" text-anchor="middle" font-family="'Segoe UI',system-ui,sans-serif" font-size="74" font-weight="800" fill="#00d4ff" letter-spacing="10" filter="url(#sxGlowSoft)" opacity="0.75">SysEx</text>
+        </g>
+
+      </g>
+    </svg>
+  </div>
+
+  <span class="badge-top">Tutorial Técnico · MIDI &amp; SysEx</span>
+  <h1>Configuración y Gestión de Mensajes de Sistema Exclusivo (SysEx) en el Yamaha PSR-SX920</h1>
+  <p class="subtitle">Control total de la arquitectura interna: ajustes globales, datos armónicos y parámetros XG</p>
+
+  <p class="description">
+    Los <strong>mensajes de Sistema Exclusivo (SysEx)</strong> te permiten tomar el control total de la arquitectura
+    interna de tu <strong>Yamaha PSR-SX920</strong>, gestionando desde ajustes globales del sistema hasta la recepción
+    automática de datos armónicos y parámetros XG. A continuación tienes una guía práctica paso a paso para aprender
+    a configurar, supervisar y utilizar los mensajes SysEx en tu teclado.
+  </p>
+
+  <div class="quote">
+    Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien.
+  </div>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="m-val">3</div>
+      <div class="m-lab">Fases del tutorial</div>
+    </div>
+    <div class="metric">
+      <div class="m-val">2</div>
+      <div class="m-lab">Bloques SysEx</div>
+    </div>
+    <div class="metric">
+      <div class="m-val">4</div>
+      <div class="m-lab">Tipos de evento</div>
+    </div>
+    <div class="metric">
+      <div class="m-val">1</div>
+      <div class="m-lab">Plantilla de usuario</div>
+    </div>
+  </div>
+
+  <div class="stamp">
+    <span class="chip">📅 <b>23/09/2026</b></span>
+    <span class="chip">🕐 <b>05:30:16</b></span>
+    <span class="chip">🎹 <b>Yamaha PSR-SX920</b></span>
+    <span class="chip">👨‍💻 <b>Rubén Sbarsky</b></span>
+  </div>
+
+</section>
+
+<!-- ============================ FASE 1 ============================ -->
+<section id="fase1" class="section">
+
+  <div class="sec-head">
+    <div class="sec-ico">⚙️</div>
+    <div>
+      <h2>Fase 1: Habilitar la Transmisión y Recepción de SysEx en el Teclado</h2>
+      <div class="sec-sub">Ajustes MIDI · System Exclusive Message · Chord System Exclusive Message</div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <span class="co-ico">ℹ️</span>
+    <div>
+      <span class="co-title">Info</span>
+      Antes de enviar o recibir instrucciones exclusivas desde un ordenador o dispositivo MIDI externo, debes
+      asegurarte de que el PSR-SX920 tenga activos los filtros correspondientes.
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">Abre el menú de ajustes MIDI</div>
+      <ul>
+        <li>Presiona el botón físico <span class="kbd">[MENU]</span> en el panel principal.</li>
+        <li>En la pantalla táctil, toca la opción <span class="kbd">[MIDI]</span>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">Accede a los ajustes del sistema</div>
+      <ul>
+        <li>En la columna lateral izquierda de la pantalla, toca la pestaña <span class="kbd">System</span>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">Configura la sección <span class="code">System Exclusive Message</span></div>
+      <ul>
+        <li><strong>Transmit (Transmitir):</strong> Toca la casilla para ajustarla en <strong>On</strong> si deseas que
+            el teclado envíe mensajes SysEx cuando modifiques parámetros internos.</li>
+        <li><strong>Receive (Recibir):</strong> Asegúrate de que esté en <strong>On</strong> para que el PSR-SX920
+            reconozca y responda a las instrucciones SysEx que reciba desde un secuenciador o programa externo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <div class="step-title">Configura la sección <span class="code">Chord System Exclusive Message</span></div>
+      <ul>
+        <li><strong>Transmit / Receive:</strong> Activa estas casillas en <strong>On</strong> si utilizas un equipo
+            externo para transmitir o recibir datos de detección de acordes (<em>root</em> y <em>type</em>) en formato
+            exclusivo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <div class="step-title">Guarda tu plantilla MIDI de usuario</div>
+      <ul>
+        <li>Toca el icono <span class="kbd">[Save]</span> (disquete) en la esquina superior derecha.</li>
+        <li>Selecciona la pestaña <strong>User</strong>, nombra tu plantilla (por ejemplo: <span class="code">SysEx_Config</span>)
+            y toca <strong>OK</strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Resumen de los cuatro controles SysEx</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Sección</th>
+            <th>Control</th>
+            <th>Función</th>
+            <th>Valor recomendado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>System Exclusive Message</td>
+            <td class="mono">Transmit</td>
+            <td>El teclado envía mensajes SysEx cuando modificas parámetros internos.</td>
+            <td><strong>On</strong></td>
+          </tr>
+          <tr>
+            <td>System Exclusive Message</td>
+            <td class="mono">Receive</td>
+            <td>El PSR-SX920 reconoce y responde a las instrucciones SysEx recibidas desde un secuenciador o programa externo.</td>
+            <td><strong>On</strong></td>
+          </tr>
+          <tr>
+            <td>Chord System Exclusive Message</td>
+            <td class="mono">Transmit</td>
+            <td>Transmite datos de detección de acordes (<em>root</em> y <em>type</em>) en formato exclusivo a un equipo externo.</td>
+            <td><strong>On</strong> si usas equipo externo</td>
+          </tr>
+          <tr>
+            <td>Chord System Exclusive Message</td>
+            <td class="mono">Receive</td>
+            <td>Recibe datos de detección de acordes (<em>root</em> y <em>type</em>) en formato exclusivo desde un equipo externo.</td>
+            <td><strong>On</strong> si usas equipo externo</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Panel ilustrativo de configuración</h3>
+    <p>Pulsa cada interruptor para visualizar cómo quedarían los cuatro filtros descritos en esta fase. Es un panel
+       de práctica: los cambios no afectan a tu teclado.</p>
+    <div class="toggle-panel">
+      <div class="toggle-row">
+        <div>
+          <div class="tg-name">System Exclusive Message · Transmit</div>
+          <div class="tg-desc">El teclado envía mensajes SysEx al modificar parámetros internos.</div>
+        </div>
+        <button class="switch on" data-switch>ON</button>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="tg-name">System Exclusive Message · Receive</div>
+          <div class="tg-desc">El teclado responde a instrucciones SysEx externas.</div>
+        </div>
+        <button class="switch on" data-switch>ON</button>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="tg-name">Chord System Exclusive Message · Transmit</div>
+          <div class="tg-desc">Datos de detección de acordes (<em>root</em> y <em>type</em>) en formato exclusivo.</div>
+        </div>
+        <button class="switch on" data-switch>ON</button>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="tg-name">Chord System Exclusive Message · Receive</div>
+          <div class="tg-desc">Recepción de datos de acordes en formato exclusivo.</div>
+        </div>
+        <button class="switch on" data-switch>ON</button>
+      </div>
+    </div>
+    <div class="callout ejemplo">
+      <span class="co-ico">✅</span>
+      <div>
+        <span class="co-title">Ejemplo</span>
+        Una plantilla guardada en la pestaña <strong>User</strong> con el nombre <span class="code">SysEx_Config</span>
+        conserva estos ajustes para tus próximas sesiones de trabajo.
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================ FASE 2 ============================ -->
+<section id="fase2" class="section">
+
+  <div class="sec-head">
+    <div class="sec-ico">🎛️</div>
+    <div>
+      <h2>Fase 2: Editar Eventos SysEx en Canciones MIDI (<span style="color:var(--accent)">Step Edit</span>)</h2>
+      <div class="sec-sub">Revisar · copiar · mover · limpiar comandos exclusivos</div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <span class="co-ico">ℹ️</span>
+    <div>
+      <span class="co-title">Info</span>
+      Si estás trabajando en la producción de una canción MIDI (<em>MIDI Song</em>) y necesitas revisar, copiar,
+      mover o limpiar comandos exclusivos que controlen la configuración inicial de la pista, realiza el siguiente
+      procedimiento.
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">Abre la pantalla de grabación y edición MIDI</div>
+      <ul>
+        <li>Presiona el botón <span class="kbd">[RECORDING]</span> del panel y selecciona
+            <strong>MIDI [Multi Recording]</strong> en la pantalla.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">Carga la canción que deseas editar</div>
+      <ul>
+        <li>Toca el nombre de la canción en la esquina superior izquierda para seleccionar el archivo MIDI.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">Entra al editor de eventos paso a paso</div>
+      <ul>
+        <li>En la barra superior de la pantalla táctil, toca el botón <span class="kbd">StepEdit</span>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <div class="step-title">Selecciona SysEx como objetivo de edición</div>
+      <ul>
+        <li>En la esquina superior izquierda (donde habitualmente se selecciona de <span class="code">Ch1</span> a
+            <span class="code">Ch16</span>), toca el cuadro desplegable y elige <strong><span class="code">SysEx</span></strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <div class="step-title">Supervisa los eventos SysEx registrados</div>
+      <p>En la lista de eventos verás comandos como:</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Evento</th>
+              <th>Nombre completo</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">ScBar</td>
+              <td>Score Start Bar</td>
+              <td>Define el número de compás inicial para la partitura en pantalla.</td>
+            </tr>
+            <tr>
+              <td class="mono">Tempo / Time / Key</td>
+              <td>Tempo / Time / Key</td>
+              <td>Ajustes de velocidad, compás y tonalidad.</td>
+            </tr>
+            <tr>
+              <td class="mono">XGPrm</td>
+              <td>XG Parameters</td>
+              <td>Modificaciones detalladas de parámetros del sistema XG.</td>
+            </tr>
+            <tr>
+              <td class="mono">Sys/Ex.</td>
+              <td>System Exclusive</td>
+              <td>Mensajes de sistema exclusivo codificados.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-body">
+      <div class="step-title">Edita los mensajes según tus necesidades</div>
+      <ul>
+        <li>En la pantalla del PSR-SX920 no se pueden redactar códigos hexadecimales desde cero para eventos
+            <span class="code">Sys/Ex.</span></li>
+        <li>Pero sí puedes utilizar los botones inferiores <span class="kbd">[Cut]</span>,
+            <span class="kbd">[Copy]</span>, <span class="kbd">[Paste]</span> y <span class="kbd">[Delete]</span>
+            para gestionar o eliminar eventos no deseados.</li>
+      </ul>
+      <div class="callout warn">
+        <span class="co-ico">⚠️</span>
+        <div>
+          <span class="co-title">Advertencia</span>
+          La edición de eventos <span class="code">Sys/Ex.</span> en pantalla se limita a cortar, copiar, pegar y
+          eliminar. No es posible redactar códigos hexadecimales desde cero en el propio teclado.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">7</div>
+    <div class="step-body">
+      <div class="step-title">Guarda los cambios de la canción</div>
+      <ul>
+        <li>Toca el icono de disquete <span class="kbd">Save</span> en la parte superior para almacenar la canción
+            editada en la memoria <strong>User</strong> o <strong>USB</strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================ FASE 3 ============================ -->
+<section id="fase3" class="section">
+
+  <div class="sec-head">
+    <div class="sec-ico">🎹</div>
+    <div>
+      <h2>Fase 3: Práctica Musical Guiada (Control Armónico Exclusivo)</h2>
+      <div class="sec-sub">C(I) · E(III) · G(V) — nomenclatura americana y grados de la escala</div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <span class="co-ico">ℹ️</span>
+    <div>
+      <span class="co-title">Info</span>
+      Cuando transmites datos de acordes mediante mensajes SysEx exclusivos desde un dispositivo externo hacia el
+      PSR-SX920, la sección de acompañamiento automático procesará las notas armónicas de la siguiente manera.
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">Tónica de Do Mayor</div>
+      <p>Al enviar el mensaje exclusivo correspondiente al acorde tónico de Do Mayor, el sistema procesará la
+         estructura de las notas <strong>C(I)</strong>, <strong>E(III)</strong> y <strong>G(V)</strong>, adaptando
+         la línea de bajo y los instrumentos del estilo.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">Dominante de Sol Mayor</div>
+      <p>Si la secuencia cambia a la dominante de Sol Mayor enviando las notas <strong>G(V)</strong>,
+         <strong>B(VII)</strong> y <strong>D(II)</strong>, el mensaje SysEx actualizará la armonía del ritmo sin
+         alterar la ejecución de tu mano derecha.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">Subdominante de Fa Mayor</div>
+      <p>Al resolver hacia la subdominante de Fa Mayor con las notas <strong>F(IV)</strong>, <strong>A(VI)</strong>
+         y <strong>C(I)</strong>, la base instrumental responderá con total fluidez.</p>
+    </div>
+  </div>
+
+  <div class="chord-grid">
+    <div class="chord-card c1">
+      <div class="cc-name">Do Mayor · Tónica</div>
+      <div class="cc-notes">C(I) · E(III) · G(V)</div>
+      <div class="cc-desc">Adapta la línea de bajo y los instrumentos del estilo.</div>
+    </div>
+    <div class="chord-card c2">
+      <div class="cc-name">Sol Mayor · Dominante</div>
+      <div class="cc-notes">G(V) · B(VII) · D(II)</div>
+      <div class="cc-desc">Actualiza la armonía del ritmo sin alterar tu mano derecha.</div>
+    </div>
+    <div class="chord-card c3">
+      <div class="cc-name">Fa Mayor · Subdominante</div>
+      <div class="cc-notes">F(IV) · A(VI) · C(I)</div>
+      <div class="cc-desc">La base instrumental responde con total fluidez.</div>
+    </div>
+  </div>
+
+  <div class="callout ejemplo">
+    <span class="co-ico">✅</span>
+    <div>
+      <span class="co-title">Ejemplo</span>
+      Progresión completa del ejercicio: <strong>C(I) → G(V) → F(IV)</strong>, siempre con la nomenclatura
+      americana de notas y el grado de la escala entre paréntesis.
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================ CONSEJOS ============================ -->
+<section id="consejos" class="section">
+
+  <div class="sec-head">
+    <div class="sec-ico">💡</div>
+    <div>
+      <h2>Consejos de Tutor para el Trabajo con SysEx</h2>
+      <div class="sec-sub">Multi Pads · Respaldo de canciones</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Edición en Multi Pads</h3>
+    <p>Recuerda que al crear o editar un Multi Pad vía MIDI (<strong>Multi Pad Creator</strong> →
+       <strong>Step Edit</strong>), también puedes incluir eventos de canal y mensajes de Sistema Exclusivo para
+       activar efectos en momentos clave.</p>
+  </div>
+
+  <div class="callout warn">
+    <span class="co-ico">⚠️</span>
+    <div>
+      <span class="co-title">Advertencia · Respaldo de canciones</span>
+      Antes de borrar cualquier evento SysEx en la lista de <span class="code">StepEdit</span>, guarda una copia de
+      seguridad del archivo MIDI original. Eliminar un evento SysEx inicial podría quitar la configuración de
+      reverberación o ecualización propia del tema.
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================ FUENTES ============================ -->
+<section id="fuentes" class="section">
+
+  <div class="sec-head">
+    <div class="sec-ico">📚</div>
+    <div>
+      <h2>Fuentes</h2>
+      <div class="sec-sub">Documentación de referencia utilizada para este tutorial</div>
+    </div>
+  </div>
+
+  <div class="src-item">
+    <h4>Tutorial Paso a Paso: Configuración y Gestión de Mensajes de Sistema Exclusivo (SysEx) en el Yamaha PSR-SX920</h4>
+    <p>Documento fuente aportado por el usuario (archivo <span class="code">Tutorial-Paso-a-Pa.txt</span>).
+       Todo el contenido técnico de este tutorial —las tres fases, los procedimientos de configuración MIDI, los
+       tipos de evento SysEx y la práctica armónica guiada— procede íntegramente de este documento.</p>
+  </div>
+
+  <div class="src-item">
+    <h4>Equipo de referencia: Yamaha PSR-SX920</h4>
+    <p>Teclado arreglista digital de la serie PSR-SX de Yamaha. Es el equipo sobre el que se describen todos los
+       menús, botones y parámetros: <span class="code">[MENU]</span>, <span class="code">[MIDI]</span>,
+       <span class="code">System</span>, <span class="code">[RECORDING]</span>,
+       <span class="code">MIDI [Multi Recording]</span>, <span class="code">StepEdit</span> y
+       <span class="code">Multi Pad Creator</span>.</p>
+  </div>
+
+  <div class="callout info">
+    <span class="co-ico">ℹ️</span>
+    <div>
+      <span class="co-title">Info</span>
+      El documento fuente no incluye enlaces externos, URL ni vídeos. Por ese motivo, esta sección no muestra
+      enlaces: no se ha añadido ninguna referencia que no estuviera presente en el material original.
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================ CRÉDITOS ============================ -->
+<section id="creditos" class="section">
+
+  <div class="sec-head">
+    <div class="sec-ico">🏆</div>
+    <div>
+      <h2>Créditos</h2>
+      <div class="sec-sub">Autoría, fecha y propósito educativo</div>
+    </div>
+  </div>
+
+  <div class="hero-wrap" id="svgCreditSlot"></div>
+
+  <div class="credit-card">
+    <div class="cc-big">Configuración y Gestión de Mensajes de Sistema Exclusivo (SysEx) en el Yamaha PSR-SX920</div>
+    <div class="cc-role">Tutorial Técnico · MIDI &amp; SysEx</div>
+  </div>
+
+  <div class="credit-card">
+    <div class="cc-big">Rubén Sbarsky</div>
+    <div class="cc-role">Créditos</div>
+  </div>
+
+  <div class="credit-meta">
+    <div class="meta-box">
+      <div class="mb-k">Fecha</div>
+      <div class="mb-v">23/09/2026</div>
+    </div>
+    <div class="meta-box">
+      <div class="mb-k">Hora</div>
+      <div class="mb-v">05:30:16</div>
+    </div>
+    <div class="meta-box">
+      <div class="mb-k">Finalidad</div>
+      <div class="mb-v">Educativa</div>
+    </div>
+  </div>
+
+  <div class="callout ejemplo">
+    <span class="co-ico">✅</span>
+    <div>
+      <span class="co-title">Indicación educativa</span>
+      Este tutorial tiene una finalidad exclusivamente educativa y de divulgación. Su objetivo es facilitar la
+      comprensión de los mensajes de Sistema Exclusivo (SysEx) y de los flujos de datos MIDI en el
+      Yamaha PSR-SX920.
+    </div>
+  </div>
+
+  <div class="fiat">Fiat iustitia, ruat caelum.</div>
+
+</section>
+
+</main>
+
+<button id="toTop" aria-label="Volver arriba">↑</button>
+
+<footer class="site-footer">
+  <p>📚 Tutorial solo con fines Educativos y Divulgación</p>
+  <p>👨‍💻 Créditos: Rubén Sbarsky</p>
+  <p>📅 FECHA: 23/09/2026 &nbsp;·&nbsp; Hora: 05:30:16</p>
+  <p class="fiat-foot">Fiat iustitia, ruat caelum.</p>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  var sections  = Array.prototype.slice.call(document.querySelectorAll('.section'));
+  var navBtns   = Array.prototype.slice.call(document.querySelectorAll('.nav-btn'));
+  var heroSvg   = document.getElementById('heroSvg');
+  var homeSlot  = document.getElementById('svgHomeSlot');
+  var creditSlot= document.getElementById('svgCreditSlot');
+  var progressFill = document.getElementById('progressFill');
+  var toTop     = document.getElementById('toTop');
+  var navScroll = document.getElementById('navScroll');
+
+  /* ---------- Reducción de movimiento ---------- */
+  var reduceMotion = false;
+  try{
+    reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }catch(e){ reduceMotion = false; }
+
+  if(reduceMotion && heroSvg && heroSvg.pauseAnimations){
+    try{ heroSvg.pauseAnimations(); }catch(e){}
+  }
+
+  /* ---------- Barra de progreso ---------- */
+  function updateProgress(){
+    var doc = document.documentElement;
+    var h = doc.scrollHeight - window.innerHeight;
+    var p = h > 0 ? (window.scrollY / h) * 100 : 0;
+    if(p < 0){ p = 0; }
+    if(p > 100){ p = 100; }
+    progressFill.style.width = p + '%';
+    if(window.scrollY > 260){
+      toTop.classList.add('show');
+    }else{
+      toTop.classList.remove('show');
+    }
+  }
+
+  /* ---------- Navegación SPA ---------- */
+  function goTo(id){
+    var i;
+    for(i = 0; i < sections.length; i++){
+      sections[i].classList.toggle('active', sections[i].id === id);
+    }
+    for(i = 0; i < navBtns.length; i++){
+      navBtns[i].classList.toggle('active', navBtns[i].getAttribute('data-target') === id);
+    }
+
+    /* Reutilizamos EXACTAMENTE el mismo SVG animado en HOME y en CRÉDITOS */
+    if(id === 'creditos'){
+      if(heroSvg.parentNode !== creditSlot){
+        creditSlot.appendChild(heroSvg);
+      }
+    }else if(id === 'home'){
+      if(heroSvg.parentNode !== homeSlot){
+        homeSlot.appendChild(heroSvg);
+      }
+    }
+
+    /* Reinicio de la línea de tiempo SMIL para que la animación siga viva */
+    if(heroSvg && heroSvg.setCurrentTime){
+      try{ heroSvg.setCurrentTime(0); }catch(e){}
+    }
+    if(reduceMotion && heroSvg && heroSvg.pauseAnimations){
+      try{ heroSvg.pauseAnimations(); }catch(e){}
+    }
+
+    /* Centrado del botón activo en la barra horizontal */
+    var activeBtn = null;
+    for(i = 0; i < navBtns.length; i++){
+      if(navBtns[i].getAttribute('data-target') === id){ activeBtn = navBtns[i]; break; }
+    }
+    if(activeBtn && navScroll){
+      var target = activeBtn.offsetLeft - (navScroll.clientWidth / 2) + (activeBtn.offsetWidth / 2);
+      if(target < 0){ target = 0; }
+      if(navScroll.scrollTo){
+        try{ navScroll.scrollTo({left: target, behavior: reduceMotion ? 'auto' : 'smooth'}); }catch(e){ navScroll.scrollLeft = target; }
+      }else{
+        navScroll.scrollLeft = target;
+      }
+    }
+
+    window.scrollTo(0, 0);
+    updateProgress();
+  }
+
+  navBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      goTo(btn.getAttribute('data-target'));
+    });
+  });
+
+  /* ---------- Botón volver arriba ---------- */
+  toTop.addEventListener('click', function(){
+    window.scrollTo({top: 0, behavior: reduceMotion ? 'auto' : 'smooth'});
+  });
+
+  /* ---------- Interruptores ilustrativos ---------- */
+  var switches = Array.prototype.slice.call(document.querySelectorAll('[data-switch]'));
+  switches.forEach(function(sw){
+    sw.addEventListener('click', function(){
+      if(sw.classList.contains('on')){
+        sw.classList.remove('on');
+        sw.classList.add('off');
+        sw.textContent = 'OFF';
+      }else{
+        sw.classList.remove('off');
+        sw.classList.add('on');
+        sw.textContent = 'ON';
+      }
+    });
+  });
+
+  /* ---------- Eventos globales ---------- */
+  window.addEventListener('scroll', updateProgress, {passive: true});
+  window.addEventListener('resize', updateProgress);
+
+  /* ---------- Estado inicial ---------- */
+  updateProgress();
+  goTo('home');
+
+})();
+</script>
+
+</body>
+</html>
