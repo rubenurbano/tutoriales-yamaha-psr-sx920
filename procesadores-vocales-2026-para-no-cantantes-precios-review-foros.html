@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procesadores Vocales 2026 — Guía Completa para No Cantantes</title>
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --card:#0f172a;
+    --border:#1e3a5f;
+    --accent:#00d4ff;
+    --green:#22c55e;
+    --amber:#f59e0b;
+    --red:#ef4444;
+    --purple:#a855f7;
+    --text:#e2e8f0;
+    --muted:#94a3b8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+  body{overflow-x:hidden}
+
+  /* PROGRESS */
+  #progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--purple));width:0%;z-index:1000;transition:width .1s linear;box-shadow:0 0 12px var(--accent)}
+
+  /* NAVBAR */
+  nav{position:fixed;top:3px;left:0;right:0;background:rgba(10,14,26,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:999;padding:.4rem .5rem}
+  .nav-inner{display:flex;gap:.35rem;overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--accent) transparent;padding-bottom:.15rem}
+  .nav-inner::-webkit-scrollbar{height:5px}
+  .nav-inner::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+  .nav-btn{flex:0 0 auto;background:transparent;border:1px solid var(--border);color:var(--muted);padding:.45rem .8rem;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;letter-spacing:.03em;transition:.25s;white-space:nowrap;font-family:inherit}
+  .nav-btn:hover{color:var(--accent);border-color:var(--accent)}
+  .nav-btn.active{background:linear-gradient(180deg,rgba(0,212,255,.18),rgba(0,212,255,.05));color:var(--accent);border-color:var(--accent);box-shadow:0 0 12px rgba(0,212,255,.3)}
+  .nav-btn.credits{color:var(--purple);border-color:rgba(168,85,247,.4)}
+  .nav-btn.credits.active{background:linear-gradient(180deg,rgba(168,85,247,.2),rgba(168,85,247,.05));color:var(--purple);border-color:var(--purple);box-shadow:0 0 12px rgba(168,85,247,.35)}
+
+  /* LAYOUT */
+  main{padding:4.2rem .8rem 4rem;max-width:1180px;margin:0 auto}
+  section{display:none;animation:fade .4s ease}
+  section.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* HOME */
+  .home-badge{display:inline-block;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.4);color:var(--accent);padding:.3rem .8rem;border-radius:999px;font-size:.72rem;font-weight:700;letter-spacing:.15em;margin-bottom:1rem;text-transform:uppercase}
+  .home-title{font-size:clamp(1.6rem,5vw,2.8rem);font-weight:800;line-height:1.15;letter-spacing:-.02em;margin-bottom:.8rem;background:linear-gradient(135deg,#fff 0%,var(--accent) 60%,var(--purple) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .home-sub{font-size:clamp(.95rem,2.4vw,1.15rem);color:var(--muted);margin-bottom:1.2rem;max-width:820px}
+  .home-desc{color:var(--text);font-size:.95rem;margin-bottom:1.5rem;max-width:900px;opacity:.9}
+  .quote{border-left:3px solid var(--accent);padding:.9rem 1.1rem;background:rgba(0,212,255,.05);border-radius:0 10px 10px 0;font-style:italic;color:var(--accent);font-size:.95rem;margin:1.4rem 0;box-shadow:inset 0 0 20px rgba(0,212,255,.06)}
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.7rem;margin:1.5rem 0}
+  .metric{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.9rem .7rem;text-align:center;position:relative;overflow:hidden}
+  .metric::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+  .metric .v{font-size:1.4rem;font-weight:800;color:var(--accent);display:block}
+  .metric .l{font-size:.68rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:.15rem}
+  .home-datetime{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.2rem;font-size:.82rem;color:var(--muted)}
+  .home-datetime span{background:var(--card);border:1px solid var(--border);padding:.4rem .8rem;border-radius:8px}
+  .home-datetime b{color:var(--accent)}
+
+  /* SVG wrapper */
+  .svg-wrap{width:100%;max-width:100%;margin:1rem 0 1.6rem;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:#070b14;box-shadow:0 0 40px rgba(0,212,255,.12),inset 0 0 60px rgba(0,0,0,.5);aspect-ratio:16/9}
+  .svg-wrap svg{display:block;width:100%;height:100%}
+
+  /* CARDS */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin:1rem 0;position:relative;overflow:hidden;transition:.3s}
+  .card:hover{border-color:rgba(0,212,255,.5);box-shadow:0 6px 30px rgba(0,212,255,.1)}
+  .card h3{font-size:1.15rem;font-weight:700;margin-bottom:.7rem;display:flex;align-items:center;gap:.55rem;flex-wrap:wrap}
+  .card h4{font-size:1rem;font-weight:700;margin:.9rem 0 .5rem;color:var(--accent)}
+  .chip{display:inline-block;padding:.2rem .6rem;border-radius:999px;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;vertical-align:middle}
+  .chip.blue{background:rgba(0,212,255,.15);color:var(--accent);border:1px solid rgba(0,212,255,.4)}
+  .chip.green{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.4)}
+  .chip.amber{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.4)}
+  .chip.red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.4)}
+  .chip.purple{background:rgba(168,85,247,.15);color:var(--purple);border:1px solid rgba(168,85,247,.4)}
+
+  .model{position:relative}
+  .model::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:12px 0 0 12px}
+  .model.blue::before{background:var(--accent);box-shadow:0 0 20px var(--accent)}
+  .model.orange::before{background:var(--amber);box-shadow:0 0 20px var(--amber)}
+  .model.green::before{background:var(--green);box-shadow:0 0 20px var(--green)}
+  .model.purple::before{background:var(--purple);box-shadow:0 0 20px var(--purple)}
+
+  .tech-list{list-style:none;padding:0;margin:.5rem 0}
+  .tech-list li{padding:.35rem 0 .35rem 1.3rem;position:relative;font-size:.88rem;border-bottom:1px dashed rgba(30,58,95,.5)}
+  .tech-list li:last-child{border-bottom:none}
+  .tech-list li::before{content:'▸';position:absolute;left:0;color:var(--accent);font-weight:700}
+
+  .price{background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.25);border-radius:8px;padding:.6rem .85rem;margin:.7rem 0;font-size:.9rem}
+  .price b{color:var(--accent);font-size:1.05rem}
+
+  /* CALLOUTS */
+  .callout{border-radius:10px;padding:.85rem 1rem;margin:.8rem 0;font-size:.88rem;border-left:4px solid;display:flex;gap:.6rem;align-items:flex-start}
+  .callout .ico{font-size:1.1rem;flex:0 0 auto;line-height:1}
+  .callout .body{flex:1}
+  .callout.info{background:rgba(0,212,255,.07);border-color:var(--accent)}
+  .callout.example{background:rgba(34,197,94,.07);border-color:var(--green)}
+  .callout.warn{background:rgba(245,158,11,.07);border-color:var(--amber)}
+  .callout.error{background:rgba(239,68,68,.07);border-color:var(--red)}
+
+  .review{background:rgba(15,23,42,.7);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;margin:.6rem 0;font-style:italic;font-size:.86rem;color:var(--muted)}
+  .review::before{content:'“';color:var(--accent);font-size:1.4rem;font-style:normal;margin-right:.2rem}
+  .review::after{content:'”';color:var(--accent);font-size:1.4rem;font-style:normal;margin-left:.2rem}
+
+  /* TABLES */
+  .tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);margin:1rem 0;-webkit-overflow-scrolling:touch}
+  table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:640px}
+  thead{background:linear-gradient(180deg,rgba(0,212,255,.12),rgba(0,212,255,.04))}
+  th,td{padding:.65rem .7rem;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+  th{color:var(--accent);font-weight:700;letter-spacing:.04em;font-size:.78rem;text-transform:uppercase}
+  tbody tr:hover{background:rgba(0,212,255,.04)}
+  td b{color:var(--accent)}
+
+  /* STEPS */
+  .steps{counter-reset:s;margin:1rem 0}
+  .step{position:relative;padding:.85rem 1rem .85rem 3rem;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:.7rem;font-size:.9rem}
+  .step::before{counter-increment:s;content:counter(s);position:absolute;left:.75rem;top:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;box-shadow:0 0 12px rgba(0,212,255,.4)}
+  .step b{color:var(--accent)}
+
+  /* SIGNAL CHAIN */
+  .chain{background:#070b14;border:1px solid var(--border);border-radius:10px;padding:1rem;font-family:'Courier New',monospace;font-size:.82rem;color:var(--green);overflow-x:auto;margin:1rem 0;white-space:nowrap}
+
+  /* SOURCES */
+  .sources-list{list-style:none;padding:0;margin:1rem 0}
+  .sources-list li{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.6rem .9rem;margin-bottom:.5rem;font-size:.85rem;display:flex;gap:.6rem;align-items:flex-start}
+  .sources-list li::before{content:'🔗';flex:0 0 auto}
+  .sources-list li a,.sources-list li span.link{color:var(--accent);word-break:break-all;text-decoration:none}
+  .sources-list li a:hover{text-decoration:underline}
+
+  /* CREDITS */
+  .credits-panel{text-align:center;padding:1.5rem 1rem}
+  .credits-panel h2{font-size:1.6rem;font-weight:800;margin-bottom:1rem;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .credits-panel .author{font-size:1.2rem;font-weight:700;color:var(--accent);margin:.6rem 0}
+  .credits-panel .meta{color:var(--muted);font-size:.9rem;margin:.3rem 0}
+  .credits-panel .latin{margin-top:1.2rem;font-style:italic;color:var(--purple);font-size:1rem;letter-spacing:.04em}
+  .credits-panel .edu{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:.7rem 1rem;margin:1rem auto;max-width:520px;color:var(--green);font-size:.85rem}
+
+  /* FOOTER */
+  footer{background:#070b14;border-top:1px solid var(--border);padding:1.4rem .8rem;text-align:center;font-size:.82rem;color:var(--muted);margin-top:2rem}
+  footer p{margin:.25rem 0}
+  footer .latin{color:var(--purple);font-style:italic;margin-top:.5rem}
+
+  /* BACK TO TOP */
+  #top-btn{position:fixed;right:1rem;bottom:1rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff;border:none;cursor:pointer;font-size:1.2rem;display:none;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,212,255,.5);z-index:998;transition:.3s}
+  #top-btn.show{display:flex}
+  #top-btn:hover{transform:translateY(-3px) scale(1.06)}
+
+  @media (max-width:640px){
+    main{padding:3.6rem .6rem 3.4rem}
+    .nav-btn{font-size:.72rem;padding:.4rem .65rem}
+    .card{padding:.9rem}
+    .card h3{font-size:1.02rem}
+    .metric .v{font-size:1.15rem}
+    table{font-size:.78rem;min-width:520px}
+    .svg-wrap{border-radius:10px}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav>
+  <div class="nav-inner" id="navInner">
+    <button class="nav-btn active" data-target="home">🏠 INICIO</button>
+    <button class="nav-btn" data-target="proc">🎤 PROCESADORES</button>
+    <button class="nav-btn" data-target="comp">📊 COMPARATIVA</button>
+    <button class="nav-btn" data-target="conex">🔌 CONEXIONES</button>
+    <button class="nav-btn" data-target="consejos">💡 CONSEJOS</button>
+    <button class="nav-btn" data-target="fuentes">📚 FUENTES</button>
+    <button class="nav-btn credits" data-target="creditos">✨ CRÉDITOS</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- HOME -->
+  <section id="home" class="active">
+    <div class="svg-wrap" id="svgHome"></div>
+    <span class="home-badge">● Guía Técnica · 2026</span>
+    <h1 class="home-title">Procesadores Vocales 2026 para No Cantantes</h1>
+    <p class="home-sub">En directo, en casa y busking — todo lo que necesitas saber para elegir, conectar y exprimir un procesador vocal sin ser cantante profesional.</p>
+    <p class="home-desc">Guía actualizada con información oficial de fabricante, fichas técnicas de tiendas especializadas (Thomann, Kirstein, Woodbrass, Sweetwater, Equipboard) y opiniones reales de usuarios en foros (Thomann Reviews, Audiofanzine, Bonedo, ReviewFinder). Los precios están en euros, IVA incluido, y son orientativos para España en 2026: el mercado de audio fluctúa por disponibilidad de stock, así que trátalos como referencia, no como precio cerrado.</p>
+
+    <div class="quote">"Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien."</div>
+
+    <div class="metrics">
+      <div class="metric"><span class="v">4</span><span class="l">Modelos analizados</span></div>
+      <div class="metric"><span class="v">2</span><span class="l">En producción</span></div>
+      <div class="metric"><span class="v">2</span><span class="l">Descatalogados</span></div>
+      <div class="metric"><span class="v">90€+</span><span class="l">Desde</span></div>
+      <div class="metric"><span class="v">2026</span><span class="l">Actualización</span></div>
+    </div>
+
+    <div class="home-datetime">
+      <span>📅 Fecha: <b>23/09/2026</b></span>
+      <span>🕒 Hora: <b>05:30:16</b></span>
+      <span>👨‍💻 Créditos: <b>Rubén Sbarsky</b></span>
+    </div>
+  </section>
+
+  <!-- PROCESADORES -->
+  <section id="proc">
+    <h2 style="font-size:clamp(1.4rem,4vw,2rem);font-weight:800;margin-bottom:1rem">🎤 Los mejores procesadores vocales del mercado</h2>
+
+    <!-- BOSS VE-22 -->
+    <div class="card model blue">
+      <h3><span class="chip blue">🔵 Recomendado</span> Boss VE-22 Vocal Performer — el más completo</h3>
+      <h4>Lo esencial</h4>
+      <p>Lanzado por BOSS/Roland en enero de 2024 como sucesor del veterano VE-20, es el procesador todo-en-uno más equilibrado del mercado para directos pequeños: pantalla LCD a color, 50 presets de fábrica + 99 memorias de usuario, y un preamplificador de micrófono de calidad profesional.</p>
+      <h4>Ficha técnica oficial</h4>
+      <ul class="tech-list">
+        <li>39 tipos de efectos: compresor, EQ, delay, eco, reverb, lo-fi, distorsión, radio, ring modulation, etc.</li>
+        <li>Corrección de tono (Pitch Correct): modo Soft (sutil, casi imperceptible) y modos Hard Tune (agresivos)</li>
+        <li>Armonías y función Doubler</li>
+        <li>Looper integrado de 37 segundos</li>
+        <li>Conversión: 48 kHz, 24 bits (método AF) en entrada / 32 bits en salida, procesado en coma flotante de 32 bits</li>
+        <li>Entrada XLR con alimentación phantom y control de sensibilidad; 2 salidas XLR (estéreo, mono dual o wet/dry)</li>
+        <li>USB-C (grabación/reproducción con PC o móvil), entrada AUX, 3 pedales/interruptores personalizables, entrada para pedal de expresión o 2 footswitches externos</li>
+        <li>Alimentación: 4 pilas AA o adaptador AC (opcional, no incluido)</li>
+        <li>Dimensiones: 218 × 143 × 64 mm</li>
+      </ul>
+      <div class="price">💶 <b>345 € – 360 €</b> en España (2026). PVP recomendado de fábrica ≈ 400 €, suele venderse con descuento. No incluye funda ni fuente de alimentación AC de serie.</div>
+      <h4>Qué dicen las reviews y los foros</h4>
+      <ul class="tech-list">
+        <li><b>MusicRadar</b> lo describe como una unidad que "hace muy bien lo básico, con una señal limpia", destacando el sonido limpio, la pantalla brillante, los footswitches sólidos y que el funcionamiento a pilas es ideal para busking.</li>
+        <li>Como contras: no tiene armonía automática, es algo caro frente a la competencia y no incluye fuente de alimentación ni funda.</li>
+        <li>En Audiofanzine, varios compradores que vienen de un TC Helicon VoiceLive 3 coinciden en que suena <b>más limpio</b> en ecualizador, compresor y de-esser, pero es <b>más limitado</b> en número de voces de armonía y no permite combinar autotune y slicer a la vez (solo un efecto activo de ese tipo).</li>
+        <li>No tiene entrada/salida MIDI, así que no se puede controlar la armonía desde un teclado ni una app externa en directo.</li>
+      </ul>
+      <div class="callout info"><span class="ico">ℹ️</span><div class="body"><b>Conclusión de usuarios:</b> muy sólido para reverbs, delays y correcciones básicas; algo limitado si buscas armonías muy elaboradas.</div></div>
+    </div>
+
+    <!-- ROLAND E-4 -->
+    <div class="card model orange">
+      <h3><span class="chip amber">🟠 Portátil</span> Roland E-4 Voice Tweaker — el más portátil, formato bolsillo/calle</h3>
+      <h4>Lo esencial</h4>
+      <p>Parte de la serie AIRA Compact de Roland (lanzado en octubre de 2023). Es más una "caja de juguetes sonoros" creativa —harmonizador, auto-pitcher, vocoder, looper y glitcher— que un procesador de directo clásico, y esa diferencia de enfoque importa a la hora de decidir si te sirve para actuar en la calle.</p>
+      <h4>Ficha técnica oficial</h4>
+      <ul class="tech-list">
+        <li>Sliders independientes de pitch y formante</li>
+        <li>Efectos: Auto Pitch, Harmony, Vocoder, Scatter (ritmos glitch), Reverb, Echo, Tempo Delay, Chorus</li>
+        <li>Filtro low-cut y noise gate</li>
+        <li>Looper de 24 segundos con overdubs ilimitados, undo/redo y detección automática de BPM</li>
+        <li>Control MIDI externo opcional para pitch, harmony y vocoder</li>
+        <li><b>Entrada de micrófono: jack de 6,3 mm (1/4"), no XLR ni minijack de 3,5 mm</b> — importante si tu micro es XLR estándar (como el SM58), necesitarás un adaptador o un pequeño preamplificador</li>
+        <li>Salida de línea, salida de auriculares, conexión USB-C (audio/MIDI, sin necesidad de drivers), conectores de sync y AIRA Link</li>
+        <li>Batería de litio recargable por USB-C, hasta 3,5 h de autonomía</li>
+        <li>Peso: 0,29 kg — realmente de bolsillo</li>
+      </ul>
+      <div class="price">💶 PVP recomendado <b>≈ 243 €</b>, habitual en oferta entre <b>195 € y 245 €</b>.</div>
+      <h4>Qué dicen las reviews y los foros — ojo con esto</h4>
+      <p>El E-4 se anuncia como compacto y portátil, y lo es, pero las reseñas reales de usuarios (Thomann) son bastante claras en que <b>no está pensado como herramienta de escenario</b>:</p>
+      <div class="review">Funciona muy bien para lo que está pensado —jugar en casa o de viaje—. No está realmente construido para uso en escenario. Dicho esto, podrías encontrarle un uso en directo. <br><b style="color:var(--muted);font-style:normal">— reseña de usuario en Thomann</b></div>
+      <ul class="tech-list">
+        <li><b>No tiene presets</b>: hay que ajustar todo manualmente cada vez, lo cual complica cambios rápidos entre canciones en un directo.</li>
+        <li>El armonizador solo permite escalas mayor o menor (no modos ni escalas más complejas).</li>
+        <li>Los controles secundarios están en los sliders, así que un vistazo rápido al aparato no siempre refleja cómo está configurado.</li>
+        <li>Los botones son pequeños y hay bastante "menu diving" (navegar menús) para configurarlo.</li>
+        <li>A favor: construcción sólida, batería de litio (ahorra dinero frente a pilas), sonido sorprendentemente bueno para el precio y el tamaño.</li>
+      </ul>
+      <div class="callout warn"><span class="ico">⚠️</span><div class="body"><b>Conclusión práctica:</b> para busking real en la calle, donde necesitas encender y tocar sin ajustar nada, el Boss VE-22 (con sus presets) es más práctico. El Roland E-4 brilla más para jam sessions, exploración creativa en casa o estudio, y como "juguete" para procesar la voz de formas no convencionales.</div></div>
+    </div>
+
+    <!-- TC HELICON PLAY ACOUSTIC -->
+    <div class="card model green">
+      <h3><span class="chip green">🟢 Guitarra + Voz</span> TC Helicon Play Acoustic — el mejor si tocas la guitarra <span class="chip red">⚠️ Descatalogado</span></h3>
+      <div class="callout error"><span class="ico">🛑</span><div class="body"><b>Aviso importante de 2026:</b> el Play Acoustic <b>ha sido descatalogado por TC Helicon</b> y ya no se fabrica. Sigue apareciendo en tiendas como Thomann en formato B-Stock (usado/reacondicionado) o como remanente de stock, normalmente entre <b>195 € y 270 €</b>, pero cuando se agote ese stock no habrá reposición del mismo modelo. Su sucesor directo, el <b>Perform-VG</b>, también ha sido descatalogado por el fabricante, así que a día de hoy TC Helicon no tiene en catálogo activo un pedal combinado de guitarra + voz equivalente.</div></div>
+      <h4>Lo esencial (mientras dure el stock)</h4>
+      <p>Escucha los acordes de tu guitarra acústica en tiempo real para afinar la voz en la escala correcta de la canción, y genera armonías automáticas basadas en tu acompañamiento.</p>
+      <h4>Ficha técnica oficial</h4>
+      <ul class="tech-list">
+        <li>Bloque de efectos vocales: corrección de tono, armonías automáticas, compresor, EQ, de-esser, gate</li>
+        <li>Bloque de efectos de guitarra: supresor de feedback, filtro BodyRez (mejora el sonido del preamplificador de la guitarra), reverb Hall of Fame y chorus Corona (los efectos clásicos de pedales TC Electronic)</li>
+        <li>Looper VLOOP integrado</li>
+        <li>Detecta la tonalidad de la canción vía la señal de guitarra, la pista de acompañamiento o los micrófonos internos "RoomSense"</li>
+        <li>Entrada XLR (mic) con phantom power de 48V, entrada jack Hi-Z para guitarra, 2 salidas XLR independientes (voz / DI de guitarra), entrada AUX, salida de auriculares, USB</li>
+        <li>Funciona únicamente con adaptador AC (no tiene opción de pilas)</li>
+      </ul>
+      <h4>Qué dicen las reviews y los foros</h4>
+      <ul class="tech-list">
+        <li>Reseñas de Thomann destacan la <b>calidad de las armonías y los reverbs</b>, y la construcción ("build like a tank"), pero coinciden en varios puntos débiles reales:</li>
+        <li>El looper es "totalmente inútil" para algunos usuarios porque cuesta mantener el ritmo con precisión.</li>
+        <li>Le faltan funciones vocales que uno esperaría en esta gama, como un compresor/limitador vocal dedicado.</li>
+        <li>Navegación de menús algo confusa para configurarlo bien la primera vez.</li>
+        <li><b>No tiene opción de pilas</b>, lo cual limita su uso real para busking: hace falta corriente eléctrica.</li>
+        <li>Un ingeniero de sonido en un concierto grande puede poner pegas a tener que rutear tu micro a través del pedal, porque limita su capacidad de ecualizarte desde la mesa — funciona mejor en bares y locales pequeños que en escenarios grandes con técnico de sonido.</li>
+      </ul>
+      <div class="callout info"><span class="ico">ℹ️</span><div class="body"><b>Para quién sigue teniendo sentido:</b> si tocas y cantas a la vez y encuentras una unidad en buen estado (nueva de las últimas remanentes o B-Stock), sigue siendo de las mejores opciones combinadas guitarra+voz que ha existido. Pero comprarlo hoy es una apuesta a stock limitado, no una compra "de catálogo".</div></div>
+    </div>
+
+    <!-- TC HELICON VOICETONE C1 -->
+    <div class="card model purple">
+      <h3><span class="chip purple">🟣 Pedal simple</span> TC Helicon VoiceTone C1 — alternativa en pedal simple <span class="chip red">⚠️ Descatalogado hace años</span></h3>
+      <div class="callout error"><span class="ico">🛑</span><div class="body"><b>Aviso importante:</b> el VoiceTone C1 lleva descatalogado bastante tiempo (toda la serie VoiceTone de TC Helicon — C1, T1, D1, R1, Synth— está fuera de producción). Solo se encuentra de segunda mano o como stock NOS (nunca usado) residual, normalmente entre <b>90 € y 160 €</b> según estado y vendedor.</div></div>
+      <h4>Lo esencial</h4>
+      <p>Formato de pedal compacto enfocado puramente en la corrección de afinación ("Mild to Wild"), con un mando de intensidad directo y control de "Gender" para cambiar el carácter tonal de la voz (más masculino o más femenino/robótico).</p>
+      <h4>Ficha técnica</h4>
+      <ul class="tech-list">
+        <li>Preamplificador de micrófono limpio y silencioso (ruido de -126 dBu con ganancia máxima)</li>
+        <li>Rango dinámico de más de 100 dB</li>
+        <li>Entrada XLR, chasis de metal fundido, base de goma antideslizante</li>
+        <li>Se puede encadenar con otros pedales VoiceTone</li>
+        <li>Control remoto on/off vía micrófono TC-Helicon MP-75 (accesorio opcional)</li>
+      </ul>
+      <h4>Qué dicen las reviews y los foros</h4>
+      <ul class="tech-list">
+        <li>Los usuarios valoran que es sencillo de usar y que el efecto Hard Tune ("efecto Cher") suena bien cuando se busca deliberadamente ese sonido robótico.</li>
+        <li><b>Si el usuario se desvía mucho de la nota, la corrección puede sonar artificial</b>, y varios análisis (Equipboard, Bonedo) confirman que <b>no es muy eficaz para quien canta muy desafinado</b>; funciona mejor como efecto creativo (retoque sutil o "Cher effect" exagerado) que como "salvavidas" de afinación real.</li>
+        <li>Contras señalados: requiere acostumbrarse a los controles para sacarle partido, los presets no son configurables por USB (nada de editor de software, solo perillas físicas), y no es ideal para instrumentos con muchos armónicos.</li>
+      </ul>
+      <div class="callout example"><span class="ico">💡</span><div class="body"><b>Alternativa actual si buscas algo parecido en 2026:</b> TC Helicon ya no vende un pedal individual de corrección de tono tan sencillo como el C1. Sus productos vocales activos en 2026 están más orientados a multiefectos completos (línea VoiceLive Play, Perform-V) o a streaming/podcasting (GoXLR), no a pedales de un solo efecto. Para una función equivalente hoy, hay que mirar en unidades multiefecto más completas (como el propio Boss VE-22) en lugar de un pedal dedicado solo a pitch correction.</div></div>
+    </div>
+  </section>
+
+  <!-- COMPARATIVA -->
+  <section id="comp">
+    <h2 style="font-size:clamp(1.4rem,4vw,2rem);font-weight:800;margin-bottom:1rem">📊 Tabla comparativa rápida (España, 2026)</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Modelo</th>
+            <th>Precio orientativo</th>
+            <th>Estado en catálogo 2026</th>
+            <th>Mejor para</th>
+            <th>Punto débil según usuarios</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Boss VE-22 Vocal Performer</b></td>
+            <td>345–360 €</td>
+            <td><span class="chip green">En producción</span></td>
+            <td>Directos pequeños, sonido limpio, presets listos</td>
+            <td>Sin armonía automática ni fuente AC incluida</td>
+          </tr>
+          <tr>
+            <td><b>Roland E-4 Voice Tweaker</b></td>
+            <td>195–245 €</td>
+            <td><span class="chip green">En producción</span></td>
+            <td>Jam en casa, sonido experimental, tamaño bolsillo</td>
+            <td>Sin presets; según usuarios, no pensado para escenario</td>
+          </tr>
+          <tr>
+            <td><b>TC Helicon Play Acoustic</b></td>
+            <td>195–270 € (stock restante)</td>
+            <td><span class="chip red">Descatalogado</span></td>
+            <td>Cantautores con guitarra acústica</td>
+            <td>Looper poco fiable; sin opción de pilas</td>
+          </tr>
+          <tr>
+            <td><b>TC Helicon VoiceTone C1</b></td>
+            <td>90–160 € (2ª mano)</td>
+            <td><span class="chip red">Descatalogado hace años</span></td>
+            <td>Corrección de tono simple y efecto Hard Tune</td>
+            <td>Poco eficaz si cantas muy desafinado</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- CONEXIONES -->
+  <section id="conex">
+    <h2 style="font-size:clamp(1.4rem,4vw,2rem);font-weight:800;margin-bottom:1rem">🔌 Conexiones e instalación en directo (paso a paso)</h2>
+    <p>La cadena de audio estándar para escenarios pequeños o calle es:</p>
+    <div class="chain">[Micrófono] --(Cable XLR)--&gt; [Procesador Vocal] --(Cable XLR o Jack)--&gt; [Altavoz Amplificado / Mesa de Sonido / Ampli de Busking]</div>
+    <h4 style="color:var(--accent);margin-top:1rem">Pasos para la configuración:</h4>
+    <div class="steps">
+      <div class="step"><b>El micrófono:</b> conecta un micrófono dinámico (como el Shure SM58) a la entrada "Input" del procesador vocal. Recuerda que en el Roland E-4 esta entrada es un jack de 6,3 mm, no XLR: si tu micro lleva conector XLR, necesitarás un cable o adaptador jack-XLR.</div>
+      <div class="step"><b>La salida de audio:</b> conecta la salida "Output" (XLR o jack, según el modelo) del procesador directamente a la entrada de tu altavoz autoamplificado, monitor o amplificador de directo (por ejemplo, un JBL EON One o un Boss Cube Street).</div>
+      <div class="step"><b>Ajuste de ganancia (crítico):</b> canta a volumen real y ajusta la perilla de ganancia (Gain) del procesador hasta que el indicador LED parpadee en verde. Si parpadea en rojo, baja el nivel para evitar distorsiones y saturación digital.</div>
+    </div>
+  </section>
+
+  <!-- CONSEJOS -->
+  <section id="consejos">
+    <h2 style="font-size:clamp(1.4rem,4vw,2rem);font-weight:800;margin-bottom:1rem">💡 Consejos de optimización para no cantantes</h2>
+
+    <div class="card">
+      <ul class="tech-list">
+        <li><b>Moderación con los efectos espaciales:</b> en lugares cerrados o escenarios pequeños, el exceso de reverberación (reverb) o eco (delay) genera una "bola de sonido" y hace perder claridad. Mantén estos efectos en niveles moderados.</li>
+        <li><b>Evitar acoples (feedback):</b> la corrección de tono agresiva junto con altavoces mal ubicados provoca pitidos. Coloca siempre el altavoz o amplificador ligeramente por delante de la línea del micrófono, y usa el filtro anti-feedback/low-cut si tu modelo lo incluye.</li>
+        <li><b>Activar el "Enhancer" o "Adaptive Tone":</b> tanto el Boss VE-22 como el Roland E-4 (y en general los procesadores TC Helicon actuales) incluyen un botón de realce automático que actúa como ecualizador y compresor inteligente, aportando brillo y consistencia a la voz sin necesidad de conocimientos técnicos. Actívalo siempre como punto de partida.</li>
+        <li><b>Prueba antes del directo:</b> varios usuarios en foros insisten en que estos procesadores requieren un rodaje previo (probar en casa o ensayo) antes de subir al escenario, especialmente el Roland E-4 (sin presets) y el TC Helicon Play Acoustic (menús algo confusos). No los estrenes el mismo día del concierto.</li>
+        <li><b>Si compras un modelo descatalogado de segunda mano</b> (Play Acoustic, VoiceTone C1), revisa que incluya la fuente de alimentación original: ninguno de los dos funciona con pilas, y sustituir la fuente por una genérica de amperaje incorrecto puede dañar la unidad.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FUENTES -->
+  <section id="fuentes">
+    <h2 style="font-size:clamp(1.4rem,4vw,2rem);font-weight:800;margin-bottom:1rem">📚 Fuentes consultadas</h2>
+    <ul class="sources-list">
+      <li>BOSS / Roland Corporation — nota de prensa oficial del VE-22 (<span class="link">boss.info</span>)</li>
+      <li>Fichas técnicas y opiniones de usuarios: Thomann (varias tiendas regionales), Kirstein, Woodbrass, Equipboard, Sweetwater, Bax Music, zzounds</li>
+      <li>Reseña profesional: MusicRadar — "Boss VE-22 Vocal Performer review"</li>
+      <li>Foro de usuarios: Audiofanzine (comparativa VE-22 vs. TC Helicon VoiceLive 3)</li>
+      <li>Análisis técnico: Bonedo.de (TC Helicon VoiceTone C1)</li>
+      <li>Consenso de expertos: ReviewFinder (TC Helicon Play Acoustic)</li>
+    </ul>
+  </section>
+
+  <!-- CREDITOS -->
+  <section id="creditos">
+    <div class="credits-panel">
+      <div class="svg-wrap" id="svgCredits"></div>
+      <h2>✨ Créditos</h2>
+      <p class="meta"><b style="color:var(--text)">Tutorial:</b> Procesadores Vocales 2026 para No Cantantes</p>
+      <p class="author">👨‍💻 Rubén Sbarsky</p>
+      <p class="meta">📅 Fecha: <b style="color:var(--accent)">23/09/2026</b></p>
+      <p class="meta">🕒 Hora: <b style="color:var(--accent)">05:30:16</b></p>
+      <div class="edu">📚 Tutorial solo con fines Educativos y Divulgación</div>
+      <p class="latin">Fiat iustitia, ruat caelum.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>📚 Tutorial solo con fines Educativos y Divulgación</p>
+  <p>👨‍💻 Créditos: Rubén Sbarsky</p>
+  <p>📅 FECHA: 23/09/2026 · Hora: 05:30:16</p>
+  <p class="latin">Fiat iustitia, ruat caelum.</p>
+</footer>
+
+<button id="top-btn" aria-label="Volver arriba">▲</button>
+
+<!-- SVG TEMPLATE (idéntico en HOME y CRÉDITOS) -->
+<template id="svgTpl">
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Procesador vocal animado">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#0f1a2e">
+        <animate attributeName="stop-color" values="#0f1a2e;#122a44;#0f1a2e" dur="6s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="60%" stop-color="#0a0e1a">
+        <animate attributeName="stop-color" values="#0a0e1a;#0d1526;#0a0e1a" dur="9s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#050810"/>
+    </radialGradient>
+
+    <linearGradient id="ringGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00d4ff"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+    <linearGradient id="ringGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#00d4ff"/>
+    </linearGradient>
+    <linearGradient id="flowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00d4ff"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient>
+    <linearGradient id="cleanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#00d4ff"/>
+    </linearGradient>
+
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowSoft" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="7" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowStrong" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0 L0 0 0 32" fill="none" stroke="#1e3a5f" stroke-width="0.6"/>
+    </pattern>
+
+    <!-- motion paths -->
+    <path id="signalPath" d="M120 300 C 220 300, 260 200, 360 200 S 500 120, 620 120 L 700 120"/>
+    <path id="waveUp" d="M60 100 Q 160 40, 260 100 T 460 100"/>
+    <path id="micOrbit" d="M400 225 m -180 0 a 180 180 0 1 1 360 0 a 180 180 0 1 1 -360 0"/>
+    <path id="notePath1" d="M150 380 C 280 380, 320 340, 420 340 S 620 300, 720 300"/>
+    <path id="notePath2" d="M150 400 C 280 400, 320 420, 420 420 S 620 400, 720 400"/>
+  </defs>
+
+  <!-- BACKGROUND -->
+  <rect width="800" height="450" fill="url(#bgGrad)"/>
+  <rect width="800" height="450" fill="url(#grid)" opacity="0.35">
+    <animate attributeName="opacity" values="0.2;0.5;0.2" dur="7s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- ORBITAL RINGS -->
+  <g transform="translate(400 225)" fill="none">
+    <circle r="190" stroke="url(#ringGrad1)" stroke-width="1" stroke-dasharray="6 14" opacity="0.55">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="24s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="4 12;10 20;6 14;4 12" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="160" stroke="url(#ringGrad2)" stroke-width="1" stroke-dasharray="3 10" opacity="0.45">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="32s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="2 8;8 16;3 10;2 8" dur="11s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="130" stroke="#00d4ff" stroke-width="0.8" stroke-dasharray="1 6" opacity="0.35">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="18s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- PULSING HALO around microphone -->
+  <circle cx="400" cy="225" r="55" fill="none" stroke="#00d4ff" stroke-width="1.4" opacity="0.6" filter="url(#glow)">
+    <animate attributeName="r" values="45;80;45" dur="4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.7;0;0.7" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="400" cy="225" r="65" fill="none" stroke="#a855f7" stroke-width="1" opacity="0.5" filter="url(#glow)">
+    <animate attributeName="r" values="60;100;60" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;0;0.5" dur="6s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- MICROPHONE (floating) -->
+  <g transform="translate(400 225)">
+    <animateTransform attributeName="transform" type="translate" values="400 225;400 222;400 225" dur="3.5s" repeatCount="indefinite" additive="replace"/>
+    <!-- body -->
+    <rect x="-16" y="18" width="32" height="42" rx="6" fill="#0f172a" stroke="#00d4ff" stroke-width="1.5" filter="url(#glow)"/>
+    <!-- grill -->
+    <ellipse cx="0" cy="-2" rx="26" ry="30" fill="#0f172a" stroke="#00d4ff" stroke-width="1.8" filter="url(#glow)"/>
+    <ellipse cx="0" cy="-2" rx="26" ry="30" fill="none" stroke="#a855f7" stroke-width="0.7" opacity="0.7">
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="5s" repeatCount="indefinite"/>
+    </ellipse>
+    <!-- grill lines -->
+    <line x1="-18" y1="-14" x2="18" y2="-14" stroke="#00d4ff" stroke-width="0.8" opacity="0.7"/>
+    <line x1="-22" y1="-6" x2="22" y2="-6" stroke="#00d4ff" stroke-width="0.8" opacity="0.7"/>
+    <line x1="-24" y1="2" x2="24" y2="2" stroke="#00d4ff" stroke-width="0.8" opacity="0.7"/>
+    <line x1="-22" y1="10" x2="22" y2="10" stroke="#00d4ff" stroke-width="0.8" opacity="0.7"/>
+    <!-- base -->
+    <rect x="-8" y="58" width="16" height="6" rx="2" fill="#00d4ff" opacity="0.8"/>
+  </g>
+
+  <!-- SOUND WAVES emanating from mic -->
+  <g fill="none" stroke="#00d4ff" stroke-width="1.4" opacity="0.7">
+    <path d="M320 200 Q 300 190, 285 205">
+      <animate attributeName="opacity" values="0;0.9;0" dur="2.5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M315 225 Q 295 225, 280 235">
+      <animate attributeName="opacity" values="0;0.9;0" dur="2.5s" begin="0.4s" repeatCount="indefinite"/>
+    </path>
+    <path d="M320 250 Q 300 260, 285 245">
+      <animate attributeName="opacity" values="0;0.9;0" dur="2.5s" begin="0.8s" repeatCount="indefinite"/>
+    </path>
+    <path d="M480 200 Q 500 190, 515 205">
+      <animate attributeName="opacity" values="0;0.9;0" dur="2.5s" begin="0.2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M485 225 Q 505 225, 520 235">
+      <animate attributeName="opacity" values="0;0.9;0" dur="2.5s" begin="0.6s" repeatCount="indefinite"/>
+    </path>
+    <path d="M480 250 Q 500 260, 515 245">
+      <animate attributeName="opacity" values="0;0.9;0" dur="2.5s" begin="1s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- RAW INPUT waveform (left, wobbly) -->
+  <g transform="translate(0 0)">
+    <text x="70" y="70" fill="#ef4444" font-size="10" font-weight="700" font-family="'Segoe UI',sans-serif" letter-spacing="2">RAW INPUT</text>
+    <path d="M40 100 Q 60 70, 80 100 T 120 100 T 160 100 T 200 100" fill="none" stroke="#ef4444" stroke-width="1.8" opacity="0.75" filter="url(#glow)">
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite"/>
+    </path>
+    <path d="M40 118 Q 60 138, 80 118 T 120 118 T 160 118 T 200 118" fill="none" stroke="#f59e0b" stroke-width="1.2" opacity="0.6">
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="4s" repeatCount="indefinite"/>
+    </path>
+    <text x="70" y="148" fill="#f59e0b" font-size="9" font-family="'Segoe UI',sans-serif" opacity="0.8">señal imperfecta</text>
+  </g>
+
+  <!-- PROCESSED waveform (right, clean) -->
+  <g>
+    <text x="620" y="70" fill="#22c55e" font-size="10" font-weight="700" font-family="'Segoe UI',sans-serif" letter-spacing="2">PROCESSED</text>
+    <path d="M560 100 Q 580 76, 600 100 T 640 100 T 680 100 T 720 100" fill="none" stroke="#22c55e" stroke-width="2" filter="url(#glow)">
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M560 118 Q 580 100, 600 118 T 640 118 T 680 118 T 720 118" fill="none" stroke="#00d4ff" stroke-width="1.4" opacity="0.85">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="3.5s" repeatCount="indefinite"/>
+    </path>
+    <text x="650" y="148" fill="#22c55e" font-size="9" font-family="'Segoe UI',sans-serif" opacity="0.8">señal limpia y afinada</text>
+  </g>
+
+  <!-- SIGNAL FLOW PATH with flowing dash -->
+  <path d="M120 300 C 220 300, 260 200, 360 200 S 500 120, 620 120 L 700 120" fill="none" stroke="url(#flowGrad)" stroke-width="2" stroke-dasharray="8 12" opacity="0.9" filter="url(#glow)">
+    <animate attributeName="stroke-dashoffset" from="0" to="-40" dur="1.6s" repeatCount="indefinite"/>
+  </path>
+  <path d="M120 300 C 220 300, 260 200, 360 200 S 500 120, 620 120 L 700 120" fill="none" stroke="#00d4ff" stroke-width="0.6" opacity="0.35"/>
+
+  <!-- PARTICLES traveling along the signal path -->
+  <circle r="4" fill="#00d4ff" filter="url(#glowStrong)">
+    <animateMotion dur="4s" repeatCount="indefinite" rotate="auto"><mpath href="#signalPath"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  <circle r="3.5" fill="#a855f7" filter="url(#glowStrong)">
+    <animateMotion dur="4s" begin="1s" repeatCount="indefinite" rotate="auto"><mpath href="#signalPath"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="4s" begin="1s" repeatCount="indefinite"/>
+  </circle>
+  <circle r="3" fill="#22c55e" filter="url(#glowStrong)">
+    <animateMotion dur="4s" begin="2s" repeatCount="indefinite" rotate="auto"><mpath href="#signalPath"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="4s" begin="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle r="3" fill="#f59e0b" filter="url(#glowStrong)">
+    <animateMotion dur="4s" begin="3s" repeatCount="indefinite" rotate="auto"><mpath href="#signalPath"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="4s" begin="3s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- GHOST NOTES traveling along note paths -->
+  <g filter="url(#glowSoft)">
+    <text font-size="20" fill="#00d4ff" opacity="0.85" font-family="serif">♪
+      <animateMotion dur="6s" repeatCount="indefinite" rotate="0"><mpath href="#notePath1"/></animateMotion>
+      <animate attributeName="opacity" values="0;0.9;0.9;0" dur="6s" repeatCount="indefinite"/>
+    </text>
+    <text font-size="18" fill="#a855f7" opacity="0.85" font-family="serif">♫
+      <animateMotion dur="7s" begin="1.5s" repeatCount="indefinite" rotate="0"><mpath href="#notePath2"/></animateMotion>
+      <animate attributeName="opacity" values="0;0.9;0.9;0" dur="7s" begin="1.5s" repeatCount="indefinite"/>
+    </text>
+    <text font-size="16" fill="#22c55e" opacity="0.85" font-family="serif">♩
+      <animateMotion dur="8s" begin="3s" repeatCount="indefinite" rotate="0"><mpath href="#notePath1"/></animateMotion>
+      <animate attributeName="opacity" values="0;0.9;0.9;0" dur="8s" begin="3s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- EFFECT NODE: PITCH -->
+  <g transform="translate(120 300)">
+    <rect x="-46" y="-18" width="92" height="36" rx="8" fill="#0f172a" stroke="#00d4ff" stroke-width="1.4" filter="url(#glow)">
+      <animate attributeName="stroke-width" values="1;2.4;1" dur="3s" repeatCount="indefinite"/>
+    </rect>
+    <text x="0" y="4" fill="#00d4ff" font-size="11" font-weight="700" text-anchor="middle" font-family="'Segoe UI',sans-serif" letter-spacing="1">PITCH</text>
+  </g>
+
+  <!-- EFFECT NODE: HARMONY -->
+  <g transform="translate(370 200)">
+    <rect x="-52" y="-20" width="104" height="40" rx="8" fill="#0f172a" stroke="#a855f7" stroke-width="1.4" filter="url(#glow)">
+      <animate attributeName="stroke-width" values="1;2.4;1" dur="3.5s" begin="0.5s" repeatCount="indefinite"/>
+    </rect>
+    <text x="0" y="4" fill="#a855f7" font-size="11" font-weight="700" text-anchor="middle" font-family="'Segoe UI',sans-serif" letter-spacing="1">HARMONY</text>
+  </g>
+
+  <!-- EFFECT NODE: REVERB -->
+  <g transform="translate(540 130)">
+    <rect x="-46" y="-18" width="92" height="36" rx="8" fill="#0f172a" stroke="#22c55e" stroke-width="1.4" filter="url(#glow)">
+      <animate attributeName="stroke-width" values="1;2.4;1" dur="4s" begin="1s" repeatCount="indefinite"/>
+    </rect>
+    <text x="0" y="4" fill="#22c55e" font-size="11" font-weight="700" text-anchor="middle" font-family="'Segoe UI',sans-serif" letter-spacing="1">REVERB</text>
+  </g>
+
+  <!-- EFFECT NODE: DELAY -->
+  <g transform="translate(690 130)">
+    <rect x="-42" y="-18" width="84" height="36" rx="8" fill="#0f172a" stroke="#f59e0b" stroke-width="1.4" filter="url(#glow)">
+      <animate attributeName="stroke-width" values="1;2.4;1" dur="2.6s" begin="0.3s" repeatCount="indefinite"/>
+    </rect>
+    <text x="0" y="4" fill="#f59e0b" font-size="11" font-weight="700" text-anchor="middle" font-family="'Segoe UI',sans-serif" letter-spacing="1">DELAY</text>
+  </g>
+
+  <!-- IMPACT / PARTICLE BURST near mic right side -->
+  <g transform="translate(470 225)">
+    <g opacity="0">
+      <line x1="0" y1="0" x2="18" y2="-8" stroke="#00d4ff" stroke-width="1.6"/>
+      <line x1="0" y1="0" x2="20" y2="2" stroke="#a855f7" stroke-width="1.6"/>
+      <line x1="0" y1="0" x2="16" y2="14" stroke="#22c55e" stroke-width="1.6"/>
+      <line x1="0" y1="0" x2="6" y2="20" stroke="#f59e0b" stroke-width="1.6"/>
+      <line x1="0" y1="0" x2="-8" y2="18" stroke="#ef4444" stroke-width="1.6"/>
+      <animate attributeName="opacity" values="0;1;0" dur="2.2s" repeatCount="indefinite"/>
+    </g>
+  </g>
+
+  <!-- KEY NODES pulsing (alert-type blinking) -->
+  <circle cx="370" cy="180" r="3" fill="#a855f7" filter="url(#glow)">
+    <animate attributeName="opacity" values="0.2;1;0.2" dur="1.4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="120" cy="282" r="3" fill="#00d4ff" filter="url(#glow)">
+    <animate attributeName="opacity" values="0.2;1;0.2" dur="1.7s" begin="0.3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="690" cy="112" r="3" fill="#f59e0b" filter="url(#glow)">
+    <animate attributeName="opacity" values="0.2;1;0.2" dur="1.9s" begin="0.6s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- TITLE TEXT with color cycle -->
+  <text x="400" y="392" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-weight="800" font-size="26" letter-spacing="2" filter="url(#glow)">
+    PROCESADOR VOCAL
+    <animate attributeName="fill" values="#00d4ff;#a855f7;#22c55e;#f59e0b;#00d4ff" dur="9s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- SUBTITLE pulsing -->
+  <text x="400" y="415" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="11" letter-spacing="4" fill="#94a3b8">
+    SEÑAL · AFINACIÓN · ARMONÍA · SALIDA
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="4s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- STATUS LABEL (alternating between variants) -->
+  <text x="400" y="438" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="9.5" font-weight="700" letter-spacing="3" fill="#22c55e">
+    <set attributeName="fill" to="#22c55e"/>
+    <animate attributeName="fill" values="#22c55e;#00d4ff;#f59e0b;#22c55e" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite"/>
+    ● EN DIRECTO · EN CASA · BUSKING ●
+  </text>
+
+  <!-- LIVE INDICATOR top-right -->
+  <g transform="translate(740 24)">
+    <circle r="5" fill="#ef4444" filter="url(#glowStrong)">
+      <animate attributeName="r" values="4;6.5;4" dur="1.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0.4;1" dur="1.2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="14" y="4" fill="#ef4444" font-family="'Segoe UI',sans-serif" font-size="11" font-weight="800" letter-spacing="2">LIVE</text>
+  </g>
+
+  <!-- AUTHOR signature bottom-right pulsing -->
+  <text x="780" y="440" text-anchor="end" fill="#a855f7" font-family="'Segoe UI',sans-serif" font-size="10" font-style="italic" opacity="0.8">
+    Rubén Sbarsky
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="5s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- CLIMAX FLASH TEXT -->
+  <text x="400" y="225" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-weight="900" font-size="34" letter-spacing="6" fill="#00d4ff" opacity="0" filter="url(#glowStrong)">
+    ¡PROCESADO!
+    <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" dur="12s" repeatCount="indefinite"/>
+    <animate attributeName="fill" values="#00d4ff;#22c55e;#a855f7;#00d4ff" dur="12s" repeatCount="indefinite"/>
+  </text>
+</svg>
+</template>
+
+<script>
+(function(){
+  // ---------- SVG INJECTION (same SVG in HOME and CRÉDITOS) ----------
+  var tpl = document.getElementById('svgTpl');
+  function inject(target){
+    if(!target) return;
+    target.innerHTML = '';
+    target.appendChild(tpl.content.cloneNode(true));
+  }
+  inject(document.getElementById('svgHome'));
+  inject(document.getElementById('svgCredits'));
+
+  // ---------- SPA NAVIGATION ----------
+  var buttons = document.querySelectorAll('.nav-btn');
+  var sections = document.querySelectorAll('main > section');
+
+  function show(id){
+    sections.forEach(function(s){ s.classList.toggle('active', s.id === id); });
+    buttons.forEach(function(b){ b.classList.toggle('active', b.dataset.target === id); });
+
+    if(id === 'creditos'){
+      // Re-inject credits SVG to restart all animations
+      inject(document.getElementById('svgCredits'));
+    }
+    if(id === 'home'){
+      inject(document.getElementById('svgHome'));
+    }
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  buttons.forEach(function(b){
+    b.addEventListener('click', function(){ show(b.dataset.target); });
+  });
+
+  // ---------- PROGRESS BAR ----------
+  var prog = document.getElementById('progress');
+  function updateProgress(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    var p = h > 0 ? (window.scrollY / h) * 100 : 0;
+    prog.style.width = p + '%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+
+  // ---------- BACK TO TOP ----------
+  var topBtn = document.getElementById('top-btn');
+  window.addEventListener('scroll', function(){
+    if(window.scrollY > 320) topBtn.classList.add('show');
+    else topBtn.classList.remove('show');
+  });
+  topBtn.addEventListener('click', function(){
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+})();
+</script>
+
+</body>
+</html>
