@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Procesadores Vocales 2026 · Tutorial Interactivo</title>
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --card:#0f172a;
+    --border:#1e3a5f;
+    --accent:#00d4ff;
+    --green:#22c55e;
+    --amber:#f59e0b;
+    --red:#ef4444;
+    --purple:#a855f7;
+    --txt:#e2e8f0;
+    --muted:#94a3b8;
+    --r:10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--txt);
+    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    padding-top:52px;
+  }
+  /* ============ BARRA DE PROGRESO ============ */
+  #progressWrap{
+    position:fixed;top:0;left:0;right:0;height:3px;
+    background:rgba(30,58,95,.5);z-index:1200;
+  }
+  #progressFill{
+    height:100%;width:0%;
+    background:linear-gradient(90deg,#00d4ff,#a855f7,#22c55e);
+    box-shadow:0 0 10px rgba(0,212,255,.8);
+    transition:width .1s linear;
+  }
+  /* ============ NAVBAR ============ */
+  nav#navbar{
+    position:fixed;top:3px;left:0;right:0;height:49px;
+    background:rgba(10,14,26,.94);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+    z-index:1100;
+    display:flex;align-items:center;
+  }
+  .navScroll{
+    display:flex;align-items:center;gap:6px;
+    overflow-x:auto;overflow-y:hidden;
+    padding:0 10px;
+    width:100%;
+    scrollbar-width:thin;
+    scrollbar-color:var(--border) transparent;
+    -webkit-overflow-scrolling:touch;
+  }
+  .navScroll::-webkit-scrollbar{height:4px;}
+  .navScroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+  .navBtn{
+    flex:0 0 auto;
+    background:transparent;
+    border:1px solid transparent;
+    color:var(--muted);
+    font-family:inherit;
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:.5px;
+    padding:8px 13px;
+    border-radius:8px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:all .22s ease;
+  }
+  .navBtn:hover{color:var(--accent);background:rgba(0,212,255,.07);}
+  .navBtn.active{
+    color:#04121a;
+    background:linear-gradient(135deg,#00d4ff,#22c55e);
+    box-shadow:0 0 14px rgba(0,212,255,.45);
+  }
+  .navBtn.creditsBtn{border-color:rgba(168,85,247,.5);color:#c4b5fd;}
+  .navBtn.creditsBtn.active{background:linear-gradient(135deg,#a855f7,#6366f1);color:#fff;}
+  .navSep{flex:0 0 auto;width:1px;height:20px;background:var(--border);margin:0 4px;}
+
+  /* ============ LAYOUT ============ */
+  main{max-width:1100px;margin:0 auto;padding:18px 14px 60px;}
+  .section{display:none;animation:fadeIn .35s ease;}
+  .section.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ============ SVG HERO ============ */
+  .svgHero{
+    width:100%;
+    margin:0 0 22px 0;
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    background:#070b14;
+    box-shadow:0 0 40px rgba(0,212,255,.12), 0 10px 30px rgba(0,0,0,.6);
+  }
+  .svgHero svg{display:block;width:100%;height:auto;}
+
+  /* ============ TIPOGRAFÍA / BLOQUES ============ */
+  .badge{
+    display:inline-block;
+    font-size:11px;font-weight:700;letter-spacing:2px;
+    color:var(--accent);
+    border:1px solid rgba(0,212,255,.45);
+    background:rgba(0,212,255,.07);
+    padding:5px 12px;border-radius:999px;
+    margin-bottom:14px;
+  }
+  h1{
+    font-size:clamp(24px,5.5vw,40px);
+    line-height:1.15;
+    font-weight:800;
+    letter-spacing:-.5px;
+    margin-bottom:10px;
+    background:linear-gradient(120deg,#00d4ff,#a855f7 55%,#22c55e);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  h2{
+    font-size:clamp(19px,3.6vw,26px);
+    font-weight:800;
+    color:#fff;
+    margin:0 0 6px 0;
+    letter-spacing:-.3px;
+  }
+  h3{
+    font-size:clamp(15px,2.8vw,18px);
+    font-weight:700;
+    color:var(--accent);
+    margin:0 0 8px 0;
+  }
+  .sub{color:var(--muted);font-size:clamp(13px,2.6vw,16px);margin-bottom:16px;}
+  p{margin-bottom:11px;font-size:14.5px;color:#cbd5e1;}
+  ul{margin:0 0 12px 0;padding-left:0;list-style:none;}
+  li{
+    position:relative;padding-left:22px;margin-bottom:9px;
+    font-size:14.5px;color:#cbd5e1;
+  }
+  li::before{
+    content:"▸";position:absolute;left:4px;top:-1px;
+    color:var(--accent);font-size:13px;
+  }
+  li.green::before{color:var(--green);}
+  li.amber::before{color:var(--amber);}
+  li.red::before{color:var(--red);}
+  li.purple::before{color:var(--purple);}
+
+  .secHead{
+    display:flex;align-items:center;gap:12px;
+    margin-bottom:18px;padding-bottom:12px;
+    border-bottom:1px solid var(--border);
+  }
+  .secIcon{
+    flex:0 0 auto;width:42px;height:42px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px;
+    background:linear-gradient(135deg,rgba(0,212,255,.16),rgba(168,85,247,.16));
+    border:1px solid var(--border);
+  }
+  .secHead .t{flex:1;min-width:0;}
+  .secHead .t small{display:block;color:var(--muted);font-size:11.5px;letter-spacing:1.6px;font-weight:700;}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--r);
+    padding:18px;
+    margin-bottom:16px;
+    position:relative;
+    transition:border-color .25s, transform .25s;
+  }
+  .card:hover{border-color:rgba(0,212,255,.5);}
+  .card.acc{border-left:3px solid var(--accent);}
+  .card.grn{border-left:3px solid var(--green);}
+  .card.amb{border-left:3px solid var(--amber);}
+  .card.pur{border-left:3px solid var(--purple);}
+  .card.red{border-left:3px solid var(--red);}
+
+  .grid{display:grid;gap:16px;}
+  @media(min-width:760px){.grid.two{grid-template-columns:1fr 1fr;}}
+
+  .chip{
+    display:inline-block;font-size:11px;font-weight:700;
+    letter-spacing:1px;padding:4px 10px;border-radius:999px;
+    margin:0 6px 6px 0;
+  }
+  .chip.c{color:var(--accent);border:1px solid rgba(0,212,255,.45);background:rgba(0,212,255,.08);}
+  .chip.g{color:var(--green);border:1px solid rgba(34,197,94,.45);background:rgba(34,197,94,.08);}
+  .chip.a{color:var(--amber);border:1px solid rgba(245,158,11,.45);background:rgba(245,158,11,.08);}
+  .chip.r{color:var(--red);border:1px solid rgba(239,68,68,.45);background:rgba(239,68,68,.08);}
+  .chip.p{color:#c4b5fd;border:1px solid rgba(168,85,247,.45);background:rgba(168,85,247,.08);}
+
+  /* ============ CALLOUTS ============ */
+  .callout{
+    border-radius:var(--r);
+    padding:14px 16px;
+    margin:14px 0;
+    font-size:14px;
+    border-left:4px solid;
+    background:rgba(255,255,255,.02);
+  }
+  .callout .ct{
+    display:block;font-weight:800;font-size:11.5px;
+    letter-spacing:1.6px;margin-bottom:5px;
+  }
+  .callout.info{border-color:var(--accent);background:rgba(0,212,255,.06);}
+  .callout.info .ct{color:var(--accent);}
+  .callout.example{border-color:var(--green);background:rgba(34,197,94,.06);}
+  .callout.example .ct{color:var(--green);}
+  .callout.warn{border-color:var(--amber);background:rgba(245,158,11,.06);}
+  .callout.warn .ct{color:var(--amber);}
+  .callout.err{border-color:var(--red);background:rgba(239,68,68,.06);}
+  .callout.err .ct{color:var(--red);}
+
+  /* ============ TABLAS ============ */
+  .tblWrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:var(--r);border:1px solid var(--border);}
+  table{border-collapse:collapse;width:100%;min-width:620px;font-size:13.5px;}
+  th{
+    background:#0d1526;color:var(--accent);
+    text-align:left;padding:11px 12px;
+    font-size:11.5px;letter-spacing:1.2px;font-weight:800;
+    border-bottom:1px solid var(--border);
+    white-space:nowrap;
+  }
+  td{padding:11px 12px;border-bottom:1px solid rgba(30,58,95,.55);color:#cbd5e1;vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(0,212,255,.035);}
+
+  /* ============ PASOS ============ */
+  .step{
+    display:flex;gap:14px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--r);
+    padding:16px;
+    margin-bottom:14px;
+  }
+  .stepNum{
+    flex:0 0 auto;width:38px;height:38px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:16px;color:#04121a;
+    background:linear-gradient(135deg,#00d4ff,#22c55e);
+  }
+  .stepNum.amber{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#1a0d00;}
+  .stepBody{flex:1;min-width:0;}
+  .stepBody h3{margin-bottom:6px;color:#fff;}
+  .stepBody p:last-child{margin-bottom:0;}
+
+  /* ============ CADENA DE SEÑAL (HTML) ============ */
+  .chain{
+    display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+    justify-content:center;margin:18px 0;
+  }
+  .chainNode{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--r);
+    padding:12px 15px;
+    text-align:center;
+    font-size:13px;font-weight:700;
+    min-width:130px;
+  }
+  .chainNode small{display:block;font-weight:500;color:var(--muted);font-size:11px;margin-top:3px;}
+  .chainNode.n1{border-color:rgba(0,212,255,.6);box-shadow:0 0 16px rgba(0,212,255,.15);}
+  .chainNode.n2{border-color:rgba(168,85,247,.6);box-shadow:0 0 16px rgba(168,85,247,.15);}
+  .chainNode.n3{border-color:rgba(34,197,94,.6);box-shadow:0 0 16px rgba(34,197,94,.15);}
+  .chainArrow{
+    color:var(--accent);font-size:20px;font-weight:800;
+    animation:arrowPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes arrowPulse{0%,100%{opacity:.45;transform:translateX(0);}50%{opacity:1;transform:translateX(4px);}}
+  .chainLabel{font-size:11px;color:var(--muted);letter-spacing:1px;}
+
+  /* ============ ACORDEÓN ============ */
+  .accItem{
+    border:1px solid var(--border);
+    border-radius:var(--r);
+    margin-bottom:10px;
+    overflow:hidden;
+    background:var(--card);
+  }
+  .accHead{
+    width:100%;text-align:left;
+    background:transparent;border:none;
+    color:var(--txt);font-family:inherit;
+    font-size:14.5px;font-weight:700;
+    padding:14px 16px;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    transition:background .2s;
+  }
+  .accHead:hover{background:rgba(0,212,255,.05);}
+  .accHead .ico{
+    flex:0 0 auto;color:var(--accent);font-size:18px;font-weight:800;
+    transition:transform .3s ease;
+  }
+  .accItem.open .accHead .ico{transform:rotate(45deg);}
+  .accBody{
+    max-height:0;overflow:hidden;
+    transition:max-height .35s ease;
+    padding:0 16px;
+  }
+  .accItem.open .accBody{max-height:900px;padding:0 16px 16px;}
+  .accBody p:last-child{margin-bottom:0;}
+
+  /* ============ MÉTRICAS HOME ============ */
+  .metrics{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin:20px 0;
+  }
+  @media(min-width:640px){.metrics{grid-template-columns:repeat(4,1fr);}}
+  .metric{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--r);
+    padding:14px 12px;
+    text-align:center;
+  }
+  .metric b{
+    display:block;font-size:22px;font-weight:800;
+    color:var(--accent);line-height:1.2;
+  }
+  .metric span{font-size:11px;color:var(--muted);letter-spacing:1px;font-weight:600;}
+
+  .quote{
+    border-left:4px solid var(--purple);
+    background:rgba(168,85,247,.06);
+    border-radius:0 var(--r) var(--r) 0;
+    padding:16px 18px;
+    margin:20px 0;
+    font-style:italic;
+    color:#ddd6fe;
+    font-size:15px;
+  }
+
+  /* ============ FOOTER ============ */
+  footer{
+    border-top:1px solid var(--border);
+    background:#080c16;
+    padding:26px 16px 34px;
+    text-align:center;
+  }
+  footer p{font-size:13px;color:var(--muted);margin-bottom:6px;}
+  footer .fiat{
+    color:var(--purple);font-style:italic;font-weight:600;
+    margin-top:12px;font-size:13.5px;
+  }
+
+  /* ============ BOTÓN TOP ============ */
+  #toTop{
+    position:fixed;right:14px;bottom:16px;
+    width:46px;height:46px;border-radius:50%;
+    background:linear-gradient(135deg,#00d4ff,#a855f7);
+    color:#04121a;border:none;
+    font-size:20px;font-weight:800;
+    cursor:pointer;z-index:1000;
+    display:none;
+    align-items:center;justify-content:center;
+    box-shadow:0 6px 20px rgba(0,212,255,.4);
+    transition:transform .2s, opacity .2s;
+  }
+  #toTop.show{display:flex;}
+  #toTop:active{transform:scale(.92);}
+
+  /* ============ CRÉDITOS ============ */
+  .creditBox{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--r);
+    padding:22px;
+    text-align:center;
+    margin-bottom:16px;
+  }
+  .creditBox .name{
+    font-size:clamp(20px,4.5vw,28px);
+    font-weight:800;
+    background:linear-gradient(120deg,#00d4ff,#a855f7,#22c55e);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    margin-bottom:6px;
+  }
+  .creditRow{
+    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:16px;
+  }
+  .creditPill{
+    background:rgba(0,212,255,.07);
+    border:1px solid rgba(0,212,255,.3);
+    border-radius:999px;
+    padding:8px 16px;
+    font-size:12.5px;font-weight:700;color:var(--accent);
+  }
+  .fiatBig{
+    margin-top:20px;
+    font-style:italic;
+    color:var(--purple);
+    font-size:15px;
+    font-weight:600;
+    letter-spacing:.4px;
+  }
+
+  /* ============ FUENTES ============ */
+  .srcItem{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-left:3px solid var(--purple);
+    border-radius:var(--r);
+    padding:14px 16px;
+    margin-bottom:12px;
+  }
+  .srcItem strong{color:#c4b5fd;display:block;font-size:14.5px;margin-bottom:4px;}
+  .srcItem span{font-size:13px;color:var(--muted);}
+
+  /* ============ RESPONSIVE ============ */
+  @media(max-width:520px){
+    main{padding:14px 11px 50px;}
+    .card{padding:15px 13px;}
+    .step{padding:13px;gap:11px;}
+    .stepNum{width:32px;height:32px;font-size:14px;}
+    .navBtn{font-size:11.5px;padding:7px 10px;}
+    .chainNode{min-width:104px;font-size:12px;padding:10px 11px;}
+    .chainArrow{font-size:16px;}
+    .metric b{font-size:19px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001s !important;transition-duration:.001s !important;}
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<div id="progressWrap"><div id="progressFill"></div></div>
+
+<nav id="navbar">
+  <div class="navScroll" id="navScroll">
+    <button class="navBtn active" data-target="inicio">INICIO</button>
+    <button class="navBtn" data-target="equipos">EQUIPOS</button>
+    <button class="navBtn" data-target="conexiones">CONEXIONES</button>
+    <button class="navBtn" data-target="consejos">CONSEJOS</button>
+    <button class="navBtn" data-target="fuentes">FUENTES</button>
+    <div class="navSep"></div>
+    <button class="navBtn creditsBtn" data-target="creditos">CRÉDITOS</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ============ HOME ============ -->
+  <section id="inicio" class="section active">
+    <div class="svgHero" id="svgHome"></div>
+
+    <span class="badge">GUÍA TÉCNICA · AUDIO EN VIVO · 2026</span>
+    <h1>Procesadores Vocales 2026 para No Cantantes</h1>
+    <p class="sub">Directo · Casa · Busking — Guía completa de equipos, conexiones y optimización</p>
+
+    <p>
+      Esta guía reúne todo lo necesario para que una persona que <strong>no es cantante profesional</strong>
+      pueda sonar afinada, sólida y creíble en un escenario pequeño, en casa o en la calle.
+      Se analizan los cuatro procesadores vocales más relevantes del mercado, la cadena de conexión
+      estándar paso a paso y las técnicas de optimización que evitan los errores más habituales.
+    </p>
+
+    <div class="quote">
+      «Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien.»
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><b>4</b><span>EQUIPOS ANALIZADOS</span></div>
+      <div class="metric"><b>3</b><span>PASOS DE MONTAJE</span></div>
+      <div class="metric"><b>3</b><span>CONSEJOS CLAVE</span></div>
+      <div class="metric"><b>100%</b><span>AUTÓNOMO SIN INTERNET</span></div>
+    </div>
+
+    <div class="card acc">
+      <h3>¿Qué vas a encontrar en este tutorial?</h3>
+      <ul>
+        <li><strong>EQUIPOS</strong> — Los mejores procesadores vocales del mercado, con sus características reales.</li>
+        <li><strong>CONEXIONES</strong> — La cadena de audio estándar y su instalación paso a paso.</li>
+        <li><strong>CONSEJOS</strong> — Optimización específica para quienes no son cantantes.</li>
+        <li><strong>FUENTES</strong> — Documentación de referencia utilizada.</li>
+        <li><strong>CRÉDITOS</strong> — Autoría, fecha y hora de elaboración.</li>
+      </ul>
+    </div>
+
+    <div class="callout info">
+      <span class="ct">INFO</span>
+      Todo el contenido de este tutorial funciona <strong>sin conexión a Internet</strong>:
+      el HTML, el CSS, el JavaScript y el SVG animado están integrados en un único archivo.
+    </div>
+  </section>
+
+  <!-- ============ EQUIPOS ============ -->
+  <section id="equipos" class="section">
+    <div class="secHead">
+      <div class="secIcon">🎛️</div>
+      <div class="t">
+        <small>CAPÍTULO 01</small>
+        <h2>Los mejores procesadores vocales del mercado</h2>
+      </div>
+    </div>
+
+    <div class="grid two">
+
+      <div class="card pur">
+        <span class="chip p">EL MÁS RECOMENDADO</span>
+        <h3>Boss VE-22 Vocal Performer</h3>
+        <p><strong>El más recomendado y completo.</strong></p>
+        <ul>
+          <li class="purple">Ideal para directos y escenarios pequeños gracias a su pantalla LCD a color muy visual y <strong>50 presets listos para usar</strong>.</li>
+          <li class="purple">Su función de corrección de tono (<strong>Pitch Correct</strong>) tiene un modo suave (<strong>Soft</strong>) que corrige desviaciones de afinación de forma casi imperceptible, y modos agresivos tipo <strong>Hard Tune</strong>.</li>
+          <li class="purple">Incluye <strong>ecualizador, compresor, de-esser</strong> (reduce siseos) y efectos de <strong>eco o reverberación</strong> para dar cuerpo a la voz al instante.</li>
+          <li class="purple">Funciona con <strong>4 pilas AA o adaptador de corriente AC</strong>. Cuenta con <strong>entrada XLR con alimentación Phantom</strong> y <strong>salidas XLR estéreo/mono</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="card acc">
+        <span class="chip c">EL MÁS PORTÁTIL</span>
+        <h3>Roland E-4 Voice Tweaker</h3>
+        <p><strong>El más portátil para formato bolsillo o calle.</strong></p>
+        <ul>
+          <li>Ultra compacto y ligero, ideal para <strong>directos improvisados o busking</strong>.</li>
+          <li>Ofrece <strong>afinación automática instantánea, armonías y efectos modernos</strong>.</li>
+          <li>Funciona con <strong>batería de litio recargable mediante USB-C</strong>. Tiene <strong>entrada de micro jack de 3.5 mm</strong> (o XLR con adaptador) y <strong>salida de línea</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="card grn">
+        <span class="chip g">EL MEJOR CON GUITARRA</span>
+        <h3>TC Helicon Play Acoustic</h3>
+        <p><strong>El mejor si tocas la guitarra.</strong></p>
+        <ul>
+          <li class="green">Escucha los <strong>acordes de tu guitarra acústica en tiempo real</strong> para afinar tu voz exactamente en la <strong>escala correcta de la canción</strong>.</li>
+          <li class="green">Ofrece <strong>armonías automáticas perfectas</strong> basadas en tu acompañamiento.</li>
+          <li class="green">Funciona <strong>únicamente con adaptador AC</strong>. Cuenta con <strong>entradas y salidas independientes XLR y Jack</strong> para separar la señal de voz y guitarra.</li>
+        </ul>
+      </div>
+
+      <div class="card amb">
+        <span class="chip a">PEDAL SIMPLE</span>
+        <h3>TC Helicon VoiceTone C1</h3>
+        <p><strong>La alternativa en pedal simple.</strong></p>
+        <ul>
+          <li class="amber">Formato de <strong>pedal compacto</strong> enfocado puramente en la <strong>corrección de afinación</strong>.</li>
+          <li class="amber">Se controla con una <strong>perilla directa de intensidad</strong>.</li>
+          <li class="amber">Si el usuario se desvía demasiado de la nota, la corrección puede <strong>sonar artificial</strong>, por lo que requiere intentar cantar la nota base con un <strong>mínimo de aproximación</strong>.</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <h3 style="margin-top:26px;">Tabla comparativa</h3>
+    <div class="tblWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Modelo</th>
+            <th>Alimentación</th>
+            <th>Entradas</th>
+            <th>Salidas</th>
+            <th>Ideal para</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Boss VE-22</strong><br>Vocal Performer</td>
+            <td>4 pilas AA o adaptador AC</td>
+            <td>XLR con alimentación Phantom</td>
+            <td>XLR estéreo / mono</td>
+            <td>Directos y escenarios pequeños</td>
+          </tr>
+          <tr>
+            <td><strong>Roland E-4</strong><br>Voice Tweaker</td>
+            <td>Batería de litio recargable por USB-C</td>
+            <td>Micro jack de 3.5 mm (o XLR con adaptador)</td>
+            <td>Salida de línea</td>
+            <td>Bolsillo, calle y busking</td>
+          </tr>
+          <tr>
+            <td><strong>TC Helicon</strong><br>Play Acoustic</td>
+            <td>Únicamente adaptador AC</td>
+            <td>XLR y Jack (voz + guitarra)</td>
+            <td>XLR y Jack independientes</td>
+            <td>Cantar tocando guitarra acústica</td>
+          </tr>
+          <tr>
+            <td><strong>TC Helicon</strong><br>VoiceTone C1</td>
+            <td>No especificado en el documento</td>
+            <td>No especificado en el documento</td>
+            <td>No especificado en el documento</td>
+            <td>Corrección de afinación simple en formato pedal</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn">
+      <span class="ct">ADVERTENCIA</span>
+      El <strong>TC Helicon VoiceTone C1</strong> no perdona: si te alejas mucho de la nota,
+      la corrección se vuelve artificial y evidente. Es el equipo que más exige al usuario
+      cantar cerca de la nota base.
+    </div>
+  </section>
+
+  <!-- ============ CONEXIONES ============ -->
+  <section id="conexiones" class="section">
+    <div class="secHead">
+      <div class="secIcon">🔌</div>
+      <div class="t">
+        <small>CAPÍTULO 02</small>
+        <h2>Conexiones e instalación en directo</h2>
+      </div>
+    </div>
+
+    <p>La <strong>cadena de audio estándar</strong> para escenarios pequeños o calle es la siguiente:</p>
+
+    <div class="chain">
+      <div class="chainNode n1">🎤 Micrófono<small>Fuente de señal</small></div>
+      <div class="chainArrow">➜</div>
+      <div class="chainLabel">Cable XLR</div>
+      <div class="chainArrow">➜</div>
+      <div class="chainNode n2">🎛️ Procesador Vocal<small>Pitch · EQ · FX</small></div>
+      <div class="chainArrow">➜</div>
+      <div class="chainLabel">Cable XLR o Jack</div>
+      <div class="chainArrow">➜</div>
+      <div class="chainNode n3">🔊 Altavoz Amplificado<small>Mesa de Sonido / Ampli de Busking</small></div>
+    </div>
+
+    <div class="callout info">
+      <span class="ct">INFO</span>
+      Cadena resumida: <strong>Micrófono → (Cable XLR) → Procesador Vocal → (Cable XLR o Jack) → Altavoz Amplificado / Mesa de Sonido / Ampli de Busking</strong>.
+    </div>
+
+    <h3 style="margin-top:24px;">Pasos para la configuración</h3>
+
+    <div class="step">
+      <div class="stepNum">1</div>
+      <div class="stepBody">
+        <h3>El Micrófono</h3>
+        <p>
+          Conecta un <strong>micrófono dinámico</strong> (como el <strong>Shure SM58</strong>)
+          a la entrada <strong>«Input XLR»</strong> del procesador vocal.
+        </p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="stepNum">2</div>
+      <div class="stepBody">
+        <h3>La Salida de Audio</h3>
+        <p>
+          Conecta la salida <strong>«Output»</strong> (XLR o Jack) del procesador directamente
+          a la entrada de tu <strong>altavoz autoamplificado</strong>, <strong>monitor</strong>
+          o <strong>amplificador de directo</strong> (ej. <strong>JBL EON One</strong> o
+          <strong>Boss Cube Street</strong>).
+        </p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="stepNum amber">3</div>
+      <div class="stepBody">
+        <h3>Ajuste de Ganancia (Crítico)</h3>
+        <p>
+          Canta a <strong>volumen real</strong> y ajusta la perilla de ganancia (<strong>Gain</strong>)
+          del procesador hasta que el <strong>indicador LED parpadee en verde</strong>.
+          Si parpadea en <strong>rojo</strong>, <strong>baja el nivel</strong> para evitar distorsiones.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout err">
+      <span class="ct">ERROR</span>
+      Si el LED de ganancia parpadea en <strong>rojo</strong> estás saturando la entrada.
+      El resultado será distorsión audible en la voz. Reduce el nivel de ganancia hasta
+      volver al <strong>verde</strong>.
+    </div>
+
+    <div class="callout example">
+      <span class="ct">EJEMPLO</span>
+      Cadena real de busking: <strong>Shure SM58</strong> → cable XLR → <strong>Boss VE-22</strong>
+      → cable XLR → <strong>Boss Cube Street</strong>. Todo alimentado con pilas AA en el procesador
+      y batería en el amplificador.
+    </div>
+  </section>
+
+  <!-- ============ CONSEJOS ============ -->
+  <section id="consejos" class="section">
+    <div class="secHead">
+      <div class="secIcon">💡</div>
+      <div class="t">
+        <small>CAPÍTULO 03</small>
+        <h2>Consejos de optimización para no cantantes</h2>
+      </div>
+    </div>
+
+    <div class="accItem open">
+      <button class="accHead">
+        <span>🌫️ Moderación con los efectos espaciales</span>
+        <span class="ico">+</span>
+      </button>
+      <div class="accBody">
+        <p>
+          En lugares cerrados o escenarios pequeños, el <strong>exceso de reverberación (reverb)</strong>
+          o <strong>eco (delay)</strong> genera una <strong>«bola de sonido»</strong> y hace perder claridad.
+        </p>
+        <p>
+          <strong>Mantén estos efectos en niveles moderados.</strong>
+        </p>
+      </div>
+    </div>
+
+    <div class="accItem">
+      <button class="accHead">
+        <span>📢 Evitar acoples (Feedback)</span>
+        <span class="ico">+</span>
+      </button>
+      <div class="accBody">
+        <p>
+          La <strong>corrección de tono agresiva</strong> junto con <strong>altavoces mal ubicados</strong>
+          provoca pitidos.
+        </p>
+        <p>
+          <strong>Coloca siempre el altavoz o amplificador ligeramente por delante de la línea del micrófono.</strong>
+        </p>
+      </div>
+    </div>
+
+    <div class="accItem">
+      <button class="accHead">
+        <span>✨ Activar el «Enhancer»</span>
+        <span class="ico">+</span>
+      </button>
+      <div class="accBody">
+        <p>
+          Tanto el <strong>Boss VE-22</strong> como el <strong>Roland E-4</strong> incluyen un
+          <strong>botón de realce (Enhance)</strong>.
+        </p>
+        <p>
+          <strong>Actívalo siempre</strong>, ya que funciona como un <strong>ecualizador y compresor
+          inteligente</strong> que aporta <strong>brillo y consistencia</strong> a la voz de forma
+          automática <strong>sin necesidad de conocimientos técnicos</strong>.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout example">
+      <span class="ct">EJEMPLO</span>
+      Resumen operativo para una actuación en local pequeño:
+      <strong>Enhance activado</strong> + <strong>reverb bajo</strong> + <strong>delay casi nulo</strong>
+      + <strong>altavoz adelantado respecto al micrófono</strong>.
+    </div>
+
+    <div class="callout warn">
+      <span class="ct">ADVERTENCIA</span>
+      La corrección de tono agresiva (<em>Hard Tune</em>) combinada con un altavoz mal situado es la
+      causa más frecuente de <strong>acoples</strong> en directo.
+    </div>
+  </section>
+
+  <!-- ============ FUENTES ============ -->
+  <section id="fuentes" class="section">
+    <div class="secHead">
+      <div class="secIcon">📚</div>
+      <div class="t">
+        <small>DOCUMENTACIÓN</small>
+        <h2>Fuentes</h2>
+      </div>
+    </div>
+
+    <p>
+      Referencias documentales empleadas para la elaboración de este tutorial. Todas ellas provienen
+      del <strong>documento fuente proporcionado</strong> por el usuario.
+    </p>
+
+    <div class="srcItem">
+      <strong>Documento fuente original</strong>
+      <span>«GUÍA COMPLETA: PROCESADORES VOCALES (2026) PARA NO CANTANTES EN DIRECTO, CASA Y BUSKING» — documento TXT aportado por el usuario. Fuente única de todo el contenido técnico de este tutorial.</span>
+    </div>
+
+    <div class="srcItem">
+      <strong>Boss VE-22 Vocal Performer</strong>
+      <span>Equipo citado en el documento fuente. El documento original no incluye enlace verificable.</span>
+    </div>
+
+    <div class="srcItem">
+      <strong>Roland E-4 Voice Tweaker</strong>
+      <span>Equipo citado en el documento fuente. El documento original no incluye enlace verificable.</span>
+    </div>
+
+    <div class="srcItem">
+      <strong>TC Helicon Play Acoustic</strong>
+      <span>Equipo citado en el documento fuente. El documento original no incluye enlace verificable.</span>
+    </div>
+
+    <div class="srcItem">
+      <strong>TC Helicon VoiceTone C1</strong>
+      <span>Equipo citado en el documento fuente. El documento original no incluye enlace verificable.</span>
+    </div>
+
+    <div class="srcItem">
+      <strong>Shure SM58</strong>
+      <span>Micrófono dinámico citado como ejemplo en el documento fuente. El documento original no incluye enlace verificable.</span>
+    </div>
+
+    <div class="srcItem">
+      <strong>JBL EON One · Boss Cube Street</strong>
+      <span>Sistemas de amplificación citados como ejemplo en el documento fuente. El documento original no incluye enlace verificable.</span>
+    </div>
+
+    <div class="callout info">
+      <span class="ct">INFO</span>
+      El documento original <strong>no aporta URLs ni enlaces externos</strong>. Siguiendo la regla de
+      integridad documental, <strong>no se han inventado enlaces</strong> ni se ha añadido información
+      procedente de fuentes externas.
+    </div>
+  </section>
+
+  <!-- ============ CRÉDITOS ============ -->
+  <section id="creditos" class="section">
+    <div class="secHead">
+      <div class="secIcon">🏆</div>
+      <div class="t">
+        <small>INFORMACIÓN DEL PROYECTO</small>
+        <h2>Créditos</h2>
+      </div>
+    </div>
+
+    <div class="svgHero" id="svgCredit"></div>
+
+    <div class="creditBox">
+      <div class="name">Rubén Sbarsky</div>
+      <p class="sub" style="margin-bottom:0;">Autor y responsable del contenido</p>
+      <div class="creditRow">
+        <div class="creditPill">📅 23/09/2026</div>
+        <div class="creditPill">🕐 05:30:16</div>
+        <div class="creditPill">📚 Educativo</div>
+      </div>
+    </div>
+
+    <div class="card pur">
+      <h3>Título del tutorial</h3>
+      <p>Procesadores Vocales 2026 para No Cantantes — Directo, Casa y Busking</p>
+      <h3 style="margin-top:14px;">Finalidad</h3>
+      <p>
+        Este material tiene una finalidad exclusivamente <strong>educativa y de divulgación</strong>.
+        Su objetivo es facilitar la comprensión de los procesadores vocales, su conexión y su
+        optimización a personas que no son cantantes profesionales.
+      </p>
+    </div>
+
+    <div class="fiatBig">Fiat iustitia, ruat caelum.</div>
+  </section>
+
+</main>
+
+<footer>
+  <p>📚 Tutorial solo con fines Educativos y Divulgación</p>
+  <p>👨‍💻 Créditos: Rubén Sbarsky</p>
+  <p>📅 FECHA: 23/09/2026</p>
+  <p>Hora: 05:30:16</p>
+  <p class="fiat">Fiat iustitia, ruat caelum.</p>
+</footer>
+
+<button id="toTop" aria-label="Volver arriba">↑</button>
+
+<script>
+/* ==========================================================
+   SVG ANIMADO — MISMO ELEMENTO PARA HOME Y CRÉDITOS
+   ========================================================== */
+const SVG_MARKUP = `
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Animación de la cadena de señal vocal: micrófono, procesador y altavoz">
+  <defs>
+    <filter id="fxGlow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="3.2" result="b1"/>
+      <feGaussianBlur stdDeviation="8" result="b2"/>
+      <feMerge>
+        <feMergeNode in="b2"/>
+        <feMergeNode in="b1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="fxSoft" x="-90%" y="-90%" width="280%" height="280%">
+      <feGaussianBlur stdDeviation="7" result="bs"/>
+      <feMerge>
+        <feMergeNode in="bs"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <linearGradient id="gBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#070b14">
+        <animate attributeName="stop-color" values="#070b14;#0b1a33;#150a2b;#070b14" dur="13s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" stop-color="#0a0e1a">
+        <animate attributeName="stop-color" values="#0a0e1a;#122040;#0d1830;#0a0e1a" dur="9s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#0d1424">
+        <animate attributeName="stop-color" values="#0d1424;#1b1030;#08202f;#0d1424" dur="16s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+
+    <pattern id="pGrid" width="25" height="25" patternUnits="userSpaceOnUse">
+      <path d="M25 0 L0 0 0 25" fill="none" stroke="#1e3a5f" stroke-width="0.6"/>
+    </pattern>
+
+    <radialGradient id="haloCyan">
+      <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.55"/>
+      <stop offset="65%" stop-color="#00d4ff" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloPurple">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.50"/>
+      <stop offset="65%" stop-color="#a855f7" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloGreen">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.50"/>
+      <stop offset="65%" stop-color="#22c55e" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloAmber">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.55"/>
+      <stop offset="70%" stop-color="#f59e0b" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+
+    <path id="pIn" d="M 132 240 L 322 240"/>
+    <path id="pOut" d="M 508 240 L 668 240"/>
+    <path id="pFull" d="M 132 240 L 668 240"/>
+  </defs>
+
+  <!-- FONDO -->
+  <rect x="0" y="0" width="800" height="450" fill="url(#gBg)"/>
+  <rect x="0" y="0" width="800" height="450" fill="url(#pGrid)">
+    <animate attributeName="opacity" values="0.20;0.55;0.20" dur="6.5s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- REJILLA DE ESQUINA HUD -->
+  <g opacity="0.5">
+    <path d="M14 14 H64" stroke="#00d4ff" stroke-width="1.4" fill="none">
+      <animate attributeName="opacity" values="0.25;1;0.25" dur="4s" repeatCount="indefinite"/>
+    </path>
+    <path d="M14 14 V64" stroke="#00d4ff" stroke-width="1.4" fill="none">
+      <animate attributeName="opacity" values="0.25;1;0.25" dur="4s" begin="0.5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M786 436 H736" stroke="#22c55e" stroke-width="1.4" fill="none">
+      <animate attributeName="opacity" values="0.25;1;0.25" dur="5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M786 436 V386" stroke="#22c55e" stroke-width="1.4" fill="none">
+      <animate attributeName="opacity" values="0.25;1;0.25" dur="5s" begin="0.7s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- ANILLOS ORBITALES -->
+  <g transform="translate(415,240)">
+    <circle r="100" fill="none" stroke="#a855f7" stroke-width="1" stroke-dasharray="6 14" opacity="0.55">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="19s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="6 14;20 6;6 14" dur="7s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.25;0.7;0.25" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="119" fill="none" stroke="#00d4ff" stroke-width="1" stroke-dasharray="3 9" opacity="0.45">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="27s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="3 9;13 4;3 9" dur="9.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="138" fill="none" stroke="#22c55e" stroke-width="1" stroke-dasharray="2 16" opacity="0.38">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="35s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="2 16;11 8;2 16" dur="11s" repeatCount="indefinite"/>
+    </circle>
+
+    <g>
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="12s" repeatCount="indefinite"/>
+      <circle cx="100" cy="0" r="3.6" fill="#a855f7" filter="url(#fxGlow)"/>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="8.5s" repeatCount="indefinite"/>
+      <circle cx="0" cy="-119" r="3" fill="#00d4ff" filter="url(#fxGlow)"/>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="17s" repeatCount="indefinite"/>
+      <circle cx="138" cy="0" r="2.6" fill="#22c55e" filter="url(#fxGlow)"/>
+    </g>
+  </g>
+
+  <!-- HALOS PULSANTES -->
+  <circle cx="110" cy="238" r="46" fill="url(#haloCyan)">
+    <animate attributeName="r" values="34;54;34" dur="3.2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.45;1;0.45" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="415" cy="240" r="96" fill="url(#haloPurple)">
+    <animate attributeName="r" values="86;108;86" dur="4.4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.35;0.85;0.35" dur="4.4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="690" cy="236" r="52" fill="url(#haloGreen)">
+    <animate attributeName="r" values="40;62;40" dur="3.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.35;0.9;0.35" dur="3.8s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- LINEAS DE FLUJO -->
+  <path d="M 132 240 L 322 240" stroke="#00d4ff" stroke-width="2.2" stroke-dasharray="10 8" fill="none" opacity="0.65" filter="url(#fxGlow)">
+    <animate attributeName="stroke-dashoffset" values="0;-36" dur="1.6s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 508 240 L 668 240" stroke="#22c55e" stroke-width="2.2" stroke-dasharray="10 8" fill="none" opacity="0.65" filter="url(#fxGlow)">
+    <animate attributeName="stroke-dashoffset" values="0;-36" dur="1.6s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- FANTASMA: RECORRIDO COMPLETO -->
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0.85;0.85;0" keyTimes="0;0.15;0.75;1" dur="8s" repeatCount="indefinite" begin="1.2s"/>
+    <circle r="10" fill="none" stroke="#f59e0b" stroke-width="2" filter="url(#fxGlow)">
+      <animateMotion dur="8s" repeatCount="indefinite" begin="1.2s" rotate="auto">
+        <mpath xlink:href="#pFull" href="#pFull"/>
+      </animateMotion>
+    </circle>
+  </g>
+
+  <!-- PARTICULAS ENTRADA -->
+  <circle r="3.2" fill="#00d4ff" filter="url(#fxGlow)">
+    <animateMotion dur="2.2s" repeatCount="indefinite" begin="0s"><mpath xlink:href="#pIn" href="#pIn"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.2s" repeatCount="indefinite" begin="0s"/>
+  </circle>
+  <circle r="2.6" fill="#a855f7" filter="url(#fxGlow)">
+    <animateMotion dur="2.7s" repeatCount="indefinite" begin="0.7s"><mpath xlink:href="#pIn" href="#pIn"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.7s" repeatCount="indefinite" begin="0.7s"/>
+  </circle>
+  <circle r="2.2" fill="#00d4ff" filter="url(#fxGlow)">
+    <animateMotion dur="3.1s" repeatCount="indefinite" begin="1.5s"><mpath xlink:href="#pIn" href="#pIn"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="3.1s" repeatCount="indefinite" begin="1.5s"/>
+  </circle>
+
+  <!-- PARTICULAS SALIDA -->
+  <circle r="3.2" fill="#22c55e" filter="url(#fxGlow)">
+    <animateMotion dur="2.4s" repeatCount="indefinite" begin="0.3s"><mpath xlink:href="#pOut" href="#pOut"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.4s" repeatCount="indefinite" begin="0.3s"/>
+  </circle>
+  <circle r="2.6" fill="#f59e0b" filter="url(#fxGlow)">
+    <animateMotion dur="2.9s" repeatCount="indefinite" begin="1.1s"><mpath xlink:href="#pOut" href="#pOut"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.9s" repeatCount="indefinite" begin="1.1s"/>
+  </circle>
+  <circle r="2.2" fill="#22c55e" filter="url(#fxGlow)">
+    <animateMotion dur="3.4s" repeatCount="indefinite" begin="2s"><mpath xlink:href="#pOut" href="#pOut"/></animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="3.4s" repeatCount="indefinite" begin="2s"/>
+  </circle>
+
+  <!-- MICROFONO -->
+  <g transform="translate(110,238)">
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.3s" repeatCount="indefinite"/>
+      <rect x="-12" y="-34" width="24" height="52" rx="12" fill="#0f172a" stroke="#00d4ff" stroke-width="2" filter="url(#fxGlow)"/>
+      <line x1="-12" y1="-22" x2="12" y2="-22" stroke="#00d4ff" stroke-width="0.9" opacity="0.7"/>
+      <line x1="-12" y1="-14" x2="12" y2="-14" stroke="#00d4ff" stroke-width="0.9" opacity="0.55"/>
+      <line x1="-12" y1="-6" x2="12" y2="-6" stroke="#00d4ff" stroke-width="0.9" opacity="0.4"/>
+      <path d="M -24 0 a 24 24 0 0 0 48 0" fill="none" stroke="#00d4ff" stroke-width="2" opacity="0.9"/>
+      <line x1="0" y1="24" x2="0" y2="44" stroke="#00d4ff" stroke-width="2" opacity="0.85"/>
+      <line x1="-14" y1="44" x2="14" y2="44" stroke="#00d4ff" stroke-width="2" opacity="0.85"/>
+      <g opacity="0.85">
+        <path d="M -30 -30 a 42 42 0 0 0 0 60" fill="none" stroke="#00d4ff" stroke-width="1.6">
+          <animate attributeName="opacity" values="0;0.9;0" dur="2.2s" repeatCount="indefinite"/>
+        </path>
+        <path d="M -38 -40 a 56 56 0 0 0 0 80" fill="none" stroke="#a855f7" stroke-width="1.4">
+          <animate attributeName="opacity" values="0;0.7;0" dur="3.1s" repeatCount="indefinite" begin="0.6s"/>
+        </path>
+      </g>
+    </g>
+  </g>
+
+  <!-- EXPLOSION ENTRADA -->
+  <g transform="translate(322,240)">
+    <g>
+      <animateTransform attributeName="transform" type="scale" values="0.3;1.9;1.9" keyTimes="0;0.32;1" dur="3s" repeatCount="indefinite" begin="0s"/>
+      <animate attributeName="opacity" values="0;0.95;0" keyTimes="0;0.28;0.55" dur="3s" repeatCount="indefinite" begin="0s"/>
+      <line x1="0" y1="0" x2="0" y2="-16" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+      <line x1="0" y1="0" x2="0" y2="-16" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" transform="rotate(60)"/>
+      <line x1="0" y1="0" x2="0" y2="-16" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" transform="rotate(120)"/>
+      <line x1="0" y1="0" x2="0" y2="-16" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" transform="rotate(180)"/>
+      <line x1="0" y1="0" x2="0" y2="-16" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" transform="rotate(240)"/>
+      <line x1="0" y1="0" x2="0" y2="-16" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" transform="rotate(300)"/>
+    </g>
+  </g>
+
+  <!-- EXPLOSION SALIDA -->
+  <g transform="translate(508,240)">
+    <g>
+      <animateTransform attributeName="transform" type="scale" values="0.3;1.9;1.9" keyTimes="0;0.32;1" dur="3.6s" repeatCount="indefinite" begin="1.5s"/>
+      <animate attributeName="opacity" values="0;0.95;0" keyTimes="0;0.28;0.55" dur="3.6s" repeatCount="indefinite" begin="1.5s"/>
+      <line x1="0" y1="0" x2="0" y2="-16" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+      <line x1="0" y1="0" x2="0" y2="-16" stroke="#22c55e" stroke-width="2" stroke-linecap="round" transform="rotate(60)"/>
+      <line x1="0" y1="0" x2="0" y2="-16" stroke="#22c55e" stroke-width="2" stroke-linecap="round" transform="rotate(120)"/>
+      <line x1="0" y1="0" x2="0" y2="-16" stroke="#22c55e" stroke-width="2" stroke-linecap="round" transform="rotate(180)"/>
+      <line x1="0" y1="0" x2="0" y2="-16" stroke="#22c55e" stroke-width="2" stroke-linecap="round" transform="rotate(240)"/>
+      <line x1="0" y1="0" x2="0" y2="-16" stroke="#22c55e" stroke-width="2" stroke-linecap="round" transform="rotate(300)"/>
+    </g>
+  </g>
+
+  <!-- NODOS CLAVE PULSANTES -->
+  <rect x="314" y="232" width="16" height="16" rx="3" fill="none" stroke="#00d4ff" stroke-width="2">
+    <animate attributeName="stroke-width" values="1;3.2;1" dur="1.9s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.35;1;0.35" dur="1.9s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="500" y="232" width="16" height="16" rx="3" fill="none" stroke="#22c55e" stroke-width="2">
+    <animate attributeName="stroke-width" values="1;3.2;1" dur="2.3s" repeatCount="indefinite" begin="0.6s"/>
+    <animate attributeName="opacity" values="0.35;1;0.35" dur="2.3s" repeatCount="indefinite" begin="0.6s"/>
+  </rect>
+
+  <!-- PROCESADOR VOCAL -->
+  <g transform="translate(415,240)">
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -2.4;0 0" dur="4.1s" repeatCount="indefinite"/>
+      <rect x="-85" y="-70" width="170" height="140" rx="12" fill="#0f172a" stroke="#a855f7" stroke-width="2" filter="url(#fxGlow)"/>
+      <!-- pantalla LCD -->
+      <rect x="-72" y="-58" width="144" height="42" rx="5" fill="#050e16" stroke="#00d4ff" stroke-width="1.2"/>
+      <g>
+        <rect x="-65" y="212" width="10" height="6" fill="#00d4ff" opacity="0.95">
+          <animate attributeName="height" values="6;26;10;30;8;6" dur="2.2s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="210;190;206;186;208;210" dur="2.2s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="-46" y="204" width="10" height="12" fill="#22c55e" opacity="0.95">
+          <animate attributeName="height" values="12;8;28;14;24;12" dur="2.7s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="204;208;188;202;192;204" dur="2.7s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="-27" y="192" width="10" height="24" fill="#a855f7" opacity="0.95">
+          <animate attributeName="height" values="24;16;8;26;14;24" dur="3.1s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="192;200;208;190;202;192" dur="3.1s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="-8" y="206" width="10" height="10" fill="#00d4ff" opacity="0.95">
+          <animate attributeName="height" values="10;30;18;8;28;10" dur="2.4s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="206;186;198;208;188;206" dur="2.4s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="11" y="198" width="10" height="18" fill="#f59e0b" opacity="0.95">
+          <animate attributeName="height" values="18;10;24;16;8;18" dur="3.4s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="198;206;192;200;208;198" dur="3.4s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="30" y="188" width="10" height="28" fill="#22c55e" opacity="0.95">
+          <animate attributeName="height" values="28;20;12;22;18;28" dur="2.9s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="188;196;204;194;198;188" dur="2.9s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="49" y="208" width="10" height="8" fill="#ef4444" opacity="0.95">
+          <animate attributeName="height" values="8;14;30;10;26;8" dur="3.6s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="208;202;186;206;190;208" dur="3.6s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+      <!-- perillas -->
+      <g>
+        <circle cx="-50" cy="30" r="11" fill="#0b1220" stroke="#00d4ff" stroke-width="1.6">
+          <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="2.6s" repeatCount="indefinite"/>
+        </circle>
+        <line x1="-50" y1="30" x2="-50" y2="21" stroke="#00d4ff" stroke-width="2">
+          <animateTransform attributeName="transform" type="rotate" from="0 -50 30" to="360 -50 30" dur="9s" repeatCount="indefinite"/>
+        </line>
+      </g>
+      <g>
+        <circle cx="0" cy="30" r="11" fill="#0b1220" stroke="#a855f7" stroke-width="1.6">
+          <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3.2s" repeatCount="indefinite"/>
+        </circle>
+        <line x1="0" y1="30" x2="0" y2="21" stroke="#a855f7" stroke-width="2">
+          <animateTransform attributeName="transform" type="rotate" from="360 0 30" to="0 0 30" dur="11s" repeatCount="indefinite"/>
+        </line>
+      </g>
+      <g>
+        <circle cx="50" cy="30" r="11" fill="#0b1220" stroke="#22c55e" stroke-width="1.6">
+          <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="2.2s" repeatCount="indefinite"/>
+        </circle>
+        <line x1="50" y1="30" x2="50" y2="21" stroke="#22c55e" stroke-width="2">
+          <animateTransform attributeName="transform" type="rotate" from="0 50 30" to="360 50 30" dur="7.5s" repeatCount="indefinite"/>
+        </line>
+      </g>
+      <!-- LED estado -->
+      <circle cx="-72" cy="52" r="4" fill="#22c55e">
+        <animate attributeName="opacity" values="0.2;1;0.2" dur="1.4s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="-56" cy="52" r="4" fill="#f59e0b">
+        <animate attributeName="opacity" values="0.2;1;0.2" dur="1.9s" repeatCount="indefinite" begin="0.4s"/>
+      </circle>
+      <circle cx="-40" cy="52" r="4" fill="#ef4444">
+        <animate attributeName="opacity" values="0.15;0.9;0.15" dur="2.6s" repeatCount="indefinite" begin="0.9s"/>
+      </circle>
+    </g>
+  </g>
+
+  <!-- ALTAVOZ -->
+  <g transform="translate(690,236)">
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.7s" repeatCount="indefinite"/>
+      <rect x="-32" y="-46" width="64" height="92" rx="8" fill="#0f172a" stroke="#22c55e" stroke-width="2" filter="url(#fxGlow)"/>
+      <circle cx="0" cy="-16" r="18" fill="none" stroke="#22c55e" stroke-width="1.8">
+        <animate attributeName="r" values="17;20;17" dur="2.1s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.5;1;0.5" dur="2.1s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="0" cy="-16" r="7" fill="#22c55e" opacity="0.35">
+        <animate attributeName="opacity" values="0.15;0.7;0.15" dur="1.7s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="0" cy="22" r="10" fill="none" stroke="#00d4ff" stroke-width="1.5">
+        <animate attributeName="r" values="9;12;9" dur="2.8s" repeatCount="indefinite"/>
+      </circle>
+      <g opacity="0.8">
+        <path d="M 34 -30 a 40 40 0 0 1 0 60" fill="none" stroke="#22c55e" stroke-width="1.6">
+          <animate attributeName="opacity" values="0;0.9;0" dur="2.4s" repeatCount="indefinite"/>
+        </path>
+        <path d="M 44 -42 a 56 56 0 0 1 0 84" fill="none" stroke="#00d4ff" stroke-width="1.4">
+          <animate attributeName="opacity" values="0;0.7;0" dur="3.3s" repeatCount="indefinite" begin="0.8s"/>
+        </path>
+      </g>
+    </g>
+  </g>
+
+  <!-- ETIQUETAS DE NODOS -->
+  <g font-family="Segoe UI, system-ui, sans-serif" font-size="11" font-weight="700" letter-spacing="1.6" text-anchor="middle">
+    <text x="110" y="308" fill="#00d4ff">MICRÓFONO
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite"/>
+    </text>
+    <text x="415" y="340" fill="#a855f7">PROCESADOR VOCAL
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="3.8s" repeatCount="indefinite"/>
+    </text>
+    <text x="690" y="308" fill="#22c55e">ALTAVOZ
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="3.4s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- ETIQUETAS DE PROCESO -->
+  <g font-family="Segoe UI, system-ui, sans-serif" font-size="10" font-weight="600" letter-spacing="1.4" fill="#7dd3fc" text-anchor="middle">
+    <text x="227" y="222">PITCH · EQ · DE-ESSER
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="4.2s" repeatCount="indefinite"/>
+    </text>
+    <text x="588" y="222">SALIDA XLR / JACK
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="5s" repeatCount="indefinite" begin="0.8s"/>
+    </text>
+  </g>
+
+  <!-- TITULO ANIMADO -->
+  <text x="36" y="50" font-family="Segoe UI, system-ui, sans-serif" font-size="30" font-weight="800" letter-spacing="1">PROCESADORES VOCALES
+    <animate attributeName="fill" values="#00d4ff;#a855f7;#22c55e;#f59e0b;#00d4ff" dur="14s" repeatCount="indefinite"/>
+  </text>
+  <text x="36" y="74" font-family="Segoe UI, system-ui, sans-serif" font-size="12.5" font-weight="700" letter-spacing="3.4" fill="#7dd3fc">GUÍA 2026 · CADENA DE SEÑAL EN VIVO
+    <animate attributeName="opacity" values="0.35;1;0.35" dur="4.6s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- INDICADOR LIVE -->
+  <g>
+    <circle cx="756" cy="32" r="5" fill="#ef4444" filter="url(#fxGlow)">
+      <animate attributeName="opacity" values="0.15;1;0.15" dur="1.5s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="4;6.5;4" dur="1.5s" repeatCount="indefinite"/>
+    </circle>
+    <text x="744" y="37" font-family="Segoe UI, system-ui, sans-serif" font-size="12" font-weight="800" letter-spacing="2.6" fill="#ef4444" text-anchor="end">LIVE</text>
+  </g>
+
+  <!-- ETIQUETAS DE ESTADO ALTERNANTES -->
+  <g font-family="Segoe UI, system-ui, sans-serif" font-size="11" font-weight="700" letter-spacing="2.2">
+    <text x="36" y="430" fill="#22c55e">MODO: DIRECTO
+      <animate attributeName="opacity" values="1;1;0;0;0;0;1" keyTimes="0;0.30;0.34;0.63;0.67;0.96;1" dur="9s" repeatCount="indefinite"/>
+    </text>
+    <text x="36" y="430" fill="#00d4ff">MODO: CASA
+      <animate attributeName="opacity" values="0;0;1;1;0;0;0" keyTimes="0;0.30;0.34;0.63;0.67;0.96;1" dur="9s" repeatCount="indefinite"/>
+    </text>
+    <text x="36" y="430" fill="#f59e0b">MODO: BUSKING
+      <animate attributeName="opacity" values="0;0;0;0;1;1;0" keyTimes="0;0.30;0.34;0.63;0.67;0.96;1" dur="9s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- FIRMA -->
+  <text x="764" y="430" font-family="Segoe UI, system-ui, sans-serif" font-size="11" font-weight="700" letter-spacing="2.2" fill="#94a3b8" text-anchor="end">RUBÉN SBARSKY
+    <animate attributeName="opacity" values="0.25;0.95;0.25" dur="6.5s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- CLIMAX -->
+  <g>
+    <ellipse cx="415" cy="412" rx="120" ry="26" fill="url(#haloAmber)">
+      <animate attributeName="opacity" values="0;0;0.9;0.9;0;0" keyTimes="0;0.55;0.62;0.72;0.79;1" dur="11s" repeatCount="indefinite"/>
+    </ellipse>
+    <text x="415" y="419" font-family="Segoe UI, system-ui, sans-serif" font-size="22" font-weight="800" letter-spacing="4" fill="#f59e0b" text-anchor="middle" filter="url(#fxGlow)">¡VOZ LISTA!
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.55;0.62;0.72;0.79;1" dur="11s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- MARCO -->
+  <rect x="1" y="1" width="798" height="448" rx="10" fill="none" stroke="#1e3a5f" stroke-width="2">
+    <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="5.5s" repeatCount="indefinite"/>
+  </rect>
+</svg>
+`;
+
+/* ==========================================================
+   MONTAJE DEL SVG (MISMO SVG EN HOME Y CRÉDITOS)
+   ========================================================== */
+const svgHome = document.getElementById('svgHome');
+const svgCredit = document.getElementById('svgCredit');
+let svgMountedIn = null;
+
+function mountSVG(sectionId){
+  if(sectionId === 'inicio'){
+    if(svgMountedIn === 'inicio') return;
+    svgCredit.innerHTML = '';
+    svgHome.innerHTML = SVG_MARKUP;
+    svgMountedIn = 'inicio';
+  } else if(sectionId === 'creditos'){
+    if(svgMountedIn === 'creditos') return;
+    svgHome.innerHTML = '';
+    svgCredit.innerHTML = SVG_MARKUP;
+    svgMountedIn = 'creditos';
+  }
+}
+
+/* ==========================================================
+   NAVEGACIÓN SPA
+   ========================================================== */
+const navBtns = Array.prototype.slice.call(document.querySelectorAll('.navBtn'));
+const sections = Array.prototype.slice.call(document.querySelectorAll('.section'));
+
+function showSection(id){
+  sections.forEach(function(s){
+    s.classList.toggle('active', s.id === id);
+  });
+  navBtns.forEach(function(b){
+    b.classList.toggle('active', b.getAttribute('data-target') === id);
+  });
+  mountSVG(id);
+  window.scrollTo({top:0, behavior:'auto'});
+  updateProgress();
+}
+
+navBtns.forEach(function(btn){
+  btn.addEventListener('click', function(){
+    showSection(btn.getAttribute('data-target'));
+    var sc = document.getElementById('navScroll');
+    if(sc && btn.scrollIntoView){
+      try{ btn.scrollIntoView({inline:'center', block:'nearest', behavior:'smooth'}); }catch(e){}
+    }
+  });
+});
+
+/* ==========================================================
+   BARRA DE PROGRESO
+   ========================================================== */
+const progressFill = document.getElementById('progressFill');
+function updateProgress(){
+  var h = document.documentElement.scrollHeight - window.innerHeight;
+  var y = window.scrollY || window.pageYOffset || 0;
+  var pct = h > 0 ? (y / h) * 100 : 0;
+  progressFill.style.width = Math.min(100, Math.max(0, pct)) + '%';
+}
+window.addEventListener('scroll', updateProgress, {passive:true});
+window.addEventListener('resize', updateProgress);
+
+/* ==========================================================
+   BOTÓN VOLVER ARRIBA
+   ========================================================== */
+const toTop = document.getElementById('toTop');
+window.addEventListener('scroll', function(){
+  if((window.scrollY || 0) > 320){ toTop.classList.add('show'); }
+  else { toTop.classList.remove('show'); }
+}, {passive:true});
+toTop.addEventListener('click', function(){
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+/* ==========================================================
+   ACORDEONES
+   ========================================================== */
+document.querySelectorAll('.accHead').forEach(function(head){
+  head.addEventListener('click', function(){
+    var item = head.parentElement;
+    var wasOpen = item.classList.contains('open');
+    item.parentElement.querySelectorAll('.accItem').forEach(function(i){
+      i.classList.remove('open');
+    });
+    if(!wasOpen){ item.classList.add('open'); }
+  });
+});
+
+/* ==========================================================
+   INICIALIZACIÓN
+   ========================================================== */
+mountSVG('inicio');
+updateProgress();
+</script>
+</body>
+</html>
