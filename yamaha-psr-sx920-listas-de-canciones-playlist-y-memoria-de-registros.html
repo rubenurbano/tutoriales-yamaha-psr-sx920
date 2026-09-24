@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutorial: Yamaha PSR-SX920 — Listas de Canciones, Playlist y Memoria de Registros</title>
+<style>
+:root{
+  --bg:#0a0e1a;
+  --card:#0f172a;
+  --border:#1e3a5f;
+  --accent:#00d4ff;
+  --green:#22c55e;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --purple:#a855f7;
+  --text:#e2e8f0;
+  --muted:#94a3b8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+/* ---------- PROGRESS BAR ---------- */
+.progress-bar{
+  position:fixed;top:0;left:0;height:3px;width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--purple),var(--green));
+  z-index:1000;transition:width .1s linear;
+  box-shadow:0 0 10px rgba(0,212,255,.6);
+}
+/* ---------- NAVBAR ---------- */
+.navbar{
+  position:sticky;top:0;z-index:900;
+  background:rgba(10,14,26,.96);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:.5rem 0;
+}
+.nav-scroll{
+  display:flex;gap:.4rem;
+  overflow-x:auto;
+  padding:.35rem .75rem;
+  scrollbar-width:thin;
+  scrollbar-color:var(--accent) transparent;
+}
+.nav-scroll::-webkit-scrollbar{height:5px}
+.nav-scroll::-webkit-scrollbar-track{background:transparent}
+.nav-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.nav-btn{
+  flex:0 0 auto;
+  background:var(--card);
+  color:var(--muted);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:.45rem .85rem;
+  font-size:.8rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .25s ease;
+  white-space:nowrap;
+  font-family:inherit;
+}
+.nav-btn:hover{color:var(--text);border-color:var(--accent)}
+.nav-btn.active{
+  color:#000;background:var(--accent);
+  border-color:var(--accent);
+  box-shadow:0 0 14px rgba(0,212,255,.5);
+}
+.nav-btn.credits{border-color:var(--purple);color:var(--purple)}
+.nav-btn.credits.active{background:var(--purple);color:#fff;box-shadow:0 0 14px rgba(168,85,247,.5)}
+/* ---------- SECTIONS ---------- */
+.section{display:none;padding:1.5rem 1rem 3rem;max-width:1200px;margin:0 auto;animation:fadeIn .4s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* ---------- HOME ---------- */
+.home-hero{text-align:center;padding:.5rem 0 1rem}
+.badge{
+  display:inline-block;
+  background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(168,85,247,.15));
+  border:1px solid var(--accent);
+  color:var(--accent);
+  padding:.35rem .9rem;
+  border-radius:99px;
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  margin-bottom:1rem;
+}
+.home-title{
+  font-size:clamp(1.6rem,4.5vw,2.8rem);
+  font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--purple),var(--green));
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  line-height:1.15;
+  margin-bottom:.75rem;
+}
+.home-subtitle{color:var(--muted);font-size:clamp(.9rem,2.2vw,1.05rem);max-width:760px;margin:0 auto 1rem}
+.svg-wrap{
+  width:100%;max-width:980px;margin:.5rem auto 1.5rem;
+  border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;background:#050810;
+  box-shadow:0 0 40px rgba(0,212,255,.12),0 0 80px rgba(168,85,247,.06);
+}
+.svg-wrap svg{display:block;width:100%;height:auto}
+.quote-box{
+  background:var(--card);border-left:4px solid var(--accent);
+  border-radius:10px;padding:1rem 1.25rem;max-width:820px;margin:0 auto 1.5rem;
+  font-style:italic;color:var(--text);font-size:.98rem;
+  text-align:left;
+}
+.quote-box::before{content:'"';color:var(--accent);font-size:2rem;line-height:0;vertical-align:-.4rem;margin-right:.3rem}
+.metrics-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:.75rem;max-width:820px;margin:0 auto 1rem;
+}
+.metric{
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:.85rem .5rem;text-align:center;
+}
+.metric-val{font-size:1.4rem;font-weight:800;color:var(--accent);display:block;line-height:1.2}
+.metric-lbl{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.dt-row{text-align:center;color:var(--muted);font-size:.82rem;margin-top:.5rem}
+.dt-row strong{color:var(--amber)}
+/* ---------- SECTION HEADER ---------- */
+.sec-header{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.sec-num{
+  display:inline-block;background:var(--accent);color:#000;
+  font-weight:800;font-size:.72rem;padding:.2rem .6rem;border-radius:6px;
+  letter-spacing:1px;margin-bottom:.5rem;
+}
+.sec-title{font-size:clamp(1.3rem,3.5vw,1.9rem);font-weight:800;color:var(--text);line-height:1.2}
+.sec-desc{color:var(--muted);margin-top:.5rem;font-size:.92rem}
+/* ---------- CARDS ---------- */
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:1rem;
+}
+.card h3{color:var(--accent);font-size:1.05rem;margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
+.card h4{color:var(--text);font-size:.95rem;margin:.75rem 0 .4rem}
+.card p{margin-bottom:.6rem;font-size:.92rem}
+.card ul,.card ol{margin:.5rem 0 .75rem 1.2rem;font-size:.92rem}
+.card li{margin-bottom:.35rem}
+/* ---------- CALLOUTS ---------- */
+.callout{
+  border-radius:10px;padding:.85rem 1rem;margin:.75rem 0;
+  font-size:.9rem;border-left:4px solid;background:rgba(15,23,42,.7);
+}
+.callout.info{border-color:var(--accent);background:rgba(0,212,255,.06)}
+.callout.info strong:first-child{color:var(--accent)}
+.callout.example{border-color:var(--green);background:rgba(34,197,94,.06)}
+.callout.example strong:first-child{color:var(--green)}
+.callout.warn{border-color:var(--amber);background:rgba(245,158,11,.06)}
+.callout.warn strong:first-child{color:var(--amber)}
+.callout.error{border-color:var(--red);background:rgba(239,68,68,.06)}
+.callout.error strong:first-child{color:var(--red)}
+.callout strong:first-child{display:block;text-transform:uppercase;letter-spacing:1px;font-size:.72rem;margin-bottom:.3rem}
+/* ---------- STEPS ---------- */
+.step{
+  display:flex;gap:.85rem;margin-bottom:1rem;align-items:flex-start;
+}
+.step-num{
+  flex:0 0 34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--purple));
+  color:#000;font-weight:800;display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;
+}
+.step-body{flex:1;min-width:0}
+.step-body h4{color:var(--text);font-size:.95rem;margin-bottom:.3rem}
+.step-body p,.step-body ul{font-size:.9rem;color:var(--muted)}
+.step-body ul{margin-left:1.1rem;margin-top:.35rem}
+.step-body li{margin-bottom:.25rem;color:var(--text)}
+/* ---------- BADGES / CHIPS ---------- */
+.chip{
+  display:inline-block;background:rgba(0,212,255,.12);
+  border:1px solid rgba(0,212,255,.4);color:var(--accent);
+  padding:.15rem .55rem;border-radius:6px;font-size:.72rem;
+  font-weight:700;font-family:'Consolas',monospace;margin:.1rem;
+}
+.chip.green{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.4);color:var(--green)}
+.chip.amber{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.4);color:var(--amber)}
+.chip.purple{background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.4);color:var(--purple)}
+.chip.red{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.4);color:var(--red)}
+/* ---------- TABLES ---------- */
+.tbl-wrap{overflow-x:auto;margin:.75rem 0}
+table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:420px}
+th,td{padding:.6rem .7rem;text-align:left;border-bottom:1px solid var(--border)}
+th{background:rgba(0,212,255,.08);color:var(--accent);font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.5px}
+tr:hover td{background:rgba(0,212,255,.03)}
+/* ---------- SVG NOTE ---------- */
+.svg-caption{text-align:center;color:var(--muted);font-size:.75rem;margin:-1rem 0 1.5rem;letter-spacing:.5px}
+/* ---------- FUENTES ---------- */
+.src-item{
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:1rem;margin-bottom:.85rem;
+}
+.src-item h4{color:var(--accent);font-size:.95rem;margin-bottom:.35rem}
+.src-item p{font-size:.85rem;color:var(--muted);margin-bottom:.4rem}
+.src-item a{color:var(--accent);text-decoration:none;font-size:.82rem;word-break:break-all;border-bottom:1px dotted var(--accent)}
+.src-item a:hover{color:var(--purple)}
+/* ---------- CRÉDITOS ---------- */
+.credits-box{
+  text-align:center;background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:1.5rem 1rem;margin-top:1rem;
+}
+.credits-box h3{color:var(--accent);font-size:1.2rem;margin-bottom:.5rem}
+.credits-name{font-size:1.1rem;font-weight:700;color:var(--purple);margin:.5rem 0}
+.credits-meta{color:var(--muted);font-size:.85rem;margin:.3rem 0}
+.latin{color:var(--amber);font-style:italic;margin-top:1rem;font-size:.9rem}
+/* ---------- FOOTER ---------- */
+footer{
+  text-align:center;padding:1.5rem 1rem;border-top:1px solid var(--border);
+  color:var(--muted);font-size:.78rem;margin-top:2rem;
+}
+footer p{margin:.25rem 0}
+footer .latin{font-size:.8rem}
+/* ---------- BACK TO TOP ---------- */
+.back-to-top{
+  position:fixed;bottom:1.1rem;right:1.1rem;z-index:800;
+  width:44px;height:44px;border-radius:50%;
+  background:var(--accent);color:#000;border:none;
+  font-size:1.3rem;font-weight:900;cursor:pointer;
+  box-shadow:0 4px 18px rgba(0,212,255,.5);
+  opacity:0;pointer-events:none;transition:all .3s ease;
+}
+.back-to-top.show{opacity:1;pointer-events:auto}
+.back-to-top:hover{transform:translateY(-3px)}
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:600px){
+  .section{padding:1rem .7rem 2.5rem}
+  .card{padding:.9rem 1rem}
+  .nav-btn{font-size:.72rem;padding:.4rem .7rem}
+  .step-num{flex:0 0 28px;height:28px;font-size:.78rem}
+  .step-body h4{font-size:.88rem}
+  .step-body p,.step-body ul,.card p,.card ul,.card ol{font-size:.85rem}
+  table{font-size:.78rem;min-width:360px}
+  th,td{padding:.45rem .5rem}
+  .metric-val{font-size:1.15rem}
+  .home-title{font-size:1.4rem}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  .section{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="navbar">
+  <div class="nav-scroll" id="navScroll">
+    <button class="nav-btn active" data-section="home">🏠 Inicio</button>
+    <button class="nav-btn" data-section="intro">📖 Introducción</button>
+    <button class="nav-btn" data-section="metodo1">🎵 Método 1 — Song List</button>
+    <button class="nav-btn" data-section="metodo2">🎼 Método 2 — Playlist</button>
+    <button class="nav-btn" data-section="ejemplo">🎹 Ejemplo Práctico</button>
+    <button class="nav-btn" data-section="arqui">🧩 Arquitectura</button>
+    <button class="nav-btn" data-section="registro">💾 Memoria de Registros</button>
+    <button class="nav-btn" data-section="vincular">🔗 Vincular a Playlist</button>
+    <button class="nav-btn" data-section="vivo">🎤 Aplicación en Vivo</button>
+    <button class="nav-btn" data-section="fuentes">📚 Fuentes</button>
+    <button class="nav-btn credits" data-section="creditos">✦ Créditos</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============================ HOME ============================ -->
+<section id="home" class="section active">
+  <div class="home-hero">
+    <div class="svg-wrap" id="svgHome"></div>
+    <div class="svg-caption">▲ Diagrama animado — Flujo Song List → Playlist → Registration Memory</div>
+    <span class="badge">Manual Técnico Interactivo</span>
+    <h1 class="home-title">Yamaha PSR-SX920 — Listas de Canciones, Playlist y Memoria de Registros</h1>
+    <p class="home-subtitle">Guía completa para crear y gestionar listas de canciones en formato <strong>MIDI</strong> y <strong>Audio</strong>, y vincularlas a la <strong>Memoria de Registros</strong> y la <strong>Playlist</strong> para presentaciones en vivo sin interrupciones.</p>
+    <div class="quote-box">Si no puedes explicarlo de forma sencilla, es que no lo entiendes lo suficientemente bien.</div>
+    <div class="metrics-grid">
+      <div class="metric"><span class="metric-val">2</span><span class="metric-lbl">Métodos</span></div>
+      <div class="metric"><span class="metric-val">4</span><span class="metric-lbl">Módulos</span></div>
+      <div class="metric"><span class="metric-val">3</span><span class="metric-lbl">Herramientas</span></div>
+      <div class="metric"><span class="metric-val">∞</span><span class="metric-lbl">Repertorios</span></div>
+    </div>
+    <p class="dt-row">📅 <strong>24/09/2026</strong> &nbsp;·&nbsp; 🕐 <strong>06:30:16</strong></p>
+  </div>
+</section>
+
+<!-- ============================ INTRODUCCIÓN ============================ -->
+<section id="intro" class="section">
+  <div class="sec-header">
+    <span class="sec-num">01</span>
+    <h2 class="sec-title">Introducción — Dos Métodos Complementarios</h2>
+    <p class="sec-desc">Crear y gestionar listas de canciones (MIDI y Audio) en el Yamaha PSR-SX920 es una herramienta fundamental para ensayar, hacer presentaciones en vivo o tener sesiones de práctica continuas.</p>
+  </div>
+
+  <div class="card">
+    <p>En el <strong>PSR-SX920</strong> existen <strong>dos métodos complementarios</strong> según lo que necesites lograr:</p>
+    <ol>
+      <li><strong>El Modo Song List</strong> (en el reproductor de canciones <span class="chip">SONG [PLAYER]</span>): Ideal para crear listas de reproducción automática continua de archivos <code>.mid</code>, <code>.wav</code> o <code>.mp3</code>.</li>
+      <li><strong>La Función Playlist</strong> (<span class="chip purple">[PLAYLIST]</span>): Diseñada para organizar repertorios completos de actuación en vivo, donde cada ítem de la lista activa una memoria de registro con sus sonidos, canciones y ajustes de panel.</li>
+    </ol>
+  </div>
+
+  <div class="callout info">
+    <strong>INFO</strong>
+    Ambos métodos pueden combinarse: la Song List controla la reproducción continua de pistas, mientras que la Playlist orquesta la configuración completa del instrumento para cada tema del repertorio.
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Herramienta</th><th>Propósito</th><th>Formatos</th><th>Uso típico</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Song List</strong></td><td>Reproducción continua automática</td><td>.mid / .wav / .mp3</td><td>Ensayos y práctica</td></tr>
+        <tr><td><strong>Playlist</strong></td><td>Repertorio completo con ajustes de panel</td><td>Bancos de Registro</td><td>Actuaciones en vivo</td></tr>
+        <tr><td><strong>Registration Memory</strong></td><td>Memoriza voces, mixer y enlace a canción</td><td>Bancos .rgt</td><td>Puente entre las dos anteriores</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÉTODO 1 ============================ -->
+<section id="metodo1" class="section">
+  <div class="sec-header">
+    <span class="sec-num">02</span>
+    <h2 class="sec-title">Método 1 — Crear una Lista de Canciones en el Song Player</h2>
+    <p class="sec-desc">Si lo que buscas es que el teclado reproduzca una secuencia de pistas MIDI y de audio una tras otra, sigue estos pasos.</p>
+  </div>
+
+  <div class="card">
+    <h3>🎛️ Paso 1 — Acceder a la pantalla de reproducción</h3>
+    <ul>
+      <li>Presiona el botón físico <span class="chip">SONG [PLAYER]</span> ubicado en el panel frontal del instrumento.</li>
+      <li>En la parte superior de la pantalla táctil, mueve el conmutador de <strong>Player</strong> a <strong>List</strong> para entrar en el modo <strong>Song List</strong>.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>➕ Paso 2 — Crear una lista nueva</h3>
+    <ul>
+      <li>Toca el icono <strong>[New]</strong> (Hoja con signo más) en la barra superior de la pantalla para abrir una lista en blanco.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>🎵 Paso 3 — Añadir canciones MIDI y de Audio</h3>
+    <ul>
+      <li>Toca el botón <strong>[Add Song]</strong>.</li>
+      <li>Se abrirá la pantalla de selección de archivos. En la parte superior podrás alternar entre los tipos de formato:
+        <ul>
+          <li><strong>Pestaña [MIDI]:</strong> Para seleccionar canciones grabadas o pistas en formato MIDI estándar (<code>.mid</code>).</li>
+          <li><strong>Pestaña [Audio]:</strong> Para seleccionar archivos de audio grabado (<code>.wav</code> o <code>.mp3</code>).</li>
+        </ul>
+      </li>
+      <li>Navega entre las pestañas de ubicación (<strong>User</strong> o tu pendrive <strong>USB1</strong>).</li>
+      <li>Toca los nombres de las canciones que deseas incluir. Si quieres añadir todas las canciones contenidas dentro de una carpeta específica, toca el botón <strong>[Select All]</strong>.</li>
+      <li>Presiona <strong>[Add to Song List]</strong> para confirmar e incorporarlas a tu lista.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>🎚️ Paso 4 — Organizar el orden y ajustes de reproducción</h3>
+    <ul>
+      <li><strong>Cambiar el orden:</strong> Selecciona una canción de la lista y utiliza los botones <strong>[Up]</strong> (Subir) o <strong>[Down]</strong> (Bajar) para ubicarla en la posición deseada.</li>
+      <li><strong>Eliminar una pista:</strong> Si agregaste una por error, selecciónala y toca <strong>[Delete]</strong>.</li>
+      <li><strong>Modo de repetición (Repeat Mode):</strong> Toca el icono de repetición en pantalla para alternar entre:
+        <ul>
+          <li><strong>Off (Desactivado):</strong> Reproduce todas las canciones de la lista una vez y se detiene automáticamente al terminar la última.</li>
+          <li><strong>All Repeat:</strong> Repite toda la lista en bucle continuo.</li>
+          <li><strong>Single Repeat:</strong> Repite únicamente la canción seleccionada en ese momento.</li>
+        </ul>
+      </li>
+      <li><strong>Reproducción Aleatoria:</strong> Activa el botón <strong>Shuffle</strong> si quieres que el PSR-SX920 mezcle el orden de reproducción.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>💾 Paso 5 — Guardar la Song List</h3>
+    <ul>
+      <li>Toca el icono <strong>[Save]</strong> (Disco con flecha) en la parte superior.</li>
+      <li>Selecciona la ubicación (<strong>User</strong> o <strong>USB</strong>) y asigna un nombre a tu lista.</li>
+    </ul>
+    <div class="callout warn">
+      <strong>ADVERTENCIA</strong>
+      Si cambias de lista o apagas el teclado sin tocar <strong>[Save]</strong>, la lista que acabas de crear se perderá.
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Modo de repetición</th><th>Comportamiento</th></tr></thead>
+      <tbody>
+        <tr><td>Off</td><td>Reproduce la lista una vez y se detiene al finalizar la última pista.</td></tr>
+        <tr><td>All Repeat</td><td>Repite toda la lista en bucle continuo.</td></tr>
+        <tr><td>Single Repeat</td><td>Repite únicamente la canción actualmente seleccionada.</td></tr>
+        <tr><td>Shuffle</td><td>Reproduce en orden aleatorio (complementario a cualquiera de los modos anteriores).</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÉTODO 2 ============================ -->
+<section id="metodo2" class="section">
+  <div class="sec-header">
+    <span class="sec-num">03</span>
+    <h2 class="sec-title">Método 2 — Usar la Función Playlist para Repertorios Completos</h2>
+    <p class="sec-desc">Si en tu presentación necesitas que al tocar cada canción de la lista no solo se seleccione la pista MIDI/Audio, sino que también se configuren automáticamente los sonidos de tu mano derecha, los efectos de voz y la partitura/letra.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>Configura tu panel</h4>
+      <p>Selecciona la canción (Audio o MIDI), asigna la voz de la mano derecha —por ejemplo, un piano brillante para interpretar las notas de la escala como <span class="chip">C(I)</span> <span class="chip">E(III)</span> <span class="chip">G(V)</span>— y guarda el ajuste en un botón de <strong>REGISTRATION MEMORY [1–8]</strong>.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>Guarda el banco de memoria</h4>
+      <p>Guarda ese banco en la pestaña <strong>User</strong> o en tu memoria USB.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>Añade a la Playlist</h4>
+      <ul>
+        <li>Presiona el botón físico <span class="chip purple">[PLAYLIST]</span>.</li>
+        <li>Toca <strong>[New]</strong> para iniciar un archivo de repertorio nuevo.</li>
+        <li>Toca <strong>[Add Record]</strong> y elige <strong>Select from Registration Bank</strong>.</li>
+        <li>Selecciona el banco de memoria que acabas de guardar y presiona <strong>[Add to Playlist]</strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>Guarda la Playlist</h4>
+      <p>Toca <strong>[Save]</strong> en la pantalla táctil para almacenar tu repertorio listo para el concierto.</p>
+    </div>
+  </div>
+
+  <div class="callout example">
+    <strong>EJEMPLO</strong>
+    Con esta función, al pulsar un tema en la Playlist el teclado carga automáticamente: la pista de audio o MIDI, la voz de la mano derecha, los ajustes del mixer y la vista de partitura o letra que hayas configurado en el banco de registros.
+  </div>
+</section>
+
+<!-- ============================ EJEMPLO PRÁCTICO ============================ -->
+<section id="ejemplo" class="section">
+  <div class="sec-header">
+    <span class="sec-num">04</span>
+    <h2 class="sec-title">Ejemplo Práctico de Aplicación</h2>
+    <p class="sec-desc">Supongamos que ensayas una balada en la tonalidad de C mayor.</p>
+  </div>
+
+  <div class="card">
+    <h3>🎼 Secuencia de uso</h3>
+    <ul>
+      <li>Creas tu <strong>Song List</strong> con la pista de acompañamiento de fondo (Audio o MIDI).</li>
+      <li>En el teclado ejecutas la melodía principal sobre las notas <span class="chip">E(III)</span> y <span class="chip">G(V)</span>.</li>
+      <li>La lista pasa automáticamente a la siguiente canción de tu ensayo al finalizar cada tema, permitiéndote practicar sin tener que manipular archivos individualmente entre canción y canción.</li>
+    </ul>
+
+    <h4>Escala de C mayor (sistema americano con grados)</h4>
+    <p>
+      <span class="chip">C(I)</span>
+      <span class="chip">D(II)</span>
+      <span class="chip">E(III)</span>
+      <span class="chip">F(IV)</span>
+      <span class="chip">G(V)</span>
+      <span class="chip">A(VI)</span>
+      <span class="chip">B(VII)</span>
+    </p>
+  </div>
+
+  <div class="callout info">
+    <strong>INFO</strong>
+    Esta práctica es ideal para principiantes: la lista mantiene el flujo de acompañamiento mientras tú practicas las notas de la escala sobre las que deseas improvisar o interpretar la melodía.
+  </div>
+</section>
+
+<!-- ============================ ARQUITECTURA ============================ -->
+<section id="arqui" class="section">
+  <div class="sec-header">
+    <span class="sec-num">05</span>
+    <h2 class="sec-title">Módulo 1 — La Arquitectura del Sistema en el PSR-SX920</h2>
+    <p class="sec-desc">Vincular tus listas de canciones (Audio y MIDI) con la Memoria de Registros y la Playlist de tu Yamaha PSR-SX920 es la combinación definitiva para tocar en vivo sin interrupciones.</p>
+  </div>
+
+  <div class="card">
+    <p>Mientras que la <strong>Song List</strong> sirve para reproducir canciones una tras otra, la <strong>Playlist</strong> conectada a la <strong>Memoria de Registros</strong> te permite hacer algo mucho más avanzado: <strong>al seleccionar un tema de tu repertorio, el teclado carga automáticamente la canción (Audio o MIDI), ajusta tus sonidos de piano y teclados, configura el mezclador y muestra la partitura o letra en pantalla de un solo toque</strong>.</p>
+  </div>
+
+  <div class="card">
+    <h3>🧩 Las tres herramientas conectadas</h3>
+    <ol>
+      <li><strong>Canción (Audio / MIDI):</strong> Tu pista de fondo (archivo <code>.wav</code>, <code>.mp3</code> o <code>.mid</code>).</li>
+      <li><strong>Banco de Registros (<em>Registration Memory</em>):</strong> Guarda la configuración completa del panel (voces para la mano derecha/izquierda, volumen, efectos) <strong>junto con el enlace a la canción</strong>.</li>
+      <li><strong>Playlist:</strong> Tu lista de repertorio general, donde cada elemento ("Record") llama directamente a un banco de memoria de registros específico.</li>
+    </ol>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Capa</th><th>Qué guarda</th><th>Dónde vive</th></tr></thead>
+      <tbody>
+        <tr><td>Canción</td><td>Pista de audio o MIDI</td><td>User / USB</td></tr>
+        <tr><td>Registro</td><td>Panel completo + enlace a canción</td><td>Banco .rgt (User / USB)</td></tr>
+        <tr><td>Playlist</td><td>Repertorio ordenado de registros</td><td>User / USB</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MEMORIA DE REGISTROS ============================ -->
+<section id="registro" class="section">
+  <div class="sec-header">
+    <span class="sec-num">06</span>
+    <h2 class="sec-title">Módulo 2 — Guardar la Canción y el Sonido en la Memoria de Registros</h2>
+    <p class="sec-desc">Tres pasos clave para vincular la pista seleccionada con la configuración completa del panel.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>Seleccionar la canción en el reproductor</h4>
+      <ul>
+        <li>Presiona el botón <span class="chip">[PLAYER]</span> en el panel frontal.</li>
+        <li>Asegúrate de estar en el modo <strong>Song Player</strong>.</li>
+        <li>Toca la casilla <strong>MIDI</strong> o <strong>Audio</strong> en la pantalla táctil y selecciona el archivo que vas a interpretar.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>Configurar las voces del teclado para acompañar</h4>
+      <ul>
+        <li>Asigna los sonidos que vas a tocar con la mano derecha e izquierda.</li>
+        <li><em>Ejemplo musical:</em> Si tu pista está en la tonalidad de <strong>C mayor</strong>, puedes configurar en <strong>RIGHT 1</strong> un piano principal para tocar sobre las notas de la escala: <span class="chip">C(I)</span>, <span class="chip">D(II)</span>, <span class="chip">E(III)</span>, <span class="chip">F(IV)</span>, <span class="chip">G(V)</span>, <span class="chip">A(VI)</span> y <span class="chip">B(VII)</span>.</li>
+        <li>En <strong>RIGHT 2</strong> o <strong>RIGHT 3</strong>, puedes agregar capas de cuerdas o pads.</li>
+        <li>Ve al <strong>Mixer</strong> (<span class="chip">[MIXER/EQ]</span>) y ajusta el balance de volumen entre la pista de audio/MIDI y tu interpretación en vivo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>Memorizar la configuración con el enlace de la canción (¡Paso clave!)</h4>
+      <ul>
+        <li>Presiona el botón <span class="chip amber">[MEMORY]</span> ubicado en la sección <strong>REGISTRATION MEMORY</strong>.</li>
+        <li>En la ventana emergente que aparece en la pantalla táctil, <strong>asegúrate de marcar la casilla correspondiente</strong>:
+          <ul>
+            <li>Marcar <strong>MIDI Song</strong> (si la canción es un archivo MIDI).</li>
+            <li>Marcar <strong>Audio Song</strong> (si la canción es un archivo de Audio WAV/MP3).</li>
+          </ul>
+        </li>
+        <li>Mientras mantienes la ventana abierta, presiona uno de los botones numerados <strong>[1]</strong> al <strong>[8]</strong> de la memoria de registros.</li>
+        <li><strong>Guardar el Banco:</strong> Presiona los botones <strong>REGIST BANK [-]</strong> y <strong>[+]</strong> simultáneamente (o toca el icono de guardado en la pantalla de banco) y guarda el banco en la memoria interna (<strong>User</strong>) o <strong>USB</strong> con un nombre representativo (ejemplo: <em>"C_Mayor_Ballad_Bank"</em>).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <strong>ADVERTENCIA</strong>
+    Es imprescindible marcar la casilla <strong>MIDI Song</strong> o <strong>Audio Song</strong> en el diálogo de MEMORY. De lo contrario, el banco de registros no guardará el enlace a la pista y la Playlist no podrá cargarla automáticamente.
+  </div>
+</section>
+
+<!-- ============================ VINCULAR ============================ -->
+<section id="vincular" class="section">
+  <div class="sec-header">
+    <span class="sec-num">07</span>
+    <h2 class="sec-title">Módulo 3 — Vincular el Banco de Registros a la Playlist</h2>
+    <p class="sec-desc">Una vez que la canción y las voces están guardadas en el Banco de Registros, procede a organizarlo en tu lista de repertorio.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>Abrir la pantalla de Playlist</h4>
+      <ul>
+        <li>Presiona el botón dedicado <span class="chip purple">[PLAYLIST]</span> en el panel superior del teclado.</li>
+        <li>Si deseas crear una lista totalmente nueva para un evento o concierto, toca el icono <strong>New</strong> en la pantalla táctil.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>Añadir el registro a la Playlist</h4>
+      <ul>
+        <li>Toca el botón <strong>[Add Record]</strong> en la parte inferior derecha de la pantalla.</li>
+        <li>Se abrirá una ventana con tres opciones de selección. Toca <strong>[Select from Registration Bank]</strong>.</li>
+        <li>Navega hasta la ubicación donde guardaste tu banco (<em>"C_Mayor_Ballad_Bank"</em>) y tócalo para seleccionarlo.</li>
+        <li>Toca <strong>[Add to Playlist]</strong> para confirmar. El registro aparecerá en tu lista de canciones de la Playlist.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>Configurar la acción automática al cargar el tema (Edit)</h4>
+      <ul>
+        <li>Selecciona el tema en la Playlist y toca el botón <strong>[Edit]</strong>.</li>
+        <li>En la pantalla de edición (<strong>Playlist Record Edit</strong>), configura la sección <strong>Action</strong>:
+          <ul>
+            <li><strong>Load Regist Memory:</strong> Toca el número de botón de registro que deseas que se active automáticamente al seleccionar el tema (por ejemplo, el botón <strong>1</strong>).</li>
+            <li><strong>View:</strong> Selecciona qué vista quieres que abra el teclado automáticamente en la pantalla táctil al cargar la canción: <strong>Score</strong> (Partitura), <strong>Lyrics</strong> (Letra) o <strong>Text</strong> (Archivo de texto con acordes).</li>
+          </ul>
+        </li>
+        <li>Cierra la ventana de edición y toca el icono <strong>Save</strong> en la parte superior para guardar la Playlist.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <strong>INFO</strong>
+    La sección <strong>Action</strong> es lo que convierte a la Playlist en un sistema de automatización: al pulsar un tema, el teclado ejecuta en cadena las acciones configuradas aquí.
+  </div>
+</section>
+
+<!-- ============================ APLICACIÓN EN VIVO ============================ -->
+<section id="vivo" class="section">
+  <div class="sec-header">
+    <span class="sec-num">08</span>
+    <h2 class="sec-title">Módulo 4 — Aplicación Práctica durante una Interpretación en Vivo</h2>
+    <p class="sec-desc">Imagina que en tu actuación cambias de una canción en C mayor a otra en G mayor.</p>
+  </div>
+
+  <div class="card">
+    <h3>🎤 Flujo de actuación</h3>
+    <ol>
+      <li>En la pantalla de <strong>Playlist</strong>, toca la primera canción (en <strong>C mayor</strong>) y presiona <strong>[Load]</strong> (o toca dos veces sobre el nombre del tema).</li>
+      <li>El teclado realiza tres acciones instantáneas:
+        <ul>
+          <li>Carga el archivo audio/MIDI en el reproductor.</li>
+          <li>Ajusta los sonidos del teclado para improvisar usando las notas <span class="chip">C(I)</span>, <span class="chip">D(II)</span>, <span class="chip">E(III)</span>, <span class="chip">F(IV)</span>, <span class="chip">G(V)</span>, <span class="chip">A(VI)</span> y <span class="chip">B(VII)</span>.</li>
+          <li>Abre la letra o partitura en pantalla.</li>
+        </ul>
+      </li>
+      <li>Al terminar la canción, seleccionas el siguiente tema de tu Playlist (en <strong>G mayor</strong>) y tocas <strong>[Load]</strong>.</li>
+      <li>De inmediato, el reproductor cambia de pista y tus voces de la mano derecha se reconfiguran para la nueva escala con tónica en <span class="chip">G(I)</span>, permitiéndote tocar sobre <span class="chip">G(I)</span>, <span class="chip">A(II)</span>, <span class="chip">B(III)</span>, <span class="chip">C(IV)</span>, <span class="chip">D(V)</span>, <span class="chip">E(VI)</span> y <span class="chip">F#(VII)</span> sin haber tenido que configurar ningún parámetro manualmente durante el show.</li>
+    </ol>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Canción</th><th>Tónica</th><th>Escala (grados)</th></tr></thead>
+      <tbody>
+        <tr><td>Tema 1</td><td>C</td><td>C(I), D(II), E(III), F(IV), G(V), A(VI), B(VII)</td></tr>
+        <tr><td>Tema 2</td><td>G</td><td>G(I), A(II), B(III), C(IV), D(V), E(VI), F#(VII)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout example">
+    <strong>EJEMPLO</strong>
+    Este flujo elimina cualquier manipulación manual durante la actuación: el teclado se reconfigura íntegramente con un solo toque por cada tema.
+  </div>
+</section>
+
+<!-- ============================ FUENTES ============================ -->
+<section id="fuentes" class="section">
+  <div class="sec-header">
+    <span class="sec-num">09</span>
+    <h2 class="sec-title">Fuentes y Referencias</h2>
+    <p class="sec-desc">Documentos y recursos utilizados para elaborar este tutorial.</p>
+  </div>
+
+  <div class="src-item">
+    <h4>📄 Documento base — Yamaha PSR-SX920: Crear y gestionar listas de canciones</h4>
+    <p>Contenido fuente proporcionado por el usuario: creación y gestión de listas de canciones (MIDI y Audio), métodos complementarios (Song List y Playlist), vinculación con Memoria de Registros y Playlist para presentaciones en vivo.</p>
+    <p><strong>Formato original:</strong> Documento de texto / Markdown · <strong>Tema:</strong> Yamaha PSR-SX920 — Song List, Playlist y Registration Memory</p>
+  </div>
+
+  <div class="src-item">
+    <h4>🎹 Manual del propietario — Yamaha PSR-SX920</h4>
+    <p>Documentación oficial del fabricante sobre el funcionamiento del botón <span class="chip">SONG [PLAYER]</span>, el botón <span class="chip purple">[PLAYLIST]</span>, el botón <span class="chip amber">[MEMORY]</span> y la sección <strong>REGISTRATION MEMORY [1–8]</strong>.</p>
+    <p>Se recomienda consultar el manual del propietario del PSR-SX920 para verificar los nombres exactos de los botones en la versión de firmware instalada.</p>
+  </div>
+
+  <div class="src-item">
+    <h4>🎼 Sistema americano de nomenclatura musical</h4>
+    <p>Convención utilizada en este tutorial: notas <span class="chip">A</span> <span class="chip">B</span> <span class="chip">C</span> <span class="chip">D</span> <span class="chip">E</span> <span class="chip">F</span> <span class="chip">G</span> con indicación de grado <span class="chip">I</span>–<span class="chip">VII</span>.</p>
+  </div>
+
+  <div class="callout info">
+    <strong>INFO</strong>
+    Este tutorial no introduce contenido ajeno al documento fuente. Cualquier referencia al manual del propietario o a convenciones musicales está orientada exclusivamente a la correcta aplicación de la nomenclatura y al uso del instrumento.
+  </div>
+</section>
+
+<!-- ============================ CRÉDITOS ============================ -->
+<section id="creditos" class="section">
+  <div class="sec-header">
+    <span class="sec-num">10</span>
+    <h2 class="sec-title">Créditos</h2>
+    <p class="sec-desc">Información del tutorial y del autor.</p>
+  </div>
+
+  <div class="svg-wrap" id="svgCreditos"></div>
+  <div class="svg-caption">▲ Mismo diagrama animado del Inicio</div>
+
+  <div class="credits-box">
+    <h3>Tutorial: Yamaha PSR-SX920 — Listas de Canciones, Playlist y Memoria de Registros</h3>
+    <p class="credits-name">Rubén Sbarsky</p>
+    <p class="credits-meta">📅 Fecha: <strong>24/09/2026</strong></p>
+    <p class="credits-meta">🕐 Hora: <strong>06:30:16</strong></p>
+    <p class="credits-meta" style="margin-top:.75rem">Tutorial con fines exclusivamente educativos y de divulgación.</p>
+    <p class="latin">Fiat iustitia, ruat caelum.</p>
+  </div>
+</section>
+
+</main>
+
+<button class="back-to-top" id="backToTop" aria-label="Volver arriba">↑</button>
+
+<footer>
+  <p>📚 Tutorial solo con fines Educativos y Divulgación</p>
+  <p>👨‍💻 Créditos: Rubén Sbarsky</p>
+  <p>📅 FECHA: 24/09/2026 &nbsp;·&nbsp; Hora: 06:30:16</p>
+  <p class="latin">Fiat iustitia, ruat caelum.</p>
+</footer>
+
+<!-- ============================ TEMPLATE SVG ============================ -->
+<template id="svgTemplate">
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#070b14">
+        <animate attributeName="stop-color" values="#070b14;#0a1428;#071020;#070b14" dur="9s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" stop-color="#0a0e1a">
+        <animate attributeName="stop-color" values="#0a0e1a;#101c3a;#0a0e1a" dur="9s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#070b14">
+        <animate attributeName="stop-color" values="#070b14;#141e3a;#070b14" dur="9s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+    <radialGradient id="haloBlue"><stop offset="0%" stop-color="#00d4ff" stop-opacity=".7"/><stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="haloGreen"><stop offset="0%" stop-color="#22c55e" stop-opacity=".7"/><stop offset="100%" stop-color="#22c55e" stop-opacity="0"/></radialGradient>
+    <radialGradient id="haloAmber"><stop offset="0%" stop-color="#f59e0b" stop-opacity=".7"/><stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/></radialGradient>
+    <radialGradient id="haloPurple"><stop offset="0%" stop-color="#a855f7" stop-opacity=".7"/><stop offset="100%" stop-color="#a855f7" stop-opacity="0"/></radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowStrong" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e3a5f" stroke-width="0.6">
+        <animate attributeName="opacity" values=".25;.7;.25" dur="6s" repeatCount="indefinite"/>
+      </path>
+    </pattern>
+    <path id="flow1" d="M 130 320 Q 260 200 400 250 Q 540 300 670 200"/>
+    <path id="flow2" d="M 130 340 Q 300 290 480 300 Q 620 310 700 260"/>
+    <path id="flow3" d="M 200 380 Q 350 300 500 340 Q 620 370 700 310"/>
+    <path id="orbit1" d="M 400 225 m -170 0 a 170 170 0 1 1 340 0 a 170 170 0 1 1 -340 0"/>
+    <path id="orbit2" d="M 400 225 m -120 0 a 120 120 0 1 1 240 0 a 120 120 0 1 1 -240 0"/>
+  </defs>
+
+  <!-- FONDO -->
+  <rect width="800" height="450" fill="url(#bgGrad)"/>
+  <rect width="800" height="450" fill="url(#grid)"/>
+
+  <!-- ÓRBITAS CONCÉNTRICAS -->
+  <g fill="none">
+    <circle cx="400" cy="225" r="170" stroke="#00d4ff" stroke-width="1" stroke-dasharray="6 14" opacity=".35">
+      <animateTransform attributeName="transform" type="rotate" from="0 400 225" to="360 400 225" dur="24s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="400" cy="225" r="140" stroke="#a855f7" stroke-width="1" stroke-dasharray="3 10" opacity=".4">
+      <animateTransform attributeName="transform" type="rotate" from="360 400 225" to="0 400 225" dur="18s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="400" cy="225" r="110" stroke="#22c55e" stroke-width="1" stroke-dasharray="2 8" opacity=".35">
+      <animateTransform attributeName="transform" type="rotate" from="0 400 225" to="360 400 225" dur="12s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="400" cy="225" r="80" stroke="#f59e0b" stroke-width="1" stroke-dasharray="1 6" opacity=".3">
+      <animateTransform attributeName="transform" type="rotate" from="360 400 225" to="0 400 225" dur="15s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- NODOS DE DESTINO (derecha) -->
+  <!-- SONG LIST -->
+  <g transform="translate(670,130)">
+    <circle r="26" fill="url(#haloBlue)" opacity=".9">
+      <animate attributeName="r" values="24;34;24" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values=".5;.9;.5" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="16" fill="#0f172a" stroke="#00d4ff" stroke-width="2" filter="url(#glow)">
+      <animate attributeName="stroke-width" values="1.5;3;1.5" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <text y="4" text-anchor="middle" fill="#00d4ff" font-size="14" font-weight="800" font-family="Segoe UI,sans-serif">♪</text>
+    <text y="-32" text-anchor="middle" fill="#00d4ff" font-size="9" font-weight="700" font-family="Segoe UI,sans-serif" letter-spacing="1">SONG LIST</text>
+  </g>
+
+  <!-- PLAYLIST -->
+  <g transform="translate(700,225)">
+    <circle r="26" fill="url(#haloPurple)" opacity=".9">
+      <animate attributeName="r" values="24;34;24" dur="3.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values=".5;.9;.5" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="16" fill="#0f172a" stroke="#a855f7" stroke-width="2" filter="url(#glow)">
+      <animate attributeName="stroke-width" values="1.5;3;1.5" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <text y="4" text-anchor="middle" fill="#a855f7" font-size="14" font-weight="800" font-family="Segoe UI,sans-serif">☰</text>
+    <text y="-32" text-anchor="middle" fill="#a855f7" font-size="9" font-weight="700" font-family="Segoe UI,sans-serif" letter-spacing="1">PLAYLIST</text>
+  </g>
+
+  <!-- REGISTRATION -->
+  <g transform="translate(670,320)">
+    <circle r="26" fill="url(#haloAmber)" opacity=".9">
+      <animate attributeName="r" values="24;34;24" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values=".5;.9;.5" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="16" fill="#0f172a" stroke="#f59e0b" stroke-width="2" filter="url(#glow)">
+      <animate attributeName="stroke-width" values="1.5;3;1.5" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+    <text y="4" text-anchor="middle" fill="#f59e0b" font-size="13" font-weight="800" font-family="Segoe UI,sans-serif">◉</text>
+    <text y="-32" text-anchor="middle" fill="#f59e0b" font-size="9" font-weight="700" font-family="Segoe UI,sans-serif" letter-spacing="1">REGIST.</text>
+  </g>
+
+  <!-- PIANO IZQUIERDA -->
+  <g transform="translate(70,290)">
+    <!-- cuerpo -->
+    <rect x="0" y="0" width="170" height="120" rx="8" fill="#0f172a" stroke="#1e3a5f" stroke-width="1.5"/>
+    <!-- teclas blancas -->
+    <g>
+      <rect x="8" y="30" width="18" height="80" rx="2" fill="#e2e8f0"/>
+      <rect x="28" y="30" width="18" height="80" rx="2" fill="#e2e8f0"/>
+      <rect x="48" y="30" width="18" height="80" rx="2" fill="#e2e8f0"/>
+      <rect x="68" y="30" width="18" height="80" rx="2" fill="#e2e8f0"/>
+      <rect x="88" y="30" width="18" height="80" rx="2" fill="#e2e8f0"/>
+      <rect x="108" y="30" width="18" height="80" rx="2" fill="#e2e8f0"/>
+      <rect x="128" y="30" width="18" height="80" rx="2" fill="#e2e8f0"/>
+      <rect x="148" y="30" width="14" height="80" rx="2" fill="#e2e8f0"/>
+    </g>
+    <!-- teclas negras -->
+    <g fill="#0a0e1a">
+      <rect x="20" y="30" width="10" height="48" rx="2"/>
+      <rect x="40" y="30" width="10" height="48" rx="2"/>
+      <rect x="80" y="30" width="10" height="48" rx="2"/>
+      <rect x="100" y="30" width="10" height="48" rx="2"/>
+      <rect x="120" y="30" width="10" height="48" rx="2"/>
+    </g>
+    <!-- tecla pulsada animada -->
+    <rect x="48" y="30" width="18" height="80" rx="2" fill="#00d4ff" opacity="0">
+      <animate attributeName="opacity" values="0;0.85;0;0;0;0" dur="4s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="108" y="30" width="18" height="80" rx="2" fill="#a855f7" opacity="0">
+      <animate attributeName="opacity" values="0;0;0;0.85;0;0" dur="4s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="28" y="30" width="18" height="80" rx="2" fill="#22c55e" opacity="0">
+      <animate attributeName="opacity" values="0;0;0;0;0.85;0" dur="4s" repeatCount="indefinite"/>
+    </rect>
+    <text x="85" y="18" text-anchor="middle" fill="#00d4ff" font-size="9" font-weight="700" font-family="Segoe UI,sans-serif" letter-spacing="2">PSR-SX920</text>
+  </g>
+
+  <!-- FLECHAS / FLUJOS NARRATIVOS -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M 130 320 Q 260 200 400 250 Q 540 300 670 200" stroke="#00d4ff" stroke-width="2" stroke-dasharray="8 10" opacity=".75">
+      <animate attributeName="stroke-dashoffset" values="0;-36" dur="2.5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 130 340 Q 300 290 480 300 Q 620 310 700 260" stroke="#a855f7" stroke-width="2" stroke-dasharray="6 9" opacity=".7">
+      <animate attributeName="stroke-dashoffset" values="0;-30" dur="3s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 200 380 Q 350 300 500 340 Q 620 370 700 310" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4 8" opacity=".65">
+      <animate attributeName="stroke-dashoffset" values="0;-24" dur="3.5s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- PARTÍCULAS VIAJERAS -->
+  <g filter="url(#glow)">
+    <circle r="3" fill="#00d4ff">
+      <animateMotion dur="4s" repeatCount="indefinite"><mpath href="#flow1"/></animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="2.5" fill="#00d4ff">
+      <animateMotion dur="4s" begin="1.3s" repeatCount="indefinite"><mpath href="#flow1"/></animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="4s" begin="1.3s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="3" fill="#a855f7">
+      <animateMotion dur="3s" repeatCount="indefinite"><mpath href="#flow2"/></animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="2.5" fill="#22c55e">
+      <animateMotion dur="3.5s" begin="0.8s" repeatCount="indefinite"><mpath href="#flow2"/></animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="3.5s" begin="0.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="3" fill="#f59e0b">
+      <animateMotion dur="4.5s" repeatCount="indefinite"><mpath href="#flow3"/></animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="4.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="2.5" fill="#ef4444">
+      <animateMotion dur="4.5s" begin="1.7s" repeatCount="indefinite"><mpath href="#flow3"/></animateMotion>
+      <animate attributeName="opacity" values="0;1;1;0" dur="4.5s" begin="1.7s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- GHOST NOTES (fantasmas que viajan) -->
+  <g filter="url(#glow)" font-family="Segoe UI,sans-serif" font-size="18" font-weight="800" text-anchor="middle">
+    <text fill="#00d4ff" opacity=".9">♪
+      <animateMotion dur="4s" repeatCount="indefinite"><mpath href="#flow1"/></animateMotion>
+      <animate attributeName="opacity" values="0;.9;.9;0" dur="4s" repeatCount="indefinite"/>
+    </text>
+    <text fill="#a855f7" opacity=".9">♫
+      <animateMotion dur="3s" begin="1s" repeatCount="indefinite"><mpath href="#flow2"/></animateMotion>
+      <animate attributeName="opacity" values="0;.9;.9;0" dur="3s" begin="1s" repeatCount="indefinite"/>
+    </text>
+    <text fill="#f59e0b" opacity=".9">♩
+      <animateMotion dur="3.5s" begin="2s" repeatCount="indefinite"><mpath href="#flow3"/></animateMotion>
+      <animate attributeName="opacity" values="0;.9;.9;0" dur="3.5s" begin="2s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- PARTÍCULAS ORBITALES -->
+  <g filter="url(#glow)">
+    <circle r="2.5" fill="#00d4ff">
+      <animateMotion dur="9s" repeatCount="indefinite"><mpath href="#orbit1"/></animateMotion>
+    </circle>
+    <circle r="2" fill="#a855f7">
+      <animateMotion dur="9s" begin="3s" repeatCount="indefinite"><mpath href="#orbit1"/></animateMotion>
+    </circle>
+    <circle r="2" fill="#22c55e">
+      <animateMotion dur="6s" repeatCount="indefinite"><mpath href="#orbit2"/></animateMotion>
+    </circle>
+    <circle r="2" fill="#f59e0b">
+      <animateMotion dur="6s" begin="2s" repeatCount="indefinite"><mpath href="#orbit2"/></animateMotion>
+    </circle>
+  </g>
+
+  <!-- TÍTULO SUPERIOR -->
+  <text x="400" y="45" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="20" font-weight="800" letter-spacing="2">
+    <tspan fill="#00d4ff">S</tspan><tspan fill="#22c55e">O</tspan><tspan fill="#f59e0b">N</tspan><tspan fill="#a855f7">G</tspan>
+    <tspan fill="#00d4ff"> </tspan>
+    <tspan fill="#22c55e">F</tspan><tspan fill="#f59e0b">L</tspan><tspan fill="#a855f7">O</tspan><tspan fill="#00d4ff">W</tspan>
+    <animate attributeName="opacity" values="1;.75;1" dur="3s" repeatCount="indefinite"/>
+  </text>
+  <text x="400" y="68" text-anchor="middle" fill="#94a3b8" font-family="Segoe UI,sans-serif" font-size="10" letter-spacing="4">
+    MIDI · AUDIO · PLAYLIST · REGISTRATION
+    <animate attributeName="opacity" values=".5;1;.5" dur="4s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- INDICADOR LIVE -->
+  <g transform="translate(740,32)">
+    <rect x="-34" y="-10" width="68" height="20" rx="10" fill="#0f172a" stroke="#ef4444" stroke-width="1" opacity=".9"/>
+    <circle cx="-18" cy="0" r="4" fill="#ef4444" filter="url(#glow)">
+      <animate attributeName="opacity" values="1;.15;1" dur="1.2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="6" y="4" text-anchor="middle" fill="#ef4444" font-size="9" font-weight="800" font-family="Segoe UI,sans-serif" letter-spacing="2">LIVE</text>
+  </g>
+
+  <!-- ETIQUETA DE ESTADO -->
+  <g transform="translate(400,415)">
+    <text text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" letter-spacing="2" fill="#22c55e">
+      <animate attributeName="fill" values="#22c55e;#00d4ff;#a855f7;#f59e0b;#22c55e" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values=".6;1;.6" dur="3s" repeatCount="indefinite"/>
+      ▶ CARGA AUTOMÁTICA · REPRODUCCIÓN CONTINUA · CERO INTERRUPCIONES
+    </text>
+  </g>
+
+  <!-- FLASH + TEXTO CLÍMAX -->
+  <g transform="translate(400,225)" filter="url(#glowStrong)" pointer-events="none">
+    <text text-anchor="middle" y="6" font-family="Segoe UI,sans-serif" font-size="34" font-weight="900" letter-spacing="4" fill="#00d4ff" opacity="0">
+      FLOW
+      <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0.9;0;0;0;0;0;0;0;0;0;0;0" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="fill" values="#00d4ff;#22c55e;#f59e0b;#a855f7;#00d4ff" dur="10s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- EXPLOSIÓN RADIAL en nodo PLAYLIST -->
+  <g transform="translate(700,225)" opacity="0" pointer-events="none">
+    <animate attributeName="opacity" values="0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0" dur="7s" repeatCount="indefinite"/>
+    <g stroke="#a855f7" stroke-width="1.5" fill="none">
+      <line x1="0" y1="0" x2="40" y2="0" transform="rotate(0)"><animateTransform attributeName="transform" type="rotate" from="0" to="0" dur="1s"/></line>
+      <line x1="0" y1="0" x2="40" y2="0" transform="rotate(45)"/>
+      <line x1="0" y1="0" x2="40" y2="0" transform="rotate(90)"/>
+      <line x1="0" y1="0" x2="40" y2="0" transform="rotate(135)"/>
+      <line x1="0" y1="0" x2="40" y2="0" transform="rotate(180)"/>
+      <line x1="0" y1="0" x2="40" y2="0" transform="rotate(225)"/>
+      <line x1="0" y1="0" x2="40" y2="0" transform="rotate(270)"/>
+      <line x1="0" y1="0" x2="40" y2="0" transform="rotate(315)"/>
+    </g>
+  </g>
+
+  <!-- FIRMA -->
+  <text x="30" y="435" font-family="Segoe UI,sans-serif" font-size="9" letter-spacing="1" fill="#94a3b8">
+    Rubén Sbarsky
+    <animate attributeName="opacity" values=".35;.85;.35" dur="5s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- MARCO -->
+  <rect x="1" y="1" width="798" height="448" fill="none" stroke="#1e3a5f" stroke-width="1.5" rx="10"/>
+</svg>
+</template>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ---------- SVG: clonar en HOME y CRÉDITOS ---------- */
+  var tpl = document.getElementById('svgTemplate');
+  var homeSvg = document.getElementById('svgHome');
+  var credSvg = document.getElementById('svgCreditos');
+
+  function cloneSvg(){
+    return tpl.content.cloneNode(true);
+  }
+  homeSvg.appendChild(cloneSvg());
+
+  /* ---------- NAVEGACIÓN SPA ---------- */
+  var navButtons = document.querySelectorAll('.nav-btn');
+  var sections = document.querySelectorAll('.section');
+
+  function activate(id){
+    sections.forEach(function(s){ s.classList.remove('active'); });
+    navButtons.forEach(function(b){ b.classList.remove('active'); });
+
+    var sec = document.getElementById(id);
+    if(sec){ sec.classList.add('active'); }
+    var btn = document.querySelector('.nav-btn[data-section="'+id+'"]');
+    if(btn){
+      btn.classList.add('active');
+      btn.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+    }
+
+    if(id === 'creditos'){
+      /* clonar SVG de nuevo para reiniciar animaciones */
+      credSvg.innerHTML = '';
+      credSvg.appendChild(cloneSvg());
+      var svgEl = credSvg.querySelector('svg');
+      if(svgEl && typeof svgEl.setCurrentTime === 'function'){
+        try { svgEl.setCurrentTime(0); } catch(e){}
+      }
+    }
+
+    window.scrollTo({top:0, behavior:'smooth'});
+    updateProgress();
+  }
+
+  navButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      activate(btn.dataset.section);
+    });
+  });
+
+  /* ---------- BARRA DE PROGRESO ---------- */
+  var progressBar = document.getElementById('progressBar');
+  var backToTop = document.getElementById('backToTop');
+
+  function updateProgress(){
+    var h = document.documentElement;
+    var scrolled = h.scrollTop || document.body.scrollTop;
+    var max = (h.scrollHeight || document.body.scrollHeight) - h.clientHeight;
+    var pct = max > 0 ? (scrolled / max) * 100 : 0;
+    progressBar.style.width = pct + '%';
+
+    if(scrolled > 300){ backToTop.classList.add('show'); }
+    else { backToTop.classList.remove('show'); }
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  window.addEventListener('resize', updateProgress);
+
+  backToTop.addEventListener('click', function(){
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  /* ---------- INICIAL ---------- */
+  updateProgress();
+})();
+</script>
+</body>
+</html>
